@@ -5,21 +5,21 @@ import oripa.persistence.dao.AbstractFileDAO;
 
 /**
  *
- * load and save {@link oripa.doc.Doc} to/from file
+ * load and save {@link oripa.project.Project} to/from file
  *
  * @author OUCHI Koji
  *
  *
  */
-public class DocDAO extends AbstractFileDAO<DocEntity> {
-	private final AbstractFileAccessSupportSelector<DocEntity> selector;
+public class DocDAO extends AbstractFileDAO<Doc> {
+	private final AbstractFileAccessSupportSelector<Doc> selector;
 
-	public DocDAO(final AbstractFileAccessSupportSelector<DocEntity> selector) {
+	public DocDAO(final AbstractFileAccessSupportSelector<Doc> selector) {
 		this.selector = selector;
 	}
 
 	@Override
-	public AbstractFileAccessSupportSelector<DocEntity> getFileAccessSupportSelector() {
+	public AbstractFileAccessSupportSelector<Doc> getFileAccessSupportSelector() {
 		return selector;
 	}
 }

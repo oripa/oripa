@@ -39,7 +39,7 @@ import oripa.persistence.filetool.Loader;
  * @author OUCHI Koji
  *
  */
-public enum CreasePatternFileTypeKey implements FileTypeProperty<DocEntity> {
+public enum CreasePatternFileTypeKey implements FileTypeProperty<Doc> {
 	OPX("opx", 1, new LoaderXML(), new ExporterXML(), "opx", "xml"),
 	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), "fold"),
 	PICT("pict", 3, null, new PictureExporter(), "png", "jpg"),
@@ -51,8 +51,8 @@ public enum CreasePatternFileTypeKey implements FileTypeProperty<DocEntity> {
 	private final String keyText;
 	private final Integer order;
 	private final String[] extensions;
-	private final Loader<DocEntity> loader;
-	private final Exporter<DocEntity> exporter;
+	private final Loader<Doc> loader;
+	private final Exporter<Doc> exporter;
 
 	/**
 	 *
@@ -68,8 +68,8 @@ public enum CreasePatternFileTypeKey implements FileTypeProperty<DocEntity> {
 	 *            which should be managed as that file type.
 	 */
 	private CreasePatternFileTypeKey(final String key, final Integer order,
-			final Loader<DocEntity> loader,
-			final Exporter<DocEntity> exporter,
+			final Loader<Doc> loader,
+			final Exporter<Doc> exporter,
 			final String... extensions) {
 		this.keyText = key;
 		this.order = order;
@@ -94,12 +94,12 @@ public enum CreasePatternFileTypeKey implements FileTypeProperty<DocEntity> {
 	}
 
 	@Override
-	public Loader<DocEntity> getLoader() {
+	public Loader<Doc> getLoader() {
 		return loader;
 	}
 
 	@Override
-	public Exporter<DocEntity> getExporter() {
+	public Exporter<Doc> getExporter() {
 		return exporter;
 	}
 }

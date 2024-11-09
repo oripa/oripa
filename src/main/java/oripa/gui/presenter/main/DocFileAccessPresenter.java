@@ -30,19 +30,19 @@ import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DocFileAccessPresenter extends FileAccessPresenter<DocEntity> {
+public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 
 	public DocFileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
-			final FileAccessService<DocEntity> fileAccessService) {
+			final FileAccessService<Doc> fileAccessService) {
 		super(parent, chooserFactory, fileAccessService);
 	}
 
@@ -59,9 +59,9 @@ public class DocFileAccessPresenter extends FileAccessPresenter<DocEntity> {
 	 * @throws IOException
 	 * @throws UserCanceledException
 	 */
-	public void saveFileWithModelCheck(final DocEntity doc,
+	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
-			final FileTypeProperty<DocEntity> type, final FrameView owner,
+			final FileTypeProperty<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError,
 			final double pointEps)
 			throws IOException, UserCanceledException {

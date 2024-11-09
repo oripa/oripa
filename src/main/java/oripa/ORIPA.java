@@ -28,7 +28,6 @@ import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
-import oripa.doc.Doc;
 import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
@@ -61,6 +60,7 @@ import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
+import oripa.project.Project;
 import oripa.resource.Constants;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
 import oripa.swing.view.file.FileChooserSwingFactory;
@@ -171,7 +171,7 @@ public class ORIPA {
 					childFrameManager,
 					mainViewSetting,
 					bindingFactory,
-					new Doc(),
+					new Project(),
 					domainContext,
 					new DefaultCutModelOutlinesHolder(),
 					presentationContext,

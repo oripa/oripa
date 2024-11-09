@@ -18,13 +18,13 @@
  */
 package oripa.persistence.doc.loader;
 
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.Loader;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface DocLoader extends Loader<DocEntity> {
+public interface DocLoader extends Loader<Doc> {
 
 }

@@ -26,34 +26,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.FileAccessService;
-import oripa.doc.Doc;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.AbstractSavingAction;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
+import oripa.project.Project;
 
 /**
- * A service object between the {@link DataAccessObject} and the {@link Doc}.
+ * A service object between the {@link DataAccessObject} and the
+ * {@link Project}.
  *
  * @author OUCHI Koji
  *
  */
-public class DataFileAccess extends FileAccessService<DocEntity> {
+public class DataFileAccess extends FileAccessService<Doc> {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
 
-	private final AbstractFileDAO<DocEntity> dao;
+	private final AbstractFileDAO<Doc> dao;
 
 	public DataFileAccess(
-			final AbstractFileDAO<DocEntity> dao) {
+			final AbstractFileDAO<Doc> dao) {
 		this.dao = dao;
 	}
 
 	public void setFileSavingAction(
-			final AbstractSavingAction<DocEntity> action,
-			final FileTypeProperty<DocEntity> type) {
+			final AbstractSavingAction<Doc> action,
+			final FileTypeProperty<Doc> type) {
 
 		dao.getFileAccessSupportSelector()
 				.getFileAccessSupport(type)
@@ -62,13 +63,13 @@ public class DataFileAccess extends FileAccessService<DocEntity> {
 	}
 
 	@Override
-	protected AbstractFileDAO<DocEntity> getFileDAO() {
+	protected AbstractFileDAO<Doc> getFileDAO() {
 		return dao;
 	}
 
 	@Override
-	public final void saveFile(final DocEntity document,
-			final String path, final FileTypeProperty<DocEntity> type)
+	public final void saveFile(final Doc document,
+			final String path, final FileTypeProperty<Doc> type)
 			throws IOException, IllegalArgumentException {
 
 		if (type == null) {
@@ -79,7 +80,7 @@ public class DataFileAccess extends FileAccessService<DocEntity> {
 	}
 
 	@Override
-	public Optional<DocEntity> loadFile(final String filePath)
+	public Optional<Doc> loadFile(final String filePath)
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
 			IOException, FileNotFoundException {
 

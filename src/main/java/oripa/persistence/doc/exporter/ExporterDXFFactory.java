@@ -21,14 +21,14 @@ package oripa.persistence.doc.exporter;
 import java.io.IOException;
 
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.entity.exporter.CreasePatternExporterDXF;
 
 public class ExporterDXFFactory {
 
 	private static class CreasePatternExporter implements DocExporter {
 		@Override
-		public boolean export(final DocEntity doc, final String filePath, final Object configObj)
+		public boolean export(final Doc doc, final String filePath, final Object configObj)
 				throws IOException, IllegalArgumentException {
 
 			CreasePattern creasePattern = doc.getCreasePattern();

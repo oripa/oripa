@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.doc;
+package oripa.project;
 
 import java.io.File;
 
@@ -26,10 +26,10 @@ import oripa.domain.docprop.PropertyHolder;
 /**
  * Manages project data.
  *
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class Doc implements PropertyHolder {
+public class Project implements PropertyHolder {
 
 	/**
 	 * Project property
@@ -38,10 +38,10 @@ public class Doc implements PropertyHolder {
 
 	private String dataFilePath = "";
 
-	public Doc() {
+	public Project() {
 	}
 
-	public Doc(final Property property, final String filePath) {
+	public Project(final Property property, final String filePath) {
 		setProperty(property);
 		setDataFilePath(filePath);
 	}

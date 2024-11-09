@@ -24,14 +24,14 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
 public class LoaderPDF implements DocLoader {
 
 	@Override
-	public Optional<DocEntity> load(final String filePath) throws IOException, WrongDataFormatException {
+	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
 		var dtos = new ArrayList<LineDto>();
 
 		try (var r = new FileReader(filePath)) {
@@ -94,7 +94,7 @@ public class LoaderPDF implements DocLoader {
 			throw new WrongDataFormatException("Parse error.", e);
 		}
 
-		var doc = new DocEntity(new LineDtoConverter().convert(dtos));
+		var doc = new Doc(new LineDtoConverter().convert(dtos));
 
 		return Optional.of(doc);
 

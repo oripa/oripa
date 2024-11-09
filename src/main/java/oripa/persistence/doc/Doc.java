@@ -25,7 +25,7 @@ import oripa.domain.docprop.Property;
  * @author OUCHI Koji
  *
  */
-public class DocEntity {
+public class Doc {
 	/**
 	 * Crease Pattern
 	 */
@@ -36,11 +36,11 @@ public class DocEntity {
 	 */
 	private final Property property;
 
-	public DocEntity(final CreasePattern creasePattern) {
+	public Doc(final CreasePattern creasePattern) {
 		this(creasePattern, new Property());
 	}
 
-	public DocEntity(final CreasePattern creasePattern, final Property property) {
+	public Doc(final CreasePattern creasePattern, final Property property) {
 		this.creasePattern = creasePattern;
 		this.property = property;
 	}

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.docprop.Property;
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -47,7 +47,7 @@ public class DataSet {
 	public DataSet() {
 	}
 
-	public DataSet(final DocEntity doc) {
+	public DataSet(final Doc doc) {
 		mainVersion = Version.FILE_MAJOR_VERSION;
 		subVersion = Version.FILE_MINOR_VERSION;
 
@@ -78,7 +78,7 @@ public class DataSet {
 		memo = property.getMemo();
 	}
 
-	public DocEntity recover(final String filePath) {
+	public Doc recover(final String filePath) {
 
 		var oriLines = new ArrayList<OriLine>();
 
@@ -90,7 +90,7 @@ public class DataSet {
 		CreasePattern creasePattern = factory
 				.createCreasePattern(oriLines);
 
-		return new DocEntity(creasePattern, createProperty());
+		return new Doc(creasePattern, createProperty());
 	}
 
 	private Property createProperty() {

@@ -29,7 +29,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
 
 import oripa.DataSet;
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.xml.ElementLoader;
@@ -74,7 +74,7 @@ public class LoaderXML implements DocLoader {
 	}
 
 	@Override
-	public Optional<DocEntity> load(final String filePath)
+	public Optional<Doc> load(final String filePath)
 			throws FileVersionError, WrongDataFormatException, IOException {
 
 		DataSet data;

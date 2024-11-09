@@ -33,7 +33,6 @@ import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
-import oripa.doc.Doc;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
@@ -59,13 +58,14 @@ import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
-import oripa.persistence.doc.DocEntity;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.SavingActionTemplate;
 import oripa.persistence.filetool.WrongDataFormatException;
+import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -96,7 +96,7 @@ public class MainFramePresenter {
 
 	private final ChildFrameManager childFrameManager;
 
-	private Doc document;
+	private Project document;
 
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
@@ -119,7 +119,7 @@ public class MainFramePresenter {
 			final ChildFrameManager childFrameManager,
 			final MainViewSetting viewSetting,
 			final BindingObjectFactoryFacade bindingFactory,
-			final Doc document,
+			final Project document,
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final CreasePatternPresentationContext presentationContext,
@@ -352,14 +352,14 @@ public class MainFramePresenter {
 		setProjectSavingAction(CreasePatternFileTypeKey.FOLD);
 	}
 
-	private class ProjectSavingAction extends SavingActionTemplate<DocEntity> {
+	private class ProjectSavingAction extends SavingActionTemplate<Doc> {
 
-		public ProjectSavingAction(final Exporter<DocEntity> exporter) {
+		public ProjectSavingAction(final Exporter<Doc> exporter) {
 			super(exporter);
 		}
 
 		@Override
-		protected void afterSave(final DocEntity data) {
+		protected void afterSave(final Doc data) {
 			var path = getPath();
 			document.setDataFilePath(path);
 			paintContext.creasePatternUndo().clearChanged();
@@ -468,8 +468,8 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final String filePath, final FileTypeProperty<DocEntity> type) {
-		var doc = new DocEntity(paintContext.getCreasePattern(), document.getProperty());
+	private void saveProjectFile(final String filePath, final FileTypeProperty<Doc> type) {
+		var doc = new Doc(paintContext.getCreasePattern(), document.getProperty());
 
 		try {
 			var action = new ProjectSavingAction(type.getExporter()).setPath(filePath);
@@ -490,7 +490,7 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private String saveFileUsingGUI(final String directory, final String fileName,
-			final FileTypeProperty<DocEntity>... types) {
+			final FileTypeProperty<Doc>... types) {
 
 		try {
 			dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
@@ -506,11 +506,11 @@ public class MainFramePresenter {
 
 			if (types == null || types.length == 0) {
 				pathOpt = presenter.saveUsingGUI(
-						new DocEntity(paintContext.getCreasePattern(), document.getProperty()),
+						new Doc(paintContext.getCreasePattern(), document.getProperty()),
 						filePath);
 			} else {
 				pathOpt = presenter.saveUsingGUI(
-						new DocEntity(paintContext.getCreasePattern(), document.getProperty()),
+						new Doc(paintContext.getCreasePattern(), document.getProperty()),
 						filePath, List.of(types));
 			}
 
@@ -545,7 +545,7 @@ public class MainFramePresenter {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(
-					new DocEntity(paintContext.getCreasePattern(), document.getProperty()),
+					new Doc(paintContext.getCreasePattern(), document.getProperty()),
 					fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
 
@@ -590,7 +590,7 @@ public class MainFramePresenter {
 		childFrameManager.closeAll(view);
 
 		try {
-			Optional<DocEntity> docEntityOpt;
+			Optional<Doc> docEntityOpt;
 			if (filePath != null) {
 				docEntityOpt = dataFileAccess.loadFile(filePath);
 			} else {
@@ -600,7 +600,7 @@ public class MainFramePresenter {
 
 			return docEntityOpt
 					.map(docEntity -> {
-						document = new Doc(docEntity.getProperty(), filePath);
+						document = new Project(docEntity.getProperty(), filePath);
 
 						var property = document.getProperty();
 						view.getUIPanelView().setEstimationResultColors(
