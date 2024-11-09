@@ -294,8 +294,8 @@ public class MainFramePresenter {
 				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 				presenter.loadUsingGUI(fileHistory.getLastPath())
-						.ifPresent(otherDoc -> {
-							paintContextModification.setToImportedLines(otherDoc.getCreasePattern(), paintContext);
+						.ifPresent(doc -> {
+							paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext);
 						});
 
 				state.performActions();
@@ -504,14 +504,11 @@ public class MainFramePresenter {
 
 			Optional<String> pathOpt;
 
+			var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
 			if (types == null || types.length == 0) {
-				pathOpt = presenter.saveUsingGUI(
-						new Doc(paintContext.getCreasePattern(), project.getProperty()),
-						filePath);
+				pathOpt = presenter.saveUsingGUI(doc, filePath);
 			} else {
-				pathOpt = presenter.saveUsingGUI(
-						new Doc(paintContext.getCreasePattern(), project.getProperty()),
-						filePath, List.of(types));
+				pathOpt = presenter.saveUsingGUI(doc, filePath, List.of(types));
 			}
 
 			return pathOpt
@@ -675,11 +672,8 @@ public class MainFramePresenter {
 			// confirm saving edited opx
 			if (view.showSaveOnCloseDialog()) {
 
-				String path = saveFileUsingGUI(fileHistory.getLastDirectory(),
+				saveFileUsingGUI(fileHistory.getLastDirectory(),
 						project.getDataFileName());
-				if (path == null) {
-
-				}
 			}
 		}
 
