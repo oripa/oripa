@@ -40,12 +40,12 @@ public class CircleCopyCommand extends ValidatablePaintCommand {
 		context.creasePatternUndo().pushUndoInfo();
 
 		var parameter = context.getCircleCopyParameter();
-		var cx = parameter.getCenterX();
-		var cy = parameter.getCenterY();
+		var cx = parameter.centerX();
+		var cy = parameter.centerY();
 
-		var angleDeg = parameter.getAngleDegree();
+		var angleDeg = parameter.angleDegree();
 
-		var count = parameter.getCopyCount();
+		var count = parameter.copyCount();
 
 		Painter painter = context.getPainter();
 		painter.copyWithRotation(cx, cy, angleDeg, count, context.getPickedLines());
