@@ -28,6 +28,7 @@ import com.google.gson.JsonSyntaxException;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.docprop.Property;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.foldformat.CreasePatternElementConverter;
 import oripa.persistence.foldformat.CreasePatternFOLDFormat;
@@ -84,13 +85,13 @@ public class LoaderFOLD implements DocLoader {
 
 		var factory = new CreasePatternFactory();
 		var cp = factory.createCreasePattern(lines);
-		var doc = new Doc(cp);
 
-		var property = doc.getProperty();
-		property.setEditorName(foldFormat.getFileAuthor());
-		property.setTitle(foldFormat.getFrameTitle());
-		property.setMemo(foldFormat.getFrameDescription());
-		property.setDataFilePath(filePath);
+		var property = new Property()
+				.setEditorName(foldFormat.getFileAuthor())
+				.setTitle(foldFormat.getFrameTitle())
+				.setMemo(foldFormat.getFrameDescription());
+
+		var doc = new Doc(cp, property, filePath);
 
 		return Optional.of(doc);
 	}

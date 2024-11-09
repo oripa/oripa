@@ -18,8 +18,8 @@
  */
 package oripa.gui.presenter.main;
 
-import oripa.doc.Doc;
-import oripa.doc.Property;
+import oripa.domain.docprop.Property;
+import oripa.domain.docprop.PropertyHolder;
 import oripa.gui.view.main.PropertyDialogView;
 
 /**
@@ -30,11 +30,11 @@ public class PropertyDialogPresenter {
 
 	private final PropertyDialogView view;
 
-	private final Doc document;
+	private final PropertyHolder propertyHolder;
 
-	public PropertyDialogPresenter(final PropertyDialogView view, final Doc document) {
+	public PropertyDialogPresenter(final PropertyDialogView view, final PropertyHolder propertyHolder) {
 		this.view = view;
-		this.document = document;
+		this.propertyHolder = propertyHolder;
 
 		view.addOKButtonListener(this::setValuesToDomain);
 
@@ -42,7 +42,7 @@ public class PropertyDialogPresenter {
 	}
 
 	private void setValuesToView() {
-		Property property = document.getProperty();
+		var property = propertyHolder.getProperty();
 
 		view.setModelTitle(property.getTitle());
 		view.setEditorName(property.getEditorName());
@@ -52,15 +52,14 @@ public class PropertyDialogPresenter {
 	}
 
 	private void setValuesToDomain() {
-		Property prop = new Property(document.getProperty().getDataFilePath());
+		var prop = new Property()
+				.setTitle(view.getModelTitle())
+				.setEditorName(view.getEditorName())
+				.setOriginalAuthorName(view.getOriginalAuthor())
+				.setReference(view.getReference())
+				.setMemo(view.getMemo());
 
-		prop.setTitle(view.getModelTitle());
-		prop.setEditorName(view.getEditorName());
-		prop.setOriginalAuthorName(view.getOriginalAuthor());
-		prop.setReference(view.getReference());
-		prop.setMemo(view.getMemo());
-
-		document.setProperty(prop);
+		propertyHolder.setProperty(prop);
 	}
 
 	public void setViewVisible(final boolean visible) {

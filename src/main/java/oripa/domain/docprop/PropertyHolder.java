@@ -16,25 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.doc;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+package oripa.domain.docprop;
 
 /**
  * @author OUCHI Koji
  *
  */
-class OptionParserTest {
+public interface PropertyHolder {
+	Property getProperty();
 
-	@Test
-	void testParseLine() {
-		var parser = new OptionParser();
-		var option = parser.parse("// test : #008888");
-
-		assertEquals("test", option.key());
-		assertEquals("#008888", option.value());
-	}
-
+	void setProperty(Property property);
 }

@@ -16,20 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.doc;
+package oripa.domain.docprop;
 
 import java.util.ArrayList;
 
-import oripa.doc.OptionParser.Keys;
+import oripa.domain.docprop.OptionParser.Keys;
 
 /**
  * @author Koji
  */
 public class Property {
-	/**
-	 *
-	 */
-	private String dataFilePath;
 	/**
 	 *
 	 */
@@ -52,28 +48,6 @@ public class Property {
 	private String memo;
 
 	/**
-	 * Constructor
-	 */
-	public Property(final String dataFilePath) {
-		this.dataFilePath = dataFilePath;
-	}
-
-	/**
-	 * @return dataFilePath
-	 */
-	public String getDataFilePath() {
-		return dataFilePath;
-	}
-
-	/**
-	 * @param dataFilePath
-	 *            Sets dataFilePath
-	 */
-	public void setDataFilePath(final String dataFilePath) {
-		this.dataFilePath = dataFilePath;
-	}
-
-	/**
 	 * @return title
 	 */
 	public String getTitle() {
@@ -84,8 +58,9 @@ public class Property {
 	 * @param title
 	 *            Sets title
 	 */
-	public void setTitle(final String title) {
+	public Property setTitle(final String title) {
 		this.title = title;
+		return this;
 	}
 
 	/**
@@ -99,8 +74,9 @@ public class Property {
 	 * @param editorName
 	 *            Sets editorName
 	 */
-	public void setEditorName(final String editorName) {
+	public Property setEditorName(final String editorName) {
 		this.editorName = editorName;
+		return this;
 	}
 
 	/**
@@ -114,8 +90,9 @@ public class Property {
 	 * @param originalAuthorName
 	 *            Sets originalAuthorName
 	 */
-	public void setOriginalAuthorName(final String originalAuthorName) {
+	public Property setOriginalAuthorName(final String originalAuthorName) {
 		this.originalAuthorName = originalAuthorName;
+		return this;
 	}
 
 	/**
@@ -129,8 +106,9 @@ public class Property {
 	 * @param reference
 	 *            Sets reference
 	 */
-	public void setReference(final String reference) {
+	public Property setReference(final String reference) {
 		this.reference = reference;
+		return this;
 	}
 
 	/**
@@ -144,8 +122,9 @@ public class Property {
 	 * @param memo
 	 *            Sets memo
 	 */
-	public void setMemo(final String memo) {
+	public Property setMemo(final String memo) {
 		this.memo = memo;
+		return this;
 	}
 
 	public String extractFrontColorCode() {
