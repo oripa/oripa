@@ -69,10 +69,22 @@ public abstract class FileAccessService<Data> {
 		getFileDAO().setConfigToSavingAction(key, configSupplier);
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param beforeSave
+	 *            a consumer whose parameters are data and file path.
+	 */
 	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
 		getFileDAO().setBeforeSave(key, beforeSave);
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param afterSave
+	 *            a consumer whose parameters are data and file path.
+	 */
 	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
 		getFileDAO().setAfterSave(key, afterSave);
 	}

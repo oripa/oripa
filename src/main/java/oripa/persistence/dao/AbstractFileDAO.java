@@ -54,12 +54,24 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param beforeSave
+	 *            a consumer whose parameters are data and file path.
+	 */
 	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
 		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setBeforeSave(beforeSave));
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param afterSave
+	 *            a consumer whose parameters are data and file path.
+	 */
 	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
 		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
 

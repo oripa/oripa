@@ -26,6 +26,13 @@ public abstract class AbstractSavingAction<Data> {
 		return this;
 	}
 
+	/**
+	 *
+	 * @param beforeSave
+	 *            a consumer whose parameters are data and file path.
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	public AbstractSavingAction<Data> setBeforeSave(final BiConsumer<Data, String> beforeSave)
 			throws IllegalArgumentException {
 		if (beforeSave == null) {
@@ -35,6 +42,13 @@ public abstract class AbstractSavingAction<Data> {
 		return this;
 	}
 
+	/**
+	 *
+	 * @param afterSave
+	 *            a consumer whose parameters are data and file path.
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	public AbstractSavingAction<Data> setAfterSave(final BiConsumer<Data, String> afterSave)
 			throws IllegalArgumentException {
 		if (afterSave == null) {

@@ -85,10 +85,20 @@ public class FileAccessSupport<Data>
 		savingAction.setConfig(configSupplier);
 	}
 
+	/**
+	 *
+	 * @param beforeSave
+	 *            a consumer whose parameters are data and file path.
+	 */
 	public void setBeforeSave(final BiConsumer<Data, String> beforeSave) {
 		savingAction.setBeforeSave(beforeSave);
 	}
 
+	/**
+	 *
+	 * @param afterSave
+	 *            a consumer whose parameters are data and file path.
+	 */
 	public void setAfterSave(final BiConsumer<Data, String> afterSave) {
 		savingAction.setAfterSave(afterSave);
 	}
