@@ -91,7 +91,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	public Optional<Data> load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
-		var canonicalPath = nullableCanonicalPath(path);
+		var canonicalPath = canonicalPath(path);
 		var file = new File(canonicalPath);
 
 		if (!file.exists()) {
@@ -112,7 +112,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		var support = getFileAccessSupportSelector().getSavableOf(path);
 		var savingAction = support.getSavingAction();
 
-		savingAction.save(data, nullableCanonicalPath(path));
+		savingAction.save(data, canonicalPath(path));
 	}
 
 	/**
@@ -133,10 +133,10 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		var support = getFileAccessSupportSelector().getSavablesOf(List.of(type)).stream().findFirst().get();
 		var savingAction = support.getSavingAction();
 
-		savingAction.save(data, nullableCanonicalPath(path));
+		savingAction.save(data, canonicalPath(path));
 	}
 
-	private String nullableCanonicalPath(final String path) throws IOException {
-		return path == null ? null : (new File(path)).getCanonicalPath();
+	private String canonicalPath(final String path) throws IOException {
+		return (new File(path)).getCanonicalPath();
 	}
 }
