@@ -33,11 +33,9 @@ import oripa.persistence.filetool.AbstractSavingAction;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
-import oripa.project.Project;
 
 /**
- * A service object between the {@link DataAccessObject} and the
- * {@link Project}.
+ * A service object between the {@link DataAccessObject} and the {@link Doc}.
  *
  * @author OUCHI Koji
  *

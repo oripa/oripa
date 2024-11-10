@@ -5,7 +5,7 @@ import oripa.persistence.dao.AbstractFileDAO;
 
 /**
  *
- * load and save {@link oripa.project.Project} to/from file
+ * load and save {@link Doc} to/from file
  *
  * @author OUCHI Koji
  *
