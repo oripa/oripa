@@ -1,5 +1,6 @@
 package oripa.persistence.filetool;
 
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class FileAccessSupport<Data>
@@ -88,20 +89,16 @@ public class FileAccessSupport<Data>
 		return savingAction;
 	}
 
-	/**
-	 * Overwrites the config of savingAction and returns the savingAction.
-	 *
-	 * @param configSupplier
-	 *            should return config object.
-	 * @return
-	 */
-	public AbstractSavingAction<Data> getSavingAction(final Supplier<Object> configSupplier) {
-		setConfigToSavingAction(configSupplier);
-		return savingAction;
-	}
-
 	public void setConfigToSavingAction(final Supplier<Object> configSupplier) {
 		savingAction.setConfig(configSupplier);
+	}
+
+	public void setBeforeSave(final BiConsumer<Data, String> beforeSave) {
+		savingAction.setBeforeSave(beforeSave);
+	}
+
+	public void setAfterSave(final BiConsumer<Data, String> afterSave) {
+		savingAction.setAfterSave(afterSave);
 	}
 
 	/**

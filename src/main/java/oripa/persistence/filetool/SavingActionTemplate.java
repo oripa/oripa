@@ -28,17 +28,8 @@ public class SavingActionTemplate<Data> extends AbstractSavingAction<Data> {
 	private final Exporter<Data> exporter;
 
 	public SavingActionTemplate(final Exporter<Data> exporter) {
+		super();
 		this.exporter = exporter;
-	}
-
-	@Override
-	protected void beforeSave(final Data data) {
-
-	}
-
-	@Override
-	protected void afterSave(final Data data) {
-
 	}
 
 	@Override

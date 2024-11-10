@@ -60,10 +60,8 @@ import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
-import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
-import oripa.persistence.filetool.SavingActionTemplate;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
@@ -348,30 +346,17 @@ public class MainFramePresenter {
 
 	private void modifySavingActions() {
 		// overwrite the action to update GUI after saving.
-		setProjectSavingAction(CreasePatternFileTypeKey.OPX);
-		setProjectSavingAction(CreasePatternFileTypeKey.FOLD);
+		dataFileAccess.setAfterSave(CreasePatternFileTypeKey.OPX, this::afterSaveProjectFile);
+		dataFileAccess.setAfterSave(CreasePatternFileTypeKey.FOLD, this::afterSaveProjectFile);
+		dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
 	}
 
-	private class ProjectSavingAction extends SavingActionTemplate<Doc> {
+	private void afterSaveProjectFile(final Doc data, final String path) {
+		project.setDataFilePath(path);
+		paintContext.creasePatternUndo().clearChanged();
 
-		public ProjectSavingAction(final Exporter<Doc> exporter) {
-			super(exporter);
-		}
-
-		@Override
-		protected void afterSave(final Doc data) {
-			var path = getPath();
-			project.setDataFilePath(path);
-			paintContext.creasePatternUndo().clearChanged();
-
-			updateMenu(path);
-			updateTitleText();
-		}
-	}
-
-	private void setProjectSavingAction(final CreasePatternFileTypeKey fileType) {
-		dataFileAccess.setFileSavingAction(
-				new ProjectSavingAction(fileType.getExporter()), fileType);
+		updateMenu(path);
+		updateTitleText();
 	}
 
 	private void updateMRUFilesMenuItem(final int index) {
@@ -472,10 +457,6 @@ public class MainFramePresenter {
 		var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
 
 		try {
-			if (type == CreasePatternFileTypeKey.FOLD) {
-				dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
-			}
-
 			dataFileAccess.saveFile(doc, filePath, type);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
@@ -491,7 +472,6 @@ public class MainFramePresenter {
 			final FileTypeProperty<Doc>... types) {
 
 		try {
-			dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
 
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
@@ -535,8 +515,6 @@ public class MainFramePresenter {
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
-
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(

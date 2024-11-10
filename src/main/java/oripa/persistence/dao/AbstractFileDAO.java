@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -51,6 +52,18 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
+	}
+
+	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
+		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
+
+		supportOpt.ifPresent(support -> support.setBeforeSave(beforeSave));
+	}
+
+	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
+		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
+
+		supportOpt.ifPresent(support -> support.setAfterSave(afterSave));
 	}
 
 	public boolean canLoad(final String filePath) {

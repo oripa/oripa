@@ -50,16 +50,6 @@ public class DataFileAccess extends FileAccessService<Doc> {
 		this.dao = dao;
 	}
 
-	public void setFileSavingAction(
-			final AbstractSavingAction<Doc> action,
-			final FileTypeProperty<Doc> type) {
-
-		dao.getFileAccessSupportSelector()
-				.getFileAccessSupport(type)
-				.orElseThrow(() -> new IllegalArgumentException("The type is not supported."))
-				.setSavingAction(action);
-	}
-
 	@Override
 	protected AbstractFileDAO<Doc> getFileDAO() {
 		return dao;
