@@ -75,14 +75,6 @@ public class FileAccessSupport<Data>
 	}
 
 	/**
-	 * @param loadingAction
-	 *            Sets loadingAction
-	 */
-	public void setLoadingAction(final AbstractLoadingAction<Data> loadingAction) {
-		this.loadingAction = loadingAction;
-	}
-
-	/**
 	 * @return savingAction
 	 */
 	public AbstractSavingAction<Data> getSavingAction() {
@@ -100,13 +92,4 @@ public class FileAccessSupport<Data>
 	public void setAfterSave(final BiConsumer<Data, String> afterSave) {
 		savingAction.setAfterSave(afterSave);
 	}
-
-	/**
-	 * @param savingAction
-	 *            Sets savingAction
-	 */
-	public void setSavingAction(final AbstractSavingAction<Data> savingAction) {
-		this.savingAction = savingAction;
-	}
-
 }

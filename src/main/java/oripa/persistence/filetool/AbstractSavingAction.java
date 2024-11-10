@@ -5,26 +5,16 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public abstract class AbstractSavingAction<Data> {
-	private String path;
 	private Supplier<Object> configSupplier;
 	private BiConsumer<Data, String> beforeSave = (data, filePath) -> {
 	};
 	private BiConsumer<Data, String> afterSave = (data, filePath) -> {
 	};
 
-	public final AbstractSavingAction<Data> setPath(final String path) {
-		this.path = path;
-
-		return this;
-	}
-
-	public final String getPath() {
-		return path;
-	}
-
-	public final boolean save(final Data data) throws IOException, IllegalArgumentException {
+	public final boolean save(final Data data, final String path)
+			throws IOException, IllegalArgumentException {
 		beforeSave.accept(data, path);
-		var saved = saveImpl(data, configSupplier == null ? null : configSupplier.get());
+		var saved = saveImpl(data, path, configSupplier == null ? null : configSupplier.get());
 		if (saved) {
 			afterSave.accept(data, path);
 		}
@@ -54,6 +44,7 @@ public abstract class AbstractSavingAction<Data> {
 		return this;
 	}
 
-	protected abstract boolean saveImpl(Data data, Object configObj) throws IOException, IllegalArgumentException;
+	protected abstract boolean saveImpl(Data data, String path, Object configObj)
+			throws IOException, IllegalArgumentException;
 
 }

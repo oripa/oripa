@@ -34,8 +34,8 @@ public class LoadingActionTemplate<Data> extends AbstractLoadingAction<Data> {
 	}
 
 	@Override
-	public Optional<Data> load() throws FileVersionError, IOException, WrongDataFormatException {
-		return loader.load(getPath());
+	public Optional<Data> load(final String path) throws FileVersionError, IOException, WrongDataFormatException {
+		return loader.load(path);
 	}
 
 }

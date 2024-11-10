@@ -33,8 +33,9 @@ public class SavingActionTemplate<Data> extends AbstractSavingAction<Data> {
 	}
 
 	@Override
-	protected boolean saveImpl(final Data data, final Object configObj) throws IOException, IllegalArgumentException {
-		return exporter.export(data, getPath(), configObj);
+	protected boolean saveImpl(final Data data, final String path, final Object configObj)
+			throws IOException, IllegalArgumentException {
+		return exporter.export(data, path, configObj);
 	}
 
 }

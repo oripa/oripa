@@ -88,7 +88,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 
 		var loadingAction = getFileAccessSupportSelector().getLoadableOf(canonicalPath).getLoadingAction();
 
-		return loadingAction.setPath(canonicalPath).load();
+		return loadingAction.load(canonicalPath);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		var support = getFileAccessSupportSelector().getSavableOf(path);
 		var savingAction = support.getSavingAction();
 
-		savingAction.setPath(nullableCanonicalPath(path)).save(data);
+		savingAction.save(data, nullableCanonicalPath(path));
 	}
 
 	/**
@@ -121,7 +121,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		var support = getFileAccessSupportSelector().getSavablesOf(List.of(type)).stream().findFirst().get();
 		var savingAction = support.getSavingAction();
 
-		savingAction.setPath(nullableCanonicalPath(path)).save(data);
+		savingAction.save(data, nullableCanonicalPath(path));
 	}
 
 	private String nullableCanonicalPath(final String path) throws IOException {
