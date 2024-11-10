@@ -119,8 +119,15 @@ public class ORIPA {
 
 			// Construct the presenter
 
-			var paintContext = new PaintContextFactory().createContext();
-			var viewContext = new CreasePatternViewContextFactory().create();
+			var domainContext = new PaintDomainContext(
+					new PaintContextFactory().createContext(),
+					new SelectionOriginHolderImpl(),
+					new ByValueContextImpl());
+			var paintContext = domainContext.getPaintContext();
+			var presentationContext = new CreasePatternPresentationContext(
+					new CreasePatternViewContextFactory().createContext(),
+					mouseActionHolder,
+					new TypeForChangeContext());
 
 			var dialogFactory = new MainFrameSwingDialogFactory(
 					new ArrayCopyDialogFactory(),
@@ -135,10 +142,6 @@ public class ORIPA {
 					mainViewSetting.getUiPanelSetting());
 
 			var stateManager = new EditModeStateManager();
-			var domainContext = new PaintDomainContext(paintContext, new SelectionOriginHolderImpl(),
-					new ByValueContextImpl());
-			var presentationContext = new CreasePatternPresentationContext(viewContext, mouseActionHolder,
-					new TypeForChangeContext());
 
 			var setterFactory = new MouseActionSetterFactory(
 					mouseActionHolder, screenUpdater::updateScreen, paintContext);
