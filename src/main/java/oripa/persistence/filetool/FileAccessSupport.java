@@ -1,5 +1,6 @@
 package oripa.persistence.filetool;
 
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class FileAccessSupport<Data>
@@ -9,8 +10,8 @@ public class FileAccessSupport<Data>
 	// TODO description is not related to persistence responsibility.
 	// this should be removed.
 	private final String description;
-	private AbstractLoadingAction<Data> loadingAction;
-	private AbstractSavingAction<Data> savingAction;
+	private LoadingAction<Data> loadingAction;
+	private SavingAction<Data> savingAction;
 
 	/**
 	 *
@@ -27,12 +28,12 @@ public class FileAccessSupport<Data>
 
 		var exporter = fileType.getExporter();
 		if (exporter != null) {
-			savingAction = new SavingActionTemplate<>(exporter);
+			savingAction = new SavingAction<>(exporter);
 		}
 
 		var loader = fileType.getLoader();
 		if (loader != null) {
-			loadingAction = new LoadingActionTemplate<>(loader);
+			loadingAction = new LoadingAction<>(loader);
 		}
 	}
 
@@ -69,34 +70,14 @@ public class FileAccessSupport<Data>
 	/**
 	 * @return loadingAction
 	 */
-	public AbstractLoadingAction<Data> getLoadingAction() {
+	public LoadingAction<Data> getLoadingAction() {
 		return loadingAction;
-	}
-
-	/**
-	 * @param loadingAction
-	 *            Sets loadingAction
-	 */
-	public void setLoadingAction(final AbstractLoadingAction<Data> loadingAction) {
-		this.loadingAction = loadingAction;
 	}
 
 	/**
 	 * @return savingAction
 	 */
-	public AbstractSavingAction<Data> getSavingAction() {
-		return savingAction;
-	}
-
-	/**
-	 * Overwrites the config of savingAction and returns the savingAction.
-	 *
-	 * @param configSupplier
-	 *            should return config object.
-	 * @return
-	 */
-	public AbstractSavingAction<Data> getSavingAction(final Supplier<Object> configSupplier) {
-		setConfigToSavingAction(configSupplier);
+	public SavingAction<Data> getSavingAction() {
 		return savingAction;
 	}
 
@@ -105,11 +86,20 @@ public class FileAccessSupport<Data>
 	}
 
 	/**
-	 * @param savingAction
-	 *            Sets savingAction
+	 *
+	 * @param beforeSave
+	 *            a consumer whose parameters are data and file path.
 	 */
-	public void setSavingAction(final AbstractSavingAction<Data> savingAction) {
-		this.savingAction = savingAction;
+	public void setBeforeSave(final BiConsumer<Data, String> beforeSave) {
+		savingAction.setBeforeSave(beforeSave);
 	}
 
+	/**
+	 *
+	 * @param afterSave
+	 *            a consumer whose parameters are data and file path.
+	 */
+	public void setAfterSave(final BiConsumer<Data, String> afterSave) {
+		savingAction.setAfterSave(afterSave);
+	}
 }

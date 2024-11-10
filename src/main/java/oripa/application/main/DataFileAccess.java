@@ -29,7 +29,6 @@ import oripa.application.FileAccessService;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.filetool.AbstractSavingAction;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -48,16 +47,6 @@ public class DataFileAccess extends FileAccessService<Doc> {
 	public DataFileAccess(
 			final AbstractFileDAO<Doc> dao) {
 		this.dao = dao;
-	}
-
-	public void setFileSavingAction(
-			final AbstractSavingAction<Doc> action,
-			final FileTypeProperty<Doc> type) {
-
-		dao.getFileAccessSupportSelector()
-				.getFileAccessSupport(type)
-				.orElseThrow(() -> new IllegalArgumentException("The type is not supported."))
-				.setSavingAction(action);
 	}
 
 	@Override

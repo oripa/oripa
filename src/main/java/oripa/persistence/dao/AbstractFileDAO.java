@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -53,6 +54,30 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param beforeSave
+	 *            a consumer whose parameters are data and file path.
+	 */
+	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
+		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
+
+		supportOpt.ifPresent(support -> support.setBeforeSave(beforeSave));
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @param afterSave
+	 *            a consumer whose parameters are data and file path.
+	 */
+	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
+		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
+
+		supportOpt.ifPresent(support -> support.setAfterSave(afterSave));
+	}
+
 	public boolean canLoad(final String filePath) {
 		try {
 			getFileAccessSupportSelector().getLoadableOf(filePath);
@@ -66,7 +91,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	public Optional<Data> load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
-		var canonicalPath = nullableCanonicalPath(path);
+		var canonicalPath = canonicalPath(path);
 		var file = new File(canonicalPath);
 
 		if (!file.exists()) {
@@ -75,7 +100,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 
 		var loadingAction = getFileAccessSupportSelector().getLoadableOf(canonicalPath).getLoadingAction();
 
-		return loadingAction.setPath(canonicalPath).load();
+		return loadingAction.load(canonicalPath);
 	}
 
 	@Override
@@ -87,7 +112,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		var support = getFileAccessSupportSelector().getSavableOf(path);
 		var savingAction = support.getSavingAction();
 
-		savingAction.setPath(nullableCanonicalPath(path)).save(data);
+		savingAction.save(data, canonicalPath(path));
 	}
 
 	/**
@@ -108,10 +133,10 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		var support = getFileAccessSupportSelector().getSavablesOf(List.of(type)).stream().findFirst().get();
 		var savingAction = support.getSavingAction();
 
-		savingAction.setPath(nullableCanonicalPath(path)).save(data);
+		savingAction.save(data, canonicalPath(path));
 	}
 
-	private String nullableCanonicalPath(final String path) throws IOException {
-		return path == null ? null : (new File(path)).getCanonicalPath();
+	private String canonicalPath(final String path) throws IOException {
+		return (new File(path)).getCanonicalPath();
 	}
 }

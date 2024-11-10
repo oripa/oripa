@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
@@ -68,6 +69,26 @@ public abstract class FileAccessService<Data> {
 		getFileDAO().setConfigToSavingAction(key, configSupplier);
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param beforeSave
+	 *            a consumer whose parameters are data and file path.
+	 */
+	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
+		getFileDAO().setBeforeSave(key, beforeSave);
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @param afterSave
+	 *            a consumer whose parameters are data and file path.
+	 */
+	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
+		getFileDAO().setAfterSave(key, afterSave);
+	}
+
 	public boolean canLoad(final String filePath) {
 		return getFileDAO().canLoad(filePath);
 	}
@@ -78,6 +99,7 @@ public abstract class FileAccessService<Data> {
 	 * @param data
 	 * @param path
 	 * @param type
+	 *            null for auto detection.
 	 *
 	 * @throws IOException
 	 * @throws IllegalArgumentException

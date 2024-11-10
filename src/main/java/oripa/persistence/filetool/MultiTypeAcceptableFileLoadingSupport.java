@@ -70,13 +70,13 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 
 	@Deprecated
 	@Override
-	public AbstractLoadingAction<Data> getLoadingAction() {
+	public LoadingAction<Data> getLoadingAction() {
 		return null;
 	}
 
 	@Deprecated
 	@Override
-	public AbstractSavingAction<Data> getSavingAction() {
+	public SavingAction<Data> getSavingAction() {
 		return null;
 	}
 
