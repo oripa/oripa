@@ -472,13 +472,11 @@ public class MainFramePresenter {
 		var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
 
 		try {
-			var action = new ProjectSavingAction(type.getExporter()).setPath(filePath);
-
 			if (type == CreasePatternFileTypeKey.FOLD) {
-				action.setConfig(this::createFOLDConfig);
+				dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
 			}
 
-			action.save(doc);
+			dataFileAccess.saveFile(doc, filePath, type);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);
