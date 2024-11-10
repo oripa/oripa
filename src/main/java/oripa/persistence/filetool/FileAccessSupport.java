@@ -10,8 +10,8 @@ public class FileAccessSupport<Data>
 	// TODO description is not related to persistence responsibility.
 	// this should be removed.
 	private final String description;
-	private AbstractLoadingAction<Data> loadingAction;
-	private AbstractSavingAction<Data> savingAction;
+	private LoadingAction<Data> loadingAction;
+	private SavingAction<Data> savingAction;
 
 	/**
 	 *
@@ -28,12 +28,12 @@ public class FileAccessSupport<Data>
 
 		var exporter = fileType.getExporter();
 		if (exporter != null) {
-			savingAction = new SavingActionTemplate<>(exporter);
+			savingAction = new SavingAction<>(exporter);
 		}
 
 		var loader = fileType.getLoader();
 		if (loader != null) {
-			loadingAction = new LoadingActionTemplate<>(loader);
+			loadingAction = new LoadingAction<>(loader);
 		}
 	}
 
@@ -70,14 +70,14 @@ public class FileAccessSupport<Data>
 	/**
 	 * @return loadingAction
 	 */
-	public AbstractLoadingAction<Data> getLoadingAction() {
+	public LoadingAction<Data> getLoadingAction() {
 		return loadingAction;
 	}
 
 	/**
 	 * @return savingAction
 	 */
-	public AbstractSavingAction<Data> getSavingAction() {
+	public SavingAction<Data> getSavingAction() {
 		return savingAction;
 	}
 
