@@ -33,7 +33,6 @@ import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
-import oripa.doc.Doc;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
@@ -59,13 +58,14 @@ import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.SavingActionTemplate;
 import oripa.persistence.filetool.WrongDataFormatException;
-import oripa.resource.Constants;
+import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -96,7 +96,7 @@ public class MainFramePresenter {
 
 	private final ChildFrameManager childFrameManager;
 
-	private final Doc document;
+	private Project project;
 
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
@@ -119,7 +119,7 @@ public class MainFramePresenter {
 			final ChildFrameManager childFrameManager,
 			final MainViewSetting viewSetting,
 			final BindingObjectFactoryFacade bindingFactory,
-			final Doc document,
+			final Project project,
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final CreasePatternPresentationContext presentationContext,
@@ -136,7 +136,7 @@ public class MainFramePresenter {
 
 		this.bindingFactory = bindingFactory;
 
-		this.document = document;
+		this.project = project;
 		this.paintContext = domainContext.getPaintContext();
 		this.viewContext = presentationContext.getViewContext();
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
@@ -206,11 +206,11 @@ public class MainFramePresenter {
 		addImportActionListener();
 
 		view.addSaveButtonListener(() -> {
-			var filePath = document.getDataFilePath();
+			var filePath = project.getDataFilePath();
 			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);
+				saveProjectFile(filePath, CreasePatternFileTypeKey.OPX);
 			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, CreasePatternFileTypeKey.FOLD);
+				saveProjectFile(filePath, CreasePatternFileTypeKey.FOLD);
 			} else {
 				saveAnyTypeUsingGUI();
 			}
@@ -220,13 +220,13 @@ public class MainFramePresenter {
 
 		view.addExportFOLDButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
+			saveFileUsingGUI(lastDirectory, project.getDataFileName(),
 					CreasePatternFileTypeKey.FOLD);
 		});
 
 		view.addSaveAsImageButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
+			saveFileUsingGUI(lastDirectory, project.getDataFileName(),
 					CreasePatternFileTypeKey.PICT);
 		});
 
@@ -272,7 +272,7 @@ public class MainFramePresenter {
 		view.addMRUFilesMenuItemUpdateListener(this::updateMRUFilesMenuItem);
 
 		view.setEstimationResultSaveColorsListener((front, back) -> {
-			var property = document.getProperty();
+			var property = project.getProperty();
 			property.putFrontColorCode(ColorUtil.convertColorToCode(front));
 			property.putBackColorCode(ColorUtil.convertColorToCode(back));
 
@@ -294,8 +294,8 @@ public class MainFramePresenter {
 				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 				presenter.loadUsingGUI(fileHistory.getLastPath())
-						.ifPresent(otherDoc -> {
-							paintContextModification.setToImportedLines(otherDoc.getCreasePattern(), paintContext);
+						.ifPresent(doc -> {
+							paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext);
 						});
 
 				state.performActions();
@@ -361,7 +361,7 @@ public class MainFramePresenter {
 		@Override
 		protected void afterSave(final Doc data) {
 			var path = getPath();
-			data.setDataFilePath(path);
+			project.setDataFilePath(path);
 			paintContext.creasePatternUndo().clearChanged();
 
 			updateMenu(path);
@@ -398,7 +398,7 @@ public class MainFramePresenter {
 	private void saveAnyTypeUsingGUI() {
 		String lastDirectory = fileHistory.getLastDirectory();
 
-		String path = saveFileUsingGUI(lastDirectory, document.getDataFileName());
+		String path = saveFileUsingGUI(lastDirectory, project.getDataFileName());
 
 		updateMenu(path);
 		updateTitleText();
@@ -410,10 +410,7 @@ public class MainFramePresenter {
 	}
 
 	private void clear() {
-		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
-
-		paintContextModification
-				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext, cutModelOutlinesHolder);
+		paintContextModification.clear(paintContext, cutModelOutlinesHolder);
 
 		screenSetting.setGridVisible(true);
 
@@ -426,7 +423,7 @@ public class MainFramePresenter {
 	private void showPropertyDialog() {
 		var dialog = dialogFactory.createPropertyDialog(view);
 
-		var presenter = new PropertyDialogPresenter(dialog, document);
+		var presenter = new PropertyDialogPresenter(dialog, project);
 
 		presenter.setViewVisible(true);
 	}
@@ -459,10 +456,10 @@ public class MainFramePresenter {
 
 	private void updateTitleText() {
 		String fileName;
-		if (document.getDataFilePath().isEmpty()) {
+		if (project.getDataFilePath().isEmpty()) {
 			fileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
 		} else {
-			fileName = document.getDataFileName();
+			fileName = project.getDataFileName();
 		}
 
 		view.setFileNameToTitle(fileName);
@@ -471,7 +468,9 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeProperty<Doc> type) {
+	private void saveProjectFile(final String filePath, final FileTypeProperty<Doc> type) {
+		var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
+
 		try {
 			var action = new ProjectSavingAction(type.getExporter()).setPath(filePath);
 
@@ -505,10 +504,11 @@ public class MainFramePresenter {
 
 			Optional<String> pathOpt;
 
+			var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
 			if (types == null || types.length == 0) {
-				pathOpt = presenter.saveUsingGUI(document, filePath);
+				pathOpt = presenter.saveUsingGUI(doc, filePath);
 			} else {
-				pathOpt = presenter.saveUsingGUI(document, filePath, List.of(types));
+				pathOpt = presenter.saveUsingGUI(doc, filePath, List.of(types));
 			}
 
 			return pathOpt
@@ -516,11 +516,11 @@ public class MainFramePresenter {
 						paintContext.creasePatternUndo().clearChanged();
 						return path;
 					})
-					.orElse(document.getDataFilePath());
+					.orElse(project.getDataFilePath());
 
 		} catch (UserCanceledException e) {
 			// ignore
-			return document.getDataFilePath();
+			return project.getDataFilePath();
 		}
 	}
 
@@ -541,7 +541,9 @@ public class MainFramePresenter {
 
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
-			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
+			presenter.saveFileWithModelCheck(
+					new Doc(paintContext.getCreasePattern(), project.getProperty()),
+					fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
 
 		} catch (UserCanceledException e) {
@@ -595,12 +597,9 @@ public class MainFramePresenter {
 
 			return docOpt
 					.map(doc -> {
-						// we can't substitute a loaded object because
-						// the document object is referred by screen and UI
-						// panel as a Holder.
-						document.set(doc);
+						project = new Project(doc.getProperty(), filePath);
 
-						var property = document.getProperty();
+						var property = project.getProperty();
 						view.getUIPanelView().setEstimationResultColors(
 								convertCodeToColor(property.extractFrontColorCode()),
 								convertCodeToColor(property.extractBackColorCode()));
@@ -608,18 +607,18 @@ public class MainFramePresenter {
 						screenSetting.setGridVisible(false);
 						paintContextModification
 								.setCreasePatternToPaintContext(
-										document.getCreasePattern(), paintContext, cutModelOutlinesHolder);
+										doc.getCreasePattern(), paintContext, cutModelOutlinesHolder);
 						screenPresenter.updateCameraCenter();
-						return document.getDataFilePath();
+						return project.getDataFilePath();
 					}).orElse(null);
 		} catch (UserCanceledException e) {
 			// ignore
-			return document.getDataFilePath();
+			return project.getDataFilePath();
 		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
 				| IOException e) {
 			logger.error("failed to load", e);
 			view.showLoadFailureErrorMessage(e);
-			return document.getDataFilePath();
+			return project.getDataFilePath();
 		}
 	}
 
@@ -673,13 +672,8 @@ public class MainFramePresenter {
 			// confirm saving edited opx
 			if (view.showSaveOnCloseDialog()) {
 
-				document.setCreasePattern(paintContext.getCreasePattern());
-
-				String path = saveFileUsingGUI(fileHistory.getLastDirectory(),
-						document.getDataFileName());
-				if (path == null) {
-
-				}
+				saveFileUsingGUI(fileHistory.getLastDirectory(),
+						project.getDataFileName());
 			}
 		}
 

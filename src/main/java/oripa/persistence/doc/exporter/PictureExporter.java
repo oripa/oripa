@@ -30,11 +30,11 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
+import oripa.persistence.doc.Doc;
 import oripa.swing.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.swing.view.util.AffineCamera;
 

@@ -16,15 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.doc.loader;
+package oripa.domain.projectprop;
 
-import oripa.persistence.doc.Doc;
-import oripa.persistence.filetool.Loader;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface DocLoader extends Loader<Doc> {
+class OptionParserTest {
+
+	@Test
+	void testParseLine() {
+		var parser = new OptionParser();
+		var option = parser.parse("// test : #008888");
+
+		assertEquals("test", option.key());
+		assertEquals("#008888", option.value());
+	}
 
 }

@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import oripa.DataSet;
-import oripa.doc.Doc;
+import oripa.persistence.doc.Doc;
 
 public class ExporterXML implements DocExporter {
 

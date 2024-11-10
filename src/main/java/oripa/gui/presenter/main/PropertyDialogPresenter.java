@@ -18,8 +18,8 @@
  */
 package oripa.gui.presenter.main;
 
-import oripa.domain.docprop.Property;
-import oripa.domain.docprop.PropertyHolder;
+import oripa.domain.projectprop.Property;
+import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.view.main.PropertyDialogView;
 
 /**

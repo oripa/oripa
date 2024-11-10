@@ -24,7 +24,7 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import oripa.doc.Doc;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 

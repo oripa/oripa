@@ -16,25 +16,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.docprop;
+package oripa.persistence.doc;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.projectprop.Property;
 
 /**
  * @author OUCHI Koji
  *
  */
-class OptionParserTest {
+public class Doc {
+	/**
+	 * Crease Pattern
+	 */
+	private final CreasePattern creasePattern;
 
-	@Test
-	void testParseLine() {
-		var parser = new OptionParser();
-		var option = parser.parse("// test : #008888");
+	/**
+	 * Project property
+	 */
+	private final Property property;
 
-		assertEquals("test", option.key());
-		assertEquals("#008888", option.value());
+	public Doc(final CreasePattern creasePattern) {
+		this(creasePattern, new Property());
+	}
+
+	public Doc(final CreasePattern creasePattern, final Property property) {
+		this.creasePattern = creasePattern;
+		this.property = property;
+	}
+
+	public CreasePattern getCreasePattern() {
+		return creasePattern;
+	}
+
+	public Property getProperty() {
+		return property;
 	}
 
 }

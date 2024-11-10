@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import oripa.application.FileAccessService;
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**

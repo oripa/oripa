@@ -3,14 +3,14 @@ package oripa.persistence.doc;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.doc.Doc;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
+import oripa.project.Project;
 import oripa.resource.StringID;
 
 /**
- * Manages available filters for {@link Doc} file access. Limited to crease
+ * Manages available filters for {@link Project} file access. Limited to crease
  * pattern input/output.
  *
  * @author OUCHI Koji

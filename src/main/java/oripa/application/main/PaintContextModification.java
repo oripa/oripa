@@ -22,8 +22,10 @@ import java.util.Collection;
 import java.util.List;
 
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
+import oripa.resource.Constants;
 import oripa.value.OriLine;
 
 /**
@@ -53,6 +55,14 @@ public class PaintContextModification {
 
 		lines.forEach(l -> l.setSelected(true));
 		paintContext.SetImportedLines(lines);
+
+	}
+
+	public void clear(final PaintContext paintContext, final CutModelOutlinesHolder cutModelOutlinesHolder) {
+		setCreasePatternToPaintContext(
+				new CreasePatternFactory().createCreasePattern(Constants.DEFAULT_PAPER_SIZE),
+				paintContext,
+				cutModelOutlinesHolder);
 
 	}
 

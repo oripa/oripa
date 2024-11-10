@@ -20,10 +20,10 @@ package oripa;
 
 import java.util.ArrayList;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.docprop.Property;
+import oripa.domain.projectprop.Property;
+import oripa.persistence.doc.Doc;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -90,9 +90,7 @@ public class DataSet {
 		CreasePattern creasePattern = factory
 				.createCreasePattern(oriLines);
 
-		Doc doc = new Doc(creasePattern, createProperty(), filePath);
-
-		return doc;
+		return new Doc(creasePattern, createProperty());
 	}
 
 	private Property createProperty() {

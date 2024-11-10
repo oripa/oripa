@@ -18,7 +18,6 @@
  */
 package oripa.persistence.doc;
 
-import oripa.doc.Doc;
 import oripa.persistence.doc.exporter.ExporterCP;
 import oripa.persistence.doc.exporter.ExporterDXFFactory;
 import oripa.persistence.doc.exporter.ExporterFOLD;

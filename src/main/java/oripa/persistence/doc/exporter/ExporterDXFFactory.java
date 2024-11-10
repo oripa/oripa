@@ -20,8 +20,8 @@ package oripa.persistence.doc.exporter;
 
 import java.io.IOException;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.entity.exporter.CreasePatternExporterDXF;
 
 public class ExporterDXFFactory {

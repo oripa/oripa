@@ -16,28 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.doc;
+package oripa.project;
 
 import java.io.File;
 
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.docprop.Property;
-import oripa.domain.docprop.PropertyHolder;
-import oripa.domain.paint.CreasePatternHolder;
+import oripa.domain.projectprop.Property;
+import oripa.domain.projectprop.PropertyHolder;
 
 /**
- * Manages all result of this app's action.
+ * Manages project data.
  *
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class Doc implements CreasePatternHolder, PropertyHolder {
-
-	/**
-	 * Crease Pattern
-	 */
-	private CreasePattern creasePattern = null;
+public class Project implements PropertyHolder {
 
 	/**
 	 * Project property
@@ -46,24 +38,12 @@ public class Doc implements CreasePatternHolder, PropertyHolder {
 
 	private String dataFilePath = "";
 
-	public Doc(final double size) {
-		this(new CreasePatternFactory().createCreasePattern(size));
+	public Project() {
 	}
 
-	public Doc(final CreasePattern creasePattern) {
-		this(creasePattern, new Property(), "");
-	}
-
-	public Doc(final CreasePattern creasePattern, final Property property, final String filePath) {
-		setCreasePattern(creasePattern);
+	public Project(final Property property, final String filePath) {
 		setProperty(property);
 		setDataFilePath(filePath);
-	}
-
-	public void set(final Doc doc) {
-		setCreasePattern(doc.getCreasePattern());
-		setProperty(doc.getProperty());
-		setDataFilePath(doc.dataFilePath);
 	}
 
 	public void setDataFilePath(final String path) {
@@ -80,18 +60,6 @@ public class Doc implements CreasePatternHolder, PropertyHolder {
 
 		return fileName;
 
-	}
-
-	// ===================================================================================================
-
-	@Override
-	public CreasePattern getCreasePattern() {
-		return creasePattern;
-	}
-
-	@Override
-	public void setCreasePattern(final CreasePattern cp) {
-		creasePattern = cp;
 	}
 
 	/**

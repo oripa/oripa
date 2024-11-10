@@ -1,12 +1,11 @@
 package oripa.persistence.doc;
 
-import oripa.doc.Doc;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.dao.AbstractFileDAO;
 
 /**
  *
- * load and save {@link oripa.doc.Doc} to/from file
+ * load and save {@link Doc} to/from file
  *
  * @author OUCHI Koji
  *

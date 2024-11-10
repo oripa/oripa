@@ -26,9 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.FileAccessService;
-import oripa.doc.Doc;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.AbstractSavingAction;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
@@ -50,7 +50,10 @@ public class DataFileAccess extends FileAccessService<Doc> {
 		this.dao = dao;
 	}
 
-	public void setFileSavingAction(final AbstractSavingAction<Doc> action, final FileTypeProperty<Doc> type) {
+	public void setFileSavingAction(
+			final AbstractSavingAction<Doc> action,
+			final FileTypeProperty<Doc> type) {
+
 		dao.getFileAccessSupportSelector()
 				.getFileAccessSupport(type)
 				.orElseThrow(() -> new IllegalArgumentException("The type is not supported."))

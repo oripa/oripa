@@ -28,7 +28,6 @@ import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
-import oripa.doc.Doc;
 import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
@@ -61,6 +60,7 @@ import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
+import oripa.project.Project;
 import oripa.resource.Constants;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
 import oripa.swing.view.file.FileChooserSwingFactory;
@@ -119,8 +119,15 @@ public class ORIPA {
 
 			// Construct the presenter
 
-			var paintContext = new PaintContextFactory().createContext();
-			var viewContext = new CreasePatternViewContextFactory().create();
+			var domainContext = new PaintDomainContext(
+					new PaintContextFactory().createContext(),
+					new SelectionOriginHolderImpl(),
+					new ByValueContextImpl());
+			var paintContext = domainContext.getPaintContext();
+			var presentationContext = new CreasePatternPresentationContext(
+					new CreasePatternViewContextFactory().createContext(),
+					mouseActionHolder,
+					new TypeForChangeContext());
 
 			var dialogFactory = new MainFrameSwingDialogFactory(
 					new ArrayCopyDialogFactory(),
@@ -135,10 +142,6 @@ public class ORIPA {
 					mainViewSetting.getUiPanelSetting());
 
 			var stateManager = new EditModeStateManager();
-			var domainContext = new PaintDomainContext(paintContext, new SelectionOriginHolderImpl(),
-					new ByValueContextImpl());
-			var presentationContext = new CreasePatternPresentationContext(viewContext, mouseActionHolder,
-					new TypeForChangeContext());
 
 			var setterFactory = new MouseActionSetterFactory(
 					mouseActionHolder, screenUpdater::updateScreen, paintContext);
@@ -171,7 +174,7 @@ public class ORIPA {
 					childFrameManager,
 					mainViewSetting,
 					bindingFactory,
-					new Doc(paintContext.getCreasePattern()),
+					new Project(),
 					domainContext,
 					new DefaultCutModelOutlinesHolder(),
 					presentationContext,

@@ -24,9 +24,9 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
@@ -94,7 +94,7 @@ public class LoaderCP implements DocLoader {
 		CreasePatternFactory factory = new CreasePatternFactory();
 		CreasePattern creasePattern = factory
 				.createCreasePattern(lines);
-		Doc doc = new Doc(creasePattern);
+		var doc = new Doc(creasePattern);
 		return Optional.of(doc);
 
 	}

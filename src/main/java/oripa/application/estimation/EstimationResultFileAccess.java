@@ -51,14 +51,14 @@ public class EstimationResultFileAccess extends FileAccessService<FoldedModelEnt
 	}
 
 	@Override
-	public final void saveFile(final FoldedModelEntity document,
+	public final void saveFile(final FoldedModelEntity foldedModel,
 			final String path, final FileTypeProperty<FoldedModelEntity> type)
 			throws IOException, IllegalArgumentException {
 
 		if (type == null) {
-			dao.save(document, path);
+			dao.save(foldedModel, path);
 		} else {
-			dao.save(document, path, type);
+			dao.save(foldedModel, path, type);
 		}
 	}
 

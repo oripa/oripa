@@ -22,7 +22,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import oripa.doc.Doc;
+import oripa.persistence.doc.Doc;
 import oripa.value.OriLine;
 
 public class ExporterCP implements DocExporter {

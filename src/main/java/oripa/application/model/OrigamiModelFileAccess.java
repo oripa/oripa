@@ -53,14 +53,14 @@ public class OrigamiModelFileAccess extends FileAccessService<OrigamiModel> {
 	}
 
 	@Override
-	public final void saveFile(final OrigamiModel document,
+	public final void saveFile(final OrigamiModel origamiModel,
 			final String path, final FileTypeProperty<OrigamiModel> type)
 			throws IOException, IllegalArgumentException {
 
 		if (type == null) {
-			dao.save(document, path);
+			dao.save(origamiModel, path);
 		} else {
-			dao.save(document, path, type);
+			dao.save(origamiModel, path, type);
 		}
 	}
 
