@@ -25,7 +25,7 @@ import oripa.application.FileAccessService;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileAccessSupportSelector;
+import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 
 /**
@@ -36,7 +36,8 @@ public class CreasePatternFileConverter {
 	private static final Logger logger = LoggerFactory.getLogger(CreasePatternFileConverter.class);
 
 	public void convert(final String inputFilePath, final String outputFilePath, final double eps) {
-		var creasePatternFileAccess = new FileAccessService<Doc>(new FileDAO<>(new DocFileAccessSupportSelector()));
+		var creasePatternFileAccess = new FileAccessService<Doc>(
+				new FileDAO<>(new DocFileAccessSupportSelectorFactory().create()));
 
 		try {
 			creasePatternFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD,

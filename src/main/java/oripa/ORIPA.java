@@ -60,7 +60,7 @@ import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileAccessSupportSelector;
+import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
 import oripa.project.Project;
 import oripa.resource.Constants;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
@@ -183,7 +183,7 @@ public class ORIPA {
 					new FileHistory(Constants.MRUFILE_NUM),
 					new IniFileAccess(
 							new InitDataFileReader(), new InitDataFileWriter()),
-					new FileAccessService<Doc>(new FileDAO<>(new DocFileAccessSupportSelector())),
+					new FileAccessService<Doc>(new FileDAO<>(new DocFileAccessSupportSelectorFactory().create())),
 					plugins);
 			presenter.setViewVisible(true);
 

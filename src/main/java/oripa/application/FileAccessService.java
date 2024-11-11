@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -45,7 +45,7 @@ public class FileAccessService<Data> {
 		this.fileDAO = dao;
 	}
 
-	protected AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector() {
+	protected FileAccessSupportSelector<Data> getFileAccessSupportSelector() {
 		return fileDAO.getFileAccessSupportSelector();
 	}
 

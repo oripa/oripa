@@ -42,13 +42,13 @@ import oripa.persistence.filetool.WrongDataFormatException;
 public class FileDAO<Data> implements DataAccessObject<Data> {
 	private static Logger logger = LoggerFactory.getLogger(FileDAO.class);
 
-	private final AbstractFileAccessSupportSelector<Data> fileAccessSupportSelector;
+	private final FileAccessSupportSelector<Data> fileAccessSupportSelector;
 
-	public FileDAO(final AbstractFileAccessSupportSelector<Data> selector) {
+	public FileDAO(final FileAccessSupportSelector<Data> selector) {
 		this.fileAccessSupportSelector = selector;
 	}
 
-	public AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector() {
+	public FileAccessSupportSelector<Data> getFileAccessSupportSelector() {
 		return fileAccessSupportSelector;
 	}
 

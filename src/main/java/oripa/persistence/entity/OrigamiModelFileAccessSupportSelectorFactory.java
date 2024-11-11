@@ -18,11 +18,11 @@
  */
 package oripa.persistence.entity;
 
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.FileAccessSupportFactory;
+import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
@@ -31,32 +31,25 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelFileAccessSupportSelector extends AbstractFileAccessSupportSelector<OrigamiModel> {
-	private final SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>> supports;
+public class OrigamiModelFileAccessSupportSelectorFactory {
 
 	/**
 	 * Constructor
 	 */
-	public OrigamiModelFileAccessSupportSelector() {
-		supports = new TreeMap<>();
+	public FileAccessSupportSelector<OrigamiModel> create() {
+		var supports = new TreeMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>>();
+		var supportFactory = new FileAccessSupportFactory<OrigamiModel>();
 
 		OrigamiModelFileTypeKey key = OrigamiModelFileTypeKey.DXF_MODEL;
-		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
 		key = OrigamiModelFileTypeKey.OBJ_MODEL;
-		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
 		key = OrigamiModelFileTypeKey.SVG_MODEL;
-		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
-	}
-
-	/* (non Javadoc)
-	 * @see oripa.persistent.dao.AbstractFilterSelector#getFilters()
-	 */
-	@Override
-	protected SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>> getFileAccessSupports() {
-		return supports;
+		return new FileAccessSupportSelector<OrigamiModel>(supports);
 	}
 
 }
