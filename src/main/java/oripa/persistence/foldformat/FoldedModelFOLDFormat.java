@@ -18,7 +18,6 @@
  */
 package oripa.persistence.foldformat;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
@@ -33,23 +32,11 @@ public class FoldedModelFOLDFormat extends FOLDFormat {
 	private List<List<Integer>> facesPrecreases;
 
 	public FoldedModelFOLDFormat() {
-		setFileClasses(new ArrayList<>() {
-			{
-				add(FileClass.SINGLE_MODEL);
-			}
-		});
+		setFileClasses(List.of(FileClass.SINGLE_MODEL));
 
-		setFrameClasses(new ArrayList<>() {
-			{
-				add(FrameClass.FOLDED_FORM);
-			}
-		});
+		setFrameClasses(List.of(FrameClass.FOLDED_FORM));
 
-		setFrameAttributes(new ArrayList<>() {
-			{
-				add(FrameAttribute.TWO_DIMENSION);
-			}
-		});
+		setFrameAttributes(List.of(FrameAttribute.TWO_DIMENSION));
 	}
 
 	/**

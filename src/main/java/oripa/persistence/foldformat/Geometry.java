@@ -23,7 +23,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -43,9 +43,7 @@ public final class Geometry {
 			var uCoord = coords.get(u);
 			var vCoord = coords.get(v);
 
-			var dir = new OriPoint(
-					vCoord.get(0) - uCoord.get(0),
-					vCoord.get(1) - uCoord.get(1));
+			var dir = Vector2d.fromList(vCoord).subtract(Vector2d.fromList(uCoord));
 
 			angle = Math.atan2(dir.getY(), dir.getX());
 
