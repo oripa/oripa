@@ -19,22 +19,16 @@
 package oripa.persistence.entity;
 
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.dao.AbstractFileDAO;
+import oripa.persistence.dao.FileDAO;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class FoldedModelDAO extends AbstractFileDAO<FoldedModelEntity> {
-	private final AbstractFileAccessSupportSelector<FoldedModelEntity> selector;
+public class FoldedModelDAO extends FileDAO<FoldedModelEntity> {
 
 	public FoldedModelDAO(final AbstractFileAccessSupportSelector<FoldedModelEntity> selector) {
-		this.selector = selector;
-	}
-
-	@Override
-	public AbstractFileAccessSupportSelector<FoldedModelEntity> getFileAccessSupportSelector() {
-		return selector;
+		super(selector);
 	}
 
 }

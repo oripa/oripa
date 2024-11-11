@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import oripa.application.FileAccessService;
 import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.AbstractFileDAO;
+import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -39,14 +39,14 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public class EstimationResultFileAccess extends FileAccessService<FoldedModelEntity> {
-	private final AbstractFileDAO<FoldedModelEntity> dao;
+	private final FileDAO<FoldedModelEntity> dao;
 
-	public EstimationResultFileAccess(final AbstractFileDAO<FoldedModelEntity> dao) {
+	public EstimationResultFileAccess(final FileDAO<FoldedModelEntity> dao) {
 		this.dao = dao;
 	}
 
 	@Override
-	protected AbstractFileDAO<FoldedModelEntity> getFileDAO() {
+	protected FileDAO<FoldedModelEntity> getFileDAO() {
 		return dao;
 	}
 

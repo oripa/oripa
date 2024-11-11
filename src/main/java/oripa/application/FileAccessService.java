@@ -27,7 +27,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.dao.AbstractFileDAO;
+import oripa.persistence.dao.FileDAO;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
@@ -39,7 +39,7 @@ import oripa.persistence.filetool.WrongDataFormatException;
  */
 public abstract class FileAccessService<Data> {
 
-	protected abstract AbstractFileDAO<Data> getFileDAO();
+	protected abstract FileDAO<Data> getFileDAO();
 
 	protected AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector() {
 		return getFileDAO().getFileAccessSupportSelector();

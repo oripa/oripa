@@ -20,22 +20,16 @@ package oripa.persistence.entity;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.dao.AbstractFileDAO;
+import oripa.persistence.dao.FileDAO;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelDAO extends AbstractFileDAO<OrigamiModel> {
-	private final AbstractFileAccessSupportSelector<OrigamiModel> selector;
+public class OrigamiModelDAO extends FileDAO<OrigamiModel> {
 
 	public OrigamiModelDAO(final AbstractFileAccessSupportSelector<OrigamiModel> selector) {
-		this.selector = selector;
-	}
-
-	@Override
-	public AbstractFileAccessSupportSelector<OrigamiModel> getFileAccessSupportSelector() {
-		return selector;
+		super(selector);
 	}
 
 }

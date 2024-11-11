@@ -31,7 +31,7 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.persistence.dao.AbstractFileDAO;
+import oripa.persistence.dao.FileDAO;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileAccessSupportSelector;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
@@ -50,7 +50,7 @@ public class ModelViewFramePresenter {
 	private final PainterScreenSetting mainScreenSetting;
 
 	private final OrigamiModelFileAccessSupportSelector supportSelector = new OrigamiModelFileAccessSupportSelector();
-	private final AbstractFileDAO<OrigamiModel> dao = new OrigamiModelDAO(supportSelector);
+	private final FileDAO<OrigamiModel> dao = new OrigamiModelDAO(supportSelector);
 	private final FileAccessService<OrigamiModel> fileAccessService = new OrigamiModelFileAccess(dao);
 
 	public ModelViewFramePresenter(

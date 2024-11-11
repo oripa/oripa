@@ -39,17 +39,21 @@ import oripa.persistence.filetool.WrongDataFormatException;
  * @author OUCHI Koji
  *
  */
-public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
-	private static Logger logger = LoggerFactory.getLogger(AbstractFileDAO.class);
+public class FileDAO<Data> implements DataAccessObject<Data> {
+	private static Logger logger = LoggerFactory.getLogger(FileDAO.class);
 
-	/**
-	 *
-	 * @return a selector managing available file types.
-	 */
-	public abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
+	private final AbstractFileAccessSupportSelector<Data> fileAccessSupportSelector;
+
+	public FileDAO(final AbstractFileAccessSupportSelector<Data> selector) {
+		this.fileAccessSupportSelector = selector;
+	}
+
+	public AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector() {
+		return fileAccessSupportSelector;
+	}
 
 	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
-		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
+		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
 	}
@@ -61,7 +65,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	 *            a consumer whose parameters are data and file path.
 	 */
 	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
-		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
+		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setBeforeSave(beforeSave));
 	}
@@ -73,14 +77,14 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	 *            a consumer whose parameters are data and file path.
 	 */
 	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
-		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
+		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setAfterSave(afterSave));
 	}
 
 	public boolean canLoad(final String filePath) {
 		try {
-			getFileAccessSupportSelector().getLoadableOf(filePath);
+			fileAccessSupportSelector.getLoadableOf(filePath);
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
@@ -98,7 +102,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 			throw new FileNotFoundException(canonicalPath + " doesn't exist.");
 		}
 
-		var loadingAction = getFileAccessSupportSelector().getLoadableOf(canonicalPath).getLoadingAction();
+		var loadingAction = fileAccessSupportSelector.getLoadableOf(canonicalPath).getLoadingAction();
 
 		return loadingAction.load(canonicalPath);
 	}
@@ -109,7 +113,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 
 		logger.info("save(): path = {}", path);
 
-		var support = getFileAccessSupportSelector().getSavableOf(path);
+		var support = fileAccessSupportSelector.getSavableOf(path);
 		var savingAction = support.getSavingAction();
 
 		savingAction.save(data, canonicalPath(path));
@@ -130,7 +134,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 
 		logger.info("save(): path = {}", path);
 
-		var support = getFileAccessSupportSelector().getSavablesOf(List.of(type)).stream().findFirst().get();
+		var support = fileAccessSupportSelector.getSavablesOf(List.of(type)).stream().findFirst().get();
 		var savingAction = support.getSavingAction();
 
 		savingAction.save(data, canonicalPath(path));
