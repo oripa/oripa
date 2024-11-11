@@ -24,7 +24,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import oripa.application.main.DataFileAccess;
+import oripa.application.FileAccessService;
 import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
@@ -58,7 +58,8 @@ import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
 import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.gui.viewsetting.main.UIPanelSettingImpl;
-import oripa.persistence.doc.DocDAO;
+import oripa.persistence.dao.FileDAO;
+import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
 import oripa.project.Project;
 import oripa.resource.Constants;
@@ -182,7 +183,7 @@ public class ORIPA {
 					new FileHistory(Constants.MRUFILE_NUM),
 					new IniFileAccess(
 							new InitDataFileReader(), new InitDataFileWriter()),
-					new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector())),
+					new FileAccessService<Doc>(new FileDAO<>(new DocFileAccessSupportSelector())),
 					plugins);
 			presenter.setViewVisible(true);
 

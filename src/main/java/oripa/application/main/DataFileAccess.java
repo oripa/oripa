@@ -18,20 +18,10 @@
  */
 package oripa.application.main;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.application.FileAccessService;
-import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.filetool.FileTypeProperty;
-import oripa.persistence.filetool.FileVersionError;
-import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
  * A service object between the {@link DataAccessObject} and the {@link Doc}.
@@ -40,37 +30,9 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public class DataFileAccess extends FileAccessService<Doc> {
-	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
-
-	private final FileDAO<Doc> dao;
 
 	public DataFileAccess(
 			final FileDAO<Doc> dao) {
-		this.dao = dao;
-	}
-
-	@Override
-	protected FileDAO<Doc> getFileDAO() {
-		return dao;
-	}
-
-	@Override
-	public final void saveFile(final Doc document,
-			final String path, final FileTypeProperty<Doc> type)
-			throws IOException, IllegalArgumentException {
-
-		if (type == null) {
-			dao.save(document, path);
-		} else {
-			dao.save(document, path, type);
-		}
-	}
-
-	@Override
-	public Optional<Doc> loadFile(final String filePath)
-			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
-			IOException, FileNotFoundException {
-
-		return dao.load(filePath);
+		super(dao);
 	}
 }

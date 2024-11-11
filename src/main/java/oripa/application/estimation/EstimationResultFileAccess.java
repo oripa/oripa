@@ -18,18 +18,11 @@
  */
 package oripa.application.estimation;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Optional;
-
 import oripa.application.FileAccessService;
 import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.dao.FileDAO;
 import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.filetool.FileTypeProperty;
-import oripa.persistence.filetool.FileVersionError;
-import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
  * A service object between the {@link DataAccessObject} and the
@@ -39,33 +32,8 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public class EstimationResultFileAccess extends FileAccessService<FoldedModelEntity> {
-	private final FileDAO<FoldedModelEntity> dao;
 
 	public EstimationResultFileAccess(final FileDAO<FoldedModelEntity> dao) {
-		this.dao = dao;
-	}
-
-	@Override
-	protected FileDAO<FoldedModelEntity> getFileDAO() {
-		return dao;
-	}
-
-	@Override
-	public final void saveFile(final FoldedModelEntity foldedModel,
-			final String path, final FileTypeProperty<FoldedModelEntity> type)
-			throws IOException, IllegalArgumentException {
-
-		if (type == null) {
-			dao.save(foldedModel, path);
-		} else {
-			dao.save(foldedModel, path, type);
-		}
-	}
-
-	@Override
-	public Optional<FoldedModelEntity> loadFile(final String filePath)
-			throws FileVersionError, IllegalArgumentException,
-			WrongDataFormatException, IOException, FileNotFoundException {
-		throw new RuntimeException("Not implemented yet.");
+		super(dao);
 	}
 }

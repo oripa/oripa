@@ -37,12 +37,16 @@ import oripa.persistence.filetool.WrongDataFormatException;
  * @author OUCHI Koji
  *
  */
-public abstract class FileAccessService<Data> {
+public class FileAccessService<Data> {
 
-	protected abstract FileDAO<Data> getFileDAO();
+	private final FileDAO<Data> fileDAO;
+
+	public FileAccessService(final FileDAO<Data> dao) {
+		this.fileDAO = dao;
+	}
 
 	protected AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector() {
-		return getFileDAO().getFileAccessSupportSelector();
+		return fileDAO.getFileAccessSupportSelector();
 	}
 
 	public List<FileAccessSupport<Data>> getSavableSupports() {
@@ -66,7 +70,7 @@ public abstract class FileAccessService<Data> {
 	}
 
 	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
-		getFileDAO().setConfigToSavingAction(key, configSupplier);
+		fileDAO.setConfigToSavingAction(key, configSupplier);
 	}
 
 	/**
@@ -76,7 +80,7 @@ public abstract class FileAccessService<Data> {
 	 *            a consumer whose parameters are data and file path.
 	 */
 	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
-		getFileDAO().setBeforeSave(key, beforeSave);
+		fileDAO.setBeforeSave(key, beforeSave);
 	}
 
 	/**
@@ -86,11 +90,11 @@ public abstract class FileAccessService<Data> {
 	 *            a consumer whose parameters are data and file path.
 	 */
 	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
-		getFileDAO().setAfterSave(key, afterSave);
+		fileDAO.setAfterSave(key, afterSave);
 	}
 
 	public boolean canLoad(final String filePath) {
-		return getFileDAO().canLoad(filePath);
+		return fileDAO.canLoad(filePath);
 	}
 
 	/**
@@ -104,8 +108,15 @@ public abstract class FileAccessService<Data> {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public abstract void saveFile(final Data data, final String path, FileTypeProperty<Data> type)
-			throws IOException, IllegalArgumentException;
+	public void saveFile(final Data data, final String path, final FileTypeProperty<Data> type)
+			throws IOException, IllegalArgumentException {
+		if (type == null) {
+			fileDAO.save(data, path);
+		} else {
+			fileDAO.save(data, path, type);
+		}
+
+	}
 
 	/**
 	 * With auto type detection by file path extension.
@@ -125,7 +136,15 @@ public abstract class FileAccessService<Data> {
 	 * @param filePath
 	 * @return the Data of loaded file.
 	 */
-	public abstract Optional<Data> loadFile(final String filePath)
+	public Optional<Data> loadFile(final String filePath)
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
-			IOException, FileNotFoundException;
+			IOException, FileNotFoundException {
+
+		if (!fileDAO.hasLoader()) {
+			throw new RuntimeException("Not implemented yet.");
+		}
+
+		return fileDAO.load(filePath);
+
+	}
 }

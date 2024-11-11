@@ -18,17 +18,10 @@
  */
 package oripa.application.model;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Optional;
-
 import oripa.application.FileAccessService;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileTypeProperty;
-import oripa.persistence.filetool.FileVersionError;
-import oripa.persistence.filetool.WrongDataFormatException;
+import oripa.persistence.dao.FileDAO;
 
 /**
  * A service object between the {@link DataAccessObject} and the
@@ -38,35 +31,10 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public class OrigamiModelFileAccess extends FileAccessService<OrigamiModel> {
-	private final FileDAO<OrigamiModel> dao;
-
 	/**
 	 * Constructor
 	 */
 	public OrigamiModelFileAccess(final FileDAO<OrigamiModel> dao) {
-		this.dao = dao;
-	}
-
-	@Override
-	protected FileDAO<OrigamiModel> getFileDAO() {
-		return dao;
-	}
-
-	@Override
-	public final void saveFile(final OrigamiModel origamiModel,
-			final String path, final FileTypeProperty<OrigamiModel> type)
-			throws IOException, IllegalArgumentException {
-
-		if (type == null) {
-			dao.save(origamiModel, path);
-		} else {
-			dao.save(origamiModel, path, type);
-		}
-	}
-
-	@Override
-	public Optional<OrigamiModel> loadFile(final String filePath) throws FileVersionError, IllegalArgumentException,
-			WrongDataFormatException, IOException, FileNotFoundException {
-		throw new RuntimeException("Not implemented yet.");
+		super(dao);
 	}
 }

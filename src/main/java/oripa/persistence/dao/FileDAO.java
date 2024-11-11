@@ -91,6 +91,10 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 		}
 	}
 
+	public boolean hasLoader() {
+		return !fileAccessSupportSelector.getLoadables().isEmpty();
+	}
+
 	@Override
 	public Optional<Data> load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
