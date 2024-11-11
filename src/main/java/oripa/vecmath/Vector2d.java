@@ -20,6 +20,7 @@ package oripa.vecmath;
 
 import static java.lang.Math.*;
 
+import java.util.List;
 import java.util.Objects;
 
 import oripa.util.MathUtil;
@@ -37,6 +38,10 @@ public class Vector2d {
 
 	public static Vector2d fromArray(final double[] xy) {
 		return new Vector2d(xy[0], xy[1]);
+	}
+
+	public static Vector2d fromList(final List<Double> xy) {
+		return new Vector2d(xy.get(0), xy.get(1));
 	}
 
 	public static Vector2d unitVector(final double angle) {
