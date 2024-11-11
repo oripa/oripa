@@ -34,7 +34,7 @@ import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
- * A template for data file access.
+ * An implementation of data file access.
  *
  * @author OUCHI Koji
  *

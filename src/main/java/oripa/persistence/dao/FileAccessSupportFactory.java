@@ -33,8 +33,8 @@ public class FileAccessSupportFactory<Data> {
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	/**
-	 * Creates and puts a support object for given file type key with given
-	 * description to a map obtained by {@link #fileAccessSupports}.
+	 * Creates a support object for given file type key with an explanation text
+	 * obtained via given label resource key.
 	 *
 	 * @param key
 	 * @param description

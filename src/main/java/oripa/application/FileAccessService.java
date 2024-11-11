@@ -41,6 +41,12 @@ public class FileAccessService<Data> {
 
 	private final FileDAO<Data> fileDAO;
 
+	/**
+	 * The descriptions among the {@link FileAccessSupport}s contained by
+	 * {@code dao} should be unique.
+	 *
+	 * @param dao
+	 */
 	public FileAccessService(final FileDAO<Data> dao) {
 		this.fileDAO = dao;
 	}

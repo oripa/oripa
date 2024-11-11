@@ -15,7 +15,6 @@ public class FileAccessSupport<Data>
 
 	/**
 	 *
-	 * Constructor.
 	 *
 	 * @param fileType
 	 *            specifies what to filter

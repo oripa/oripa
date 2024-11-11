@@ -33,8 +33,7 @@ import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingSupport;
 
 /**
- * manages available file access support objects. the descriptions among the
- * {@link FileAccessSupport}s should be unique.
+ * manages available file access support objects.
  *
  * @author OUCHI Koji
  *
