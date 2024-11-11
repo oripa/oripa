@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.main.DataFileAccess;
+import oripa.application.FileAccessService;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
@@ -103,7 +103,7 @@ public class MainFramePresenter {
 
 	// data access
 	private final IniFileAccess iniFileAccess;
-	private final DataFileAccess dataFileAccess;
+	private final FileAccessService<Doc> dataFileAccess;
 	private final FileHistory fileHistory;
 
 	// services
@@ -124,7 +124,7 @@ public class MainFramePresenter {
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final FileHistory fileHistory,
 			final IniFileAccess iniFileAccess,
-			final DataFileAccess dataFileAccess,
+			final FileAccessService<Doc> dataFileAccess,
 			final List<GraphicMouseActionPlugin> plugins) {
 		this.view = view;
 		this.dialogFactory = dialogFactory;

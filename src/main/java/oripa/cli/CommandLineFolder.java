@@ -23,13 +23,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.main.DataFileAccess;
+import oripa.application.FileAccessService;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.doc.DocDAO;
-import oripa.persistence.doc.DocFileAccessSupportSelector;
+import oripa.persistence.dao.FileDAO;
+import oripa.persistence.doc.Doc;
+import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelAllExporterFOLD;
 import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
@@ -48,7 +49,8 @@ public class CommandLineFolder {
 			throw new IllegalArgumentException("Output format is not supported. acceptable format: fold");
 		}
 
-		var creasePatternFileAccess = new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector()));
+		var creasePatternFileAccess = new FileAccessService<Doc>(
+				new FileDAO<>(new DocFileAccessSupportSelectorFactory().create()));
 
 		try {
 			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();

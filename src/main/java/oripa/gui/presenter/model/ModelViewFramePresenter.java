@@ -21,7 +21,6 @@ package oripa.gui.presenter.model;
 import java.util.List;
 
 import oripa.application.FileAccessService;
-import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.exception.UserCanceledException;
@@ -31,9 +30,8 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.persistence.dao.AbstractFileDAO;
-import oripa.persistence.entity.OrigamiModelDAO;
-import oripa.persistence.entity.OrigamiModelFileAccessSupportSelector;
+import oripa.persistence.dao.FileDAO;
+import oripa.persistence.entity.OrigamiModelFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
 
 /**
@@ -49,9 +47,9 @@ public class ModelViewFramePresenter {
 	private OrigamiModel origamiModel;
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final OrigamiModelFileAccessSupportSelector supportSelector = new OrigamiModelFileAccessSupportSelector();
-	private final AbstractFileDAO<OrigamiModel> dao = new OrigamiModelDAO(supportSelector);
-	private final FileAccessService<OrigamiModel> fileAccessService = new OrigamiModelFileAccess(dao);
+	private final OrigamiModelFileAccessSupportSelectorFactory supportSelectorFactory = new OrigamiModelFileAccessSupportSelectorFactory();
+	private final FileAccessService<OrigamiModel> fileAccessService = new FileAccessService<OrigamiModel>(
+			new FileDAO<>(supportSelectorFactory.create()));
 
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,

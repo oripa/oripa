@@ -18,10 +18,8 @@
  */
 package oripa.persistence.foldformat;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,33 +33,22 @@ import oripa.value.OriLine;
  */
 class CreasePatternElementConverterTest {
 
-	private final Collection<OriLine> lines = new ArrayList<>() {
-		{
-			add(new OriLine(0.0, 0.0, 1.0, 0.0, OriLine.Type.CUT));
-			add(new OriLine(1.0, 0.0, 1.0, 1.0, OriLine.Type.CUT));
-			add(new OriLine(1.0, 1.0, 0.0, 1.0, OriLine.Type.CUT));
-			add(new OriLine(0.0, 1.0, 0.0, 0.0, OriLine.Type.CUT));
+	private final Collection<OriLine> lines = List.of(
+			new OriLine(0.0, 0.0, 1.0, 0.0, OriLine.Type.CUT),
+			new OriLine(1.0, 0.0, 1.0, 1.0, OriLine.Type.CUT),
+			new OriLine(1.0, 1.0, 0.0, 1.0, OriLine.Type.CUT),
+			new OriLine(0.0, 1.0, 0.0, 0.0, OriLine.Type.CUT),
 
-			add(new OriLine(0.0, 0.0, 1.0, 1.0, OriLine.Type.MOUNTAIN));
-		}
-	};
+			new OriLine(0.0, 0.0, 1.0, 1.0, OriLine.Type.MOUNTAIN)
+
+	);
 
 	private List<Double> createCoord(final double x, final double y) {
-		return new ArrayList<Double>() {
-			{
-				add(x);
-				add(y);
-			}
-		};
+		return List.of(x, y);
 	}
 
 	private List<Integer> createEdge(final int index1, final int index2) {
-		return new ArrayList<Integer>() {
-			{
-				add(index1);
-				add(index2);
-			}
-		};
+		return List.of(index1, index2);
 	}
 
 	/**

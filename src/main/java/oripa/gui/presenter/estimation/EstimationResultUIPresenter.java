@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.estimation.EstimationResultFileAccess;
+import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
 import oripa.domain.fold.FoldedModel;
 import oripa.exception.UserCanceledException;
@@ -36,9 +36,9 @@ import oripa.gui.view.estimation.DefaultColors;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.util.ColorUtil;
-import oripa.persistence.entity.FoldedModelDAO;
+import oripa.persistence.dao.FileDAO;
 import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
+import oripa.persistence.entity.FoldedModelFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
@@ -87,9 +87,9 @@ public class EstimationResultUIPresenter {
 	 */
 	private void export() {
 		try {
-			var supportSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
-			var dao = new FoldedModelDAO(supportSelector);
-			var fileAccessService = new EstimationResultFileAccess(dao);
+			var supportSelectorFactory = new FoldedModelFileAccessSupportSelectorFactory();
+			var fileAccessService = new FileAccessService<FoldedModelEntity>(
+					new FileDAO<>(supportSelectorFactory.create(view.isFaceOrderFlipped())));
 
 			fileAccessService.setConfigToSavingAction(
 					FoldedModelFileTypeKey.SVG_FOLDED_MODEL, this::createSVGConfig);

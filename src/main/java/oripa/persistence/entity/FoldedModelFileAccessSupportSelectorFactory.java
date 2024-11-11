@@ -18,10 +18,10 @@
  */
 package oripa.persistence.entity;
 
-import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.FileAccessSupportFactory;
+import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
@@ -30,36 +30,32 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFileAccessSupportSelector extends AbstractFileAccessSupportSelector<FoldedModelEntity> {
-	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> supports = new TreeMap<>();
+public class FoldedModelFileAccessSupportSelectorFactory {
 
-	/**
-	 * Constructor
-	 */
-	public FoldedModelFileAccessSupportSelector(final boolean modelFlip) {
+	public FileAccessSupportSelector<FoldedModelEntity> create(final boolean modelFlip) {
+		var supports = new TreeMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>>();
+		var supportFactory = new FileAccessSupportFactory<FoldedModelEntity>();
+
 		FoldedModelFileTypeKey key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
-		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
 		key = FoldedModelFileTypeKey.FOLD_SINGLE_OVERLAPS;
-		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID) + " (single)");
+		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID, " (single)"));
 
 		key = FoldedModelFileTypeKey.FOLD_ALL_OVERLAPS;
-		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID) + " (all)");
+		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID, " (all)"));
 
 		if (modelFlip) {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP;
-			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+			supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 		} else {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL;
-			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+			supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 		}
 
 		key = FoldedModelFileTypeKey.PICTURE;
-		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
-	}
+		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
-	@Override
-	protected SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> getFileAccessSupports() {
-		return supports;
+		return new FileAccessSupportSelector<FoldedModelEntity>(supports);
 	}
 }
