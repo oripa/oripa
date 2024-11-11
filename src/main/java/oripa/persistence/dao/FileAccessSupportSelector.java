@@ -48,17 +48,6 @@ public class FileAccessSupportSelector<Data> {
 	}
 
 	/**
-	 * Creates and puts a support object for given file type key with given
-	 * description to a map obtained by {@link #fileAccessSupports}.
-	 *
-	 * @param key
-	 * @param description
-	 */
-	public void putFileAccessSupport(final FileTypeProperty<Data> key, final String description) {
-		this.putFileAccessSupport(key, new FileAccessSupport<Data>(key, description));
-	}
-
-	/**
 	 *
 	 * @param key
 	 *            A value that describes the file type you want.
@@ -66,20 +55,6 @@ public class FileAccessSupportSelector<Data> {
 	 */
 	public Optional<FileAccessSupport<Data>> getFileAccessSupport(final FileTypeProperty<Data> key) {
 		return Optional.ofNullable(fileAccessSupports.get(key));
-	}
-
-	/**
-	 *
-	 * @param key
-	 *            A value that describes the file type you want.
-	 * @param support
-	 *            A support object to be set.
-	 * @return The previous support object for given key.
-	 */
-
-	public FileAccessSupport<Data> putFileAccessSupport(final FileTypeProperty<Data> key,
-			final FileAccessSupport<Data> support) {
-		return fileAccessSupports.put(key, support);
 	}
 
 	/**
