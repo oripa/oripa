@@ -94,7 +94,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 		}
 	}
 
-	public boolean hasLoader() {
+	public boolean hasLoaders() {
 		return !fileAccessSupportSelector.getLoadables().isEmpty();
 	}
 

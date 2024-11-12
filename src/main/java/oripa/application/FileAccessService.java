@@ -146,7 +146,7 @@ public class FileAccessService<Data> {
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
 			IOException, FileNotFoundException {
 
-		if (!fileDAO.hasLoader()) {
+		if (!fileDAO.hasLoaders()) {
 			throw new RuntimeException("Not implemented yet.");
 		}
 
