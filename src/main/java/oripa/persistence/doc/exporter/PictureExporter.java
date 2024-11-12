@@ -89,7 +89,7 @@ public class PictureExporter implements DocExporter {
 		// TODO: make zeroLineWidth configurable
 		drawer.drawAllLines(objDrawer, creasePattern, scale, false);
 
-		File file = new File(filePath);
+		var file = new File(filePath);
 		ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),
 				file);
 

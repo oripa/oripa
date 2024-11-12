@@ -34,6 +34,7 @@ import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelAllExporterFOLD;
 import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -49,8 +50,9 @@ public class CommandLineFolder {
 			throw new IllegalArgumentException("Output format is not supported. acceptable format: fold");
 		}
 
+		var fileFactory = new FileFactory();
 		var creasePatternFileAccess = new FileAccessService<Doc>(
-				new FileDAO<>(new DocFileAccessSupportSelectorFactory().create()));
+				new FileDAO<>(new DocFileAccessSupportSelectorFactory().create(fileFactory), fileFactory));
 
 		try {
 			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();

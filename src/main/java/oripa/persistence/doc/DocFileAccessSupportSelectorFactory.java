@@ -7,6 +7,7 @@ import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
+import oripa.util.file.FileFactory;
 
 /**
  * Creates available file access supports for {@link Doc} file access.
@@ -16,7 +17,7 @@ import oripa.resource.StringID;
  */
 public class DocFileAccessSupportSelectorFactory {
 
-	public FileAccessSupportSelector<Doc> create() {
+	public FileAccessSupportSelector<Doc> create(final FileFactory fileFactory) {
 		var supports = new TreeMap<FileTypeProperty<Doc>, FileAccessSupport<Doc>>();
 		var supportFactory = new FileAccessSupportFactory<Doc>();
 
@@ -41,6 +42,6 @@ public class DocFileAccessSupportSelectorFactory {
 		key = CreasePatternFileTypeKey.PDF;
 		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
 
-		return new FileAccessSupportSelector<Doc>(supports);
+		return new FileAccessSupportSelector<Doc>(supports, fileFactory);
 	}
 }

@@ -32,6 +32,7 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.FileTypeProperty;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -42,8 +43,9 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	public DocFileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
+			final FileFactory fileFactory,
 			final FileAccessService<Doc> fileAccessService) {
-		super(parent, chooserFactory, fileAccessService);
+		super(parent, chooserFactory, fileFactory, fileAccessService);
 	}
 
 	/**
@@ -65,7 +67,7 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 			final Supplier<Boolean> acceptModelError,
 			final double pointEps)
 			throws IOException, UserCanceledException {
-		File givenFile = new File(directory, "export." + type.getExtensions()[0]);
+		File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
 		CreasePattern creasePattern = doc.getCreasePattern();

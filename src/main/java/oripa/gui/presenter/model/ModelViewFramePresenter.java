@@ -30,9 +30,8 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.persistence.dao.FileDAO;
-import oripa.persistence.entity.OrigamiModelFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -47,9 +46,8 @@ public class ModelViewFramePresenter {
 	private OrigamiModel origamiModel;
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final OrigamiModelFileAccessSupportSelectorFactory supportSelectorFactory = new OrigamiModelFileAccessSupportSelectorFactory();
-	private final FileAccessService<OrigamiModel> fileAccessService = new FileAccessService<OrigamiModel>(
-			new FileDAO<>(supportSelectorFactory.create()));
+	private final FileFactory fileFactory;
+	private final FileAccessService<OrigamiModel> fileAccessService;
 
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,
@@ -58,9 +56,14 @@ public class ModelViewFramePresenter {
 			final List<OrigamiModel> origamiModels,
 			final CutModelOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateScissorsLine,
+			final FileAccessService<OrigamiModel> fileAccessService,
+			final FileFactory fileFactory,
 			final double eps) {
 		this.view = view;
 		this.fileChooserFactory = fileChooserFactory;
+
+		this.fileAccessService = fileAccessService;
+		this.fileFactory = fileFactory;
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.origamiModels = origamiModels;
@@ -112,7 +115,7 @@ public class ModelViewFramePresenter {
 	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
-			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, fileAccessService);
+			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, fileFactory, fileAccessService);
 
 			presenter.saveUsingGUI(origamiModel, null, List.of(type));
 		} catch (UserCanceledException e) {

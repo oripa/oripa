@@ -26,6 +26,7 @@ import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -36,7 +37,7 @@ public class OrigamiModelFileAccessSupportSelectorFactory {
 	/**
 	 * Constructor
 	 */
-	public FileAccessSupportSelector<OrigamiModel> create() {
+	public FileAccessSupportSelector<OrigamiModel> create(final FileFactory fileFactory) {
 		var supports = new TreeMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>>();
 		var supportFactory = new FileAccessSupportFactory<OrigamiModel>();
 
@@ -49,7 +50,7 @@ public class OrigamiModelFileAccessSupportSelectorFactory {
 		key = OrigamiModelFileTypeKey.SVG_MODEL;
 		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
-		return new FileAccessSupportSelector<OrigamiModel>(supports);
+		return new FileAccessSupportSelector<OrigamiModel>(supports, fileFactory);
 	}
 
 }

@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingSupport;
+import oripa.util.file.FileFactory;
 
 /**
  * manages available file access support objects.
@@ -40,10 +41,13 @@ import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingSupport;
  */
 public class FileAccessSupportSelector<Data> {
 	private final SortedMap<FileTypeProperty<Data>, FileAccessSupport<Data>> fileAccessSupports;
+	private final FileFactory fileFactory;
 
 	public FileAccessSupportSelector(
-			final SortedMap<FileTypeProperty<Data>, FileAccessSupport<Data>> supports) {
+			final SortedMap<FileTypeProperty<Data>, FileAccessSupport<Data>> supports,
+			final FileFactory fileFactory) {
 		this.fileAccessSupports = supports;
+		this.fileFactory = fileFactory;
 	}
 
 	/**
@@ -97,7 +101,7 @@ public class FileAccessSupportSelector<Data> {
 			throw new IllegalArgumentException("Wrong path (null)");
 		}
 
-		File file = new File(path);
+		var file = fileFactory.create(path);
 		if (file.isDirectory()) {
 			throw new IllegalArgumentException("The path is for directory.");
 		}

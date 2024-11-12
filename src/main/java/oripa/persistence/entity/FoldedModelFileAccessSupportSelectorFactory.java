@@ -25,6 +25,7 @@ import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -32,7 +33,7 @@ import oripa.resource.StringID;
  */
 public class FoldedModelFileAccessSupportSelectorFactory {
 
-	public FileAccessSupportSelector<FoldedModelEntity> create(final boolean modelFlip) {
+	public FileAccessSupportSelector<FoldedModelEntity> create(final boolean modelFlip, final FileFactory fileFactory) {
 		var supports = new TreeMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>>();
 		var supportFactory = new FileAccessSupportFactory<FoldedModelEntity>();
 
@@ -56,6 +57,6 @@ public class FoldedModelFileAccessSupportSelectorFactory {
 		key = FoldedModelFileTypeKey.PICTURE;
 		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
-		return new FileAccessSupportSelector<FoldedModelEntity>(supports);
+		return new FileAccessSupportSelector<FoldedModelEntity>(supports, fileFactory);
 	}
 }
