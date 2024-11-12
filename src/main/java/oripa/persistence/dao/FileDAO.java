@@ -18,7 +18,6 @@
  */
 package oripa.persistence.dao;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
+import oripa.util.file.FileFactory;
 
 /**
  * An implementation of data file access.
@@ -44,8 +44,11 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 
 	private final FileAccessSupportSelector<Data> fileAccessSupportSelector;
 
-	public FileDAO(final FileAccessSupportSelector<Data> selector) {
+	private final FileFactory fileFactory;
+
+	public FileDAO(final FileAccessSupportSelector<Data> selector, final FileFactory fileFactory) {
 		this.fileAccessSupportSelector = selector;
+		this.fileFactory = fileFactory;
 	}
 
 	public FileAccessSupportSelector<Data> getFileAccessSupportSelector() {
@@ -100,7 +103,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
 		var canonicalPath = canonicalPath(path);
-		var file = new File(canonicalPath);
+		var file = fileFactory.create(canonicalPath);
 
 		if (!file.exists()) {
 			throw new FileNotFoundException(canonicalPath + " doesn't exist.");
@@ -145,6 +148,6 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 	}
 
 	private String canonicalPath(final String path) throws IOException {
-		return (new File(path)).getCanonicalPath();
+		return fileFactory.create(path).getCanonicalPath();
 	}
 }

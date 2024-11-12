@@ -19,11 +19,7 @@
 package oripa.renderer.estimation;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.origeom.OverlapRelationValues;
@@ -89,8 +85,8 @@ public class FoldedModelPixelRenderer {
 	private final double minv[];
 	private final double maxv[];
 
-	private final boolean bUseTexture = false;
-	private BufferedImage textureImage = null;
+//	private final boolean bUseTexture = false;
+//	private final BufferedImage textureImage = null;
 
 	/**
 	 *
@@ -121,14 +117,14 @@ public class FoldedModelPixelRenderer {
 		minu = new double[height];
 		minv = new double[height];
 
-		if (bUseTexture) {
-			try {
-				textureImage = ImageIO.read(new File("c:\\chiyo2-1024.bmp"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				textureImage = null;
-			}
-		}
+//		if (bUseTexture) {
+//			try {
+//				textureImage = ImageIO.read(new File("c:\\chiyo2-1024.bmp"));
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				textureImage = null;
+//			}
+//		}
 
 	}
 
@@ -289,21 +285,22 @@ public class FoldedModelPixelRenderer {
 						pbuf[p] = 0xffffffff;
 
 					} else {
-						if (bUseTexture) {
-							int tx = (int) (textureImage.getWidth() * u);
-							int ty = (int) (textureImage.getHeight() * v);
-
-							tx = tx % textureImage.getWidth();
-							ty = ty % textureImage.getHeight();
-							int textureColor = textureImage.getRGB(tx, ty);
-
-							if (fillFaces && (tri.isFaceFront() ^ faceOrderFlipped)) {
-								pbuf[p] = textureColor;
-							} else {
-								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
-
-							}
-						} else {
+//						if (bUseTexture) {
+//							int tx = (int) (textureImage.getWidth() * u);
+//							int ty = (int) (textureImage.getHeight() * v);
+//
+//							tx = tx % textureImage.getWidth();
+//							ty = ty % textureImage.getHeight();
+//							int textureColor = textureImage.getRGB(tx, ty);
+//
+//							if (fillFaces && (tri.isFaceFront() ^ faceOrderFlipped)) {
+//								pbuf[p] = textureColor;
+//							} else {
+//								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
+//
+//							}
+//						} else
+						{
 							pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 						}
 					}

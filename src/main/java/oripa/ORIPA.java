@@ -73,6 +73,7 @@ import oripa.swing.view.main.MainFrameSwingDialogFactory;
 import oripa.swing.view.main.PropertyDialogFactory;
 import oripa.swing.view.main.SubSwingFrameFactory;
 import oripa.swing.view.model.ModelViewSwingFrameFactory;
+import oripa.util.file.FileFactory;
 
 public class ORIPA {
 	public static void main(final String[] args) {
@@ -162,6 +163,8 @@ public class ORIPA {
 			var bindingFactory = new BindingObjectFactoryFacade(stateFactory, setterFactory,
 					new PluginPaintBoundStateFactory(stateManager, setterFactory));
 
+			var fileFactory = new FileFactory();
+
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					viewUpdateSupport,
@@ -180,10 +183,12 @@ public class ORIPA {
 					new DefaultCutModelOutlinesHolder(),
 					presentationContext,
 					statePopperFactory,
-					new FileHistory(Constants.MRUFILE_NUM),
+					new FileHistory(Constants.MRUFILE_NUM, fileFactory),
 					new IniFileAccess(
 							new InitDataFileReader(), new InitDataFileWriter()),
-					new FileAccessService<Doc>(new FileDAO<>(new DocFileAccessSupportSelectorFactory().create())),
+					new FileAccessService<Doc>(
+							new FileDAO<>(new DocFileAccessSupportSelectorFactory().create(fileFactory), fileFactory)),
+					fileFactory,
 					plugins);
 			presenter.setViewVisible(true);
 

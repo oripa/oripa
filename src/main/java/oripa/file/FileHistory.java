@@ -1,6 +1,5 @@
 package oripa.file;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import oripa.resource.Constants;
+import oripa.util.file.FileFactory;
 
 /**
  * for handling the most recently used files list
@@ -15,6 +15,9 @@ import oripa.resource.Constants;
  */
 public class FileHistory {
 	private LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
+
+	private final FileFactory fileFactory;
+
 	private final int maxSize;
 
 	/**
@@ -23,8 +26,9 @@ public class FileHistory {
 	 *
 	 * @param maxSize
 	 */
-	public FileHistory(final int maxSize) {
+	public FileHistory(final int maxSize, final FileFactory fileFactory) {
 		this.maxSize = maxSize;
+		this.fileFactory = fileFactory;
 	}
 
 	/**
@@ -97,7 +101,7 @@ public class FileHistory {
 			return Constants.USER_HOME_DIR_PATH;
 		}
 
-		File file = new File(mostRecentlyUsedHistory.getFirst());
+		var file = fileFactory.create(mostRecentlyUsedHistory.getFirst());
 		try {
 			return file.getParentFile().getCanonicalPath();
 		} catch (IOException e) {

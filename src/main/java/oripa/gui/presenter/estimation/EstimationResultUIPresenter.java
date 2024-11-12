@@ -42,6 +42,7 @@ import oripa.persistence.entity.FoldedModelFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -54,6 +55,8 @@ public class EstimationResultUIPresenter {
 
 	final FileChooserFactory fileChooserFactory;
 
+	private final FileFactory fileFactory;
+
 	private String lastFilePath;
 	private final Consumer<String> lastFilePathChangeListener;
 
@@ -62,11 +65,14 @@ public class EstimationResultUIPresenter {
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
 			final FileChooserFactory fileChooserFactory,
+			final FileFactory fileFactory,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
 
 		this.fileChooserFactory = fileChooserFactory;
+
+		this.fileFactory = fileFactory;
 
 		this.lastFilePath = lastFilePath;
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
@@ -89,7 +95,7 @@ public class EstimationResultUIPresenter {
 		try {
 			var supportSelectorFactory = new FoldedModelFileAccessSupportSelectorFactory();
 			var fileAccessService = new FileAccessService<FoldedModelEntity>(
-					new FileDAO<>(supportSelectorFactory.create(view.isFaceOrderFlipped())));
+					new FileDAO<>(supportSelectorFactory.create(view.isFaceOrderFlipped(), fileFactory), fileFactory));
 
 			fileAccessService.setConfigToSavingAction(
 					FoldedModelFileTypeKey.SVG_FOLDED_MODEL, this::createSVGConfig);
@@ -103,8 +109,11 @@ public class EstimationResultUIPresenter {
 
 			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
 
-			var presenter = new FileAccessPresenter<FoldedModelEntity>((FrameView) view.getTopLevelView(),
-					fileChooserFactory, fileAccessService);
+			var presenter = new FileAccessPresenter<FoldedModelEntity>(
+					(FrameView) view.getTopLevelView(),
+					fileChooserFactory,
+					fileFactory,
+					fileAccessService);
 
 			lastFilePath = presenter.saveUsingGUI(entity, lastFilePath).get();
 

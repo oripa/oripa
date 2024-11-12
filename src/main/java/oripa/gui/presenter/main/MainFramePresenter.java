@@ -67,6 +67,7 @@ import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -105,6 +106,7 @@ public class MainFramePresenter {
 	private final IniFileAccess iniFileAccess;
 	private final FileAccessService<Doc> dataFileAccess;
 	private final FileHistory fileHistory;
+	private final FileFactory fileFactory;
 
 	// services
 	private final PaintContextModification paintContextModification = new PaintContextModification();
@@ -125,6 +127,7 @@ public class MainFramePresenter {
 			final FileHistory fileHistory,
 			final IniFileAccess iniFileAccess,
 			final FileAccessService<Doc> dataFileAccess,
+			final FileFactory fileFactory,
 			final List<GraphicMouseActionPlugin> plugins) {
 		this.view = view;
 		this.dialogFactory = dialogFactory;
@@ -144,6 +147,7 @@ public class MainFramePresenter {
 		this.fileHistory = fileHistory;
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
+		this.fileFactory = fileFactory;
 
 		this.screenSetting = viewSetting.getPainterScreenSetting();
 
@@ -169,6 +173,7 @@ public class MainFramePresenter {
 				domainContext,
 				cutModelOutlinesHolder,
 				bindingFactory,
+				fileFactory,
 				screenSetting);
 
 		loadIniFile();
@@ -289,7 +294,7 @@ public class MainFramePresenter {
 
 		view.addImportButtonListener(() -> {
 			try {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
 				presenter.loadUsingGUI(fileHistory.getLastPath())
 						.ifPresent(doc -> {
@@ -473,9 +478,10 @@ public class MainFramePresenter {
 
 		try {
 
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
-			File givenFile = new File(directory,
+			File givenFile = fileFactory.create(
+					directory,
 					(fileName.isEmpty()) ? "newFile.opx" : fileName);
 
 			var filePath = givenFile.getPath();
@@ -515,7 +521,7 @@ public class MainFramePresenter {
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(
 					new Doc(paintContext.getCreasePattern(), project.getProperty()),
@@ -567,7 +573,7 @@ public class MainFramePresenter {
 			if (filePath != null) {
 				docOpt = dataFileAccess.loadFile(filePath);
 			} else {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
 			}
 

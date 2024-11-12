@@ -18,7 +18,6 @@
  */
 package oripa.gui.presenter.file;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +31,7 @@ import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
+import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -43,14 +43,17 @@ public class FileAccessPresenter<Data> {
 
 	private final FrameView parent;
 	private final FileChooserFactory chooserFactory;
+	protected final FileFactory fileFactory;
 	private final FileAccessService<Data> fileAccessService;
 
 	public FileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
+			final FileFactory fileFactory,
 			final FileAccessService<Data> fileAccessService) {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
+		this.fileFactory = fileFactory;
 		this.fileAccessService = fileAccessService;
 	}
 
@@ -82,7 +85,7 @@ public class FileAccessPresenter<Data> {
 		String filePath = file.getPath();
 
 		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
-		var correctedFile = new File(correctedPath);
+		var correctedFile = fileFactory.create(correctedPath);
 
 		// TODO make a wrapper of File: exists() depends on file system and it's
 		// not testable.

@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.application.FileAccessService;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
@@ -56,8 +57,11 @@ import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameView;
+import oripa.persistence.dao.FileDAO;
+import oripa.persistence.entity.OrigamiModelFileAccessSupportSelectorFactory;
 import oripa.resource.StringID;
 import oripa.util.MathUtil;
+import oripa.util.file.FileFactory;
 import oripa.value.OriLine;
 
 /**
@@ -100,6 +104,8 @@ public class UIPanelPresenter {
 
 	private String lastResultFilePath;
 
+	private final FileFactory fileFactory;
+
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
 			final FileChooserFactory fileChooserFactory,
@@ -109,11 +115,14 @@ public class UIPanelPresenter {
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
+			final FileFactory fileFactory,
 			final PainterScreenSetting mainScreenSetting) {
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
 
 		this.fileChooserFactory = fileChooserFactory;
+
+		this.fileFactory = fileFactory;
 
 		this.byValueContext = domainContext.getByValueContext();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
@@ -404,6 +413,10 @@ public class UIPanelPresenter {
 				origamiModels,
 				cutOutlinesHolder,
 				screenUpdater::updateScreen,
+				new FileAccessService<OrigamiModel>(
+						new FileDAO<>(new OrigamiModelFileAccessSupportSelectorFactory().create(fileFactory),
+								fileFactory)),
+				fileFactory,
 				paintContext.getPointEps());
 		modelViewPresenter.setViewVisible(true);
 
@@ -430,6 +443,7 @@ public class UIPanelPresenter {
 				var resultFramePresenter = new EstimationResultFramePresenter(
 						resultFrame,
 						fileChooserFactory,
+						fileFactory,
 						foldedModels,
 						paintContext.getPointEps(),
 						lastResultFilePath,
