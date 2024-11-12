@@ -570,16 +570,22 @@ public class MainFramePresenter {
 
 		try {
 			Optional<Doc> docOpt;
+
+			String loadedPath = filePath;
+
 			if (filePath != null) {
 				docOpt = dataFileAccess.loadFile(filePath);
 			} else {
 				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
+				loadedPath = presenter.getLoadedPath();
 			}
+
+			final var finalLoadedPath = loadedPath;
 
 			return docOpt
 					.map(doc -> {
-						project = new Project(doc.getProperty(), filePath);
+						project = new Project(doc.getProperty(), finalLoadedPath);
 
 						var property = project.getProperty();
 						view.getUIPanelView().setEstimationResultColors(

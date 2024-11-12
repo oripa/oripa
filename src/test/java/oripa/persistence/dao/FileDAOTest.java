@@ -89,7 +89,7 @@ class FileDAOTest {
 		}
 
 		@Test
-		void exceptionIsThrownWhenfileDoesNotExist()
+		void exceptionIsThrownWhenFileDoesNotExist()
 				throws IOException, IllegalArgumentException, FileVersionError, WrongDataFormatException {
 
 			File file = mock();

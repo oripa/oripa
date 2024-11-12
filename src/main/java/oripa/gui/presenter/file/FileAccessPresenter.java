@@ -45,6 +45,7 @@ public class FileAccessPresenter<Data> {
 	private final FileChooserFactory chooserFactory;
 	protected final FileFactory fileFactory;
 	private final FileAccessService<Data> fileAccessService;
+	private String loadedPath;
 
 	public FileAccessPresenter(
 			final FrameView parent,
@@ -120,14 +121,19 @@ public class FileAccessPresenter<Data> {
 
 		var file = chooser.getSelectedFile();
 
-		String filePath = file.getPath();
+		loadedPath = file.getPath();
 
 		try {
-			return fileAccessService.loadFile(filePath);
+			return fileAccessService.loadFile(loadedPath);
 		} catch (Exception e) {
 			chooser.showErrorMessage(e);
+			loadedPath = null;
 			return Optional.empty();
 		}
+	}
+
+	public String getLoadedPath() {
+		return loadedPath;
 	}
 
 	private List<FileFilterProperty> toFileFilterProperties(final List<FileAccessSupport<Data>> supports) {
