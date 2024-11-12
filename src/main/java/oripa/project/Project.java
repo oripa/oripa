@@ -57,11 +57,7 @@ public class Project implements PropertyHolder {
 
 	public Project(final Property property, final String filePath) {
 		setProperty(property);
-		setDataFilePath(filePath);
-	}
-
-	public void setDataFilePath(final String path) {
-		dataFilePath = path;
+		dataFilePath = filePath;
 	}
 
 	public String getDataFilePath() {
@@ -77,7 +73,7 @@ public class Project implements PropertyHolder {
 	}
 
 	public boolean isProjectFile() {
-		return projectFileTypes.stream().anyMatch(type -> type.extensionsMatch(dataFilePath));
+		return projectFileTypeMatch(dataFilePath);
 	}
 
 	/**
