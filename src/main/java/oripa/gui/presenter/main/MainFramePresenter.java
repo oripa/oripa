@@ -199,11 +199,7 @@ public class MainFramePresenter {
 
 	private void addListeners() {
 		view.addOpenButtonListener(() -> {
-			String path = loadFile(null);
-			screenUpdater.updateScreen();
-			updateMenu(path);
-			updateTitleText();
-			uiPanelPresenter.updateValuePanelFractionDigits();
+			loadFile(null);
 		});
 
 		addImportActionListener();
@@ -350,18 +346,7 @@ public class MainFramePresenter {
 	}
 
 	private void modifySavingActions() {
-		// overwrite the action to update GUI after saving.
-		dataFileAccess.setAfterSave(CreasePatternFileTypeKey.OPX, this::afterSaveProjectFile);
-		dataFileAccess.setAfterSave(CreasePatternFileTypeKey.FOLD, this::afterSaveProjectFile);
 		dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
-	}
-
-	private void afterSaveProjectFile(final Doc data, final String path) {
-		project.setDataFilePath(path);
-		paintContext.creasePatternUndo().clearChanged();
-
-		updateMenu(path);
-		updateTitleText();
 	}
 
 	private void updateMRUFilesMenuItem(final int index) {
@@ -377,7 +362,6 @@ public class MainFramePresenter {
 
 		try {
 			loadFile(filePath);
-			updateTitleText();
 		} catch (Exception ex) {
 			logger.error("error when loading: ", ex);
 			view.showLoadFailureErrorMessage(ex);
@@ -388,10 +372,7 @@ public class MainFramePresenter {
 	private void saveAnyTypeUsingGUI() {
 		String lastDirectory = fileHistory.getLastDirectory();
 
-		String path = saveFileUsingGUI(lastDirectory, project.getDataFileName());
-
-		updateMenu(path);
-		updateTitleText();
+		saveFileUsingGUI(lastDirectory, project.getDataFileName());
 	}
 
 	private void exit() {
@@ -401,6 +382,7 @@ public class MainFramePresenter {
 
 	private void clear() {
 		paintContextModification.clear(paintContext, cutModelOutlinesHolder);
+		project = new Project();
 
 		screenSetting.setGridVisible(true);
 
@@ -445,8 +427,9 @@ public class MainFramePresenter {
 	}
 
 	private void updateTitleText() {
+		var filePath = project.getDataFilePath();
 		String fileName;
-		if (project.getDataFilePath().isEmpty()) {
+		if (filePath == null || filePath.isEmpty()) {
 			fileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
 		} else {
 			fileName = project.getDataFileName();
@@ -459,10 +442,11 @@ public class MainFramePresenter {
 	 * saves project without opening a dialog
 	 */
 	private void saveProjectFile(final String filePath, final FileTypeProperty<Doc> type) {
-		var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
+		var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
 
 		try {
 			dataFileAccess.saveFile(doc, filePath, type);
+			afterSaveFile(null, filePath);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);
@@ -473,7 +457,17 @@ public class MainFramePresenter {
 	 * save file without origami model check
 	 */
 	@SafeVarargs
-	private String saveFileUsingGUI(final String directory, final String fileName,
+	private void saveFileUsingGUI(final String directory, final String fileName,
+			final FileTypeProperty<Doc>... types) {
+		var filePath = saveFileUsingGUIImpl(directory, fileName, types);
+		afterSaveFile(null, filePath);
+	}
+
+	/**
+	 * save file without origami model check
+	 */
+	@SafeVarargs
+	private String saveFileUsingGUIImpl(final String directory, final String fileName,
 			final FileTypeProperty<Doc>... types) {
 
 		try {
@@ -488,24 +482,36 @@ public class MainFramePresenter {
 
 			Optional<String> pathOpt;
 
-			var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
+			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
 			if (types == null || types.length == 0) {
 				pathOpt = presenter.saveUsingGUI(doc, filePath);
 			} else {
 				pathOpt = presenter.saveUsingGUI(doc, filePath, List.of(types));
 			}
 
-			return pathOpt
-					.map(path -> {
-						paintContext.creasePatternUndo().clearChanged();
-						return path;
-					})
-					.orElse(project.getDataFilePath());
+			return pathOpt.orElse(project.getDataFilePath());
 
 		} catch (UserCanceledException e) {
 			// ignore
 			return project.getDataFilePath();
 		}
+	}
+
+	/**
+	 * Call this method when save is done.
+	 *
+	 * @param data
+	 * @param path
+	 */
+	private void afterSaveFile(final Doc data, final String path) {
+		paintContext.creasePatternUndo().clearChanged();
+
+		if (Project.projectFileTypeMatch(path)) {
+			project = new Project(project.getProperty(), path);
+		}
+
+		updateMenu();
+		updateTitleText();
 	}
 
 	private CreasePatternFOLDConfig createFOLDConfig() {
@@ -524,7 +530,7 @@ public class MainFramePresenter {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(
-					new Doc(paintContext.getCreasePattern(), project.getProperty()),
+					Doc.forSaving(paintContext.getCreasePattern(), project.getProperty()),
 					fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
 
@@ -542,12 +548,14 @@ public class MainFramePresenter {
 	 *
 	 * @param filePath
 	 */
-	private void updateMenu(final String filePath) {
+	private void updateMenu() {
+		var filePath = project.getDataFilePath();
+
 		if (filePath == null || filePath.isEmpty()) {
 			return;
 		}
 
-		if (!dataFileAccess.canLoad(filePath)) {
+		if (!project.isProjectFile()) {
 			logger.debug("updating menu is canceled: {}", filePath);
 			return;
 		}
@@ -562,9 +570,20 @@ public class MainFramePresenter {
 	 * otherwise, it tries to read data from the path.
 	 *
 	 * @param filePath
+	 */
+	private void loadFile(final String filePath) {
+		loadFileImpl(filePath);
+		afterLoadFile();
+	}
+
+	/**
+	 * if filePath is null, this method opens a dialog to select the target.
+	 * otherwise, it tries to read data from the path.
+	 *
+	 * @param filePath
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
-	private String loadFile(final String filePath) {
+	private String loadFileImpl(final String filePath) {
 
 		childFrameManager.closeAll(view);
 
@@ -581,6 +600,7 @@ public class MainFramePresenter {
 				loadedPath = presenter.getLoadedPath();
 			}
 
+			// make the variable final to avoid lambda's limitation.
 			final var finalLoadedPath = loadedPath;
 
 			return docOpt
@@ -608,6 +628,18 @@ public class MainFramePresenter {
 			view.showLoadFailureErrorMessage(e);
 			return project.getDataFilePath();
 		}
+	}
+
+	/**
+	 * Update UI.
+	 *
+	 * @param filePath
+	 */
+	private void afterLoadFile() {
+		screenUpdater.updateScreen();
+		updateMenu();
+		updateTitleText();
+		uiPanelPresenter.updateValuePanelFractionDigits();
 	}
 
 	/**

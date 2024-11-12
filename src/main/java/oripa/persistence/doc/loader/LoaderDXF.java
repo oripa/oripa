@@ -115,7 +115,7 @@ public class LoaderDXF implements DocLoader {
 			return Optional.empty();
 		}
 
-		var doc = new Doc(new LineDtoConverter().convert(dtos));
+		var doc = Doc.forLoading(new LineDtoConverter().convert(dtos));
 
 		return Optional.of(doc);
 	}

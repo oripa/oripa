@@ -36,13 +36,24 @@ public class Doc {
 	 */
 	private final Property property;
 
-	public Doc(final CreasePattern creasePattern) {
-		this(creasePattern, new Property());
+	private final boolean projectLoaded;
+
+	public static Doc forSaving(final CreasePattern creasePattern, final Property property) {
+		return new Doc(creasePattern, property, false);
 	}
 
-	public Doc(final CreasePattern creasePattern, final Property property) {
+	public static Doc forLoading(final CreasePattern creasePattern) {
+		return new Doc(creasePattern, new Property(), false);
+	}
+
+	public static Doc forLoading(final CreasePattern creasePattern, final Property property) {
+		return new Doc(creasePattern, new Property(), true);
+	}
+
+	private Doc(final CreasePattern creasePattern, final Property property, final Boolean projectLoaded) {
 		this.creasePattern = creasePattern;
 		this.property = property;
+		this.projectLoaded = projectLoaded;
 	}
 
 	public CreasePattern getCreasePattern() {
@@ -51,6 +62,10 @@ public class Doc {
 
 	public Property getProperty() {
 		return property;
+	}
+
+	public Boolean isProjectLoaded() {
+		return projectLoaded;
 	}
 
 }
