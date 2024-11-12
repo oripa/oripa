@@ -63,10 +63,15 @@ public class FileAccessSupportSelector<Data> {
 	/**
 	 *
 	 * @return support objects that can load data from a file, including a
-	 *         support object accepting all available types.
+	 *         support object accepting all available types. empty if no support
+	 *         is available for loading.
 	 */
 	public List<FileAccessSupport<Data>> getLoadablesWithMultiType() {
 		var loadables = new ArrayList<>(getLoadables());
+
+		if (loadables.isEmpty()) {
+			return List.of();
+		}
 
 		var multi = new MultiTypeAcceptableFileLoadingSupport<Data>(
 				loadables, "Any type");
@@ -143,6 +148,10 @@ public class FileAccessSupportSelector<Data> {
 	 * @return A support object that can save a data object.
 	 */
 	public FileAccessSupport<Data> getSavableOf(final String path) {
+		if (path == null) {
+			throw new IllegalArgumentException("path should not be null.");
+		}
+
 		return find(getSavables(), path,
 				() -> new IllegalArgumentException(
 						"The file type guessed from the extension is not supported."));
@@ -151,7 +160,7 @@ public class FileAccessSupportSelector<Data> {
 	private FileAccessSupport<Data> find(final List<FileAccessSupport<Data>> supports, final String path,
 			final Supplier<IllegalArgumentException> exceptionSupplier) {
 		return supports.stream()
-				.filter(support -> support.getTargetType().extensionsMatch(path))
+				.filter(support -> support.extensionsMatch(path))
 				.findFirst()
 				.orElseThrow(exceptionSupplier);
 	}

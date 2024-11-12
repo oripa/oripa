@@ -133,7 +133,7 @@ public class FileAccessPresenter<Data> {
 	private List<FileFilterProperty> toFileFilterProperties(final List<FileAccessSupport<Data>> supports) {
 		return supports.stream()
 				.map(support -> new FileFilterProperty(
-						support.getTargetType().getKeyText(), support.getDescription(), support.getExtensions()))
+						support.getFileTypeKeyText(), support.getDescription(), support.getExtensions()))
 				.toList();
 	}
 

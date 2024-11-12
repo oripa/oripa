@@ -59,6 +59,10 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 						.toList()),
 				msg);
 
+		if (supports.isEmpty()) {
+			throw new IllegalArgumentException("suppports should not be empty.");
+		}
+
 		supports.forEach(support -> {
 			if (support.getLoadingAction() == null) {
 				throw new IllegalArgumentException("file access support should have a loadingAction.");
