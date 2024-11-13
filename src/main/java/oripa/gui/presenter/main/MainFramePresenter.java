@@ -207,7 +207,7 @@ public class MainFramePresenter {
 		view.addSaveButtonListener(() -> {
 			project.getProjectFileType()
 					.ifPresentOrElse(
-							type -> saveProjectFile(type),
+							type -> saveFile(type),
 							() -> saveFileUsingGUI());
 
 		});
@@ -215,11 +215,11 @@ public class MainFramePresenter {
 		view.addSaveAsButtonListener(this::saveFileUsingGUI);
 
 		view.addExportFOLDButtonListener(() -> {
-			saveFileUsingGUI(CreasePatternFileTypeKey.FOLD);
+			exportFileUsingGUI(CreasePatternFileTypeKey.FOLD);
 		});
 
 		view.addSaveAsImageButtonListener(() -> {
-			saveFileUsingGUI(CreasePatternFileTypeKey.PICT);
+			exportFileUsingGUI(CreasePatternFileTypeKey.PICT);
 		});
 
 		view.addExitButtonListener(this::exit);
@@ -250,9 +250,10 @@ public class MainFramePresenter {
 
 		view.addAboutButtonListener(view::showAboutAppMessage);
 
-		view.addExportDXFButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
-		view.addExportCPButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
-		view.addExportSVGButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.SVG));
+		// I wonder if the model check is really needed...
+		view.addExportDXFButtonListener(() -> exportFileUsingGUIWithModelCheck(CreasePatternFileTypeKey.DXF));
+		view.addExportCPButtonListener(() -> exportFileUsingGUIWithModelCheck(CreasePatternFileTypeKey.CP));
+		view.addExportSVGButtonListener(() -> exportFileUsingGUIWithModelCheck(CreasePatternFileTypeKey.SVG));
 
 		view.addPropertyButtonListener(this::showPropertyDialog);
 		view.addRepeatCopyButtonListener(this::showArrayCopyDialog);
@@ -428,7 +429,7 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final FileTypeProperty<Doc> type) {
+	private void saveFile(final FileTypeProperty<Doc> type) {
 		var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
 
 		try {
@@ -449,7 +450,19 @@ public class MainFramePresenter {
 		var lastDirectory = fileHistory.getLastDirectory();
 		var fileName = project.getDataFileName();
 		var filePath = saveFileUsingGUIImpl(lastDirectory, fileName, types);
+
 		afterSaveFile(filePath);
+	}
+
+	/**
+	 * export file without origami model check. This does not update UI and
+	 * CP-edit history.
+	 */
+	@SafeVarargs
+	private void exportFileUsingGUI(final FileTypeProperty<Doc>... types) {
+		var lastDirectory = fileHistory.getLastDirectory();
+		var fileName = project.getDataFileName();
+		saveFileUsingGUIImpl(lastDirectory, fileName, types);
 	}
 
 	/**
@@ -514,7 +527,7 @@ public class MainFramePresenter {
 	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
 	 * model check before saving.
 	 */
-	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
+	private void exportFileUsingGUIWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
