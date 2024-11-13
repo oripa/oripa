@@ -261,7 +261,7 @@ public class MainFramePresenter {
 
 		addPaintMenuItemsListener();
 
-		view.addMRUFileButtonListener(this::loadFileFromMRUFileMenuItem);
+		view.addMRUFileButtonListener(this::loadFile);
 		view.addMRUFilesMenuItemUpdateListener(this::updateMRUFilesMenuItem);
 
 		view.setEstimationResultSaveColorsListener((front, back) -> {
@@ -354,17 +354,6 @@ public class MainFramePresenter {
 		} else {
 			view.setMRUFilesMenuItem(index, "");
 		}
-	}
-
-	private void loadFileFromMRUFileMenuItem(final String filePath) {
-
-		try {
-			loadFile(filePath);
-		} catch (Exception ex) {
-			logger.error("error when loading: ", ex);
-			view.showLoadFailureErrorMessage(ex);
-		}
-		screenUpdater.updateScreen();
 	}
 
 	private void exit() {
@@ -576,8 +565,7 @@ public class MainFramePresenter {
 	}
 
 	/**
-	 * if filePath is null, this method opens a dialog to select the target.
-	 * otherwise, it tries to read data from the path.
+	 * This method tries to read data from the path.
 	 *
 	 * @param filePath
 	 */
@@ -586,6 +574,9 @@ public class MainFramePresenter {
 		afterLoadFile();
 	}
 
+	/**
+	 * This method opens the file dialog and load the selected file.
+	 */
 	private void loadFileUsingGUI() {
 		var selection = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess)
 				.loadUsingGUI(fileHistory.getLastPath());
@@ -599,8 +590,7 @@ public class MainFramePresenter {
 	}
 
 	/**
-	 * if filePath is null, this method opens a dialog to select the target.
-	 * otherwise, it tries to read data from the path.
+	 * This method tries to read data from the path.
 	 *
 	 * @param filePath
 	 * @return file path for loaded file. {@code null} if loading is not done.
