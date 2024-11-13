@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -46,6 +45,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
+import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.file.FileChooserFactory;
@@ -199,7 +199,7 @@ public class MainFramePresenter {
 
 	private void addListeners() {
 		view.addOpenButtonListener(() -> {
-			loadFile(null);
+			loadFileUsingGUI();
 		});
 
 		addImportActionListener();
@@ -284,16 +284,20 @@ public class MainFramePresenter {
 
 		view.addImportButtonListener(() -> {
 			try {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
+				var presenter = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
-				presenter.loadUsingGUI(fileHistory.getLastPath())
-						.ifPresent(doc -> {
-							paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext);
-						});
+				var selection = presenter.loadUsingGUI(fileHistory.getLastPath());
+				if (selection.action() == UserAction.CANCELED) {
+					return;
+				}
+
+				var docOpt = dataFileAccess.loadFile(selection.path());
+				docOpt.ifPresent(
+						doc -> paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext));
 
 				state.performActions();
-			} catch (UserCanceledException e) {
-				// ignore
+			} catch (IOException | IllegalArgumentException | FileVersionError | WrongDataFormatException e) {
+				view.showLoadFailureErrorMessage(e);
 			}
 		});
 
@@ -435,6 +439,7 @@ public class MainFramePresenter {
 		try {
 			var filePath = project.getDataFilePath();
 			dataFileAccess.saveFile(doc, filePath, type);
+
 			afterSaveFile(filePath);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
@@ -447,9 +452,7 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void saveFileUsingGUI(final FileTypeProperty<Doc>... types) {
-		var lastDirectory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName();
-		var filePath = saveFileUsingGUIImpl(lastDirectory, fileName, types);
+		var filePath = saveFileUsingGUIImpl(types);
 
 		afterSaveFile(filePath);
 	}
@@ -460,21 +463,20 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void exportFileUsingGUI(final FileTypeProperty<Doc>... types) {
-		var lastDirectory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName();
-		saveFileUsingGUIImpl(lastDirectory, fileName, types);
+		saveFileUsingGUIImpl(types);
 	}
 
 	/**
 	 * save file without origami model check
 	 */
 	@SafeVarargs
-	private String saveFileUsingGUIImpl(final String directory, final String fileName,
-			final FileTypeProperty<Doc>... types) {
+	private String saveFileUsingGUIImpl(final FileTypeProperty<Doc>... types) {
+		var directory = fileHistory.getLastDirectory();
+		var fileName = project.getDataFileName();
 
 		try {
 
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
+			var presenter = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
 			File givenFile = fileFactory.create(
 					directory,
@@ -482,18 +484,21 @@ public class MainFramePresenter {
 
 			var filePath = givenFile.getPath();
 
-			Optional<String> pathOpt;
+			var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
+					: presenter.saveUsingGUI(filePath, List.of(types));
 
-			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
-			if (types == null || types.length == 0) {
-				pathOpt = presenter.saveUsingGUI(doc, filePath);
-			} else {
-				pathOpt = presenter.saveUsingGUI(doc, filePath, List.of(types));
+			if (selection.action() == UserAction.CANCELED) {
+				return project.getDataFilePath();
 			}
 
-			return pathOpt.orElse(project.getDataFilePath());
+			var path = selection.path();
 
-		} catch (UserCanceledException e) {
+			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
+			dataFileAccess.saveFile(doc, selection.path(), selection.type());
+
+			return path;
+
+		} catch (IllegalArgumentException | IOException e) {
 			// ignore
 			return project.getDataFilePath();
 		}
@@ -529,12 +534,19 @@ public class MainFramePresenter {
 	 */
 	private void exportFileUsingGUIWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
+			var presenter = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
 
-			presenter.saveFileWithModelCheck(
+			var selection = presenter.saveFileWithModelCheck(
 					Doc.forSaving(paintContext.getCreasePattern(), project.getProperty()),
 					fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
+
+			if (selection.action() == UserAction.CANCELED) {
+				return;
+			}
+
+			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
+			dataFileAccess.saveFile(doc, selection.path(), type);
 
 		} catch (UserCanceledException e) {
 			// ignore
@@ -574,6 +586,18 @@ public class MainFramePresenter {
 		afterLoadFile();
 	}
 
+	private void loadFileUsingGUI() {
+		var selection = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess)
+				.loadUsingGUI(fileHistory.getLastPath());
+
+		if (selection.action() == UserAction.CANCELED) {
+			return;
+		}
+
+		loadFileImpl(selection.path());
+		afterLoadFile();
+	}
+
 	/**
 	 * if filePath is null, this method opens a dialog to select the target.
 	 * otherwise, it tries to read data from the path.
@@ -586,24 +610,11 @@ public class MainFramePresenter {
 		childFrameManager.closeAll(view);
 
 		try {
-			Optional<Doc> docOpt;
 
-			String loadedPath = filePath;
-
-			if (filePath != null) {
-				docOpt = dataFileAccess.loadFile(filePath);
-			} else {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
-				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
-				loadedPath = presenter.getLoadedPath();
-			}
-
-			// make the variable final to avoid lambda's limitation.
-			final var finalLoadedPath = loadedPath;
-
-			return docOpt
+			var DocOpt = dataFileAccess.loadFile(filePath);
+			return DocOpt
 					.map(doc -> {
-						project = new Project(doc.getProperty(), finalLoadedPath);
+						project = new Project(doc.getProperty(), filePath);
 
 						var property = project.getProperty();
 						view.getUIPanelView().setEstimationResultColors(
@@ -617,9 +628,6 @@ public class MainFramePresenter {
 						screenPresenter.updateCameraCenter();
 						return project.getDataFilePath();
 					}).orElse(null);
-		} catch (UserCanceledException e) {
-			// ignore
-			return project.getDataFilePath();
 		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
 				| IOException e) {
 			logger.error("failed to load", e);

@@ -49,8 +49,8 @@ public class CreasePatternFileConverter {
 						config.setEps(eps);
 						return config;
 					});
-			var input = creasePatternFileAccess.loadFile(inputFilePath);
-			creasePatternFileAccess.saveFile(input.get(), outputFilePath);
+			var input = creasePatternFileAccess.loadFile(inputFilePath).get();
+			creasePatternFileAccess.saveFile(input, outputFilePath);
 		} catch (Exception e) {
 			logger.error("conversion error", e);
 		}

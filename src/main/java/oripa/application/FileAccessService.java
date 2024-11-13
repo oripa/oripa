@@ -20,13 +20,10 @@ package oripa.application;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -51,28 +48,8 @@ public class FileAccessService<Data> {
 		this.fileDAO = dao;
 	}
 
-	protected FileAccessSupportSelector<Data> getFileAccessSupportSelector() {
-		return fileDAO.getFileAccessSupportSelector();
-	}
-
-	public List<FileAccessSupport<Data>> getSavableSupports() {
-		return getFileAccessSupportSelector().getSavables();
-	}
-
-	public List<FileAccessSupport<Data>> getSavableSupportsOf(final Collection<FileTypeProperty<Data>> types) {
-		return getFileAccessSupportSelector().getSavablesOf(types);
-	}
-
-	public List<FileAccessSupport<Data>> getLoadableSupportsWithMultiType() {
-		return getFileAccessSupportSelector().getLoadablesWithMultiType();
-	}
-
-	public FileTypeProperty<Data> getSavableTypeByDescription(final String description) {
-		return getFileAccessSupportSelector().getSavables().stream()
-				.filter(support -> support.getDescription().equals(description))
-				.findFirst()
-				.get()
-				.getTargetType();
+	public FileSelectionService<Data> getFileSelectionService() {
+		return new FileSelectionService<>(fileDAO.getFileAccessSupportSelector());
 	}
 
 	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
