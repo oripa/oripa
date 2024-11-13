@@ -49,6 +49,9 @@ public class Project implements PropertyHolder {
 	}
 
 	public static boolean projectFileTypeMatch(final String path) {
+		if (path == null || path.isEmpty()) {
+			return false;
+		}
 		return projectFileTypes.stream().anyMatch(type -> type.extensionsMatch(path));
 	}
 

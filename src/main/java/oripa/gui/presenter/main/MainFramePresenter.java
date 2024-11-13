@@ -551,10 +551,6 @@ public class MainFramePresenter {
 	private void updateMenu() {
 		var filePath = project.getDataFilePath();
 
-		if (filePath == null || filePath.isEmpty()) {
-			return;
-		}
-
 		if (!project.isProjectFile()) {
 			logger.debug("updating menu is canceled: {}", filePath);
 			return;
