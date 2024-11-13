@@ -44,6 +44,14 @@ public class FileAccessSupport<Data>
 		return fileType.getExtensions();
 	}
 
+	public boolean extensionsMatch(final String filePath) {
+		return fileType.extensionsMatch(filePath);
+	}
+
+	public String getFileTypeKeyText() {
+		return fileType.getKeyText();
+	}
+
 	public FileTypeProperty<Data> getTargetType() {
 		return fileType;
 	}
@@ -52,13 +60,18 @@ public class FileAccessSupport<Data>
 		return description;
 	}
 
+	// no need to be public but required by Mockito testing.
+	public Integer getOrder() {
+		return fileType.getOrder();
+	}
+
 	/**
 	 * The order property is the most prior, the second is the description
 	 * property.
 	 */
 	@Override
 	public int compareTo(final FileAccessSupport<Data> o) {
-		int cmp = fileType.getOrder().compareTo(o.fileType.getOrder());
+		int cmp = getOrder().compareTo(o.getOrder());
 		if (cmp == 0) {
 			return description.compareTo(o.description);
 		}

@@ -36,11 +36,19 @@ public class Doc {
 	 */
 	private final Property property;
 
-	public Doc(final CreasePattern creasePattern) {
-		this(creasePattern, new Property());
+	public static Doc forSaving(final CreasePattern creasePattern, final Property property) {
+		return new Doc(creasePattern, property);
 	}
 
-	public Doc(final CreasePattern creasePattern, final Property property) {
+	public static Doc forLoading(final CreasePattern creasePattern) {
+		return new Doc(creasePattern, new Property());
+	}
+
+	public static Doc forLoading(final CreasePattern creasePattern, final Property property) {
+		return new Doc(creasePattern, property);
+	}
+
+	private Doc(final CreasePattern creasePattern, final Property property) {
 		this.creasePattern = creasePattern;
 		this.property = property;
 	}

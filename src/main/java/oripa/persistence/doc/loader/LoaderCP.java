@@ -94,7 +94,7 @@ public class LoaderCP implements DocLoader {
 		CreasePatternFactory factory = new CreasePatternFactory();
 		CreasePattern creasePattern = factory
 				.createCreasePattern(lines);
-		var doc = new Doc(creasePattern);
+		var doc = Doc.forLoading(creasePattern);
 		return Optional.of(doc);
 
 	}

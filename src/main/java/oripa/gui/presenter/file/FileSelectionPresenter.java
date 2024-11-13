@@ -19,13 +19,11 @@
 package oripa.gui.presenter.file;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.FileAccessService;
-import oripa.exception.UserCanceledException;
+import oripa.application.FileSelectionService;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
@@ -37,47 +35,45 @@ import oripa.util.file.FileFactory;
  * @author OUCHI Koji
  *
  */
-public class FileAccessPresenter<Data> {
+public class FileSelectionPresenter<Data> {
 
-	private static Logger logger = LoggerFactory.getLogger(FileAccessPresenter.class);
+	private static Logger logger = LoggerFactory.getLogger(FileSelectionPresenter.class);
 
 	private final FrameView parent;
 	private final FileChooserFactory chooserFactory;
 	protected final FileFactory fileFactory;
-	private final FileAccessService<Data> fileAccessService;
+	private final FileSelectionService<Data> fileSelectionService;
 
-	public FileAccessPresenter(
+	public FileSelectionPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
 			final FileFactory fileFactory,
-			final FileAccessService<Data> fileAccessService) {
+			final FileSelectionService<Data> fileSelectionService) {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
 		this.fileFactory = fileFactory;
-		this.fileAccessService = fileAccessService;
+		this.fileSelectionService = fileSelectionService;
 	}
 
-	public Optional<String> saveUsingGUI(final Data data, final String path) throws UserCanceledException {
+	public FileSelectionResult<Data> saveUsingGUI(final String path) {
 
-		return saveUsingGUIImpl(data, path, fileAccessService.getSavableSupports());
+		return saveUsingGUIImpl(path, fileSelectionService.getSavableSupports());
 	}
 
-	public Optional<String> saveUsingGUI(final Data data, final String path, final List<FileTypeProperty<Data>> types)
-			throws UserCanceledException {
+	public FileSelectionResult<Data> saveUsingGUI(final String path, final List<FileTypeProperty<Data>> types) {
 
-		return saveUsingGUIImpl(data, path, fileAccessService.getSavableSupportsOf(types));
+		return saveUsingGUIImpl(path, fileSelectionService.getSavableSupportsOf(types));
 	}
 
-	private Optional<String> saveUsingGUIImpl(final Data data, final String path,
-			final List<FileAccessSupport<Data>> savableSupports)
-			throws UserCanceledException {
+	private FileSelectionResult<Data> saveUsingGUIImpl(
+			final String path, final List<FileAccessSupport<Data>> savableSupports) {
 
 		var chooser = chooserFactory.createForSaving(
 				path,
 				toFileFilterProperties(savableSupports));
 
 		if (!chooser.showDialog(parent)) {
-			throw new UserCanceledException();
+			return FileSelectionResult.createCancel();
 		}
 
 		var file = chooser.getSelectedFile();
@@ -87,53 +83,39 @@ public class FileAccessPresenter<Data> {
 		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
 		var correctedFile = fileFactory.create(correctedPath);
 
-		// TODO make a wrapper of File: exists() depends on file system and it's
-		// not testable.
 		if (correctedFile.exists()) {
 			if (!chooser.showOverwriteConfirmMessage()) {
-				throw new UserCanceledException();
+				return FileSelectionResult.createCancel();
 			}
 		}
 
 		logger.debug("saving {}", correctedPath);
 
-		try {
-			fileAccessService.saveFile(data, correctedPath,
-					fileAccessService.getSavableTypeByDescription(chooser.getSelectedFilterDescription()));
-		} catch (Exception e) {
-			chooser.showErrorMessage(e);
-			return Optional.empty();
-		}
-
-		return Optional.of(correctedPath);
+		return FileSelectionResult.createSelectedForSave(correctedPath,
+				fileSelectionService.getSavableTypeByDescription(chooser.getSelectedFilterDescription()));
 	}
 
-	public Optional<Data> loadUsingGUI(final String lastFilePath) throws UserCanceledException {
+	public FileSelectionResult<Data> loadUsingGUI(final String lastFilePath) {
 
 		var chooser = chooserFactory.createForLoading(
 				lastFilePath,
-				toFileFilterProperties(fileAccessService.getLoadableSupportsWithMultiType()));
+				toFileFilterProperties(fileSelectionService.getLoadableSupportsWithMultiType()));
 
 		if (!chooser.showDialog(parent)) {
-			throw new UserCanceledException();
+			return FileSelectionResult.createCancel();
 		}
 
 		var file = chooser.getSelectedFile();
 
-		String filePath = file.getPath();
+		var loadedPath = file.getPath();
 
-		try {
-			return fileAccessService.loadFile(filePath);
-		} catch (Exception e) {
-			chooser.showErrorMessage(e);
-			return Optional.empty();
-		}
+		return FileSelectionResult.createSelectedForLoad(loadedPath);
 	}
 
 	private List<FileFilterProperty> toFileFilterProperties(final List<FileAccessSupport<Data>> supports) {
 		return supports.stream()
 				.map(support -> new FileFilterProperty(
-						support.getTargetType().getKeyText(), support.getDescription(), support.getExtensions()))
+						support.getFileTypeKeyText(), support.getDescription(), support.getExtensions()))
 				.toList();
 	}
 

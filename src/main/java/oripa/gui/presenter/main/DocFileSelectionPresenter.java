@@ -27,7 +27,8 @@ import oripa.application.FileAccessService;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.exception.UserCanceledException;
-import oripa.gui.presenter.file.FileAccessPresenter;
+import oripa.gui.presenter.file.FileSelectionPresenter;
+import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.doc.Doc;
@@ -38,14 +39,14 @@ import oripa.util.file.FileFactory;
  * @author OUCHI Koji
  *
  */
-public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
+public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 
-	public DocFileAccessPresenter(
+	public DocFileSelectionPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
 			final FileFactory fileFactory,
 			final FileAccessService<Doc> fileAccessService) {
-		super(parent, chooserFactory, fileFactory, fileAccessService);
+		super(parent, chooserFactory, fileFactory, fileAccessService.getFileSelectionService());
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	 * @throws IOException
 	 * @throws UserCanceledException
 	 */
-	public void saveFileWithModelCheck(final Doc doc,
+	public FileSelectionResult<Doc> saveFileWithModelCheck(final Doc doc,
 			final String directory,
 			final FileTypeProperty<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError,
@@ -78,11 +79,11 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 
 		if (!origamiModel.isLocallyFlatFoldable()) {
 			if (!acceptModelError.get()) {
-				return;
+				return FileSelectionResult.createCancel();
 			}
 		}
 
-		saveUsingGUI(doc, filePath, List.of(type));
+		return saveUsingGUI(filePath, List.of(type));
 	}
 
 }

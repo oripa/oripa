@@ -19,9 +19,12 @@
 package oripa.project;
 
 import java.io.File;
+import java.util.List;
+import java.util.Optional;
 
 import oripa.domain.projectprop.Property;
 import oripa.domain.projectprop.PropertyHolder;
+import oripa.persistence.doc.CreasePatternFileTypeKey;
 
 /**
  * Manages project data.
@@ -38,16 +41,27 @@ public class Project implements PropertyHolder {
 
 	private String dataFilePath = "";
 
+	private static final List<CreasePatternFileTypeKey> projectFileTypes = List.of(
+			CreasePatternFileTypeKey.OPX,
+			CreasePatternFileTypeKey.FOLD);
+
+	public static List<CreasePatternFileTypeKey> projectFileTypes() {
+		return projectFileTypes;
+	}
+
+	public static boolean projectFileTypeMatch(final String path) {
+		if (path == null || path.isEmpty()) {
+			return false;
+		}
+		return projectFileTypes.stream().anyMatch(type -> type.extensionsMatch(path));
+	}
+
 	public Project() {
 	}
 
 	public Project(final Property property, final String filePath) {
 		setProperty(property);
-		setDataFilePath(filePath);
-	}
-
-	public void setDataFilePath(final String path) {
-		dataFilePath = path;
+		dataFilePath = filePath;
 	}
 
 	public String getDataFilePath() {
@@ -60,6 +74,16 @@ public class Project implements PropertyHolder {
 
 		return fileName;
 
+	}
+
+	public Optional<CreasePatternFileTypeKey> getProjectFileType() {
+		return projectFileTypes.stream()
+				.filter(type -> type.extensionsMatch(dataFilePath))
+				.findFirst();
+	}
+
+	public boolean isProjectFile() {
+		return projectFileTypeMatch(dataFilePath);
 	}
 
 	/**

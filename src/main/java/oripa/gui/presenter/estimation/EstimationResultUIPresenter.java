@@ -29,8 +29,7 @@ import org.slf4j.LoggerFactory;
 import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
 import oripa.domain.fold.FoldedModel;
-import oripa.exception.UserCanceledException;
-import oripa.gui.presenter.file.FileAccessPresenter;
+import oripa.gui.presenter.file.FileSelectionPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.gui.view.estimation.EstimationResultUIView;
@@ -109,16 +108,19 @@ public class EstimationResultUIPresenter {
 
 			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
 
-			var presenter = new FileAccessPresenter<FoldedModelEntity>(
+			var presenter = new FileSelectionPresenter<FoldedModelEntity>(
 					(FrameView) view.getTopLevelView(),
 					fileChooserFactory,
 					fileFactory,
-					fileAccessService);
+					fileAccessService.getFileSelectionService());
 
-			lastFilePath = presenter.saveUsingGUI(entity, lastFilePath).get();
+			var selection = presenter.saveUsingGUI(lastFilePath);
+
+			fileAccessService.saveFile(entity, selection.path(), selection.type());
+
+			lastFilePath = selection.path();
 
 			lastFilePathChangeListener.accept(lastFilePath);
-		} catch (UserCanceledException e) {
 
 		} catch (Exception ex) {
 			logger.error("error: ", ex);

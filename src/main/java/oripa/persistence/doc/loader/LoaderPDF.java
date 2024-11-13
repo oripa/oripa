@@ -94,7 +94,7 @@ public class LoaderPDF implements DocLoader {
 			throw new WrongDataFormatException("Parse error.", e);
 		}
 
-		var doc = new Doc(new LineDtoConverter().convert(dtos));
+		var doc = Doc.forLoading(new LineDtoConverter().convert(dtos));
 
 		return Optional.of(doc);
 

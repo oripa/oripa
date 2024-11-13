@@ -90,7 +90,7 @@ public class DataSet {
 		CreasePattern creasePattern = factory
 				.createCreasePattern(oriLines);
 
-		return new Doc(creasePattern, createProperty());
+		return Doc.forLoading(creasePattern, createProperty());
 	}
 
 	private Property createProperty() {

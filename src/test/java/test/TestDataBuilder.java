@@ -3,6 +3,7 @@ package test;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.projectprop.Property;
 import oripa.geom.GeomUtil;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.exporter.DocExporter;
@@ -54,7 +55,7 @@ public class TestDataBuilder {
 		DocExporter exporter = new ExporterXML();
 
 		try {
-			var doc = new Doc(creasePattern);
+			var doc = Doc.forSaving(creasePattern, new Property());
 			exporter.export(doc, "heavy_test.opx", null);
 		} catch (Exception e) {
 

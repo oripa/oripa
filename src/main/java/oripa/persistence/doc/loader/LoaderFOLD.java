@@ -91,7 +91,7 @@ public class LoaderFOLD implements DocLoader {
 				.setTitle(foldFormat.getFrameTitle())
 				.setMemo(foldFormat.getFrameDescription());
 
-		var doc = new Doc(cp, property);
+		var doc = Doc.forLoading(cp, property);
 
 		return Optional.of(doc);
 	}
