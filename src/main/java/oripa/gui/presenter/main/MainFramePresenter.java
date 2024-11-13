@@ -205,31 +205,24 @@ public class MainFramePresenter {
 		addImportActionListener();
 
 		view.addSaveButtonListener(() -> {
-			var filePath = project.getDataFilePath();
-			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
-				saveProjectFile(filePath, CreasePatternFileTypeKey.OPX);
-			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
-				saveProjectFile(filePath, CreasePatternFileTypeKey.FOLD);
-			} else {
-				saveAnyTypeUsingGUI();
-			}
+			project.getProjectFileType()
+					.ifPresentOrElse(
+							type -> saveProjectFile(type),
+							() -> saveFileUsingGUI());
+
 		});
 
-		view.addSaveAsButtonListener(() -> saveAnyTypeUsingGUI());
+		view.addSaveAsButtonListener(this::saveFileUsingGUI);
 
 		view.addExportFOLDButtonListener(() -> {
-			String lastDirectory = fileHistory.getLastDirectory();
-			saveFileUsingGUI(lastDirectory, project.getDataFileName(),
-					CreasePatternFileTypeKey.FOLD);
+			saveFileUsingGUI(CreasePatternFileTypeKey.FOLD);
 		});
 
 		view.addSaveAsImageButtonListener(() -> {
-			String lastDirectory = fileHistory.getLastDirectory();
-			saveFileUsingGUI(lastDirectory, project.getDataFileName(),
-					CreasePatternFileTypeKey.PICT);
+			saveFileUsingGUI(CreasePatternFileTypeKey.PICT);
 		});
 
-		view.addExitButtonListener(() -> exit());
+		view.addExitButtonListener(this::exit);
 
 		view.addUndoButtonListener(() -> {
 			try {
@@ -253,7 +246,7 @@ public class MainFramePresenter {
 			screenUpdater.updateScreen();
 		});
 
-		view.addClearButtonListener(() -> clear());
+		view.addClearButtonListener(this::clear);
 
 		view.addAboutButtonListener(view::showAboutAppMessage);
 
@@ -261,9 +254,9 @@ public class MainFramePresenter {
 		view.addExportCPButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
 		view.addExportSVGButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.SVG));
 
-		view.addPropertyButtonListener(() -> showPropertyDialog());
-		view.addRepeatCopyButtonListener(() -> showArrayCopyDialog());
-		view.addCircleCopyButtonListener(() -> showCircleCopyDialog());
+		view.addPropertyButtonListener(this::showPropertyDialog);
+		view.addRepeatCopyButtonListener(this::showArrayCopyDialog);
+		view.addCircleCopyButtonListener(this::showCircleCopyDialog);
 
 		addPaintMenuItemsListener();
 
@@ -369,12 +362,6 @@ public class MainFramePresenter {
 		screenUpdater.updateScreen();
 	}
 
-	private void saveAnyTypeUsingGUI() {
-		String lastDirectory = fileHistory.getLastDirectory();
-
-		saveFileUsingGUI(lastDirectory, project.getDataFileName());
-	}
-
 	private void exit() {
 		saveIniFile();
 		System.exit(0);
@@ -441,12 +428,13 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final String filePath, final FileTypeProperty<Doc> type) {
+	private void saveProjectFile(final FileTypeProperty<Doc> type) {
 		var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
 
 		try {
+			var filePath = project.getDataFilePath();
 			dataFileAccess.saveFile(doc, filePath, type);
-			afterSaveFile(null, filePath);
+			afterSaveFile(filePath);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);
@@ -457,10 +445,11 @@ public class MainFramePresenter {
 	 * save file without origami model check
 	 */
 	@SafeVarargs
-	private void saveFileUsingGUI(final String directory, final String fileName,
-			final FileTypeProperty<Doc>... types) {
-		var filePath = saveFileUsingGUIImpl(directory, fileName, types);
-		afterSaveFile(null, filePath);
+	private void saveFileUsingGUI(final FileTypeProperty<Doc>... types) {
+		var lastDirectory = fileHistory.getLastDirectory();
+		var fileName = project.getDataFileName();
+		var filePath = saveFileUsingGUIImpl(lastDirectory, fileName, types);
+		afterSaveFile(filePath);
 	}
 
 	/**
@@ -503,7 +492,7 @@ public class MainFramePresenter {
 	 * @param data
 	 * @param path
 	 */
-	private void afterSaveFile(final Doc data, final String path) {
+	private void afterSaveFile(final String path) {
 		paintContext.creasePatternUndo().clearChanged();
 
 		if (Project.projectFileTypeMatch(path)) {
@@ -688,8 +677,7 @@ public class MainFramePresenter {
 			// confirm saving edited opx
 			if (view.showSaveOnCloseDialog()) {
 
-				saveFileUsingGUI(fileHistory.getLastDirectory(),
-						project.getDataFileName());
+				saveFileUsingGUI();
 			}
 		}
 

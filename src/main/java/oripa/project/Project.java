@@ -20,6 +20,7 @@ package oripa.project;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import oripa.domain.projectprop.Property;
 import oripa.domain.projectprop.PropertyHolder;
@@ -73,6 +74,12 @@ public class Project implements PropertyHolder {
 
 		return fileName;
 
+	}
+
+	public Optional<CreasePatternFileTypeKey> getProjectFileType() {
+		return projectFileTypes.stream()
+				.filter(type -> type.extensionsMatch(dataFilePath))
+				.findFirst();
 	}
 
 	public boolean isProjectFile() {
