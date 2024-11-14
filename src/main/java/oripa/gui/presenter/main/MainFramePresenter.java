@@ -48,7 +48,6 @@ import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.MainViewSetting;
@@ -78,8 +77,8 @@ public class MainFramePresenter {
 
 	private final MainFrameView view;
 	private final MainFrameDialogFactory dialogFactory;
-	private final FileChooserFactory fileChooserFactory;
 
+	private final MainComponentPresenterFactory componentPresenterFactory;
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
 
@@ -115,7 +114,7 @@ public class MainFramePresenter {
 			final ViewUpdateSupport viewUpdateSupport,
 			final MainFrameDialogFactory dialogFactory,
 			final SubFrameFactory subFrameFactory,
-			final FileChooserFactory fileChooserFactory,
+			final MainComponentPresenterFactory componentPresenterFactory,
 			final ChildFrameManager childFrameManager,
 			final MainViewSetting viewSetting,
 			final BindingObjectFactoryFacade bindingFactory,
@@ -131,11 +130,12 @@ public class MainFramePresenter {
 			final List<GraphicMouseActionPlugin> plugins) {
 		this.view = view;
 		this.dialogFactory = dialogFactory;
-		this.fileChooserFactory = fileChooserFactory;
 
 		this.childFrameManager = childFrameManager;
 
 		this.bindingFactory = bindingFactory;
+
+		this.componentPresenterFactory = componentPresenterFactory;
 
 		this.project = project;
 		this.paintContext = domainContext.getPaintContext();
@@ -156,25 +156,11 @@ public class MainFramePresenter {
 
 		var uiPanel = view.getUIPanelView();
 
-		screenPresenter = new PainterScreenPresenter(
-				screen,
-				viewUpdateSupport,
-				presentationContext,
-				paintContext,
-				cutModelOutlinesHolder);
+		screenPresenter = componentPresenterFactory.createPainterScreenPresenter(
+				screen);
 
-		uiPanelPresenter = new UIPanelPresenter(
-				uiPanel,
-				subFrameFactory,
-				fileChooserFactory,
-				statePopperFactory,
-				viewUpdateSupport,
-				presentationContext,
-				domainContext,
-				cutModelOutlinesHolder,
-				bindingFactory,
-				fileFactory,
-				screenSetting);
+		uiPanelPresenter = componentPresenterFactory.createUIPanelPresenter(
+				uiPanel);
 
 		loadIniFile();
 
@@ -284,7 +270,7 @@ public class MainFramePresenter {
 
 		view.addImportButtonListener(() -> {
 			try {
-				var presenter = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
+				var presenter = componentPresenterFactory.createDocFileSelectionPresenter(view);
 
 				var selection = presenter.loadUsingGUI(fileHistory.getLastPath());
 				if (selection.action() == UserAction.CANCELED) {
@@ -376,7 +362,7 @@ public class MainFramePresenter {
 	private void showPropertyDialog() {
 		var dialog = dialogFactory.createPropertyDialog(view);
 
-		var presenter = new PropertyDialogPresenter(dialog, project);
+		var presenter = componentPresenterFactory.createPropertyDialogPresenter(dialog, project);
 
 		presenter.setViewVisible(true);
 	}
@@ -389,7 +375,7 @@ public class MainFramePresenter {
 
 		var dialog = dialogFactory.createArrayCopyDialog(view);
 
-		var presenter = new ArrayCopyDialogPresenter(dialog, paintContext, screenUpdater);
+		var presenter = componentPresenterFactory.createArrayCopyDialogPresenter(dialog);
 
 		presenter.setViewVisible(true);
 	}
@@ -402,7 +388,7 @@ public class MainFramePresenter {
 
 		var dialog = dialogFactory.createCircleCopyDialog(view);
 
-		var presenter = new CircleCopyDialogPresenter(dialog, paintContext, screenUpdater);
+		var presenter = componentPresenterFactory.createCircleCopyDialogPresenter(dialog);
 
 		presenter.setViewVisible(true);
 	}
@@ -465,7 +451,7 @@ public class MainFramePresenter {
 
 		try {
 
-			var presenter = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
+			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(view);
 
 			File givenFile = fileFactory.create(
 					directory,
@@ -523,7 +509,7 @@ public class MainFramePresenter {
 	 */
 	private void exportFileUsingGUIWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			var presenter = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess);
+			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(view);
 
 			var selection = presenter.saveFileWithModelCheck(
 					Doc.forSaving(paintContext.getCreasePattern(), project.getProperty()),
@@ -578,7 +564,7 @@ public class MainFramePresenter {
 	 * This method opens the file dialog and load the selected file.
 	 */
 	private void loadFileUsingGUI() {
-		var selection = new DocFileSelectionPresenter(view, fileChooserFactory, fileFactory, dataFileAccess)
+		var selection = componentPresenterFactory.createDocFileSelectionPresenter(view)
 				.loadUsingGUI(fileHistory.getLastPath());
 
 		if (selection.action() == UserAction.CANCELED) {

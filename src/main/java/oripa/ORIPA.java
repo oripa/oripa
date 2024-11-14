@@ -29,6 +29,7 @@ import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.byvalue.ByValueContextImpl;
@@ -48,7 +49,9 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
+import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
+import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
@@ -61,6 +64,7 @@ import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
+import oripa.persistence.entity.OrigamiModelFileAccessSupportSelectorFactory;
 import oripa.project.Project;
 import oripa.resource.Constants;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
@@ -165,29 +169,66 @@ public class ORIPA {
 
 			var fileFactory = new FileFactory();
 
+			var subFrameFactory = new SubSwingFrameFactory(
+					new FoldabilityCheckSwingFrameFactory(childFrameManager),
+					new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
+							childFrameManager),
+					new EstimationResultSwingFrameFactory(childFrameManager));
+			var fileChooserFactory = new FileChooserSwingFactory();
+
+			var cutModelOutlinesHolder = new DefaultCutModelOutlinesHolder();
+
+			var origamiModelFileAccessService = new FileAccessService<OrigamiModel>(
+					new FileDAO<OrigamiModel>(
+							new OrigamiModelFileAccessSupportSelectorFactory().create(fileFactory),
+							fileFactory));
+			var subFramePresenterFactory = new SubFramePresenterFactory(
+					fileChooserFactory,
+					mainViewSetting.getPainterScreenSetting(),
+					cutModelOutlinesHolder,
+					origamiModelFileAccessService,
+					fileFactory);
+
+			var docFileAccessService = new FileAccessService<Doc>(
+					new FileDAO<>(
+							new DocFileAccessSupportSelectorFactory().create(fileFactory),
+							fileFactory));
+
+			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
+					subFrameFactory,
+					subFramePresenterFactory,
+					fileChooserFactory,
+					statePopperFactory,
+					viewUpdateSupport,
+					presentationContext,
+					domainContext,
+					cutModelOutlinesHolder,
+					bindingFactory,
+					fileFactory,
+					docFileAccessService,
+					mainViewSetting.getPainterScreenSetting());
+
+			var fileHistory = new FileHistory(Constants.MRUFILE_NUM, fileFactory);
+			var iniFileAccess = new IniFileAccess(
+					new InitDataFileReader(), new InitDataFileWriter());
+
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					viewUpdateSupport,
 					dialogFactory,
-					new SubSwingFrameFactory(
-							new FoldabilityCheckSwingFrameFactory(childFrameManager),
-							new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
-									childFrameManager),
-							new EstimationResultSwingFrameFactory(childFrameManager)),
-					new FileChooserSwingFactory(),
+					subFrameFactory,
+					mainComponentPresenterFactory,
 					childFrameManager,
 					mainViewSetting,
 					bindingFactory,
 					new Project(),
 					domainContext,
-					new DefaultCutModelOutlinesHolder(),
+					cutModelOutlinesHolder,
 					presentationContext,
 					statePopperFactory,
-					new FileHistory(Constants.MRUFILE_NUM, fileFactory),
-					new IniFileAccess(
-							new InitDataFileReader(), new InitDataFileWriter()),
-					new FileAccessService<Doc>(
-							new FileDAO<>(new DocFileAccessSupportSelectorFactory().create(fileFactory), fileFactory)),
+					fileHistory,
+					iniFileAccess,
+					docFileAccessService,
 					fileFactory,
 					plugins);
 			presenter.setViewVisible(true);
