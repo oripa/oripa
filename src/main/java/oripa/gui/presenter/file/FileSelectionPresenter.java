@@ -29,6 +29,7 @@ import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
+import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
 /**
@@ -43,16 +44,19 @@ public class FileSelectionPresenter<Data> {
 	private final FileChooserFactory chooserFactory;
 	protected final FileFactory fileFactory;
 	private final FileSelectionService<Data> fileSelectionService;
+	private final ExtensionCorrector extensionCorrector;
 
 	public FileSelectionPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
 			final FileFactory fileFactory,
-			final FileSelectionService<Data> fileSelectionService) {
+			final FileSelectionService<Data> fileSelectionService,
+			final ExtensionCorrector extensionCorrector) {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
 		this.fileFactory = fileFactory;
 		this.fileSelectionService = fileSelectionService;
+		this.extensionCorrector = extensionCorrector;
 	}
 
 	public FileSelectionResult<Data> saveUsingGUI(final String path) {
@@ -80,7 +84,7 @@ public class FileSelectionPresenter<Data> {
 
 		String filePath = file.getPath();
 
-		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
+		var correctedPath = extensionCorrector.correct(filePath, chooser.getSelectedFilterExtensions());
 		var correctedFile = fileFactory.create(correctedPath);
 
 		if (correctedFile.exists()) {
@@ -119,28 +123,4 @@ public class FileSelectionPresenter<Data> {
 				.toList();
 	}
 
-	private String replaceExtension(final String path, final String ext) {
-		// drop the old extension and
-		// append the new extension
-		return path.replaceAll("\\.\\w+$", "") + "." + ext;
-	}
-
-	/**
-	 * this method does not change {@code path}.
-	 *
-	 * @param path
-	 * @param extensions
-	 *            example: "png"
-	 * @return path string with new extension
-	 */
-	private String correctExtension(final String path, final String[] extensions) {
-
-		logger.debug("extensions[0] for correction: {}", extensions[0]);
-		if (List.of(extensions).stream()
-				.noneMatch(ext -> path.endsWith("." + ext))) {
-			return replaceExtension(path, extensions[0]);
-		}
-
-		return path;
-	}
 }

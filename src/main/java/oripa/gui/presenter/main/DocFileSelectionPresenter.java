@@ -33,6 +33,7 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.FileTypeProperty;
+import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
 /**
@@ -46,7 +47,8 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 			final FileChooserFactory chooserFactory,
 			final FileFactory fileFactory,
 			final FileAccessService<Doc> fileAccessService) {
-		super(parent, chooserFactory, fileFactory, fileAccessService.getFileSelectionService());
+		super(parent, chooserFactory, fileFactory, fileAccessService.getFileSelectionService(),
+				new ExtensionCorrector());
 	}
 
 	/**

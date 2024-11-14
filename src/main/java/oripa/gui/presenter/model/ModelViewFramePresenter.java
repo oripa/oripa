@@ -30,6 +30,7 @@ import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
+import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
 /**
@@ -115,7 +116,7 @@ public class ModelViewFramePresenter {
 
 		try {
 			var presenter = new FileSelectionPresenter<>(view, fileChooserFactory, fileFactory,
-					fileAccessService.getFileSelectionService());
+					fileAccessService.getFileSelectionService(), new ExtensionCorrector());
 
 			var selection = presenter.saveUsingGUI(null, List.of(type));
 
