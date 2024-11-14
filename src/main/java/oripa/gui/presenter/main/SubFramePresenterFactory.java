@@ -22,13 +22,18 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import oripa.application.FileAccessService;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
+import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.file.FileChooserFactory;
+import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
@@ -91,4 +96,39 @@ public class SubFramePresenterFactory {
 				lastFilePath,
 				lastFilePathChangeListener);
 	}
+
+	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameView(
+			final FoldabilityCheckFrameView view,
+			final CreasePattern creasePattern, final boolean isZeroLineWidth,
+			final double pointEps) {
+
+		OrigamiModel origamiModel;
+
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		origamiModel = modelFactory.createOrigamiModel(
+				creasePattern,
+				pointEps);
+
+		return createFoldabilityCheckFrameView(view, creasePattern, origamiModel, new EstimationResultRules(),
+				isZeroLineWidth,
+				pointEps);
+
+	}
+
+	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameView(
+			final FoldabilityCheckFrameView view,
+			final CreasePattern creasePattern, final OrigamiModel origamiModel,
+			final EstimationResultRules estimationRules,
+			final boolean isZeroLineWidth,
+			final double pointEps) {
+
+		return new FoldabilityCheckFramePresenter(
+				view,
+				origamiModel,
+				estimationRules,
+				creasePattern,
+				isZeroLineWidth,
+				pointEps);
+	}
+
 }

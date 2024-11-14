@@ -343,16 +343,27 @@ public class UIPanelPresenter {
 	 * display window with foldability checks
 	 */
 	private void showCheckerWindow() {
-		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
-		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth(),
+		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
+		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameView(
+				frame,
+				paintContext.getCreasePattern(),
+				viewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
+
+		presenter.setViewVisible(true);
 	}
 
 	private void showCheckerWindow(final OrigamiModel origamiModel, final EstimationResultRules estimationRules) {
-		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
-		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), origamiModel, estimationRules,
+		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
+		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameView(
+				frame,
+				paintContext.getCreasePattern(),
+				origamiModel,
+				estimationRules,
 				viewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
+
+		presenter.setViewVisible(true);
 	}
 
 	private void computeModels() {
@@ -397,9 +408,6 @@ public class UIPanelPresenter {
 				modelViewFrame,
 				origamiModels,
 				screenUpdater::updateScreen,
-//				new FileAccessService<OrigamiModel>(
-//						new FileDAO<>(new OrigamiModelFileAccessSupportSelectorFactory().create(fileFactory),
-//								fileFactory)),
 				paintContext.getPointEps());
 		modelViewPresenter.setViewVisible(true);
 
