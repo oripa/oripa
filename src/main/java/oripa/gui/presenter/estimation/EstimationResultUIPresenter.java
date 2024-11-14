@@ -41,6 +41,7 @@ import oripa.persistence.entity.FoldedModelFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
+import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
 /**
@@ -112,7 +113,8 @@ public class EstimationResultUIPresenter {
 					(FrameView) view.getTopLevelView(),
 					fileChooserFactory,
 					fileFactory,
-					fileAccessService.getFileSelectionService());
+					fileAccessService.getFileSelectionService(),
+					new ExtensionCorrector());
 
 			var selection = presenter.saveUsingGUI(lastFilePath);
 
