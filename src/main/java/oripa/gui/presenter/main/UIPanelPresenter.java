@@ -152,6 +152,7 @@ public class UIPanelPresenter {
 
 			view.addMouseActionPluginListener(plugin.getName(), state::performActions, keyProcessing);
 		}
+		view.updatePluginPanel();
 	}
 
 	private void addListeners() {

@@ -180,7 +180,6 @@ public class MainFramePresenter {
 
 	private void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
 		uiPanelPresenter.addPlugins(plugins);
-		view.getUIPanelView().updatePluginPanel();
 	}
 
 	private void addListeners() {
