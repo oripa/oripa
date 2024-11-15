@@ -51,6 +51,7 @@ import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
+import oripa.gui.presenter.main.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.ViewScreenUpdaterFactory;
@@ -194,9 +195,12 @@ public class ORIPA {
 							new DocFileAccessSupportSelectorFactory().create(fileFactory),
 							fileFactory));
 
+			var modelComputationFacadeFactory = new ModelComputationFacadeFactory();
+
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
 					subFrameFactory,
 					subFramePresenterFactory,
+					modelComputationFacadeFactory,
 					fileChooserFactory,
 					statePopperFactory,
 					viewUpdateSupport,

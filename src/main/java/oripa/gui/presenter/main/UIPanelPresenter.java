@@ -93,6 +93,7 @@ public class UIPanelPresenter {
 
 	private final BindingObjectFactoryFacade bindingFactory;
 
+	private final ModelComputationFacadeFactory computationFacadeFactory;
 	private ComputationResult computationResult;
 
 	private String lastResultFilePath;
@@ -100,6 +101,7 @@ public class UIPanelPresenter {
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
+			final ModelComputationFacadeFactory computationFacadeFactory,
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
@@ -110,6 +112,7 @@ public class UIPanelPresenter {
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
 		this.subFramePresenterFactory = subFramePresenterFactory;
+		this.computationFacadeFactory = computationFacadeFactory;
 
 		this.byValueContext = domainContext.getByValueContext();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
@@ -367,13 +370,8 @@ public class UIPanelPresenter {
 	}
 
 	private void computeModels() {
-		var modelComputation = new ModelComputationFacade(
-				// ask if ORIPA should try to remove duplication.
-				view::showCleaningUpDuplicationDialog,
-				// clean up the crease pattern
-				view::showCleaningUpMessage,
-				// folding failed.
-				view::showFoldFailureMessage,
+		var modelComputation = computationFacadeFactory.createModelComputationFacade(
+				view,
 				paintContext.getPointEps());
 
 		CreasePattern creasePattern = paintContext.getCreasePattern();
