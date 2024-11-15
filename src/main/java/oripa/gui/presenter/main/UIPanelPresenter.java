@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.FileAccessService;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
@@ -42,26 +41,20 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
-import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationType;
-import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameView;
-import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.persistence.dao.FileDAO;
-import oripa.persistence.entity.OrigamiModelFileAccessSupportSelectorFactory;
 import oripa.resource.StringID;
 import oripa.util.MathUtil;
-import oripa.util.file.FileFactory;
 import oripa.value.OriLine;
 
 /**
@@ -73,7 +66,7 @@ public class UIPanelPresenter {
 
 	private final UIPanelView view;
 	private final SubFrameFactory subFrameFactory;
-	private final FileChooserFactory fileChooserFactory;
+	private final SubFramePresenterFactory subFramePresenterFactory;
 
 	private final TypeForChange[] alterLineComboDataFrom = {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
@@ -100,29 +93,26 @@ public class UIPanelPresenter {
 
 	private final BindingObjectFactoryFacade bindingFactory;
 
+	private final ModelComputationFacadeFactory computationFacadeFactory;
 	private ComputationResult computationResult;
 
 	private String lastResultFilePath;
 
-	private final FileFactory fileFactory;
-
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
-			final FileChooserFactory fileChooserFactory,
+			final SubFramePresenterFactory subFramePresenterFactory,
+			final ModelComputationFacadeFactory computationFacadeFactory,
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
-			final FileFactory fileFactory,
 			final PainterScreenSetting mainScreenSetting) {
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
-
-		this.fileChooserFactory = fileChooserFactory;
-
-		this.fileFactory = fileFactory;
+		this.subFramePresenterFactory = subFramePresenterFactory;
+		this.computationFacadeFactory = computationFacadeFactory;
 
 		this.byValueContext = domainContext.getByValueContext();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
@@ -162,6 +152,7 @@ public class UIPanelPresenter {
 
 			view.addMouseActionPluginListener(plugin.getName(), state::performActions, keyProcessing);
 		}
+		view.updatePluginPanel();
 	}
 
 	private void addListeners() {
@@ -356,26 +347,32 @@ public class UIPanelPresenter {
 	 * display window with foldability checks
 	 */
 	private void showCheckerWindow() {
-		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
-		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth(),
+		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
+		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameView(
+				frame,
+				paintContext.getCreasePattern(),
+				viewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
+
+		presenter.setViewVisible(true);
 	}
 
 	private void showCheckerWindow(final OrigamiModel origamiModel, final EstimationResultRules estimationRules) {
-		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
-		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), origamiModel, estimationRules,
+		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
+		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameView(
+				frame,
+				paintContext.getCreasePattern(),
+				origamiModel,
+				estimationRules,
 				viewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
+
+		presenter.setViewVisible(true);
 	}
 
 	private void computeModels() {
-		var modelComputation = new ModelComputationFacade(
-				// ask if ORIPA should try to remove duplication.
-				view::showCleaningUpDuplicationDialog,
-				// clean up the crease pattern
-				view::showCleaningUpMessage,
-				// folding failed.
-				view::showFoldFailureMessage,
+		var modelComputation = computationFacadeFactory.createModelComputationFacade(
+				view,
 				paintContext.getPointEps());
 
 		CreasePattern creasePattern = paintContext.getCreasePattern();
@@ -406,17 +403,10 @@ public class UIPanelPresenter {
 		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent,
 				view.getPaperDomainOfModelChangeListener());
 
-		var modelViewPresenter = new ModelViewFramePresenter(
+		var modelViewPresenter = subFramePresenterFactory.createModelViewFramePresenter(
 				modelViewFrame,
-				fileChooserFactory,
-				mainScreenSetting,
 				origamiModels,
-				cutOutlinesHolder,
 				screenUpdater::updateScreen,
-				new FileAccessService<OrigamiModel>(
-						new FileDAO<>(new OrigamiModelFileAccessSupportSelectorFactory().create(fileFactory),
-								fileFactory)),
-				fileFactory,
 				paintContext.getPointEps());
 		modelViewPresenter.setViewVisible(true);
 
@@ -440,10 +430,8 @@ public class UIPanelPresenter {
 				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
 				// resultFrame.repaint();
 
-				var resultFramePresenter = new EstimationResultFramePresenter(
+				var resultFramePresenter = subFramePresenterFactory.createEstimationResultFramePresenter(
 						resultFrame,
-						fileChooserFactory,
-						fileFactory,
 						foldedModels,
 						paintContext.getPointEps(),
 						lastResultFilePath,

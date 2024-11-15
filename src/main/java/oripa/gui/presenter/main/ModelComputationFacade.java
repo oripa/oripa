@@ -150,7 +150,8 @@ public class ModelComputationFacade {
 		}
 	}
 
-	private final TestedOrigamiModelFactory modelFactory = new TestedOrigamiModelFactory();
+	private final TestedOrigamiModelFactory modelFactory;
+	private final FolderFactory folderFactory;
 
 	private final Supplier<Boolean> needCleaningUpDuplication;
 	private final Runnable showCleaningUpMessage;
@@ -159,21 +160,33 @@ public class ModelComputationFacade {
 	private final double eps;
 
 	public ModelComputationFacade(
+			final TestedOrigamiModelFactory modelFactory,
+			final FolderFactory folderFactory,
 			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
 			final Runnable showFailureMessage,
 			final double eps) {
+		this.modelFactory = modelFactory;
+		this.folderFactory = folderFactory;
+
 		this.needCleaningUpDuplication = needCleaningUpDuplication;
 		this.showCleaningUpMessage = showCleaningUpMessage;
 		this.showFailureMessage = showFailureMessage;
 		this.eps = eps;
 	}
 
+	/**
+	 *
+	 * @param origamiModels
+	 *            half-edge structure before folding
+	 * @param type
+	 *            type of computation decided with crease types and model
+	 *            building result.
+	 * @return
+	 */
 	public ComputationResult computeModels(
 			final List<OrigamiModel> origamiModels,
 			final ComputationType type) {
-
-		var folderFactory = new FolderFactory();
 
 		var foldResults = origamiModels.stream()
 				.map(model -> folderFactory.create(model.getModelType()).fold(model, eps, type.toEstimationType()))
