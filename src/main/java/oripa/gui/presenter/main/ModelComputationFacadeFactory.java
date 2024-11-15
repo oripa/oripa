@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.main;
 
+import oripa.domain.fold.FolderFactory;
+import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.gui.view.main.UIPanelView;
 
 /**
@@ -25,11 +27,21 @@ import oripa.gui.view.main.UIPanelView;
  *
  */
 public class ModelComputationFacadeFactory {
+	private final TestedOrigamiModelFactory modelFactory;
+	private final FolderFactory folderFactory;
+
+	public ModelComputationFacadeFactory(final TestedOrigamiModelFactory modelFactory,
+			final FolderFactory folderFactory) {
+		this.modelFactory = modelFactory;
+		this.folderFactory = folderFactory;
+	}
 
 	public ModelComputationFacade createModelComputationFacade(
 			final UIPanelView view,
 			final double eps) {
 		return new ModelComputationFacade(
+				modelFactory,
+				folderFactory,
 				// ask if ORIPA should try to remove duplication.
 				view::showCleaningUpDuplicationDialog,
 				// clean up the crease pattern

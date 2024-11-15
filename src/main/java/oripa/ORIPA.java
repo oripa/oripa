@@ -29,6 +29,8 @@ import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
+import oripa.domain.fold.FolderFactory;
+import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
@@ -195,7 +197,9 @@ public class ORIPA {
 							new DocFileAccessSupportSelectorFactory().create(fileFactory),
 							fileFactory));
 
-			var modelComputationFacadeFactory = new ModelComputationFacadeFactory();
+			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
+					new TestedOrigamiModelFactory(),
+					new FolderFactory());
 
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
 					subFrameFactory,
