@@ -48,7 +48,7 @@ public class FileAccessService<Data> {
 	}
 
 	public FileSelectionService<Data> getFileSelectionService() {
-		return new FileSelectionService<>(fileDAO.getFileAccessSupportSelector());
+		return new FileSelectionService<>(fileDAO.getFileSelectionSupportSelector());
 	}
 
 	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {

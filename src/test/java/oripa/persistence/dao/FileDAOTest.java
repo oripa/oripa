@@ -160,7 +160,7 @@ class FileDAOTest {
 			FileType<Doc> fileType = mock();
 			FileSelectionSupport<Doc> support = mock();
 
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.of(support));
+			when(selector.getFileSelectionSupport(fileType)).thenReturn(Optional.of(support));
 
 			dao.setConfigToSavingAction(fileType, mock());
 
@@ -172,7 +172,7 @@ class FileDAOTest {
 			FileType<Doc> fileType = mock();
 			FileSelectionSupport<Doc> support = mock();
 
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.empty());
+			when(selector.getFileSelectionSupport(fileType)).thenReturn(Optional.empty());
 
 			dao.setConfigToSavingAction(fileType, mock());
 

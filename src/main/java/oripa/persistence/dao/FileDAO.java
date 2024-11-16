@@ -49,12 +49,12 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 		this.fileFactory = fileFactory;
 	}
 
-	public FileSelectionSupportSelector<Data> getFileAccessSupportSelector() {
+	public FileSelectionSupportSelector<Data> getFileSelectionSupportSelector() {
 		return fileSelectionSupportSelector;
 	}
 
 	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
-		var supportOpt = fileSelectionSupportSelector.getFileAccessSupport(key);
+		var supportOpt = fileSelectionSupportSelector.getFileSelectionSupport(key);
 
 		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
 	}

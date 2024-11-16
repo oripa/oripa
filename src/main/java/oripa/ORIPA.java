@@ -70,9 +70,9 @@ import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
-import oripa.persistence.entity.FoldedModelFileAccessSupportSelectorFactory;
-import oripa.persistence.entity.OrigamiModelFileAccessSupportSelectorFactory;
+import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
+import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
+import oripa.persistence.entity.OrigamiModelFileSelectionSupportSelectorFactory;
 import oripa.project.Project;
 import oripa.resource.Constants;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
@@ -189,10 +189,10 @@ public class ORIPA {
 
 			var origamiModelFileAccessService = new FileAccessService<OrigamiModel>(
 					new FileDAO<OrigamiModel>(
-							new OrigamiModelFileAccessSupportSelectorFactory().create(fileFactory),
+							new OrigamiModelFileSelectionSupportSelectorFactory().create(fileFactory),
 							fileFactory));
 			var foldedModelFileAccessFactory = new FoldedModelFileAccessServiceFactory(
-					new FoldedModelFileAccessSupportSelectorFactory(), fileFactory);
+					new FoldedModelFileSelectionSupportSelectorFactory(), fileFactory);
 
 			var extensionCorrector = new ExtensionCorrector();
 
@@ -221,7 +221,7 @@ public class ORIPA {
 
 			var docFileAccessService = new FileAccessService<Doc>(
 					new FileDAO<>(
-							new DocFileAccessSupportSelectorFactory().create(fileFactory),
+							new DocFileSelectionSupportSelectorFactory().create(fileFactory),
 							fileFactory));
 
 			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(

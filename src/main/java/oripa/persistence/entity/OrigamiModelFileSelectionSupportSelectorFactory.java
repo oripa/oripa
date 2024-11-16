@@ -33,7 +33,7 @@ import oripa.util.file.FileFactory;
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelFileAccessSupportSelectorFactory {
+public class OrigamiModelFileSelectionSupportSelectorFactory {
 	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
 
 	/**

@@ -32,7 +32,7 @@ import oripa.util.file.FileFactory;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFileAccessSupportSelectorFactory {
+public class FoldedModelFileSelectionSupportSelectorFactory {
 	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
 
 	public FileSelectionSupportSelector<FoldedModelEntity> create(final boolean modelFlip,

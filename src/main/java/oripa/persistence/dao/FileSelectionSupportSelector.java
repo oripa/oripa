@@ -59,7 +59,7 @@ public class FileSelectionSupportSelector<Data> {
 	 *            A value that describes the file type you want.
 	 * @return A support object for given key. Empty if no support for the key.
 	 */
-	public Optional<FileSelectionSupport<Data>> getFileAccessSupport(final FileType<Data> key) {
+	public Optional<FileSelectionSupport<Data>> getFileSelectionSupport(final FileType<Data> key) {
 		return Optional.ofNullable(fileSelectionSupports.get(key.getFileTypeProperty()));
 	}
 

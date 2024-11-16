@@ -16,7 +16,7 @@ import oripa.util.file.FileFactory;
  * @author OUCHI Koji
  *
  */
-public class DocFileAccessSupportSelectorFactory {
+public class DocFileSelectionSupportSelectorFactory {
 	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
 
 	public FileSelectionSupportSelector<Doc> create(final FileFactory fileFactory) {
