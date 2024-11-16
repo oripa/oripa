@@ -21,11 +21,8 @@ package oripa.gui.presenter.estimation;
 import java.util.function.Consumer;
 
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
-import oripa.gui.presenter.file.FileSelectionPresenter;
-import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
-import oripa.persistence.entity.FoldedModelEntity;
 
 /**
  * @author OUCHI Koji
@@ -58,10 +55,5 @@ public class EstimationResultComponentPresenterFactory {
 				lastFilePath,
 				lastFilePathChangeListener);
 
-	}
-
-	public FileSelectionPresenter<FoldedModelEntity> createFileSelectionPresenter(final FrameView parent,
-			final boolean isFaceOrderFlipped) {
-		return fileSelectionPresenterFactory.create(parent, isFaceOrderFlipped);
 	}
 }

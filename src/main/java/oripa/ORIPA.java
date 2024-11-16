@@ -197,7 +197,6 @@ public class ORIPA {
 			var foldedModelfileSelectionPresenterFactory = new FoldedModelFileSelectionPresenterFactory(
 					fileChooserFactory,
 					fileFactory,
-					foldedModelFileAccessFactory,
 					extensionCorrector);
 
 			var subFramePresenterFactory = new SubFramePresenterFactory(

@@ -106,7 +106,7 @@ public class EstimationResultUIPresenter {
 			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
 
 			var presenter = fileSelectionPresenterFactory.create(
-					(FrameView) view.getTopLevelView(), view.isFaceOrderFlipped());
+					(FrameView) view.getTopLevelView(), fileAccessService.getFileSelectionService());
 
 			var selection = presenter.saveUsingGUI(lastFilePath);
 

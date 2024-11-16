@@ -18,7 +18,7 @@
  */
 package oripa.gui.presenter.estimation;
 
-import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
+import oripa.application.FileSelectionService;
 import oripa.gui.presenter.file.FileSelectionPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
@@ -34,26 +34,25 @@ public class FoldedModelFileSelectionPresenterFactory {
 
 	private final FileChooserFactory fileChooserFactory;
 	private final FileFactory fileFactory;
-	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
 	private final ExtensionCorrector extensionCorrector;
 
 	public FoldedModelFileSelectionPresenterFactory(
 			final FileChooserFactory fileChooserFactory,
 			final FileFactory fileFactory,
-			final FoldedModelFileAccessServiceFactory fileAccessServiceFactory,
 			final ExtensionCorrector extensionCorrector) {
 		this.fileChooserFactory = fileChooserFactory;
 		this.fileFactory = fileFactory;
-		this.fileAccessServiceFactory = fileAccessServiceFactory;
 		this.extensionCorrector = extensionCorrector;
 	}
 
-	public FileSelectionPresenter<FoldedModelEntity> create(final FrameView parent, final boolean isFaceOrderFlipped) {
+	public FileSelectionPresenter<FoldedModelEntity> create(
+			final FrameView parent,
+			final FileSelectionService<FoldedModelEntity> fileSelectionService) {
 		return new FileSelectionPresenter<FoldedModelEntity>(
 				parent,
 				fileChooserFactory,
 				fileFactory,
-				fileAccessServiceFactory.create(isFaceOrderFlipped).getFileSelectionService(),
+				fileSelectionService,
 				extensionCorrector);
 
 	}
