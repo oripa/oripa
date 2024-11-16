@@ -77,12 +77,8 @@ class FileSelectionSupportSelectorTest {
 		@Test
 		void resultContainsMultiTypeSupport() {
 
-			FileAccessSupport<Doc> access = mock();
-			when(access.compareTo(any())).thenReturn(1);
-			when(access.getLoadingAction()).thenReturn(mock());
-
 			when(support.isLoadable()).thenReturn(true);
-			when(support.getFileAccessSupport()).thenReturn(access);
+			when(support.compareTo(any())).thenReturn(1);
 
 			when(supports.values()).thenReturn(List.of(support));
 
@@ -99,7 +95,7 @@ class FileSelectionSupportSelectorTest {
 		}
 
 		@Test
-		void exceptionIsThrownIfNoLoadableSupport() {
+		void EmptyIfNoLoadableSupport() {
 
 			when(supports.values()).thenReturn(List.of(support));
 
@@ -287,7 +283,7 @@ class FileSelectionSupportSelectorTest {
 		@Test
 		void exceptionIsThrownWhenNoExtensionMatches() throws IOException {
 
-			when(support.getSavingAction()).thenReturn(mock());
+			when(support.isSavable()).thenReturn(true);
 			when(support.extensionsMatch(eq("file.ext"))).thenReturn(false);
 
 			when(supports.values()).thenReturn(List.of(support));
