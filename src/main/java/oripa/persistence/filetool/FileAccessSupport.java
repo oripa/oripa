@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 public class FileAccessSupport<Data>
 		implements Comparable<FileAccessSupport<Data>> {
 
-	private final FileTypeProperty<Data> fileType;
+	private final FileTypePropertyWithAccessor<Data> fileType;
 	// TODO description is not related to persistence responsibility.
 	// this should be removed.
 	private final String description;
@@ -21,7 +21,7 @@ public class FileAccessSupport<Data>
 	 * @param description
 	 *            message in filter box
 	 */
-	public FileAccessSupport(final FileTypeProperty<Data> fileType, final String description) {
+	public FileAccessSupport(final FileTypePropertyWithAccessor<Data> fileType, final String description) {
 		this.fileType = fileType;
 		this.description = description;
 

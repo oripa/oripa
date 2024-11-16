@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
+import oripa.persistence.filetool.FileTypePropertyWithAccessor;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
@@ -39,7 +40,7 @@ public class FileAccessSupportFactory<Data> {
 	 * @param key
 	 * @param description
 	 */
-	public FileAccessSupport<Data> createFileAccessSupport(final FileTypeProperty<Data> key,
+	public FileAccessSupport<Data> createFileAccessSupport(final FileTypePropertyWithAccessor<Data> key,
 			final String labelResourceKey, final String... appendings) {
 
 		var description = createDescription(key, labelResourceKey, appendings);
