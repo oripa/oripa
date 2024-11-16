@@ -58,6 +58,7 @@ import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
+import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.ViewUpdateSupport;
@@ -199,9 +200,15 @@ public class ORIPA {
 					fileFactory,
 					extensionCorrector);
 
+			var origamiModelfileSelectionPresenterFactory = new OrigamiModelFileSelectionPresenterFactory(
+					fileChooserFactory,
+					fileFactory,
+					extensionCorrector);
+
 			var subFramePresenterFactory = new SubFramePresenterFactory(
 					fileChooserFactory,
 					foldedModelfileSelectionPresenterFactory,
+					origamiModelfileSelectionPresenterFactory,
 					mainViewSetting.getPainterScreenSetting(),
 					cutModelOutlinesHolder,
 					origamiModelFileAccessService,
