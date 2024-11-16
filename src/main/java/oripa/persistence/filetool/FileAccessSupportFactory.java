@@ -16,13 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.dao;
+package oripa.persistence.filetool;
 
 import java.util.stream.Stream;
 
-import oripa.persistence.filetool.FileAccessSupport;
-import oripa.persistence.filetool.FileTypeProperty;
-import oripa.persistence.filetool.FileTypePropertyWithAccessor;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 

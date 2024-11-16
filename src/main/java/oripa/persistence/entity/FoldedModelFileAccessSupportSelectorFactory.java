@@ -20,9 +20,9 @@ package oripa.persistence.entity;
 
 import java.util.TreeMap;
 
-import oripa.persistence.dao.FileAccessSupportFactory;
 import oripa.persistence.dao.FileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
+import oripa.persistence.filetool.FileAccessSupportFactory;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
 import oripa.util.file.FileFactory;
