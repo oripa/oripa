@@ -16,47 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.filetool;
+package oripa.persistence.entity;
 
-import java.util.Arrays;
-import java.util.Collection;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.persistence.dao.FileType;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class MultiTypeProperty<Data> implements FileTypePropertyWithAccessor<Data> {
-
-	private final Collection<FileTypeProperty<Data>> properties;
-
-	public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
-		this.properties = properties;
+public class OrigamiModelFileTypes {
+	public static FileType<OrigamiModel> obj() {
+		return new FileType<>(OrigamiModelFileTypeKey.OBJ_MODEL);
 	}
 
-	@Override
-	public Integer getOrder() {
-		return -1;
+	public static FileType<OrigamiModel> dxf() {
+		return new FileType<>(OrigamiModelFileTypeKey.DXF_MODEL);
 	}
 
-	@Override
-	public String getKeyText() {
-		return String.join("+", getExtensions());
-	}
-
-	@Override
-	public String[] getExtensions() {
-		return properties.stream()
-				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
-				.toList().toArray(new String[0]);
-	}
-
-	@Override
-	public Loader<Data> getLoader() {
-		return null;
-	}
-
-	@Override
-	public Exporter<Data> getExporter() {
-		return null;
+	public static FileType<OrigamiModel> svg() {
+		return new FileType<>(OrigamiModelFileTypeKey.SVG_MODEL);
 	}
 }

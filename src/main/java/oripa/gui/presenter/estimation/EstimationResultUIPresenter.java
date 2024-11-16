@@ -36,7 +36,7 @@ import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.entity.FoldedModelFileTypeKey;
+import oripa.persistence.entity.FoldedModelFileTypes;
 import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
 
@@ -95,12 +95,12 @@ public class EstimationResultUIPresenter {
 			var fileAccessService = fileAccessServiceFactory.create(view.isFaceOrderFlipped());
 
 			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypeKey.SVG_FOLDED_MODEL, this::createSVGConfig);
+					FoldedModelFileTypes.svg(), this::createSVGConfig);
 			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP, this::createSVGConfig);
+					FoldedModelFileTypes.flippedSvg(), this::createSVGConfig);
 
 			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypeKey.PICTURE, this::createPictureConfig);
+					FoldedModelFileTypes.picture(), this::createPictureConfig);
 
 			var foldedModel = view.getModel();
 

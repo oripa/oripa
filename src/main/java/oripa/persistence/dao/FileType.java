@@ -16,47 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.filetool;
+package oripa.persistence.dao;
 
-import java.util.Arrays;
-import java.util.Collection;
+import oripa.persistence.filetool.FileTypeProperty;
 
 /**
+ * This is a value object. {@code equals()} and {@code hashCode()} uses the
+ * given {@code property}'s ones.
+ *
  * @author OUCHI Koji
  *
  */
-public class MultiTypeProperty<Data> implements FileTypePropertyWithAccessor<Data> {
+public class FileType<Data> {
+	private final FileTypeProperty<Data> property;
 
-	private final Collection<FileTypeProperty<Data>> properties;
-
-	public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
-		this.properties = properties;
+	public FileType(final FileTypeProperty<Data> property) {
+		this.property = property;
 	}
 
-	@Override
-	public Integer getOrder() {
-		return -1;
+	FileTypeProperty<Data> getFileTypeProperty() {
+		return property;
 	}
 
-	@Override
-	public String getKeyText() {
-		return String.join("+", getExtensions());
-	}
-
-	@Override
 	public String[] getExtensions() {
-		return properties.stream()
-				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
-				.toList().toArray(new String[0]);
+		return property.getExtensions();
+	}
+
+	public boolean extensionsMatch(final String path) {
+		return property.extensionsMatch(path);
 	}
 
 	@Override
-	public Loader<Data> getLoader() {
-		return null;
+	public boolean equals(final Object obj) {
+		if (obj instanceof FileType f) {
+			return property.equals(f.getFileTypeProperty());
+		}
+		return false;
 	}
 
 	@Override
-	public Exporter<Data> getExporter() {
-		return null;
+	public int hashCode() {
+		return property.hashCode();
 	}
 }

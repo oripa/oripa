@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.util.file.FileFactory;
@@ -55,7 +54,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 		return fileAccessSupportSelector;
 	}
 
-	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
+	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
 		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
@@ -67,7 +66,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 	 * @param beforeSave
 	 *            a consumer whose parameters are data and file path.
 	 */
-	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
+	public void setBeforeSave(final FileType<Data> key, final BiConsumer<Data, String> beforeSave) {
 		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setBeforeSave(beforeSave));
@@ -79,7 +78,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 	 * @param afterSave
 	 *            a consumer whose parameters are data and file path.
 	 */
-	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
+	public void setAfterSave(final FileType<Data> key, final BiConsumer<Data, String> afterSave) {
 		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
 
 		supportOpt.ifPresent(support -> support.setAfterSave(afterSave));
@@ -136,12 +135,14 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
+	public void save(final Data data, final String path, final FileType<Data> type)
 			throws IOException, IllegalArgumentException {
 
 		logger.info("save(): path = {}", path);
 
-		var support = fileAccessSupportSelector.getSavablesOf(List.of(type)).stream().findFirst().get();
+		var support = fileAccessSupportSelector.getSavablesOf(List.of(type)).stream()
+				.findFirst()
+				.get();
 		var savingAction = support.getSavingAction();
 
 		savingAction.save(data, canonicalPath(path));

@@ -24,14 +24,14 @@ import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistence.entity.exporter.FoldedModelPictureExporter;
 import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
 import oripa.persistence.filetool.Exporter;
-import oripa.persistence.filetool.FileTypeProperty;
+import oripa.persistence.filetool.FileTypePropertyWithAccessor;
 import oripa.persistence.filetool.Loader;
 
 /**
  * @author OUCHI Koji
  *
  */
-public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModelEntity> {
+enum FoldedModelFileTypeKey implements FileTypePropertyWithAccessor<FoldedModelEntity> {
 	SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), "svg"),
 	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), "svg"),
 	PICTURE("picture", 2, null, new FoldedModelPictureExporter(), "png", "jpg"),

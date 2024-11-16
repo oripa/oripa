@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.List;
 
 import oripa.persistence.dao.FileAccessSupportSelector;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.filetool.FileAccessSupport;
-import oripa.persistence.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
@@ -40,7 +40,7 @@ public class FileSelectionService<Data> {
 		return selector.getSavables();
 	}
 
-	public List<FileAccessSupport<Data>> getSavableSupportsOf(final Collection<FileTypeProperty<Data>> types) {
+	public List<FileAccessSupport<Data>> getSavableSupportsOf(final Collection<FileType<Data>> types) {
 		return selector.getSavablesOf(types);
 	}
 
@@ -48,12 +48,12 @@ public class FileSelectionService<Data> {
 		return selector.getLoadablesWithMultiType();
 	}
 
-	public FileTypeProperty<Data> getSavableTypeByDescription(final String description) {
-		return selector.getSavables().stream()
+	public FileType<Data> getSavableTypeByDescription(final String description) {
+		return new FileType<>(selector.getSavables().stream()
 				.filter(support -> support.getDescription().equals(description))
 				.findFirst()
 				.get()
-				.getTargetType();
+				.getTargetType());
 	}
 
 }

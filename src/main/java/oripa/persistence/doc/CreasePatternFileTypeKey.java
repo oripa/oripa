@@ -30,7 +30,7 @@ import oripa.persistence.doc.loader.LoaderFOLD;
 import oripa.persistence.doc.loader.LoaderPDF;
 import oripa.persistence.doc.loader.LoaderXML;
 import oripa.persistence.filetool.Exporter;
-import oripa.persistence.filetool.FileTypeProperty;
+import oripa.persistence.filetool.FileTypePropertyWithAccessor;
 import oripa.persistence.filetool.Loader;
 
 /**
@@ -39,7 +39,7 @@ import oripa.persistence.filetool.Loader;
  * @author OUCHI Koji
  *
  */
-public enum CreasePatternFileTypeKey implements FileTypeProperty<Doc> {
+enum CreasePatternFileTypeKey implements FileTypePropertyWithAccessor<Doc> {
 	OPX("opx", 1, new LoaderXML(), new ExporterXML(), "opx", "xml"),
 	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), "fold"),
 	PICT("pict", 3, null, new PictureExporter(), "png", "jpg"),

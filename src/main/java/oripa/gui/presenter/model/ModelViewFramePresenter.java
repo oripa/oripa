@@ -28,7 +28,8 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.persistence.entity.OrigamiModelFileTypeKey;
+import oripa.persistence.dao.FileType;
+import oripa.persistence.entity.OrigamiModelFileTypes;
 
 /**
  * @author OUCHI Koji
@@ -82,11 +83,11 @@ public class ModelViewFramePresenter {
 
 		view.addCrossLineButtonListener(() -> mainScreenSetting.setCrossLineVisible(view.isCrossLineVisible()));
 
-		view.addExportDXFButtonListener(() -> exportFile(OrigamiModelFileTypeKey.DXF_MODEL));
+		view.addExportDXFButtonListener(() -> exportFile(OrigamiModelFileTypes.dxf()));
 
-		view.addExportOBJButtonListener(() -> exportFile(OrigamiModelFileTypeKey.OBJ_MODEL));
+		view.addExportOBJButtonListener(() -> exportFile(OrigamiModelFileTypes.obj()));
 
-		view.addExportSVGButtonListener(() -> exportFile(OrigamiModelFileTypeKey.SVG_MODEL));
+		view.addExportSVGButtonListener(() -> exportFile(OrigamiModelFileTypes.svg()));
 
 		view.addFillAlphaButtonListener(() -> {
 			view.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
@@ -109,7 +110,7 @@ public class ModelViewFramePresenter {
 		view.repaint();
 	}
 
-	private void exportFile(final OrigamiModelFileTypeKey type) {
+	private void exportFile(final FileType<OrigamiModel> type) {
 
 		try {
 			var presenter = fileSelectionPresenterFactory.create(view, fileAccessService.getFileSelectionService());

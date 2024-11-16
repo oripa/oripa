@@ -23,14 +23,14 @@ import oripa.persistence.entity.exporter.OrigamiModelExporterDXF;
 import oripa.persistence.entity.exporter.OrigamiModelExporterOBJ;
 import oripa.persistence.entity.exporter.OrigamiModelExporterSVG;
 import oripa.persistence.filetool.Exporter;
-import oripa.persistence.filetool.FileTypeProperty;
+import oripa.persistence.filetool.FileTypePropertyWithAccessor;
 import oripa.persistence.filetool.Loader;
 
 /**
  * @author OUCHI Koji
  *
  */
-public enum OrigamiModelFileTypeKey implements FileTypeProperty<OrigamiModel> {
+enum OrigamiModelFileTypeKey implements FileTypePropertyWithAccessor<OrigamiModel> {
 	OBJ_MODEL("obj", 1, null, new OrigamiModelExporterOBJ(), "obj"),
 	DXF_MODEL("dxf", 2, null, new OrigamiModelExporterDXF(), "dxf"),
 	SVG_MODEL("svg", 3, null, new OrigamiModelExporterSVG(), "svg");

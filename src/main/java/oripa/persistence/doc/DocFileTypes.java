@@ -16,47 +16,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.filetool;
+package oripa.persistence.doc;
 
-import java.util.Arrays;
-import java.util.Collection;
+import oripa.persistence.dao.FileType;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class MultiTypeProperty<Data> implements FileTypePropertyWithAccessor<Data> {
-
-	private final Collection<FileTypeProperty<Data>> properties;
-
-	public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
-		this.properties = properties;
+public class DocFileTypes {
+	public static FileType<Doc> opx() {
+		return new FileType<>(CreasePatternFileTypeKey.OPX);
 	}
 
-	@Override
-	public Integer getOrder() {
-		return -1;
+	public static FileType<Doc> fold() {
+		return new FileType<>(CreasePatternFileTypeKey.FOLD);
 	}
 
-	@Override
-	public String getKeyText() {
-		return String.join("+", getExtensions());
+	public static FileType<Doc> pictutre() {
+		return new FileType<>(CreasePatternFileTypeKey.PICT);
 	}
 
-	@Override
-	public String[] getExtensions() {
-		return properties.stream()
-				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
-				.toList().toArray(new String[0]);
+	public static FileType<Doc> dxf() {
+		return new FileType<>(CreasePatternFileTypeKey.DXF);
 	}
 
-	@Override
-	public Loader<Data> getLoader() {
-		return null;
+	public static FileType<Doc> cp() {
+		return new FileType<>(CreasePatternFileTypeKey.CP);
 	}
 
-	@Override
-	public Exporter<Data> getExporter() {
-		return null;
+	public static FileType<Doc> svg() {
+		return new FileType<>(CreasePatternFileTypeKey.SVG);
 	}
+
+	public static FileType<Doc> pdf() {
+		return new FileType<>(CreasePatternFileTypeKey.PDF);
+	}
+
 }

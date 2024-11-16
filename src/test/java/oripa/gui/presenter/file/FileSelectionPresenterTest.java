@@ -37,9 +37,9 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.LoadingFileChooserView;
 import oripa.gui.view.file.SavingFileChooserView;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.FileAccessSupport;
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
@@ -83,7 +83,7 @@ class FileSelectionPresenterTest {
 			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
 			when(view.getSelectedFilterDescription()).thenReturn("description");
 
-			FileTypeProperty<Doc> type = mock();
+			FileType<Doc> type = mock();
 
 			setupFileSelectionServiceForSaving("opx", type);
 
@@ -113,7 +113,7 @@ class FileSelectionPresenterTest {
 			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
 			when(view.getSelectedFilterDescription()).thenReturn("description");
 
-			FileTypeProperty<Doc> type = mock();
+			FileType<Doc> type = mock();
 
 			setupFileSelectionServiceForSaving("opx", type);
 
@@ -144,7 +144,7 @@ class FileSelectionPresenterTest {
 			when(view.getSelectedFilterDescription()).thenReturn("description");
 			when(view.showOverwriteConfirmMessage()).thenReturn(true);
 
-			FileTypeProperty<Doc> type = mock();
+			FileType<Doc> type = mock();
 
 			setupFileSelectionServiceForSaving("opx", type);
 
@@ -193,7 +193,7 @@ class FileSelectionPresenterTest {
 			assertEquals(UserAction.CANCELED, result.action());
 		}
 
-		void setupFileSelectionServiceForSaving(final String extension, final FileTypeProperty<Doc> type) {
+		void setupFileSelectionServiceForSaving(final String extension, final FileType<Doc> type) {
 			FileAccessSupport<Doc> support = mock();
 			when(support.getExtensions()).thenReturn(new String[] { "opx" });
 
@@ -223,11 +223,11 @@ class FileSelectionPresenterTest {
 			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
 			when(view.getSelectedFilterDescription()).thenReturn("description");
 
-			FileTypeProperty<Doc> type1 = mock();
+			FileType<Doc> type1 = mock();
 			FileAccessSupport<Doc> support1 = mock();
 			when(support1.getExtensions()).thenReturn(new String[] { "opx" });
 
-			FileTypeProperty<Doc> type2 = mock();
+			FileType<Doc> type2 = mock();
 			FileAccessSupport<Doc> support2 = mock();
 			when(support2.getExtensions()).thenReturn(new String[] { "fold" });
 

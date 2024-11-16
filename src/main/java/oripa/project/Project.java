@@ -24,7 +24,9 @@ import java.util.Optional;
 
 import oripa.domain.projectprop.Property;
 import oripa.domain.projectprop.PropertyHolder;
-import oripa.persistence.doc.CreasePatternFileTypeKey;
+import oripa.persistence.dao.FileType;
+import oripa.persistence.doc.Doc;
+import oripa.persistence.doc.DocFileTypes;
 
 /**
  * Manages project data.
@@ -41,11 +43,11 @@ public class Project implements PropertyHolder {
 
 	private String dataFilePath = "";
 
-	private static final List<CreasePatternFileTypeKey> projectFileTypes = List.of(
-			CreasePatternFileTypeKey.OPX,
-			CreasePatternFileTypeKey.FOLD);
+	private static final List<FileType<Doc>> projectFileTypes = List.of(
+			DocFileTypes.opx(),
+			DocFileTypes.fold());
 
-	public static List<CreasePatternFileTypeKey> projectFileTypes() {
+	public static List<FileType<Doc>> projectFileTypes() {
 		return projectFileTypes;
 	}
 
@@ -76,7 +78,7 @@ public class Project implements PropertyHolder {
 
 	}
 
-	public Optional<CreasePatternFileTypeKey> getProjectFileType() {
+	public Optional<FileType<Doc>> getProjectFileType() {
 		return projectFileTypes.stream()
 				.filter(type -> type.extensionsMatch(dataFilePath))
 				.findFirst();

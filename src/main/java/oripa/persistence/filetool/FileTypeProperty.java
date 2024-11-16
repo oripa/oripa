@@ -48,8 +48,4 @@ public interface FileTypeProperty<Data> {
 	String getKeyText();
 
 	Integer getOrder();
-
-	Loader<Data> getLoader();
-
-	Exporter<Data> getExporter();
 }

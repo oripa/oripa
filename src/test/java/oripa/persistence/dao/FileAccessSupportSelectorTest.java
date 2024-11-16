@@ -205,10 +205,15 @@ class FileAccessSupportSelectorTest {
 		@Test
 		void returnsGivenSupport() {
 
-			when(support.getSavingAction()).thenReturn(mock());
+			FileType<Doc> type = mock();
+			FileTypeProperty<Doc> typeProperty = mock();
 
-			Collection<FileTypeProperty<Doc>> fileTypes = mock();
-			when(fileTypes.contains(any())).thenReturn(true);
+			when(support.getSavingAction()).thenReturn(mock());
+			when(support.getTargetType()).thenReturn(typeProperty);
+
+			when(type.getFileTypeProperty()).thenReturn(typeProperty);
+
+			Collection<FileType<Doc>> fileTypes = List.of(type);
 
 			when(supports.values()).thenReturn(List.of(support));
 
@@ -222,12 +227,18 @@ class FileAccessSupportSelectorTest {
 		@Test
 		void emptyIfNoTypeMatches() {
 
+			FileType<Doc> type = mock();
+			FileTypeProperty<Doc> typeProperty = mock();
+
 			when(support.getSavingAction()).thenReturn(mock());
+			when(support.getTargetType()).thenReturn(typeProperty);
+
+			// returns other type property.
+			when(type.getFileTypeProperty()).thenReturn(mock());
 
 			when(supports.values()).thenReturn(List.of(support));
 
-			Collection<FileTypeProperty<Doc>> fileTypes = mock();
-			when(fileTypes.contains(any())).thenReturn(false);
+			Collection<FileType<Doc>> fileTypes = List.of(type);
 
 			var savables = selector.getSavablesOf(fileTypes);
 

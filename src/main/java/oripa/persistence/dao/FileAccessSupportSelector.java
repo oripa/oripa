@@ -56,8 +56,8 @@ public class FileAccessSupportSelector<Data> {
 	 *            A value that describes the file type you want.
 	 * @return A support object for given key. Empty if no support for the key.
 	 */
-	public Optional<FileAccessSupport<Data>> getFileAccessSupport(final FileTypeProperty<Data> key) {
-		return Optional.ofNullable(fileAccessSupports.get(key));
+	public Optional<FileAccessSupport<Data>> getFileAccessSupport(final FileType<Data> key) {
+		return Optional.ofNullable(fileAccessSupports.get(key.getFileTypeProperty()));
 	}
 
 	/**
@@ -135,9 +135,12 @@ public class FileAccessSupportSelector<Data> {
 				.toList();
 	}
 
-	public List<FileAccessSupport<Data>> getSavablesOf(final Collection<FileTypeProperty<Data>> types) {
+	public List<FileAccessSupport<Data>> getSavablesOf(final Collection<FileType<Data>> types) {
 		return getSavables().stream()
-				.filter(support -> types.contains(support.getTargetType()))
+				.filter(support -> types.stream()
+						.map(t -> t.getFileTypeProperty())
+						.toList()
+						.contains(support.getTargetType()))
 				.toList();
 	}
 
