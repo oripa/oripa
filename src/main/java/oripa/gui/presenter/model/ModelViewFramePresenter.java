@@ -47,10 +47,11 @@ public class ModelViewFramePresenter {
 
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,
+			final ModelViewComponentPresenterFactory componentPresenterFactory,
 			final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
 			final PainterScreenSetting mainScreenSetting,
 			final List<OrigamiModel> origamiModels,
-			final CutModelOutlinesHolder lineHolder,
+			final CutModelOutlinesHolder cutModelOutlineHolder,
 			final CallbackOnUpdate onUpdateScissorsLine,
 			final FileAccessService<OrigamiModel> fileAccessService,
 			final double eps) {
@@ -62,7 +63,9 @@ public class ModelViewFramePresenter {
 		this.mainScreenSetting = mainScreenSetting;
 		this.origamiModels = origamiModels;
 
-		var screenPresenter = new ModelViewScreenPresenter(view.getModelScreenView(), lineHolder, onUpdateScissorsLine,
+		var screenPresenter = componentPresenterFactory.createScreenPresenter(
+				view.getModelScreenView(),
+				onUpdateScissorsLine,
 				eps);
 
 		addListenersToComponents();

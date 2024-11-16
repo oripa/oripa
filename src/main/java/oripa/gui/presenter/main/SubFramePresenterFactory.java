@@ -32,6 +32,7 @@ import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
+import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
@@ -53,6 +54,7 @@ public class SubFramePresenterFactory {
 	private final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory;
 	private final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory;
 
+	private final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory;
 	private final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory;
 	private final FileAccessService<OrigamiModel> origamiModelFileAccessService;
 	private final CutModelOutlinesHolder cutModelOutlinesHolder;
@@ -64,20 +66,22 @@ public class SubFramePresenterFactory {
 			final PainterScreenSetting mainScreenSetting,
 			final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory,
 			final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory,
+			final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory,
 			final FileAccessService<OrigamiModel> origamiModelFileAccessService,
 			final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileFactory fileFactory) {
 		this.fileChooserFactory = fileChooserFactory;
+		this.mainScreenSetting = mainScreenSetting;
 
 		this.foldedModelFileSelectionPresenterFactory = foldedModelFileSelectionPresenterFactory;
+		this.foldedModelFileAccessFactory = foldedModelFileAccessFactory;
+
+		this.modelViewComponentPresenterFactory = modelViewComponentPresenterFactory;
+		this.origamiModelFileAccessService = origamiModelFileAccessService;
 		this.origamiModelFileSelectionPresenterFactory = origamiModelFileSelectionPresenterFactory;
 
-		this.mainScreenSetting = mainScreenSetting;
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
-
-		this.origamiModelFileAccessService = origamiModelFileAccessService;
-		this.foldedModelFileAccessFactory = foldedModelFileAccessFactory;
 		this.fileFactory = fileFactory;
 	}
 
@@ -88,6 +92,7 @@ public class SubFramePresenterFactory {
 			final double eps) {
 		return new ModelViewFramePresenter(
 				view,
+				modelViewComponentPresenterFactory,
 				origamiModelFileSelectionPresenterFactory,
 				mainScreenSetting,
 				origamiModels,

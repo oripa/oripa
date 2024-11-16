@@ -58,6 +58,7 @@ import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
+import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
@@ -205,11 +206,14 @@ public class ORIPA {
 					fileFactory,
 					extensionCorrector);
 
+			var modelViewComponentPresenterFactory = new ModelViewComponentPresenterFactory(cutModelOutlinesHolder);
+
 			var subFramePresenterFactory = new SubFramePresenterFactory(
 					fileChooserFactory,
 					mainViewSetting.getPainterScreenSetting(),
 					foldedModelfileSelectionPresenterFactory,
 					foldedModelFileAccessFactory,
+					modelViewComponentPresenterFactory,
 					origamiModelFileAccessService,
 					origamiModelfileSelectionPresenterFactory,
 					cutModelOutlinesHolder,
@@ -225,19 +229,19 @@ public class ORIPA {
 					new FolderFactory());
 
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
+					mainViewSetting.getPainterScreenSetting(),
 					subFrameFactory,
 					subFramePresenterFactory,
-					modelComputationFacadeFactory,
 					fileChooserFactory,
+					modelComputationFacadeFactory,
+					presentationContext,
 					statePopperFactory,
 					viewUpdateSupport,
-					presentationContext,
 					domainContext,
 					cutModelOutlinesHolder,
 					bindingFactory,
 					fileFactory,
-					docFileAccessService,
-					mainViewSetting.getPainterScreenSetting());
+					extensionCorrector);
 
 			var fileHistory = new FileHistory(Constants.MRUFILE_NUM, fileFactory);
 			var iniFileAccess = new IniFileAccess(

@@ -16,26 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.file;
+package oripa.gui.presenter.model;
 
-import oripa.persistence.filetool.FileTypeProperty;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.gui.view.model.ModelViewScreenView;
+import oripa.gui.view.util.CallbackOnUpdate;
 
 /**
  * @author OUCHI Koji
  *
  */
-public record FileSelectionResult<Data>(UserAction action, String path, FileTypeProperty<Data> type) {
-	public static <Data> FileSelectionResult<Data> createCancel() {
-		return new FileSelectionResult<>(UserAction.CANCELED, null, null);
+public class ModelViewComponentPresenterFactory {
+
+	private final CutModelOutlinesHolder cutModelOutlineHolder;
+
+	public ModelViewComponentPresenterFactory(final CutModelOutlinesHolder cutModelOutlineHolder) {
+		this.cutModelOutlineHolder = cutModelOutlineHolder;
 	}
 
-	public static <Data> FileSelectionResult<Data> createSelectedForLoad(final String path) {
-		return new FileSelectionResult<>(UserAction.SELECTED, path, null);
-	}
-
-	public static <Data> FileSelectionResult<Data> createSelectedForSave(
-			final String path,
-			final FileTypeProperty<Data> type) {
-		return new FileSelectionResult<>(UserAction.SELECTED, path, type);
+	public ModelViewScreenPresenter createScreenPresenter(
+			final ModelViewScreenView view,
+			final CallbackOnUpdate onUpdateScissorsLine,
+			final double eps) {
+		return new ModelViewScreenPresenter(
+				view,
+				cutModelOutlineHolder,
+				onUpdateScissorsLine,
+				eps);
 	}
 }
