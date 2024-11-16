@@ -18,7 +18,7 @@
  */
 package oripa.gui.presenter.main;
 
-import oripa.application.FileAccessService;
+import oripa.application.FileSelectionService;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintDomainContext;
@@ -37,6 +37,7 @@ import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.persistence.doc.Doc;
+import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
 /**
@@ -56,22 +57,22 @@ public class MainComponentPresenterFactory {
 	private final BindingObjectFactoryFacade bindingFactory;
 	private final FileFactory fileFactory;
 	private final PainterScreenSetting mainScreenSetting;
-	private final FileAccessService<Doc> fileAccessService;
+	private final ExtensionCorrector extensionCorrector;
 
 	public MainComponentPresenterFactory(
+			final PainterScreenSetting mainScreenSetting,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
-			final ModelComputationFacadeFactory computationFacadeFactory,
 			final FileChooserFactory fileChooserFactory,
+			final ModelComputationFacadeFactory computationFacadeFactory,
+			final CreasePatternPresentationContext presentationContext,
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final ViewUpdateSupport viewUpdateSupport,
-			final CreasePatternPresentationContext presentationContext,
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
 			final FileFactory fileFactory,
-			final FileAccessService<Doc> fileAccessService,
-			final PainterScreenSetting mainScreenSetting) {
+			final ExtensionCorrector extensionCorrector) {
 
 		this.subFrameFactory = subFrameFactory;
 		this.subFramePresenterFactory = subFramePresenterFactory;
@@ -84,8 +85,8 @@ public class MainComponentPresenterFactory {
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.bindingFactory = bindingFactory;
 		this.fileFactory = fileFactory;
-		this.fileAccessService = fileAccessService;
 		this.mainScreenSetting = mainScreenSetting;
+		this.extensionCorrector = extensionCorrector;
 
 	}
 
@@ -139,11 +140,12 @@ public class MainComponentPresenterFactory {
 	}
 
 	public DocFileSelectionPresenter createDocFileSelectionPresenter(
-			final FrameView parent) {
+			final FrameView parent, final FileSelectionService<Doc> fileSelectionService) {
 		return new DocFileSelectionPresenter(
 				parent,
 				fileChooserFactory,
 				fileFactory,
-				fileAccessService);
+				fileSelectionService,
+				extensionCorrector);
 	}
 }

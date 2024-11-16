@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
 
-import oripa.application.FileAccessService;
+import oripa.application.FileSelectionService;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.exception.UserCanceledException;
@@ -46,9 +46,9 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
 			final FileFactory fileFactory,
-			final FileAccessService<Doc> fileAccessService) {
-		super(parent, chooserFactory, fileFactory, fileAccessService.getFileSelectionService(),
-				new ExtensionCorrector());
+			final FileSelectionService<Doc> fileSelectionService,
+			final ExtensionCorrector extensionCorrector) {
+		super(parent, chooserFactory, fileFactory, fileSelectionService, extensionCorrector);
 	}
 
 	/**

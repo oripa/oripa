@@ -23,15 +23,12 @@ import java.util.List;
 import oripa.application.FileAccessService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.presenter.file.FileSelectionPresenter;
-import oripa.gui.view.file.FileChooserFactory;
+import oripa.gui.presenter.file.UserAction;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
-import oripa.util.file.ExtensionCorrector;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -40,35 +37,35 @@ import oripa.util.file.FileFactory;
 public class ModelViewFramePresenter {
 
 	private final ModelViewFrameView view;
-	private final FileChooserFactory fileChooserFactory;
+	private final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
 
 	private final List<OrigamiModel> origamiModels;
 	private OrigamiModel origamiModel;
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final FileFactory fileFactory;
 	private final FileAccessService<OrigamiModel> fileAccessService;
 
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,
-			final FileChooserFactory fileChooserFactory,
+			final ModelViewComponentPresenterFactory componentPresenterFactory,
+			final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
 			final PainterScreenSetting mainScreenSetting,
 			final List<OrigamiModel> origamiModels,
-			final CutModelOutlinesHolder lineHolder,
+			final CutModelOutlinesHolder cutModelOutlineHolder,
 			final CallbackOnUpdate onUpdateScissorsLine,
 			final FileAccessService<OrigamiModel> fileAccessService,
-			final FileFactory fileFactory,
 			final double eps) {
 		this.view = view;
-		this.fileChooserFactory = fileChooserFactory;
+		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
 
 		this.fileAccessService = fileAccessService;
-		this.fileFactory = fileFactory;
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.origamiModels = origamiModels;
 
-		var screenPresenter = new ModelViewScreenPresenter(view.getModelScreenView(), lineHolder, onUpdateScissorsLine,
+		var screenPresenter = componentPresenterFactory.createScreenPresenter(
+				view.getModelScreenView(),
+				onUpdateScissorsLine,
 				eps);
 
 		addListenersToComponents();
@@ -115,10 +112,13 @@ public class ModelViewFramePresenter {
 	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
-			var presenter = new FileSelectionPresenter<>(view, fileChooserFactory, fileFactory,
-					fileAccessService.getFileSelectionService(), new ExtensionCorrector());
+			var presenter = fileSelectionPresenterFactory.create(view, fileAccessService.getFileSelectionService());
 
 			var selection = presenter.saveUsingGUI(null, List.of(type));
+
+			if (selection.action() == UserAction.CANCELED) {
+				return;
+			}
 
 			fileAccessService.saveFile(origamiModel, selection.path(), type);
 

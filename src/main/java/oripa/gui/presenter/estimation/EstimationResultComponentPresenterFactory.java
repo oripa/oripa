@@ -18,67 +18,42 @@
  */
 package oripa.gui.presenter.estimation;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
-import oripa.domain.fold.FoldedModel;
-import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class EstimationResultFramePresenter {
-	private final EstimationResultFrameView view;
+public class EstimationResultComponentPresenterFactory {
+	private final FileChooserFactory fileChooserFactory;
+	private final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
 
-	private final List<FoldedModel> foldedModels;
-	private FoldedModel foldedModel;
-	private final double eps;
+	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
 
-	public EstimationResultFramePresenter(
-			final EstimationResultFrameView view,
+	public EstimationResultComponentPresenterFactory(
 			final FileChooserFactory fileChooserFactory,
 			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
-			final FoldedModelFileAccessServiceFactory fileAccessFactory,
-			final FileFactory fileFactory,
-			final List<FoldedModel> foldedModels,
-			final double eps,
+			final FoldedModelFileAccessServiceFactory fileAccessServiceFactory) {
+		this.fileChooserFactory = fileChooserFactory;
+		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
+		this.fileAccessServiceFactory = fileAccessServiceFactory;
+	}
+
+	public EstimationResultUIPresenter createEstimationResultUIPresenter(
+			final EstimationResultUIView view,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
-		this.view = view;
-
-		this.foldedModels = foldedModels;
-
-		this.eps = eps;
-
-		var uiPresenter = new EstimationResultUIPresenter(
-				view.getUI(),
+		return new EstimationResultUIPresenter(
+				view,
 				fileChooserFactory,
 				fileSelectionPresenterFactory,
-				fileAccessFactory,
+				fileAccessServiceFactory,
 				lastFilePath,
 				lastFilePathChangeListener);
 
-		addListeners();
-
-		setToView();
-	}
-
-	private void setToView() {
-		view.setModelCount(foldedModels.size());
-	}
-
-	private void addListeners() {
-		view.addModelSwitchListener(index -> {
-			foldedModel = foldedModels.get(index);
-			view.setModel(foldedModel, eps);
-		});
-	}
-
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
 	}
 }

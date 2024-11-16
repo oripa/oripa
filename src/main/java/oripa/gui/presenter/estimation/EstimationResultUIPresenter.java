@@ -26,23 +26,19 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.FileAccessService;
+import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
 import oripa.domain.fold.FoldedModel;
-import oripa.gui.presenter.file.FileSelectionPresenter;
+import oripa.gui.presenter.file.UserAction;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.util.ColorUtil;
-import oripa.persistence.dao.FileDAO;
 import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.entity.FoldedModelFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
-import oripa.util.file.ExtensionCorrector;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -54,8 +50,9 @@ public class EstimationResultUIPresenter {
 	private final EstimationResultUIView view;
 
 	final FileChooserFactory fileChooserFactory;
+	private final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
 
-	private final FileFactory fileFactory;
+	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
 
 	private String lastFilePath;
 	private final Consumer<String> lastFilePathChangeListener;
@@ -65,14 +62,16 @@ public class EstimationResultUIPresenter {
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
 			final FileChooserFactory fileChooserFactory,
-			final FileFactory fileFactory,
+			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
+			final FoldedModelFileAccessServiceFactory fileAccessFactory,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
 
 		this.fileChooserFactory = fileChooserFactory;
+		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
 
-		this.fileFactory = fileFactory;
+		this.fileAccessServiceFactory = fileAccessFactory;
 
 		this.lastFilePath = lastFilePath;
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
@@ -93,9 +92,7 @@ public class EstimationResultUIPresenter {
 	 */
 	private void export() {
 		try {
-			var supportSelectorFactory = new FoldedModelFileAccessSupportSelectorFactory();
-			var fileAccessService = new FileAccessService<FoldedModelEntity>(
-					new FileDAO<>(supportSelectorFactory.create(view.isFaceOrderFlipped(), fileFactory), fileFactory));
+			var fileAccessService = fileAccessServiceFactory.create(view.isFaceOrderFlipped());
 
 			fileAccessService.setConfigToSavingAction(
 					FoldedModelFileTypeKey.SVG_FOLDED_MODEL, this::createSVGConfig);
@@ -109,14 +106,14 @@ public class EstimationResultUIPresenter {
 
 			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
 
-			var presenter = new FileSelectionPresenter<FoldedModelEntity>(
-					(FrameView) view.getTopLevelView(),
-					fileChooserFactory,
-					fileFactory,
-					fileAccessService.getFileSelectionService(),
-					new ExtensionCorrector());
+			var presenter = fileSelectionPresenterFactory.create(
+					(FrameView) view.getTopLevelView(), fileAccessService.getFileSelectionService());
 
 			var selection = presenter.saveUsingGUI(lastFilePath);
+
+			if (selection.action() == UserAction.CANCELED) {
+				return;
+			}
 
 			fileAccessService.saveFile(entity, selection.path(), selection.type());
 

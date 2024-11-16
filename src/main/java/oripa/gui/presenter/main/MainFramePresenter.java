@@ -269,7 +269,9 @@ public class MainFramePresenter {
 
 		view.addImportButtonListener(() -> {
 			try {
-				var presenter = componentPresenterFactory.createDocFileSelectionPresenter(view);
+				var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
+						view,
+						dataFileAccess.getFileSelectionService());
 
 				var selection = presenter.loadUsingGUI(fileHistory.getLastPath());
 				if (selection.action() == UserAction.CANCELED) {
@@ -450,7 +452,8 @@ public class MainFramePresenter {
 
 		try {
 
-			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(view);
+			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
+					view, dataFileAccess.getFileSelectionService());
 
 			File givenFile = fileFactory.create(
 					directory,
@@ -508,7 +511,9 @@ public class MainFramePresenter {
 	 */
 	private void exportFileUsingGUIWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(view);
+			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
+					view,
+					dataFileAccess.getFileSelectionService());
 
 			var selection = presenter.saveFileWithModelCheck(
 					Doc.forSaving(paintContext.getCreasePattern(), project.getProperty()),
@@ -563,7 +568,9 @@ public class MainFramePresenter {
 	 * This method opens the file dialog and load the selected file.
 	 */
 	private void loadFileUsingGUI() {
-		var selection = componentPresenterFactory.createDocFileSelectionPresenter(view)
+		var selection = componentPresenterFactory.createDocFileSelectionPresenter(
+				view,
+				dataFileAccess.getFileSelectionService())
 				.loadUsingGUI(fileHistory.getLastPath());
 
 		if (selection.action() == UserAction.CANCELED) {
