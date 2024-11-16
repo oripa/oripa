@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
 import oripa.domain.fold.FoldedModel;
+import oripa.gui.presenter.file.UserAction;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.gui.view.estimation.EstimationResultUIView;
@@ -109,6 +110,10 @@ public class EstimationResultUIPresenter {
 					(FrameView) view.getTopLevelView(), fileAccessService.getFileSelectionService());
 
 			var selection = presenter.saveUsingGUI(lastFilePath);
+
+			if (selection.action() == UserAction.CANCELED) {
+				return;
+			}
 
 			fileAccessService.saveFile(entity, selection.path(), selection.type());
 

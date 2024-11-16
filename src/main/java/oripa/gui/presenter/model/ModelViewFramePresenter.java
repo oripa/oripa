@@ -24,6 +24,7 @@ import oripa.application.FileAccessService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.file.FileSelectionPresenter;
+import oripa.gui.presenter.file.UserAction;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
@@ -119,6 +120,10 @@ public class ModelViewFramePresenter {
 					fileAccessService.getFileSelectionService(), new ExtensionCorrector());
 
 			var selection = presenter.saveUsingGUI(null, List.of(type));
+
+			if (selection.action() == UserAction.CANCELED) {
+				return;
+			}
 
 			fileAccessService.saveFile(origamiModel, selection.path(), type);
 
