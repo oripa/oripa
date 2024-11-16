@@ -31,8 +31,8 @@ import oripa.gui.presenter.file.FileSelectionPresenter;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
@@ -66,7 +66,7 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 	 */
 	public FileSelectionResult<Doc> saveFileWithModelCheck(final Doc doc,
 			final String directory,
-			final FileTypeProperty<Doc> type, final FrameView owner,
+			final FileType<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError,
 			final double pointEps)
 			throws IOException, UserCanceledException {

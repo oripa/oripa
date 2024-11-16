@@ -28,8 +28,8 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.entity.OrigamiModelFileTypes;
-import oripa.persistence.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
@@ -110,7 +110,7 @@ public class ModelViewFramePresenter {
 		view.repaint();
 	}
 
-	private void exportFile(final FileTypeProperty<OrigamiModel> type) {
+	private void exportFile(final FileType<OrigamiModel> type) {
 
 		try {
 			var presenter = fileSelectionPresenterFactory.create(view, fileAccessService.getFileSelectionService());

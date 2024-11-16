@@ -19,22 +19,22 @@
 package oripa.persistence.entity;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.filetool.FileTypeProperty;
+import oripa.persistence.dao.FileType;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class OrigamiModelFileTypes {
-	public static FileTypeProperty<OrigamiModel> obj() {
-		return OrigamiModelFileTypeKey.OBJ_MODEL;
+	public static FileType<OrigamiModel> obj() {
+		return new FileType<>(OrigamiModelFileTypeKey.OBJ_MODEL);
 	}
 
-	public static FileTypeProperty<OrigamiModel> dxf() {
-		return OrigamiModelFileTypeKey.DXF_MODEL;
+	public static FileType<OrigamiModel> dxf() {
+		return new FileType<>(OrigamiModelFileTypeKey.DXF_MODEL);
 	}
 
-	public static FileTypeProperty<OrigamiModel> svg() {
-		return OrigamiModelFileTypeKey.SVG_MODEL;
+	public static FileType<OrigamiModel> svg() {
+		return new FileType<>(OrigamiModelFileTypeKey.SVG_MODEL);
 	}
 }

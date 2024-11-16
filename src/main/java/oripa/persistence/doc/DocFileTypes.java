@@ -18,39 +18,39 @@
  */
 package oripa.persistence.doc;
 
-import oripa.persistence.filetool.FileTypeProperty;
+import oripa.persistence.dao.FileType;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class DocFileTypes {
-	public static FileTypeProperty<Doc> opx() {
-		return CreasePatternFileTypeKey.OPX;
+	public static FileType<Doc> opx() {
+		return new FileType<>(CreasePatternFileTypeKey.OPX);
 	}
 
-	public static FileTypeProperty<Doc> fold() {
-		return CreasePatternFileTypeKey.FOLD;
+	public static FileType<Doc> fold() {
+		return new FileType<>(CreasePatternFileTypeKey.FOLD);
 	}
 
-	public static FileTypeProperty<Doc> pictutre() {
-		return CreasePatternFileTypeKey.PICT;
+	public static FileType<Doc> pictutre() {
+		return new FileType<>(CreasePatternFileTypeKey.PICT);
 	}
 
-	public static FileTypeProperty<Doc> dxf() {
-		return CreasePatternFileTypeKey.DXF;
+	public static FileType<Doc> dxf() {
+		return new FileType<>(CreasePatternFileTypeKey.DXF);
 	}
 
-	public static FileTypeProperty<Doc> cp() {
-		return CreasePatternFileTypeKey.CP;
+	public static FileType<Doc> cp() {
+		return new FileType<>(CreasePatternFileTypeKey.CP);
 	}
 
-	public static FileTypeProperty<Doc> svg() {
-		return CreasePatternFileTypeKey.SVG;
+	public static FileType<Doc> svg() {
+		return new FileType<>(CreasePatternFileTypeKey.SVG);
 	}
 
-	public static FileTypeProperty<Doc> pdf() {
-		return CreasePatternFileTypeKey.PDF;
+	public static FileType<Doc> pdf() {
+		return new FileType<>(CreasePatternFileTypeKey.PDF);
 	}
 
 }

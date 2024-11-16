@@ -16,37 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.entity;
+package oripa.persistence.dao;
 
-import oripa.persistence.dao.FileType;
+import oripa.persistence.filetool.FileTypeProperty;
 
 /**
+ * This is a value object. {@code equals()} and {@code hashCode()} uses the
+ * given {@code property}'s ones.
+ *
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFileTypes {
-	public static FileType<FoldedModelEntity> svg() {
-		return new FileType<>(FoldedModelFileTypeKey.SVG_FOLDED_MODEL);
+public class FileType<Data> {
+	private final FileTypeProperty<Data> property;
+
+	public FileType(final FileTypeProperty<Data> property) {
+		this.property = property;
 	}
 
-	public static FileType<FoldedModelEntity> flippedSvg() {
-		return new FileType<>(FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP);
+	FileTypeProperty<Data> getFileTypeProperty() {
+		return property;
 	}
 
-	public static FileType<FoldedModelEntity> picture() {
-		return new FileType<>(FoldedModelFileTypeKey.PICTURE);
+	public String[] getExtensions() {
+		return property.getExtensions();
 	}
 
-	public static FileType<FoldedModelEntity> ormat() {
-		return new FileType<>(FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL);
+	public boolean extensionsMatch(final String path) {
+		return property.extensionsMatch(path);
 	}
 
-	public static FileType<FoldedModelEntity> singleFrameFold() {
-		return new FileType<>(FoldedModelFileTypeKey.FOLD_SINGLE_OVERLAPS);
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof FileType f) {
+			return property.equals(f.getFileTypeProperty());
+		}
+		return false;
 	}
 
-	public static FileType<FoldedModelEntity> multiFrameFold() {
-		return new FileType<>(FoldedModelFileTypeKey.FOLD_ALL_OVERLAPS);
+	@Override
+	public int hashCode() {
+		return property.hashCode();
 	}
-
 }

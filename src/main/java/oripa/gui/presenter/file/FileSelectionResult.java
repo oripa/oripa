@@ -18,13 +18,13 @@
  */
 package oripa.gui.presenter.file;
 
-import oripa.persistence.filetool.FileTypeProperty;
+import oripa.persistence.dao.FileType;
 
 /**
  * @author OUCHI Koji
  *
  */
-public record FileSelectionResult<Data>(UserAction action, String path, FileTypeProperty<Data> type) {
+public record FileSelectionResult<Data>(UserAction action, String path, FileType<Data> type) {
 	public static <Data> FileSelectionResult<Data> createCancel() {
 		return new FileSelectionResult<>(UserAction.CANCELED, null, null);
 	}
@@ -35,7 +35,7 @@ public record FileSelectionResult<Data>(UserAction action, String path, FileType
 
 	public static <Data> FileSelectionResult<Data> createSelectedForSave(
 			final String path,
-			final FileTypeProperty<Data> type) {
+			final FileType<Data> type) {
 		return new FileSelectionResult<>(UserAction.SELECTED, path, type);
 	}
 }

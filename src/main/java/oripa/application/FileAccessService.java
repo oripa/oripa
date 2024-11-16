@@ -25,8 +25,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import oripa.persistence.dao.FileDAO;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.filetool.FileAccessSupport;
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -52,7 +52,7 @@ public class FileAccessService<Data> {
 		return new FileSelectionService<>(fileDAO.getFileAccessSupportSelector());
 	}
 
-	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
+	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
 		fileDAO.setConfigToSavingAction(key, configSupplier);
 	}
 
@@ -62,7 +62,7 @@ public class FileAccessService<Data> {
 	 * @param beforeSave
 	 *            a consumer whose parameters are data and file path.
 	 */
-	public void setBeforeSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> beforeSave) {
+	public void setBeforeSave(final FileType<Data> key, final BiConsumer<Data, String> beforeSave) {
 		fileDAO.setBeforeSave(key, beforeSave);
 	}
 
@@ -72,7 +72,7 @@ public class FileAccessService<Data> {
 	 * @param afterSave
 	 *            a consumer whose parameters are data and file path.
 	 */
-	public void setAfterSave(final FileTypeProperty<Data> key, final BiConsumer<Data, String> afterSave) {
+	public void setAfterSave(final FileType<Data> key, final BiConsumer<Data, String> afterSave) {
 		fileDAO.setAfterSave(key, afterSave);
 	}
 
@@ -91,7 +91,7 @@ public class FileAccessService<Data> {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveFile(final Data data, final String path, final FileTypeProperty<Data> type)
+	public void saveFile(final Data data, final String path, final FileType<Data> type)
 			throws IOException, IllegalArgumentException {
 		if (type == null) {
 			fileDAO.save(data, path);

@@ -27,8 +27,8 @@ import oripa.application.FileSelectionService;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.filetool.FileAccessSupport;
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
@@ -64,7 +64,7 @@ public class FileSelectionPresenter<Data> {
 		return saveUsingGUIImpl(path, fileSelectionService.getSavableSupports());
 	}
 
-	public FileSelectionResult<Data> saveUsingGUI(final String path, final List<FileTypeProperty<Data>> types) {
+	public FileSelectionResult<Data> saveUsingGUI(final String path, final List<FileType<Data>> types) {
 
 		return saveUsingGUIImpl(path, fileSelectionService.getSavableSupportsOf(types));
 	}

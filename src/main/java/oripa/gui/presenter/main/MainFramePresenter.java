@@ -56,10 +56,10 @@ import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.project.Project;
@@ -409,7 +409,7 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveFile(final FileTypeProperty<Doc> type) {
+	private void saveFile(final FileType<Doc> type) {
 		var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
 
 		try {
@@ -427,7 +427,7 @@ public class MainFramePresenter {
 	 * save file without origami model check
 	 */
 	@SafeVarargs
-	private void saveFileUsingGUI(final FileTypeProperty<Doc>... types) {
+	private void saveFileUsingGUI(final FileType<Doc>... types) {
 		var filePath = saveFileUsingGUIImpl(types);
 
 		afterSaveFile(filePath);
@@ -438,7 +438,7 @@ public class MainFramePresenter {
 	 * CP-edit history.
 	 */
 	@SafeVarargs
-	private void exportFileUsingGUI(final FileTypeProperty<Doc>... types) {
+	private void exportFileUsingGUI(final FileType<Doc>... types) {
 		saveFileUsingGUIImpl(types);
 	}
 
@@ -446,7 +446,7 @@ public class MainFramePresenter {
 	 * save file without origami model check
 	 */
 	@SafeVarargs
-	private String saveFileUsingGUIImpl(final FileTypeProperty<Doc>... types) {
+	private String saveFileUsingGUIImpl(final FileType<Doc>... types) {
 		var directory = fileHistory.getLastDirectory();
 		var fileName = project.getDataFileName();
 
@@ -509,7 +509,7 @@ public class MainFramePresenter {
 	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
 	 * model check before saving.
 	 */
-	private void exportFileUsingGUIWithModelCheck(final FileTypeProperty<Doc> type) {
+	private void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
 		try {
 			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
 					view,
