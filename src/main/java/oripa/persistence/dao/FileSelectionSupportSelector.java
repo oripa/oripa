@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.function.Supplier;
 
-import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingSupport;
 import oripa.util.file.FileFactory;
@@ -39,14 +38,18 @@ import oripa.util.file.FileFactory;
  * @author OUCHI Koji
  *
  */
-public class FileAccessSupportSelector<Data> {
-	private final SortedMap<FileTypeProperty<Data>, FileAccessSupport<Data>> fileAccessSupports;
+public class FileSelectionSupportSelector<Data> {
+	private final SortedMap<FileTypeProperty<Data>, FileSelectionSupport<Data>> fileSelectionSupports;
+
+	private final FileSelectionSupportFactory fileSelectionSupportFactory;
 	private final FileFactory fileFactory;
 
-	public FileAccessSupportSelector(
-			final SortedMap<FileTypeProperty<Data>, FileAccessSupport<Data>> supports,
+	public FileSelectionSupportSelector(
+			final SortedMap<FileTypeProperty<Data>, FileSelectionSupport<Data>> supports,
+			final FileSelectionSupportFactory fileSelectionSupportFactory,
 			final FileFactory fileFactory) {
-		this.fileAccessSupports = supports;
+		this.fileSelectionSupports = supports;
+		this.fileSelectionSupportFactory = fileSelectionSupportFactory;
 		this.fileFactory = fileFactory;
 	}
 
@@ -56,8 +59,8 @@ public class FileAccessSupportSelector<Data> {
 	 *            A value that describes the file type you want.
 	 * @return A support object for given key. Empty if no support for the key.
 	 */
-	public Optional<FileAccessSupport<Data>> getFileAccessSupport(final FileType<Data> key) {
-		return Optional.ofNullable(fileAccessSupports.get(key.getFileTypeProperty()));
+	public Optional<FileSelectionSupport<Data>> getFileAccessSupport(final FileType<Data> key) {
+		return Optional.ofNullable(fileSelectionSupports.get(key.getFileTypeProperty()));
 	}
 
 	/**
@@ -66,7 +69,7 @@ public class FileAccessSupportSelector<Data> {
 	 *         support object accepting all available types. empty if no support
 	 *         is available for loading.
 	 */
-	public List<FileAccessSupport<Data>> getLoadablesWithMultiType() {
+	public List<FileSelectionSupport<Data>> getLoadablesWithMultiType() {
 		var loadables = new ArrayList<>(getLoadables());
 
 		if (loadables.isEmpty()) {
@@ -74,8 +77,12 @@ public class FileAccessSupportSelector<Data> {
 		}
 
 		var multi = new MultiTypeAcceptableFileLoadingSupport<Data>(
-				loadables, "Any type");
-		loadables.add(multi);
+				loadables.stream()
+						.map(loadable -> loadable.getFileAccessSupport())
+						.toList(),
+				"Any type");
+
+		loadables.add(fileSelectionSupportFactory.create(multi));
 
 		Collections.sort(loadables);
 
@@ -86,9 +93,9 @@ public class FileAccessSupportSelector<Data> {
 	 *
 	 * @return support objects that can load data from a file.
 	 */
-	public List<FileAccessSupport<Data>> getLoadables() {
-		return fileAccessSupports.values().stream()
-				.filter(support -> support.getLoadingAction() != null)
+	public List<FileSelectionSupport<Data>> getLoadables() {
+		return fileSelectionSupports.values().stream()
+				.filter(support -> support.isLoadable())
 				.sorted()
 				.toList();
 	}
@@ -100,7 +107,7 @@ public class FileAccessSupportSelector<Data> {
 	 *             No support object is available for the given path. Or, the
 	 *             path is null or is for a directory.
 	 */
-	public FileAccessSupport<Data> getLoadableOf(final String path)
+	public FileSelectionSupport<Data> getLoadableOf(final String path)
 			throws IllegalArgumentException {
 		if (path == null) {
 			throw new IllegalArgumentException("Wrong path (null)");
@@ -128,19 +135,16 @@ public class FileAccessSupportSelector<Data> {
 	 *
 	 * @return support objects that can save a data object.
 	 */
-	public List<FileAccessSupport<Data>> getSavables() {
-		return fileAccessSupports.values().stream()
-				.filter(support -> support.getSavingAction() != null)
+	public List<FileSelectionSupport<Data>> getSavables() {
+		return fileSelectionSupports.values().stream()
+				.filter(support -> support.isSavable())
 				.sorted()
 				.toList();
 	}
 
-	public List<FileAccessSupport<Data>> getSavablesOf(final Collection<FileType<Data>> types) {
+	public List<FileSelectionSupport<Data>> getSavablesOf(final Collection<FileType<Data>> types) {
 		return getSavables().stream()
-				.filter(support -> types.stream()
-						.map(t -> t.getFileTypeProperty())
-						.toList()
-						.contains(support.getTargetType()))
+				.filter(support -> types.contains(support.getTargetType()))
 				.toList();
 	}
 
@@ -150,7 +154,7 @@ public class FileAccessSupportSelector<Data> {
 	 *            file path to save
 	 * @return A support object that can save a data object.
 	 */
-	public FileAccessSupport<Data> getSavableOf(final String path) {
+	public FileSelectionSupport<Data> getSavableOf(final String path) {
 		if (path == null) {
 			throw new IllegalArgumentException("path should not be null.");
 		}
@@ -160,7 +164,7 @@ public class FileAccessSupportSelector<Data> {
 						"The file type guessed from the extension is not supported."));
 	}
 
-	private FileAccessSupport<Data> find(final List<FileAccessSupport<Data>> supports, final String path,
+	private FileSelectionSupport<Data> find(final List<FileSelectionSupport<Data>> supports, final String path,
 			final Supplier<IllegalArgumentException> exceptionSupplier) {
 		return supports.stream()
 				.filter(support -> support.extensionsMatch(path))

@@ -31,6 +31,8 @@ import java.util.SortedMap;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -46,13 +48,16 @@ import oripa.util.file.FileFactory;
  *
  */
 @ExtendWith(MockitoExtension.class)
-class FileAccessSupportSelectorTest {
+class FileSelectionSupportSelectorTest {
 
 	@InjectMocks
-	FileAccessSupportSelector<Doc> selector;
+	FileSelectionSupportSelector<Doc> selector;
 
 	@Mock
-	SortedMap<FileTypeProperty<Doc>, FileAccessSupport<Doc>> supports;
+	SortedMap<FileTypeProperty<Doc>, FileSelectionSupport<Doc>> supports;
+
+	@Mock
+	FileSelectionSupportFactory selectionSupportFactory;
 
 	@Mock
 	FileFactory fileFactory;
@@ -60,24 +65,37 @@ class FileAccessSupportSelectorTest {
 	@Nested
 	class TestGetLoadablesWithMultiType {
 		@Mock
-		FileAccessSupport<Doc> support;
+		FileSelectionSupport<Doc> support;
 
 		@Mock
 		FileTypeProperty<Doc> fileType;
 
+		@Captor
+		ArgumentCaptor<FileAccessSupport<Doc>> multi;
+
+		@SuppressWarnings("unchecked")
 		@Test
 		void resultContainsMultiTypeSupport() {
 
-			when(support.getOrder()).thenReturn(1);
-			when(support.getLoadingAction()).thenReturn(mock());
+			FileAccessSupport<Doc> access = mock();
+			when(access.compareTo(any())).thenReturn(1);
+			when(access.getLoadingAction()).thenReturn(mock());
+
+			when(support.isLoadable()).thenReturn(true);
+			when(support.getFileAccessSupport()).thenReturn(access);
 
 			when(supports.values()).thenReturn(List.of(support));
+
+			FileSelectionSupport<Doc> forMulti = mock();
+			when(forMulti.compareTo(support)).thenReturn(-1);
+			when(selectionSupportFactory.create(any(FileAccessSupport.class))).thenReturn(forMulti);
 
 			var loadables = selector.getLoadablesWithMultiType();
 
 			assertEquals(2, loadables.size());
 
-			assertTrue(loadables.get(0) instanceof MultiTypeAcceptableFileLoadingSupport<Doc>);
+			verify(selectionSupportFactory).create(multi.capture());
+			assertTrue(multi.getValue() instanceof MultiTypeAcceptableFileLoadingSupport<Doc>);
 		}
 
 		@Test
@@ -94,12 +112,12 @@ class FileAccessSupportSelectorTest {
 	@Nested
 	class TestGetLoadables {
 		@Mock
-		FileAccessSupport<Doc> support;
+		FileSelectionSupport<Doc> support;
 
 		@Test
 		void returnsGivenSupport() {
 
-			when(support.getLoadingAction()).thenReturn(mock());
+			when(support.isLoadable()).thenReturn(true);
 
 			when(supports.values()).thenReturn(List.of(support));
 
@@ -124,7 +142,7 @@ class FileAccessSupportSelectorTest {
 	@Nested
 	class TestGetLoadableOf {
 		@Mock
-		FileAccessSupport<Doc> support;
+		FileSelectionSupport<Doc> support;
 
 		@Mock
 		FileTypeProperty<Doc> fileType;
@@ -132,7 +150,7 @@ class FileAccessSupportSelectorTest {
 		@Test
 		void returnsGivenSupportWhenPathIsCorrect() throws IOException {
 
-			when(support.getLoadingAction()).thenReturn(mock());
+			when(support.isLoadable()).thenReturn(true);
 			when(support.extensionsMatch(eq("canonical_path.ext"))).thenReturn(true);
 
 			when(supports.values()).thenReturn(List.of(support));
@@ -170,7 +188,7 @@ class FileAccessSupportSelectorTest {
 	@Nested
 	class TestGetSavables {
 		@Mock
-		FileAccessSupport<Doc> support;
+		FileSelectionSupport<Doc> support;
 
 		@Test
 		void returnsGivenSupport() {
@@ -200,7 +218,7 @@ class FileAccessSupportSelectorTest {
 	@Nested
 	class TestGetSavablesOf {
 		@Mock
-		FileAccessSupport<Doc> support;
+		FileSelectionSupport<Doc> support;
 
 		@Test
 		void returnsGivenSupport() {
@@ -208,8 +226,8 @@ class FileAccessSupportSelectorTest {
 			FileType<Doc> type = mock();
 			FileTypeProperty<Doc> typeProperty = mock();
 
-			when(support.getSavingAction()).thenReturn(mock());
-			when(support.getTargetType()).thenReturn(typeProperty);
+			when(support.isSavable()).thenReturn(true);
+			when(support.getTargetType()).thenReturn(type);
 
 			when(type.getFileTypeProperty()).thenReturn(typeProperty);
 
@@ -228,10 +246,9 @@ class FileAccessSupportSelectorTest {
 		void emptyIfNoTypeMatches() {
 
 			FileType<Doc> type = mock();
-			FileTypeProperty<Doc> typeProperty = mock();
 
-			when(support.getSavingAction()).thenReturn(mock());
-			when(support.getTargetType()).thenReturn(typeProperty);
+			when(support.isSavable()).thenReturn(true);
+			when(support.getTargetType()).thenReturn(type);
 
 			// returns other type property.
 			when(type.getFileTypeProperty()).thenReturn(mock());
@@ -249,7 +266,7 @@ class FileAccessSupportSelectorTest {
 	@Nested
 	class TestGetSavableOf {
 		@Mock
-		FileAccessSupport<Doc> support;
+		FileSelectionSupport<Doc> support;
 
 		@Mock
 		FileTypeProperty<Doc> fileType;
@@ -257,7 +274,7 @@ class FileAccessSupportSelectorTest {
 		@Test
 		void returnsGivenSupportWhenPathIsCorrect() throws IOException {
 
-			when(support.getSavingAction()).thenReturn(mock());
+			when(support.isSavable()).thenReturn(true);
 			when(support.extensionsMatch(eq("file.ext"))).thenReturn(true);
 
 			when(supports.values()).thenReturn(List.of(support));

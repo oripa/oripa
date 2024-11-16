@@ -48,10 +48,6 @@ public class FileAccessSupport<Data>
 		return fileType.extensionsMatch(filePath);
 	}
 
-	public String getFileTypeKeyText() {
-		return fileType.getKeyText();
-	}
-
 	public FileTypeProperty<Data> getTargetType() {
 		return fileType;
 	}
@@ -60,8 +56,7 @@ public class FileAccessSupport<Data>
 		return description;
 	}
 
-	// no need to be public but required by Mockito testing.
-	public Integer getOrder() {
+	private Integer getOrder() {
 		return fileType.getOrder();
 	}
 

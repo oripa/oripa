@@ -41,16 +41,16 @@ import oripa.util.file.FileFactory;
 public class FileDAO<Data> implements DataAccessObject<Data> {
 	private static Logger logger = LoggerFactory.getLogger(FileDAO.class);
 
-	private final FileAccessSupportSelector<Data> fileAccessSupportSelector;
+	private final FileSelectionSupportSelector<Data> fileAccessSupportSelector;
 
 	private final FileFactory fileFactory;
 
-	public FileDAO(final FileAccessSupportSelector<Data> selector, final FileFactory fileFactory) {
+	public FileDAO(final FileSelectionSupportSelector<Data> selector, final FileFactory fileFactory) {
 		this.fileAccessSupportSelector = selector;
 		this.fileFactory = fileFactory;
 	}
 
-	public FileAccessSupportSelector<Data> getFileAccessSupportSelector() {
+	public FileSelectionSupportSelector<Data> getFileAccessSupportSelector() {
 		return fileAccessSupportSelector;
 	}
 

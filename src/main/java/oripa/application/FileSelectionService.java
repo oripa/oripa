@@ -21,39 +21,39 @@ package oripa.application;
 import java.util.Collection;
 import java.util.List;
 
-import oripa.persistence.dao.FileAccessSupportSelector;
+import oripa.persistence.dao.FileSelectionSupport;
+import oripa.persistence.dao.FileSelectionSupportSelector;
 import oripa.persistence.dao.FileType;
-import oripa.persistence.filetool.FileAccessSupport;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class FileSelectionService<Data> {
-	private final FileAccessSupportSelector<Data> selector;
+	private final FileSelectionSupportSelector<Data> selector;
 
-	public FileSelectionService(final FileAccessSupportSelector<Data> selector) {
+	public FileSelectionService(final FileSelectionSupportSelector<Data> selector) {
 		this.selector = selector;
 	}
 
-	public List<FileAccessSupport<Data>> getSavableSupports() {
+	public List<FileSelectionSupport<Data>> getSavableSupports() {
 		return selector.getSavables();
 	}
 
-	public List<FileAccessSupport<Data>> getSavableSupportsOf(final Collection<FileType<Data>> types) {
+	public List<FileSelectionSupport<Data>> getSavableSupportsOf(final Collection<FileType<Data>> types) {
 		return selector.getSavablesOf(types);
 	}
 
-	public List<FileAccessSupport<Data>> getLoadableSupportsWithMultiType() {
+	public List<FileSelectionSupport<Data>> getLoadableSupportsWithMultiType() {
 		return selector.getLoadablesWithMultiType();
 	}
 
 	public FileType<Data> getSavableTypeByDescription(final String description) {
-		return new FileType<>(selector.getSavables().stream()
+		return selector.getSavables().stream()
 				.filter(support -> support.getDescription().equals(description))
 				.findFirst()
 				.get()
-				.getTargetType());
+				.getTargetType();
 	}
 
 }
