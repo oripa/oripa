@@ -39,7 +39,7 @@ import oripa.persistence.filetool.Loader;
  * @author OUCHI Koji
  *
  */
-public enum CreasePatternFileTypeKey implements FileTypePropertyWithAccessor<Doc> {
+enum CreasePatternFileTypeKey implements FileTypePropertyWithAccessor<Doc> {
 	OPX("opx", 1, new LoaderXML(), new ExporterXML(), "opx", "xml"),
 	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), "fold"),
 	PICT("pict", 3, null, new PictureExporter(), "png", "jpg"),

@@ -31,7 +31,7 @@ import oripa.persistence.filetool.Loader;
  * @author OUCHI Koji
  *
  */
-public enum FoldedModelFileTypeKey implements FileTypePropertyWithAccessor<FoldedModelEntity> {
+enum FoldedModelFileTypeKey implements FileTypePropertyWithAccessor<FoldedModelEntity> {
 	SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), "svg"),
 	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), "svg"),
 	PICTURE("picture", 2, null, new FoldedModelPictureExporter(), "png", "jpg"),

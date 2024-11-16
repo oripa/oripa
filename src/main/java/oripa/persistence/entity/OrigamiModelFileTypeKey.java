@@ -30,7 +30,7 @@ import oripa.persistence.filetool.Loader;
  * @author OUCHI Koji
  *
  */
-public enum OrigamiModelFileTypeKey implements FileTypePropertyWithAccessor<OrigamiModel> {
+enum OrigamiModelFileTypeKey implements FileTypePropertyWithAccessor<OrigamiModel> {
 	OBJ_MODEL("obj", 1, null, new OrigamiModelExporterOBJ(), "obj"),
 	DXF_MODEL("dxf", 2, null, new OrigamiModelExporterDXF(), "dxf"),
 	SVG_MODEL("svg", 3, null, new OrigamiModelExporterSVG(), "svg");
