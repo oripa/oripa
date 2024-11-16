@@ -32,6 +32,12 @@ import oripa.persistence.dao.FileType;
 public class FileSelectionService<Data> {
 	private final FileSelectionSupportSelector<Data> selector;
 
+	/**
+	 * The descriptions among the {@link FileSelectionSupport}s in the
+	 * {@code selector} should be unique.
+	 *
+	 * @param selector
+	 */
 	public FileSelectionService(final FileSelectionSupportSelector<Data> selector) {
 		this.selector = selector;
 	}

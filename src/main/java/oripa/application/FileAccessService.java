@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.FileType;
-import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -37,12 +36,6 @@ public class FileAccessService<Data> {
 
 	private final FileDAO<Data> fileDAO;
 
-	/**
-	 * The descriptions among the {@link FileAccessSupport}s contained by
-	 * {@code dao} should be unique.
-	 *
-	 * @param dao
-	 */
 	public FileAccessService(final FileDAO<Data> dao) {
 		this.fileDAO = dao;
 	}

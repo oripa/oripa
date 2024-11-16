@@ -25,6 +25,8 @@ import oripa.persistence.filetool.LoadingAction;
 import oripa.persistence.filetool.SavingAction;
 
 /**
+ * Provides information for file selection.
+ *
  * @author OUCHI Koji
  *
  */
@@ -88,6 +90,11 @@ public class FileSelectionSupport<Data> implements Comparable<FileSelectionSuppo
 	@Override
 	public int compareTo(final FileSelectionSupport<Data> o) {
 		return fileAccessSupport.compareTo(o.fileAccessSupport);
+	}
+
+	@Override
+	public int hashCode() {
+		return fileAccessSupport.hashCode();
 	}
 
 	@Override
