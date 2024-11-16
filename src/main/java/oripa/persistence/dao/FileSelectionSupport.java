@@ -18,7 +18,6 @@
  */
 package oripa.persistence.dao;
 
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import oripa.persistence.filetool.FileAccessSupport;
@@ -82,26 +81,8 @@ public class FileSelectionSupport<Data> implements Comparable<FileSelectionSuppo
 		return fileAccessSupport.getSavingAction() != null;
 	}
 
-	public void setConfigToSavingAction(final Supplier<Object> configSupplier) {
+	void setConfigToSavingAction(final Supplier<Object> configSupplier) {
 		fileAccessSupport.setConfigToSavingAction(configSupplier);
-	}
-
-	/**
-	 *
-	 * @param beforeSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setBeforeSave(final BiConsumer<Data, String> beforeSave) {
-		fileAccessSupport.setBeforeSave(beforeSave);
-	}
-
-	/**
-	 *
-	 * @param afterSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setAfterSave(final BiConsumer<Data, String> afterSave) {
-		fileAccessSupport.setAfterSave(afterSave);
 	}
 
 	@Override

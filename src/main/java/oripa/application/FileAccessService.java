@@ -21,7 +21,6 @@ package oripa.application;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import oripa.persistence.dao.FileDAO;
@@ -54,26 +53,6 @@ public class FileAccessService<Data> {
 
 	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
 		fileDAO.setConfigToSavingAction(key, configSupplier);
-	}
-
-	/**
-	 *
-	 * @param key
-	 * @param beforeSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setBeforeSave(final FileType<Data> key, final BiConsumer<Data, String> beforeSave) {
-		fileDAO.setBeforeSave(key, beforeSave);
-	}
-
-	/**
-	 *
-	 * @param key
-	 * @param afterSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setAfterSave(final FileType<Data> key, final BiConsumer<Data, String> afterSave) {
-		fileDAO.setAfterSave(key, afterSave);
 	}
 
 	public boolean canLoad(final String filePath) {
