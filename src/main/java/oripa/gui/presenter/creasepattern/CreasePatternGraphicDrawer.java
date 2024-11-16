@@ -41,8 +41,10 @@ public class CreasePatternGraphicDrawer {
 	 *
 	 * @param drawer
 	 *            a graphic object.
-	 * @param context
-	 *            a context of user interaction.
+	 * @param viewContext
+	 *            a context of crease pattern appearance.
+	 * @param paintContext
+	 *            a context of paint interaction
 	 * @param forceShowingVertex
 	 *            true if vertices must be drawn regardless of the context.
 	 */

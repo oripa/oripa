@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import oripa.application.FileAccessService;
+import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
@@ -51,6 +52,7 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
+import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacadeFactory;
@@ -67,6 +69,7 @@ import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
+import oripa.persistence.entity.FoldedModelFileAccessSupportSelectorFactory;
 import oripa.persistence.entity.OrigamiModelFileAccessSupportSelectorFactory;
 import oripa.project.Project;
 import oripa.resource.Constants;
@@ -80,6 +83,7 @@ import oripa.swing.view.main.MainFrameSwingDialogFactory;
 import oripa.swing.view.main.PropertyDialogFactory;
 import oripa.swing.view.main.SubSwingFrameFactory;
 import oripa.swing.view.model.ModelViewSwingFrameFactory;
+import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
 public class ORIPA {
@@ -185,11 +189,24 @@ public class ORIPA {
 					new FileDAO<OrigamiModel>(
 							new OrigamiModelFileAccessSupportSelectorFactory().create(fileFactory),
 							fileFactory));
+			var foldedModelFileAccessFactory = new FoldedModelFileAccessServiceFactory(
+					new FoldedModelFileAccessSupportSelectorFactory(), fileFactory);
+
+			var extensionCorrector = new ExtensionCorrector();
+
+			var foldedModelfileSelectionPresenterFactory = new FoldedModelFileSelectionPresenterFactory(
+					fileChooserFactory,
+					fileFactory,
+					foldedModelFileAccessFactory,
+					extensionCorrector);
+
 			var subFramePresenterFactory = new SubFramePresenterFactory(
 					fileChooserFactory,
+					foldedModelfileSelectionPresenterFactory,
 					mainViewSetting.getPainterScreenSetting(),
 					cutModelOutlinesHolder,
 					origamiModelFileAccessService,
+					foldedModelFileAccessFactory,
 					fileFactory);
 
 			var docFileAccessService = new FileAccessService<Doc>(
