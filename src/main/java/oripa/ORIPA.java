@@ -207,12 +207,12 @@ public class ORIPA {
 
 			var subFramePresenterFactory = new SubFramePresenterFactory(
 					fileChooserFactory,
-					foldedModelfileSelectionPresenterFactory,
-					origamiModelfileSelectionPresenterFactory,
 					mainViewSetting.getPainterScreenSetting(),
-					cutModelOutlinesHolder,
-					origamiModelFileAccessService,
+					foldedModelfileSelectionPresenterFactory,
 					foldedModelFileAccessFactory,
+					origamiModelFileAccessService,
+					origamiModelfileSelectionPresenterFactory,
+					cutModelOutlinesHolder,
 					fileFactory);
 
 			var docFileAccessService = new FileAccessService<Doc>(

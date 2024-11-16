@@ -48,24 +48,25 @@ import oripa.util.file.FileFactory;
  */
 public class SubFramePresenterFactory {
 	private final FileChooserFactory fileChooserFactory;
+	private final PainterScreenSetting mainScreenSetting;
 
 	private final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory;
-	private final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory;
-
-	private final PainterScreenSetting mainScreenSetting;
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
-	private final FileAccessService<OrigamiModel> origamiModelFileAccessService;
 	private final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory;
+
+	private final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory;
+	private final FileAccessService<OrigamiModel> origamiModelFileAccessService;
+	private final CutModelOutlinesHolder cutModelOutlinesHolder;
+
 	private final FileFactory fileFactory;
 
 	public SubFramePresenterFactory(
 			final FileChooserFactory fileChooserFactory,
-			final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory,
-			final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory,
 			final PainterScreenSetting mainScreenSetting,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
-			final FileAccessService<OrigamiModel> origamiModelFileAccessService,
+			final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory,
 			final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory,
+			final FileAccessService<OrigamiModel> origamiModelFileAccessService,
+			final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory,
+			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileFactory fileFactory) {
 		this.fileChooserFactory = fileChooserFactory;
 
@@ -117,7 +118,8 @@ public class SubFramePresenterFactory {
 
 	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameView(
 			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern, final boolean isZeroLineWidth,
+			final CreasePattern creasePattern,
+			final boolean isZeroLineWidth,
 			final double pointEps) {
 
 		OrigamiModel origamiModel;
@@ -127,7 +129,11 @@ public class SubFramePresenterFactory {
 				creasePattern,
 				pointEps);
 
-		return createFoldabilityCheckFrameView(view, creasePattern, origamiModel, new EstimationResultRules(),
+		return createFoldabilityCheckFrameView(
+				view,
+				creasePattern,
+				origamiModel,
+				new EstimationResultRules(),
 				isZeroLineWidth,
 				pointEps);
 
@@ -135,7 +141,8 @@ public class SubFramePresenterFactory {
 
 	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameView(
 			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern, final OrigamiModel origamiModel,
+			final CreasePattern creasePattern,
+			final OrigamiModel origamiModel,
 			final EstimationResultRules estimationRules,
 			final boolean isZeroLineWidth,
 			final double pointEps) {
