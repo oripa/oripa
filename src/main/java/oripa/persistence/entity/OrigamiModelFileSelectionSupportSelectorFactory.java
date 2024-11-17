@@ -41,27 +41,31 @@ public class OrigamiModelFileSelectionSupportSelectorFactory {
 	 */
 	public FileSelectionSupportSelector<OrigamiModel> create(final FileFactory fileFactory) {
 		var supports = new TreeMap<FileTypeProperty<OrigamiModel>, FileSelectionSupport<OrigamiModel>>();
-		var supportFactory = new FileAccessSupportFactory<OrigamiModel>();
+		var accessSupportFactory = new FileAccessSupportFactory();
 
 		var key = OrigamiModelFileTypeKey.DXF_MODEL;
 		supports.put(
 				key,
 				new FileSelectionSupport<OrigamiModel>(
-						supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
+						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
 
 		key = OrigamiModelFileTypeKey.OBJ_MODEL;
 		supports.put(
 				key,
 				new FileSelectionSupport<OrigamiModel>(
-						supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
+						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
 
 		key = OrigamiModelFileTypeKey.SVG_MODEL;
 		supports.put(
 				key,
 				new FileSelectionSupport<OrigamiModel>(
-						supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
+						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
 
-		return new FileSelectionSupportSelector<OrigamiModel>(supports, selectionSupportFactory, fileFactory);
+		return new FileSelectionSupportSelector<OrigamiModel>(
+				supports,
+				selectionSupportFactory,
+				accessSupportFactory,
+				fileFactory);
 	}
 
 }

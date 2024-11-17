@@ -21,7 +21,7 @@ public class DocFileSelectionSupportSelectorFactory {
 
 	public FileSelectionSupportSelector<Doc> create(final FileFactory fileFactory) {
 		var supports = new TreeMap<FileTypeProperty<Doc>, FileSelectionSupport<Doc>>();
-		var accessSupportFactory = new FileAccessSupportFactory<Doc>();
+		var accessSupportFactory = new FileAccessSupportFactory();
 
 		CreasePatternFileTypeKey key = CreasePatternFileTypeKey.OPX;
 		supports.put(
@@ -55,6 +55,7 @@ public class DocFileSelectionSupportSelectorFactory {
 		supports.put(key, new FileSelectionSupport<Doc>(
 				accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID)));
 
-		return new FileSelectionSupportSelector<Doc>(supports, selectionSupportFactory, fileFactory);
+		return new FileSelectionSupportSelector<Doc>(supports, selectionSupportFactory, accessSupportFactory,
+				fileFactory);
 	}
 }

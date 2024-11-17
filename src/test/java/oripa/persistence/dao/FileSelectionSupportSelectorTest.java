@@ -39,6 +39,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.FileAccessSupport;
+import oripa.persistence.filetool.FileAccessSupportFactory;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingSupport;
 import oripa.util.file.FileFactory;
@@ -60,6 +61,9 @@ class FileSelectionSupportSelectorTest {
 	FileSelectionSupportFactory selectionSupportFactory;
 
 	@Mock
+	FileAccessSupportFactory accessSupportFactory;
+
+	@Mock
 	FileFactory fileFactory;
 
 	@Nested
@@ -77,10 +81,16 @@ class FileSelectionSupportSelectorTest {
 		@Test
 		void resultContainsMultiTypeSupport() {
 
+			FileAccessSupport<Doc> access = mock();
+
+			when(support.getFileAccessSupport()).thenReturn(access);
 			when(support.isLoadable()).thenReturn(true);
-			when(support.compareTo(any())).thenReturn(1);
 
 			when(supports.values()).thenReturn(List.of(support));
+
+			MultiTypeAcceptableFileLoadingSupport<Doc> multiAccess = mock();
+			when(accessSupportFactory.createMultiTypeAcceptableLoading(eq(List.of(access)), any()))
+					.thenReturn(multiAccess);
 
 			FileSelectionSupport<Doc> forMulti = mock();
 			when(forMulti.compareTo(support)).thenReturn(-1);
@@ -189,7 +199,7 @@ class FileSelectionSupportSelectorTest {
 		@Test
 		void returnsGivenSupport() {
 
-			when(support.getSavingAction()).thenReturn(mock());
+			when(support.isSavable()).thenReturn(true);
 
 			when(supports.values()).thenReturn(List.of(support));
 
@@ -203,6 +213,7 @@ class FileSelectionSupportSelectorTest {
 		@Test
 		void emptyIfNoSavableSupport() {
 
+			when(support.isSavable()).thenReturn(false);
 			when(supports.values()).thenReturn(List.of(support));
 
 			var savables = selector.getSavables();
@@ -220,12 +231,9 @@ class FileSelectionSupportSelectorTest {
 		void returnsGivenSupport() {
 
 			FileType<Doc> type = mock();
-			FileTypeProperty<Doc> typeProperty = mock();
 
 			when(support.isSavable()).thenReturn(true);
 			when(support.getTargetType()).thenReturn(type);
-
-			when(type.getFileTypeProperty()).thenReturn(typeProperty);
 
 			Collection<FileType<Doc>> fileTypes = List.of(type);
 
@@ -246,12 +254,11 @@ class FileSelectionSupportSelectorTest {
 			when(support.isSavable()).thenReturn(true);
 			when(support.getTargetType()).thenReturn(type);
 
-			// returns other type property.
-			when(type.getFileTypeProperty()).thenReturn(mock());
-
 			when(supports.values()).thenReturn(List.of(support));
 
-			Collection<FileType<Doc>> fileTypes = List.of(type);
+			// type different from the supported one
+			FileType<Doc> givenType = mock();
+			Collection<FileType<Doc>> fileTypes = List.of(givenType);
 
 			var savables = selector.getSavablesOf(fileTypes);
 
@@ -275,9 +282,9 @@ class FileSelectionSupportSelectorTest {
 
 			when(supports.values()).thenReturn(List.of(support));
 
-			var loadable = selector.getSavableOf("file.ext");
+			var savable = selector.getSavableOf("file.ext");
 
-			assertSame(support, loadable);
+			assertSame(support, savable);
 		}
 
 		@Test

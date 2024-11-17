@@ -38,7 +38,7 @@ public class FoldedModelFileSelectionSupportSelectorFactory {
 	public FileSelectionSupportSelector<FoldedModelEntity> create(final boolean modelFlip,
 			final FileFactory fileFactory) {
 		var supports = new TreeMap<FileTypeProperty<FoldedModelEntity>, FileSelectionSupport<FoldedModelEntity>>();
-		var accessSupportFactory = new FileAccessSupportFactory<FoldedModelEntity>();
+		var accessSupportFactory = new FileAccessSupportFactory();
 
 		var key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
 		supports.put(
@@ -78,6 +78,10 @@ public class FoldedModelFileSelectionSupportSelectorFactory {
 				new FileSelectionSupport<FoldedModelEntity>(
 						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
 
-		return new FileSelectionSupportSelector<FoldedModelEntity>(supports, selectionSupportFactory, fileFactory);
+		return new FileSelectionSupportSelector<FoldedModelEntity>(
+				supports,
+				selectionSupportFactory,
+				accessSupportFactory,
+				fileFactory);
 	}
 }

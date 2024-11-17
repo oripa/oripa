@@ -18,6 +18,7 @@
  */
 package oripa.persistence.filetool;
 
+import java.util.Collection;
 import java.util.stream.Stream;
 
 import oripa.resource.ResourceHolder;
@@ -27,7 +28,7 @@ import oripa.resource.ResourceKey;
  * @author OUCHI Koji
  *
  */
-public class FileAccessSupportFactory<Data> {
+public class FileAccessSupportFactory {
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	/**
@@ -37,12 +38,18 @@ public class FileAccessSupportFactory<Data> {
 	 * @param key
 	 * @param description
 	 */
-	public FileAccessSupport<Data> createFileAccessSupport(final FileTypePropertyWithAccessor<Data> key,
+	public <Data> FileAccessSupport<Data> createFileAccessSupport(final FileTypePropertyWithAccessor<Data> key,
 			final String labelResourceKey, final String... appendings) {
 
 		var description = createDescription(key, labelResourceKey, appendings);
 
 		return new FileAccessSupport<Data>(key, description);
+	}
+
+	public <Data> MultiTypeAcceptableFileLoadingSupport<Data> createMultiTypeAcceptableLoading(
+			final Collection<FileAccessSupport<Data>> accessSupports,
+			final String message) throws IllegalArgumentException {
+		return new MultiTypeAcceptableFileLoadingSupport<Data>(accessSupports, message);
 	}
 
 	/**
@@ -53,7 +60,7 @@ public class FileAccessSupportFactory<Data> {
 	 * @param resourceKey
 	 * @return explanation text for dialog.
 	 */
-	protected String createDescription(final FileTypeProperty<Data> fileTypeKey,
+	protected <Data> String createDescription(final FileTypeProperty<Data> fileTypeKey,
 			final String resourceKey, final String... appendings) {
 		var description = createDefaultDescription(fileTypeKey,
 				resourceHolder.getString(ResourceKey.LABEL, resourceKey));

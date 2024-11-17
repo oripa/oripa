@@ -44,20 +44,20 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 	 * @param supports
 	 *            filters whose loading action objects are not null. Filters
 	 *            will be copied to this object.
-	 * @param msg
+	 * @param message
 	 *            message in filter box
 	 * @throws IllegalArgumentException
 	 *             if a loading action of a filter is null.
 	 */
 	public MultiTypeAcceptableFileLoadingSupport(
 			final Collection<FileAccessSupport<Data>> supports,
-			final String msg) throws IllegalArgumentException {
+			final String message) throws IllegalArgumentException {
 
 		super(new MultiTypeProperty<Data>(
 				supports.stream()
 						.map(support -> support.getTargetType())
 						.toList()),
-				msg);
+				message);
 
 		if (supports.isEmpty()) {
 			throw new IllegalArgumentException("suppports should not be empty.");

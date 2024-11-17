@@ -28,8 +28,8 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.function.Supplier;
 
+import oripa.persistence.filetool.FileAccessSupportFactory;
 import oripa.persistence.filetool.FileTypeProperty;
-import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingSupport;
 import oripa.util.file.FileFactory;
 
 /**
@@ -42,14 +42,17 @@ public class FileSelectionSupportSelector<Data> {
 	private final SortedMap<FileTypeProperty<Data>, FileSelectionSupport<Data>> fileSelectionSupports;
 
 	private final FileSelectionSupportFactory fileSelectionSupportFactory;
+	private final FileAccessSupportFactory fileAccessSupportFactory;
 	private final FileFactory fileFactory;
 
 	public FileSelectionSupportSelector(
 			final SortedMap<FileTypeProperty<Data>, FileSelectionSupport<Data>> supports,
 			final FileSelectionSupportFactory fileSelectionSupportFactory,
+			final FileAccessSupportFactory fileAccessSupportFactory,
 			final FileFactory fileFactory) {
 		this.fileSelectionSupports = supports;
 		this.fileSelectionSupportFactory = fileSelectionSupportFactory;
+		this.fileAccessSupportFactory = fileAccessSupportFactory;
 		this.fileFactory = fileFactory;
 	}
 
@@ -76,7 +79,7 @@ public class FileSelectionSupportSelector<Data> {
 			return List.of();
 		}
 
-		var multi = new MultiTypeAcceptableFileLoadingSupport<Data>(
+		var multi = fileAccessSupportFactory.createMultiTypeAcceptableLoading(
 				loadables.stream()
 						.map(loadable -> loadable.getFileAccessSupport())
 						.toList(),
