@@ -24,12 +24,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.SortedMap;
 import java.util.function.Supplier;
 
 import oripa.persistence.filetool.FileAccessSupportFactory;
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.util.file.FileFactory;
 
 /**
@@ -39,14 +38,14 @@ import oripa.util.file.FileFactory;
  *
  */
 public class FileSelectionSupportSelector<Data> {
-	private final SortedMap<FileTypeProperty<Data>, FileSelectionSupport<Data>> fileSelectionSupports;
+	private final Map<FileType<Data>, FileSelectionSupport<Data>> fileSelectionSupports;
 
 	private final FileSelectionSupportFactory fileSelectionSupportFactory;
 	private final FileAccessSupportFactory fileAccessSupportFactory;
 	private final FileFactory fileFactory;
 
 	public FileSelectionSupportSelector(
-			final SortedMap<FileTypeProperty<Data>, FileSelectionSupport<Data>> supports,
+			final Map<FileType<Data>, FileSelectionSupport<Data>> supports,
 			final FileSelectionSupportFactory fileSelectionSupportFactory,
 			final FileAccessSupportFactory fileAccessSupportFactory,
 			final FileFactory fileFactory) {
@@ -63,7 +62,7 @@ public class FileSelectionSupportSelector<Data> {
 	 * @return A support object for given key. Empty if no support for the key.
 	 */
 	public Optional<FileSelectionSupport<Data>> getFileSelectionSupport(final FileType<Data> key) {
-		return Optional.ofNullable(fileSelectionSupports.get(key.getFileTypeProperty()));
+		return Optional.ofNullable(fileSelectionSupports.get(key));
 	}
 
 	/**
