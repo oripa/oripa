@@ -23,7 +23,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +30,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -88,20 +89,112 @@ class FileDAOTest {
 
 		@Test
 		void exceptionIsThrownWhenFileDoesNotExist()
-				throws IOException, IllegalArgumentException, FileVersionError, WrongDataFormatException {
+				throws IOException {
 
 			File file = mock();
+			String canonicalPath = "canonical path";
 			when(file.exists()).thenReturn(false);
+			when(file.getCanonicalPath()).thenReturn(canonicalPath);
+
+			when(fileFactory.create(anyString())).thenReturn(file);
+
+			var exception = assertThrows(DataAccessException.class, () -> dao.load("path"));
+			assertEquals(canonicalPath + " doesn't exist.", exception.getMessage());
+		}
+
+		@MethodSource("createExceptions")
+		@ParameterizedTest
+		void exceptionIsThrownWhenLoadingThrowsException(final Throwable expectedException)
+				throws IOException, IllegalArgumentException, FileVersionError, WrongDataFormatException {
+
+			FileSelectionSupport<Doc> support = mock();
+			LoadingAction<Doc> loadingAction = mock();
+
+			when(selector.getLoadableOf(anyString())).thenReturn(support);
+
+			when(support.getLoadingAction()).thenReturn(loadingAction);
+
+			when(loadingAction.load(anyString())).thenThrow(expectedException);
+
+			File file = mock();
+			when(file.exists()).thenReturn(true);
 			when(file.getCanonicalPath()).thenReturn("canonical path");
 
 			when(fileFactory.create(anyString())).thenReturn(file);
 
-			assertThrows(FileNotFoundException.class, () -> dao.load("path"));
+			var actual = assertThrows(DataAccessException.class, () -> dao.load("path"));
+			assertEquals(expectedException, actual.getCause());
 		}
+
+		static List<Throwable> createExceptions() {
+			return List.of(
+					new WrongDataFormatException("arg"),
+					new FileVersionError(),
+					new IOException());
+		}
+
 	}
 
 	@Nested
-	class TestSave {
+	class TestSave_NoType {
+		@Test
+		void saveSucceedsWhenFileTypeIsNotGiven() throws IllegalArgumentException, IOException {
+
+			Doc doc = mock();
+
+			FileSelectionSupport<Doc> support = mock();
+			SavingAction<Doc> savingAction = mock();
+
+			when(selector.getSavableOf(anyString())).thenReturn(support);
+
+			when(support.getSavingAction()).thenReturn(savingAction);
+
+			when(savingAction.save(eq(doc), anyString())).thenReturn(true);
+
+			File file = mock();
+			when(file.getCanonicalPath()).thenReturn("canonical path");
+
+			when(fileFactory.create(anyString())).thenReturn(file);
+
+			dao.save(doc, "canonical path");
+
+			verify(savingAction).save(doc, "canonical path");
+		}
+
+		@MethodSource("createExceptions")
+		@ParameterizedTest
+		void exceptionIsThrownWhenSavingThrowsException(final Throwable expectedException)
+				throws IllegalArgumentException, IOException {
+
+			Doc doc = mock();
+
+			FileSelectionSupport<Doc> support = mock();
+			SavingAction<Doc> savingAction = mock();
+
+			when(selector.getSavableOf(anyString())).thenReturn(support);
+
+			when(support.getSavingAction()).thenReturn(savingAction);
+
+			when(savingAction.save(eq(doc), anyString())).thenThrow(expectedException);
+
+			File file = mock();
+			when(file.getCanonicalPath()).thenReturn("canonical path");
+
+			when(fileFactory.create(anyString())).thenReturn(file);
+
+			var actual = assertThrows(DataAccessException.class, () -> dao.save(doc, "canonical path"));
+			assertEquals(expectedException, actual.getCause());
+		}
+
+		static List<Throwable> createExceptions() {
+			return List.of(
+					new IOException());
+		}
+
+	}
+
+	@Nested
+	class TestSave_WithType {
 		@Test
 		void saveSucceedsWhenFileTypeIsGiven() throws IllegalArgumentException, IOException {
 
@@ -127,29 +220,38 @@ class FileDAOTest {
 			verify(savingAction).save(doc, "canonical path");
 		}
 
-		@Test
-		void saveSucceedsWhenFileTypeIsNotGiven() throws IllegalArgumentException, IOException {
+		@MethodSource("createExceptions")
+		@ParameterizedTest
+		void exceptionIsThrownWhenSavingThrowsException(final Throwable expectedException)
+				throws IllegalArgumentException, IOException {
 
 			Doc doc = mock();
+			FileType<Doc> fileType = mock();
 
 			FileSelectionSupport<Doc> support = mock();
 			SavingAction<Doc> savingAction = mock();
 
-			when(selector.getSavableOf(anyString())).thenReturn(support);
+			when(selector.getSavablesOf(anyList())).thenReturn(List.of(support));
 
 			when(support.getSavingAction()).thenReturn(savingAction);
 
-			when(savingAction.save(eq(doc), anyString())).thenReturn(true);
+			when(savingAction.save(eq(doc), anyString())).thenThrow(expectedException);
 
 			File file = mock();
 			when(file.getCanonicalPath()).thenReturn("canonical path");
 
 			when(fileFactory.create(anyString())).thenReturn(file);
 
-			dao.save(doc, "canonical path");
+			var actual = assertThrows(DataAccessException.class, () -> dao.save(doc, "canonical path", fileType));
+			assertEquals(expectedException, actual.getCause());
 
-			verify(savingAction).save(doc, "canonical path");
 		}
+
+		static List<Throwable> createExceptions() {
+			return List.of(
+					new IOException());
+		}
+
 	}
 
 	@Nested
@@ -178,6 +280,7 @@ class FileDAOTest {
 
 			verify(support, never()).setConfigToSavingAction(any());
 		}
+
 	}
 
 }
