@@ -24,7 +24,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,10 +126,7 @@ class FileDAOTest {
 			assertEquals(expectedException, actual.getCause());
 		}
 
-		static List<Throwable> createExceptions()
-				throws InstantiationException, IllegalAccessException, IllegalArgumentException,
-				InvocationTargetException,
-				NoSuchMethodException, SecurityException {
+		static List<Throwable> createExceptions() {
 			return List.of(
 					new WrongDataFormatException("arg"),
 					new FileVersionError(),
@@ -190,10 +186,7 @@ class FileDAOTest {
 			assertEquals(expectedException, actual.getCause());
 		}
 
-		static List<Throwable> createExceptions()
-				throws InstantiationException, IllegalAccessException, IllegalArgumentException,
-				InvocationTargetException,
-				NoSuchMethodException, SecurityException {
+		static List<Throwable> createExceptions() {
 			return List.of(
 					new IOException());
 		}
@@ -254,10 +247,7 @@ class FileDAOTest {
 
 		}
 
-		static List<Throwable> createExceptions()
-				throws InstantiationException, IllegalAccessException, IllegalArgumentException,
-				InvocationTargetException,
-				NoSuchMethodException, SecurityException {
+		static List<Throwable> createExceptions() {
 			return List.of(
 					new IOException());
 		}
