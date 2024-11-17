@@ -56,12 +56,11 @@ import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
+import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
-import oripa.persistence.filetool.FileVersionError;
-import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -283,7 +282,7 @@ public class MainFramePresenter {
 						doc -> paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext));
 
 				state.performActions();
-			} catch (IOException | IllegalArgumentException | FileVersionError | WrongDataFormatException e) {
+			} catch (DataAccessException | IllegalArgumentException e) {
 				view.showLoadFailureErrorMessage(e);
 			}
 		});
@@ -417,7 +416,7 @@ public class MainFramePresenter {
 			dataFileAccess.saveFile(doc, filePath, type);
 
 			afterSaveFile(filePath);
-		} catch (IOException | IllegalArgumentException e) {
+		} catch (DataAccessException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);
 		}
@@ -475,7 +474,7 @@ public class MainFramePresenter {
 
 			return path;
 
-		} catch (IllegalArgumentException | IOException e) {
+		} catch (IllegalArgumentException | DataAccessException e) {
 			// ignore
 			return project.getDataFilePath();
 		}
@@ -610,8 +609,7 @@ public class MainFramePresenter {
 						screenPresenter.updateCameraCenter();
 						return project.getDataFilePath();
 					}).orElse(null);
-		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
-				| IOException e) {
+		} catch (DataAccessException | IllegalArgumentException e) {
 			logger.error("failed to load", e);
 			view.showLoadFailureErrorMessage(e);
 			return project.getDataFilePath();

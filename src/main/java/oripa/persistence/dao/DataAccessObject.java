@@ -48,8 +48,7 @@ public interface DataAccessObject<Data> {
 	 * @throws WrongDataFormatException
 	 */
 	Optional<Data> load(String path)
-			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
-			WrongDataFormatException;
+			throws DataAccessException, IllegalArgumentException;
 
 	/**
 	 * save data to {@code path}.
@@ -64,6 +63,6 @@ public interface DataAccessObject<Data> {
 	 *             {@code data} can't be saved as the given extension.
 	 */
 	void save(Data data, String path)
-			throws IOException, IllegalArgumentException;
+			throws DataAccessException, IllegalArgumentException;
 
 }

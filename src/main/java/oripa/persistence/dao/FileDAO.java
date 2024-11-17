@@ -18,7 +18,6 @@
  */
 package oripa.persistence.dao;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -74,30 +73,37 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 
 	@Override
 	public Optional<Data> load(final String path)
-			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
-			WrongDataFormatException {
+			throws DataAccessException, IllegalArgumentException {
+
 		var canonicalPath = canonicalPath(path);
 		var file = fileFactory.create(canonicalPath);
 
 		if (!file.exists()) {
-			throw new FileNotFoundException(canonicalPath + " doesn't exist.");
+			throw new DataAccessException(canonicalPath + " doesn't exist.");
 		}
-
 		var loadingAction = fileSelectionSupportSelector.getLoadableOf(canonicalPath).getLoadingAction();
 
-		return loadingAction.load(canonicalPath);
+		try {
+			return loadingAction.load(canonicalPath);
+		} catch (FileVersionError | IOException | WrongDataFormatException e) {
+			throw new DataAccessException(e);
+		}
 	}
 
 	@Override
 	public void save(final Data data, final String path)
-			throws IOException, IllegalArgumentException {
+			throws DataAccessException, IllegalArgumentException {
 
 		logger.info("save(): path = {}", path);
 
 		var support = fileSelectionSupportSelector.getSavableOf(path);
 		var savingAction = support.getSavingAction();
 
-		savingAction.save(data, canonicalPath(path));
+		try {
+			savingAction.save(data, canonicalPath(path));
+		} catch (IOException e) {
+			throw new DataAccessException(e);
+		}
 	}
 
 	/**
@@ -111,7 +117,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 	 * @throws IllegalArgumentException
 	 */
 	public void save(final Data data, final String path, final FileType<Data> type)
-			throws IOException, IllegalArgumentException {
+			throws DataAccessException, IllegalArgumentException {
 
 		logger.info("save(): path = {}", path);
 
@@ -120,10 +126,18 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 				.get();
 		var savingAction = support.getSavingAction();
 
-		savingAction.save(data, canonicalPath(path));
+		try {
+			savingAction.save(data, canonicalPath(path));
+		} catch (IOException e) {
+			throw new DataAccessException(e);
+		}
 	}
 
-	private String canonicalPath(final String path) throws IOException {
-		return fileFactory.create(path).getCanonicalPath();
+	private String canonicalPath(final String path) throws DataAccessException {
+		try {
+			return fileFactory.create(path).getCanonicalPath();
+		} catch (Exception e) {
+			throw new DataAccessException(e);
+		}
 	}
 }

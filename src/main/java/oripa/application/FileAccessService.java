@@ -18,15 +18,13 @@
  */
 package oripa.application;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.FileType;
-import oripa.persistence.filetool.FileVersionError;
-import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
  * @author OUCHI Koji
@@ -64,7 +62,7 @@ public class FileAccessService<Data> {
 	 * @throws IllegalArgumentException
 	 */
 	public void saveFile(final Data data, final String path, final FileType<Data> type)
-			throws IOException, IllegalArgumentException {
+			throws DataAccessException, IllegalArgumentException {
 		if (type == null) {
 			fileDAO.save(data, path);
 		} else {
@@ -81,7 +79,7 @@ public class FileAccessService<Data> {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveFile(final Data data, final String path) throws IOException, IllegalArgumentException {
+	public void saveFile(final Data data, final String path) throws DataAccessException, IllegalArgumentException {
 		saveFile(data, path, null);
 	}
 
@@ -92,8 +90,7 @@ public class FileAccessService<Data> {
 	 * @return the Data of loaded file.
 	 */
 	public Optional<Data> loadFile(final String filePath)
-			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
-			IOException, FileNotFoundException {
+			throws DataAccessException, IllegalArgumentException {
 
 		if (!fileDAO.hasLoaders()) {
 			throw new RuntimeException("Not implemented yet.");
