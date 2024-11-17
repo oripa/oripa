@@ -18,11 +18,14 @@
  */
 package oripa.persistence.entity;
 
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import oripa.persistence.dao.FileSelectionSupport;
 import oripa.persistence.dao.FileSelectionSupportFactory;
 import oripa.persistence.dao.FileSelectionSupportSelector;
+import oripa.persistence.dao.FileType;
+import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileAccessSupportFactory;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
@@ -34,54 +37,61 @@ import oripa.util.file.FileFactory;
  */
 public class FoldedModelFileSelectionSupportSelectorFactory {
 	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
+	private final FileAccessSupportFactory accessSupportFactory = new FileAccessSupportFactory();
 
 	public FileSelectionSupportSelector<FoldedModelEntity> create(final boolean modelFlip,
 			final FileFactory fileFactory) {
-		var supports = new TreeMap<FileTypeProperty<FoldedModelEntity>, FileSelectionSupport<FoldedModelEntity>>();
-		var accessSupportFactory = new FileAccessSupportFactory();
+		var supports = new HashMap<FileType<FoldedModelEntity>, FileSelectionSupport<FoldedModelEntity>>();
 
 		var key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
-		supports.put(
+		put(
+				supports,
 				key,
-				new FileSelectionSupport<FoldedModelEntity>(
-						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
+				accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
 		key = FoldedModelFileTypeKey.FOLD_SINGLE_OVERLAPS;
-		supports.put(
+		put(
+				supports,
 				key,
-				new FileSelectionSupport<FoldedModelEntity>(
-						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID, " (single)")));
+				accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID, " (single)"));
 
 		key = FoldedModelFileTypeKey.FOLD_ALL_OVERLAPS;
-		supports.put(
+		put(
+				supports,
 				key,
-				new FileSelectionSupport<FoldedModelEntity>(
-						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID, " (all)")));
+				accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID, " (all)"));
 
 		if (modelFlip) {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP;
-			supports.put(
+			put(
+					supports,
 					key,
-					new FileSelectionSupport<FoldedModelEntity>(
-							accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
+					accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 		} else {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL;
-			supports.put(
+			put(
+					supports,
 					key,
-					new FileSelectionSupport<FoldedModelEntity>(
-							accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
+					accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 		}
 
 		key = FoldedModelFileTypeKey.PICTURE;
-		supports.put(
+		put(
+				supports,
 				key,
-				new FileSelectionSupport<FoldedModelEntity>(
-						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
+				accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
 
 		return new FileSelectionSupportSelector<FoldedModelEntity>(
 				supports,
 				selectionSupportFactory,
 				accessSupportFactory,
 				fileFactory);
+	}
+
+	private void put(final Map<FileType<FoldedModelEntity>, FileSelectionSupport<FoldedModelEntity>> supports,
+			final FileTypeProperty<FoldedModelEntity> key, final FileAccessSupport<FoldedModelEntity> accessSupport) {
+		supports.put(
+				new FileType<>(key),
+				selectionSupportFactory.create(accessSupport));
 	}
 }

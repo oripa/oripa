@@ -99,6 +99,7 @@ class FileSelectionSupportSelectorTest {
 			var loadables = selector.getLoadablesWithMultiType();
 
 			assertEquals(2, loadables.size());
+			assertEquals(forMulti, loadables.get(0));
 
 			verify(selectionSupportFactory).create(multi.capture());
 			assertTrue(multi.getValue() instanceof MultiTypeAcceptableFileLoadingSupport<Doc>);
@@ -131,7 +132,7 @@ class FileSelectionSupportSelectorTest {
 
 			assertEquals(1, loadables.size());
 
-			assertSame(support, loadables.get(0));
+			assertEquals(support, loadables.get(0));
 		}
 
 		@Test
@@ -168,7 +169,7 @@ class FileSelectionSupportSelectorTest {
 
 			var loadable = selector.getLoadableOf("file.ext");
 
-			assertSame(support, loadable);
+			assertEquals(support, loadable);
 		}
 
 		@Test
@@ -207,7 +208,7 @@ class FileSelectionSupportSelectorTest {
 
 			assertEquals(1, savables.size());
 
-			assertSame(support, savables.get(0));
+			assertEquals(support, savables.get(0));
 		}
 
 		@Test
@@ -243,7 +244,7 @@ class FileSelectionSupportSelectorTest {
 
 			assertEquals(1, savables.size());
 
-			assertSame(support, savables.get(0));
+			assertEquals(support, savables.get(0));
 		}
 
 		@Test
@@ -284,7 +285,7 @@ class FileSelectionSupportSelectorTest {
 
 			var savable = selector.getSavableOf("file.ext");
 
-			assertSame(support, savable);
+			assertEquals(support, savable);
 		}
 
 		@Test

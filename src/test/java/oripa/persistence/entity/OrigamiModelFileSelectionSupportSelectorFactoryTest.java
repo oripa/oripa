@@ -16,42 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.dao;
+package oripa.persistence.entity;
 
-import oripa.persistence.filetool.FileTypeProperty;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import oripa.persistence.dao.FileType;
+import oripa.util.file.FileFactory;
 
 /**
- * This is a value object. {@code equals()} and {@code hashCode()} uses the
- * given {@code property}'s ones.
- *
  * @author OUCHI Koji
  *
  */
-public class FileType<Data> {
-	private final FileTypeProperty<Data> property;
+@ExtendWith(MockitoExtension.class)
+class OrigamiModelFileSelectionSupportSelectorFactoryTest {
 
-	public FileType(final FileTypeProperty<Data> property) {
-		this.property = property;
-	}
+	@InjectMocks
+	OrigamiModelFileSelectionSupportSelectorFactory selectorFactory;
 
-	public String[] getExtensions() {
-		return property.getExtensions();
-	}
+	@Test
+	void selectorContainsAllTypes() {
+		FileFactory fileFactory = mock();
 
-	public boolean extensionsMatch(final String path) {
-		return property.extensionsMatch(path);
-	}
+		var selector = selectorFactory.create(fileFactory);
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof FileType f) {
-			return property.equals(f.property);
+		for (var key : OrigamiModelFileTypeKey.values()) {
+			var type = new FileType<>(key);
+
+			assertTrue(selector.getFileSelectionSupport(type).isPresent());
 		}
-		return false;
 	}
 
-	@Override
-	public int hashCode() {
-		return property.hashCode();
-	}
 }
