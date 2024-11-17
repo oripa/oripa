@@ -215,7 +215,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private Runnable modelComputationListener;
 	private Runnable showFoldedModelWindowsListener;
 
-	public UIPanel(final MainViewSetting viewSetting) {
+	public UIPanel(
+			final MainViewSetting viewSetting,
+			final MainDialogService dialogService,
+			final ResourceHolder resources) {
 
 		setting = viewSetting.getUiPanelSetting();
 

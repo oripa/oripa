@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.main.IniFileAccess;
+import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
@@ -71,10 +72,12 @@ import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
+import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
 import oripa.persistence.entity.OrigamiModelFileSelectionSupportSelectorFactory;
 import oripa.project.Project;
 import oripa.resource.Constants;
+import oripa.resource.ResourceHolder;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
 import oripa.swing.view.file.FileChooserSwingFactory;
 import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
@@ -249,23 +252,26 @@ public class ORIPA {
 
 			var presenter = new MainFramePresenter(
 					mainFrame,
+					mainViewSetting,
 					viewUpdateSupport,
 					dialogFactory,
 					subFrameFactory,
 					mainComponentPresenterFactory,
+					presentationContext,
 					childFrameManager,
-					mainViewSetting,
 					bindingFactory,
+					statePopperFactory,
 					new Project(),
 					domainContext,
+					new PaintContextModification(),
 					cutModelOutlinesHolder,
-					presentationContext,
-					statePopperFactory,
 					fileHistory,
 					iniFileAccess,
 					docFileAccessService,
 					fileFactory,
-					plugins);
+					plugins,
+					() -> new CreasePatternFOLDConfig(),
+					ResourceHolder.getInstance());
 			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {

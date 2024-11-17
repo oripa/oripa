@@ -81,8 +81,7 @@ public class MainFramePresenter {
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
 
-	// shared objects
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
 
 	private final StatePopperFactory<EditMode> statePopperFactory;
 
@@ -106,27 +105,35 @@ public class MainFramePresenter {
 	private final FileHistory fileHistory;
 	private final FileFactory fileFactory;
 
-	// services
-	private final PaintContextModification paintContextModification = new PaintContextModification();
+	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
 
-	public MainFramePresenter(final MainFrameView view,
+	// services
+	private final PaintContextModification paintContextModification;
+
+	public MainFramePresenter(
+			final MainFrameView view,
+			final MainViewSetting viewSetting,
 			final ViewUpdateSupport viewUpdateSupport,
 			final MainFrameDialogFactory dialogFactory,
 			final SubFrameFactory subFrameFactory,
 			final MainComponentPresenterFactory componentPresenterFactory,
+			final CreasePatternPresentationContext presentationContext,
 			final ChildFrameManager childFrameManager,
-			final MainViewSetting viewSetting,
 			final BindingObjectFactoryFacade bindingFactory,
+			final StatePopperFactory<EditMode> statePopperFactory,
 			final Project project,
 			final PaintDomainContext domainContext,
+			final PaintContextModification paintContextModification,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
-			final CreasePatternPresentationContext presentationContext,
-			final StatePopperFactory<EditMode> statePopperFactory,
 			final FileHistory fileHistory,
 			final IniFileAccess iniFileAccess,
 			final FileAccessService<Doc> dataFileAccess,
 			final FileFactory fileFactory,
-			final List<GraphicMouseActionPlugin> plugins) {
+			final List<GraphicMouseActionPlugin> plugins,
+			final Supplier<CreasePatternFOLDConfig> foldConfigFactory,
+			final ResourceHolder resourceHolder) {
+		this.resourceHolder = resourceHolder;
+
 		this.view = view;
 		this.dialogFactory = dialogFactory;
 
@@ -138,6 +145,7 @@ public class MainFramePresenter {
 
 		this.project = project;
 		this.paintContext = domainContext.getPaintContext();
+		this.paintContextModification = paintContextModification;
 		this.viewContext = presentationContext.getViewContext();
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 
@@ -147,6 +155,8 @@ public class MainFramePresenter {
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
 		this.fileFactory = fileFactory;
+
+		this.foldConfigFactory = foldConfigFactory;
 
 		this.screenSetting = viewSetting.getPainterScreenSetting();
 
@@ -394,15 +404,16 @@ public class MainFramePresenter {
 	}
 
 	private void updateTitleText() {
-		var filePath = project.getDataFilePath();
-		String fileName;
-		if (filePath == null || filePath.isEmpty()) {
-			fileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
-		} else {
-			fileName = project.getDataFileName();
-		}
 
-		view.setFileNameToTitle(fileName);
+		view.setFileNameToTitle(getTitleText());
+	}
+
+	private String getTitleText() {
+		var defaultFileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
+		var fileName = project.getDataFileName().orElse(defaultFileName);
+
+		return fileName.isEmpty() ? defaultFileName : fileName;
+
 	}
 
 	/**
@@ -447,7 +458,7 @@ public class MainFramePresenter {
 	@SafeVarargs
 	private String saveFileUsingGUIImpl(final FileType<Doc>... types) {
 		var directory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName();
+		var fileName = project.getDataFileName().get();
 
 		try {
 
@@ -498,7 +509,7 @@ public class MainFramePresenter {
 	}
 
 	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = new CreasePatternFOLDConfig();
+		var config = foldConfigFactory.get();
 		config.setEps(paintContext.getPointEps());
 
 		return config;
@@ -598,7 +609,7 @@ public class MainFramePresenter {
 						project = new Project(doc.getProperty(), filePath);
 
 						var property = project.getProperty();
-						view.getUIPanelView().setEstimationResultColors(
+						view.setEstimationResultColors(
 								convertCodeToColor(property.extractFrontColorCode()),
 								convertCodeToColor(property.extractBackColorCode()));
 

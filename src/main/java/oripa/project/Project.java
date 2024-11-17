@@ -70,11 +70,15 @@ public class Project implements PropertyHolder {
 		return dataFilePath;
 	}
 
-	public String getDataFileName() {
+	public Optional<String> getDataFileName() {
+		if (dataFilePath == null || dataFilePath.isEmpty()) {
+			return Optional.empty();
+		}
+
 		File file = new File(dataFilePath);
 		String fileName = file.getName();
 
-		return fileName;
+		return Optional.of(fileName);
 
 	}
 
