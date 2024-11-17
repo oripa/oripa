@@ -35,7 +35,6 @@ import oripa.appstate.StatePopperFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
-import oripa.exception.UserCanceledException;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
@@ -537,8 +536,6 @@ public class MainFramePresenter {
 			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
 			dataFileAccess.saveFile(doc, selection.path(), type);
 
-		} catch (UserCanceledException e) {
-			// ignore
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
 			view.showSaveFailureErrorMessage(e);

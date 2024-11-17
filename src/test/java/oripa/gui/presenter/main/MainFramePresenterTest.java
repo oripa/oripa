@@ -51,6 +51,7 @@ import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
+import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.MainViewSetting;
@@ -356,6 +357,60 @@ class MainFramePresenterTest {
 			}
 		}
 
+//		@Nested
+//		class TestAddListeners {
+//			@Captor
+//			ArgumentCaptor<Runnable> runnableCaptor;
+//
+//			@Captor
+//			ArgumentCaptor<Function<Doc, String>> loadFileMapperCaptor;
+//
+//			void addsOpenButtonListener() {
+//				setupResourceHolder();
+//
+//				setupView();
+//
+//				PainterScreenSetting screenSetting = mock();
+//				setupViewSetting(screenSetting);
+//
+//				ViewScreenUpdater screenUpdater = mock();
+//				setupViewUpdateSupport(screenUpdater);
+//
+//				setupPresentationContext();
+//
+//				PaintContext paintContext = mock();
+//				setupDomainContext(paintContext);
+//
+//				PainterScreenPresenter screenPresenter = mock();
+//				setupComponentPresenterFactory(screenPresenter, mock());
+//
+//				// setup GUI interaction
+//				DocFileSelectionPresenter selectionPresenter = mock();
+//				FileSelectionResult<Doc> result = mock();
+//				String path = "last path";
+//				when(selectionPresenter.loadUsingGUI(anyString())).thenReturn(result);
+//				when(result.action()).thenReturn(UserAction.SELECTED);
+//				when(result.path()).thenReturn(path);
+//				when(componentPresenterFactory.createDocFileSelectionPresenter(view, any()))
+//						.thenReturn(selectionPresenter);
+//				when(dataFileAccess.getFileSelectionService()).thenReturn(mock());
+//				when(fileHistory.getLastPath()).thenReturn(path);
+//
+//				setupBindingFactory();
+//
+//				setupIniFileAccess();
+//
+//				setupProject();
+//
+//				construct();
+//
+//				verify(view).addOpenButtonListener(runnableCaptor.capture());
+//				runnableCaptor.getValue().run();
+//
+//			}
+//
+//		}
+
 		MainFramePresenter construct() {
 			return new MainFramePresenter(
 					view,
@@ -406,8 +461,12 @@ class MainFramePresenterTest {
 			setupViewSetting(mock());
 		}
 
+		void setupViewUpdateSupport(final ViewScreenUpdater screenUpdater) {
+			when(viewUpdateSupport.getViewScreenUpdater()).thenReturn(screenUpdater);
+		}
+
 		void setupViewUpdateSupport() {
-			when(viewUpdateSupport.getViewScreenUpdater()).thenReturn(mock());
+			setupViewUpdateSupport(mock());
 		}
 
 		void setupPresentationContext() {
@@ -455,6 +514,7 @@ class MainFramePresenterTest {
 		void setupFOLDConfigFactory() {
 			setupFOLDConfigFactory(mock());
 		}
+
 	}
 
 	@Test

@@ -66,8 +66,17 @@ public class Project implements PropertyHolder {
 		dataFilePath = filePath;
 	}
 
+	public void clear() {
+		property = new Property();
+		dataFilePath = "";
+	}
+
 	public String getDataFilePath() {
 		return dataFilePath;
+	}
+
+	public void setDataFilePath(final String path) {
+		dataFilePath = path;
 	}
 
 	public Optional<String> getDataFileName() {

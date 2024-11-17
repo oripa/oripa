@@ -69,7 +69,7 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 			final FileType<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError,
 			final double pointEps)
-			throws IOException, UserCanceledException {
+			throws IOException {
 		File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
