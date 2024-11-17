@@ -164,6 +164,40 @@ class FileDAOTest {
 
 			verify(savingAction).save(doc, "canonical path");
 		}
+
+		@MethodSource("createExceptions")
+		@ParameterizedTest
+		void exceptionIsThrownWhenSavingThrowsException(final Throwable expectedException)
+				throws IllegalArgumentException, IOException {
+
+			Doc doc = mock();
+
+			FileSelectionSupport<Doc> support = mock();
+			SavingAction<Doc> savingAction = mock();
+
+			when(selector.getSavableOf(anyString())).thenReturn(support);
+
+			when(support.getSavingAction()).thenReturn(savingAction);
+
+			when(savingAction.save(eq(doc), anyString())).thenThrow(expectedException);
+
+			File file = mock();
+			when(file.getCanonicalPath()).thenReturn("canonical path");
+
+			when(fileFactory.create(anyString())).thenReturn(file);
+
+			var actual = assertThrows(DataAccessException.class, () -> dao.save(doc, "canonical path"));
+			assertEquals(expectedException, actual.getCause());
+		}
+
+		static List<Throwable> createExceptions()
+				throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+				InvocationTargetException,
+				NoSuchMethodException, SecurityException {
+			return List.of(
+					new IOException());
+		}
+
 	}
 
 	@Nested
@@ -208,16 +242,16 @@ class FileDAOTest {
 
 			when(support.getSavingAction()).thenReturn(savingAction);
 
-			when(savingAction.save(eq(doc), anyString())).thenReturn(true);
+			when(savingAction.save(eq(doc), anyString())).thenThrow(expectedException);
 
 			File file = mock();
 			when(file.getCanonicalPath()).thenReturn("canonical path");
 
 			when(fileFactory.create(anyString())).thenReturn(file);
 
-			dao.save(doc, "canonical path", fileType);
+			var actual = assertThrows(DataAccessException.class, () -> dao.save(doc, "canonical path", fileType));
+			assertEquals(expectedException, actual.getCause());
 
-			verify(savingAction).save(doc, "canonical path");
 		}
 
 		static List<Throwable> createExceptions()
@@ -256,6 +290,7 @@ class FileDAOTest {
 
 			verify(support, never()).setConfigToSavingAction(any());
 		}
+
 	}
 
 }
