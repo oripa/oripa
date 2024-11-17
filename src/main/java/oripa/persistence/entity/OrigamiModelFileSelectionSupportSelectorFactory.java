@@ -38,13 +38,13 @@ import oripa.util.file.FileFactory;
  */
 public class OrigamiModelFileSelectionSupportSelectorFactory {
 	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
+	private final FileAccessSupportFactory accessSupportFactory = new FileAccessSupportFactory();
 
 	/**
 	 * Constructor
 	 */
 	public FileSelectionSupportSelector<OrigamiModel> create(final FileFactory fileFactory) {
 		var supports = new HashMap<FileType<OrigamiModel>, FileSelectionSupport<OrigamiModel>>();
-		var accessSupportFactory = new FileAccessSupportFactory();
 
 		var key = OrigamiModelFileTypeKey.DXF_MODEL;
 		put(

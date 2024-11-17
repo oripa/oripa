@@ -37,11 +37,11 @@ import oripa.util.file.FileFactory;
  */
 public class FoldedModelFileSelectionSupportSelectorFactory {
 	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
+	private final FileAccessSupportFactory accessSupportFactory = new FileAccessSupportFactory();
 
 	public FileSelectionSupportSelector<FoldedModelEntity> create(final boolean modelFlip,
 			final FileFactory fileFactory) {
 		var supports = new HashMap<FileType<FoldedModelEntity>, FileSelectionSupport<FoldedModelEntity>>();
-		var accessSupportFactory = new FileAccessSupportFactory();
 
 		var key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
 		put(

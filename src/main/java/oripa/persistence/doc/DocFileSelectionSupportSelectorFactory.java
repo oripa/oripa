@@ -21,10 +21,10 @@ import oripa.util.file.FileFactory;
  */
 public class DocFileSelectionSupportSelectorFactory {
 	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
+	private final FileAccessSupportFactory accessSupportFactory = new FileAccessSupportFactory();
 
 	public FileSelectionSupportSelector<Doc> create(final FileFactory fileFactory) {
 		var supports = new HashMap<FileType<Doc>, FileSelectionSupport<Doc>>();
-		var accessSupportFactory = new FileAccessSupportFactory();
 
 		CreasePatternFileTypeKey key = CreasePatternFileTypeKey.OPX;
 		put(
