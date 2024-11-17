@@ -34,10 +34,6 @@ public class FileType<Data> {
 		this.property = property;
 	}
 
-	FileTypeProperty<Data> getFileTypeProperty() {
-		return property;
-	}
-
 	public String[] getExtensions() {
 		return property.getExtensions();
 	}
@@ -49,7 +45,7 @@ public class FileType<Data> {
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof FileType f) {
-			return property.equals(f.getFileTypeProperty());
+			return property.equals(f.property);
 		}
 		return false;
 	}
