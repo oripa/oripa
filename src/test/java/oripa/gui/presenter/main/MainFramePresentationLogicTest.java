@@ -18,18 +18,16 @@
  */
 package oripa.gui.presenter.main;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -147,9 +145,6 @@ public class MainFramePresentationLogicTest {
 	@Nested
 	class TestLoadFileImpl {
 
-		@Captor
-		ArgumentCaptor<Function<Doc, String>> loadFileMapperCaptor;
-
 		@Test
 		void succeeds() {
 
@@ -161,25 +156,22 @@ public class MainFramePresentationLogicTest {
 			setupDomainContext();
 
 			String path = "path";
-			Optional<Doc> docOpt = mock();
-			when(dataFileAccess.loadFile(eq(path))).thenReturn(docOpt);
-
-			Property currentProperty = mock();
-			when(project.getProperty()).thenReturn(currentProperty);
-
-			var presentationLogic = construct();
-			presentationLogic.loadFileImpl(path);
-
-			verify(childFrameManager).closeAll(view);
-
-			verify(docOpt).map(loadFileMapperCaptor.capture());
-
 			Property loadedProperty = mock();
 			Doc loadedDoc = mock();
 			when(loadedDoc.getProperty()).thenReturn(loadedProperty);
 			when(loadedDoc.getCreasePattern()).thenReturn(mock());
+			when(dataFileAccess.loadFile(eq(path))).thenReturn(Optional.of(loadedDoc));
 
-			loadFileMapperCaptor.getValue().apply(loadedDoc);
+			Property currentProperty = mock();
+			when(project.getProperty()).thenReturn(currentProperty);
+
+			// execute
+			var presentationLogic = construct();
+			var loadedPath = presentationLogic.loadFileImpl(path);
+
+			assertEquals(path, loadedPath);
+
+			verify(childFrameManager).closeAll(view);
 
 			verify(dataFileAccess).loadFile(path);
 			verify(project).setProperty(loadedProperty);

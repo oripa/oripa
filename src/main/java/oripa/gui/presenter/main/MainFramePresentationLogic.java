@@ -276,8 +276,8 @@ public class MainFramePresentationLogic {
 
 		try {
 
-			var DocOpt = dataFileAccess.loadFile(filePath);
-			return DocOpt
+			var docOpt = dataFileAccess.loadFile(filePath);
+			return docOpt
 					.map(doc -> {
 						project.setProperty(doc.getProperty());
 						project.setDataFilePath(filePath);
