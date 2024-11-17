@@ -16,26 +16,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.file;
+package oripa.persistence.dao;
+
+import oripa.persistence.filetool.FileAccessSupport;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class FileFilterProperty {
-	private final String description;
-	private final String[] extensions;
+public class FileSelectionSupportFactory {
 
-	public FileFilterProperty(final String description, final String... extensions) {
-		this.description = description;
-		this.extensions = extensions;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String[] getExtensions() {
-		return extensions;
+	public <Data> FileSelectionSupport<Data> create(final FileAccessSupport<Data> accessSupport) {
+		return new FileSelectionSupport<Data>(accessSupport);
 	}
 }

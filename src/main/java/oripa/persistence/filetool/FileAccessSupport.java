@@ -1,15 +1,13 @@
 package oripa.persistence.filetool;
 
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class FileAccessSupport<Data>
 		implements Comparable<FileAccessSupport<Data>> {
 
 	private final FileTypePropertyWithAccessor<Data> fileType;
-	// TODO description is not related to persistence responsibility.
-	// this should be removed.
 	private final String description;
+
 	private LoadingAction<Data> loadingAction;
 	private SavingAction<Data> savingAction;
 
@@ -48,10 +46,6 @@ public class FileAccessSupport<Data>
 		return fileType.extensionsMatch(filePath);
 	}
 
-	public String getFileTypeKeyText() {
-		return fileType.getKeyText();
-	}
-
 	public FileTypeProperty<Data> getTargetType() {
 		return fileType;
 	}
@@ -60,8 +54,7 @@ public class FileAccessSupport<Data>
 		return description;
 	}
 
-	// no need to be public but required by Mockito testing.
-	public Integer getOrder() {
+	private Integer getOrder() {
 		return fileType.getOrder();
 	}
 
@@ -97,21 +90,4 @@ public class FileAccessSupport<Data>
 		savingAction.setConfig(configSupplier);
 	}
 
-	/**
-	 *
-	 * @param beforeSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setBeforeSave(final BiConsumer<Data, String> beforeSave) {
-		savingAction.setBeforeSave(beforeSave);
-	}
-
-	/**
-	 *
-	 * @param afterSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setAfterSave(final BiConsumer<Data, String> afterSave) {
-		savingAction.setAfterSave(afterSave);
-	}
 }

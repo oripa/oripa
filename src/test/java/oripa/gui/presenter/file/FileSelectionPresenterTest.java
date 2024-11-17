@@ -37,9 +37,9 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.LoadingFileChooserView;
 import oripa.gui.view.file.SavingFileChooserView;
+import oripa.persistence.dao.FileSelectionSupport;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.filetool.FileAccessSupport;
 import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
@@ -194,7 +194,7 @@ class FileSelectionPresenterTest {
 		}
 
 		void setupFileSelectionServiceForSaving(final String extension, final FileType<Doc> type) {
-			FileAccessSupport<Doc> support = mock();
+			FileSelectionSupport<Doc> support = mock();
 			when(support.getExtensions()).thenReturn(new String[] { "opx" });
 
 			when(fileSelectionService.getSavableSupports()).thenReturn(List.of(support));
@@ -224,11 +224,11 @@ class FileSelectionPresenterTest {
 			when(view.getSelectedFilterDescription()).thenReturn("description");
 
 			FileType<Doc> type1 = mock();
-			FileAccessSupport<Doc> support1 = mock();
+			FileSelectionSupport<Doc> support1 = mock();
 			when(support1.getExtensions()).thenReturn(new String[] { "opx" });
 
 			FileType<Doc> type2 = mock();
-			FileAccessSupport<Doc> support2 = mock();
+			FileSelectionSupport<Doc> support2 = mock();
 			when(support2.getExtensions()).thenReturn(new String[] { "fold" });
 
 			when(fileSelectionService.getSavableSupportsOf(any())).thenReturn(List.of(support1, support2));
@@ -277,8 +277,8 @@ class FileSelectionPresenterTest {
 			when(selectedFile.getPath()).thenReturn(selectedPath);
 			when(view.getSelectedFile()).thenReturn(selectedFile);
 
-			FileAccessSupport<Doc> type = mock();
-			when(fileSelectionService.getLoadableSupportsWithMultiType()).thenReturn(List.of(type));
+			FileSelectionSupport<Doc> support = mock();
+			when(fileSelectionService.getLoadableSupportsWithMultiType()).thenReturn(List.of(support));
 
 			var result = presenter.loadUsingGUI(lastPath);
 

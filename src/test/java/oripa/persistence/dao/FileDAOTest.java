@@ -36,7 +36,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.persistence.doc.Doc;
-import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.LoadingAction;
 import oripa.persistence.filetool.SavingAction;
@@ -57,7 +56,7 @@ class FileDAOTest {
 	FileFactory fileFactory;
 
 	@Mock
-	FileAccessSupportSelector<Doc> selector;
+	FileSelectionSupportSelector<Doc> selector;
 
 	@Nested
 	class TestLoad {
@@ -65,7 +64,7 @@ class FileDAOTest {
 		void loadSucceedsWhenFileExists()
 				throws IOException, IllegalArgumentException, FileVersionError, WrongDataFormatException {
 
-			FileAccessSupport<Doc> support = mock();
+			FileSelectionSupport<Doc> support = mock();
 			LoadingAction<Doc> loadingAction = mock();
 
 			when(selector.getLoadableOf(anyString())).thenReturn(support);
@@ -109,7 +108,7 @@ class FileDAOTest {
 			Doc doc = mock();
 			FileType<Doc> fileType = mock();
 
-			FileAccessSupport<Doc> support = mock();
+			FileSelectionSupport<Doc> support = mock();
 			SavingAction<Doc> savingAction = mock();
 
 			when(selector.getSavablesOf(anyList())).thenReturn(List.of(support));
@@ -133,7 +132,7 @@ class FileDAOTest {
 
 			Doc doc = mock();
 
-			FileAccessSupport<Doc> support = mock();
+			FileSelectionSupport<Doc> support = mock();
 			SavingAction<Doc> savingAction = mock();
 
 			when(selector.getSavableOf(anyString())).thenReturn(support);
@@ -159,9 +158,9 @@ class FileDAOTest {
 		void supportMethodIsCalledWhenSupportExists() {
 
 			FileType<Doc> fileType = mock();
-			FileAccessSupport<Doc> support = mock();
+			FileSelectionSupport<Doc> support = mock();
 
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.of(support));
+			when(selector.getFileSelectionSupport(fileType)).thenReturn(Optional.of(support));
 
 			dao.setConfigToSavingAction(fileType, mock());
 
@@ -171,67 +170,13 @@ class FileDAOTest {
 		@Test
 		void supportMethodIsNotCalledWhenSupportDoesNotExist() {
 			FileType<Doc> fileType = mock();
-			FileAccessSupport<Doc> support = mock();
+			FileSelectionSupport<Doc> support = mock();
 
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.empty());
+			when(selector.getFileSelectionSupport(fileType)).thenReturn(Optional.empty());
 
 			dao.setConfigToSavingAction(fileType, mock());
 
 			verify(support, never()).setConfigToSavingAction(any());
-		}
-	}
-
-	@Nested
-	class TestSetBeforeSave {
-		@Test
-		void supportMethodIsCalledWhenSupportExists() {
-			FileType<Doc> fileType = mock();
-			FileAccessSupport<Doc> support = mock();
-
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.of(support));
-
-			dao.setBeforeSave(fileType, mock());
-
-			verify(support).setBeforeSave(any());
-		}
-
-		@Test
-		void supportMethodIsNotCalledWhenSupportDoesNotExist() {
-			FileType<Doc> fileType = mock();
-			FileAccessSupport<Doc> support = mock();
-
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.empty());
-
-			dao.setBeforeSave(fileType, mock());
-
-			verify(support, never()).setBeforeSave(any());
-		}
-	}
-
-	@Nested
-	class TestSetAfterSave {
-		@Test
-		void supportMethodIsCalledWhenSupportExists() {
-			FileType<Doc> fileType = mock();
-			FileAccessSupport<Doc> support = mock();
-
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.of(support));
-
-			dao.setAfterSave(fileType, mock());
-
-			verify(support).setAfterSave(any());
-		}
-
-		@Test
-		void supportMethodIsNotCalledWhenSupportDoesNotExist() {
-			FileType<Doc> fileType = mock();
-			FileAccessSupport<Doc> support = mock();
-
-			when(selector.getFileAccessSupport(fileType)).thenReturn(Optional.empty());
-
-			dao.setAfterSave(fileType, mock());
-
-			verify(support, never()).setAfterSave(any());
 		}
 	}
 

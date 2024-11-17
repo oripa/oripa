@@ -21,8 +21,9 @@ package oripa.persistence.entity;
 import java.util.TreeMap;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.FileAccessSupportSelector;
-import oripa.persistence.filetool.FileAccessSupport;
+import oripa.persistence.dao.FileSelectionSupport;
+import oripa.persistence.dao.FileSelectionSupportFactory;
+import oripa.persistence.dao.FileSelectionSupportSelector;
 import oripa.persistence.filetool.FileAccessSupportFactory;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
@@ -32,25 +33,39 @@ import oripa.util.file.FileFactory;
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelFileAccessSupportSelectorFactory {
+public class OrigamiModelFileSelectionSupportSelectorFactory {
+	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
 
 	/**
 	 * Constructor
 	 */
-	public FileAccessSupportSelector<OrigamiModel> create(final FileFactory fileFactory) {
-		var supports = new TreeMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>>();
-		var supportFactory = new FileAccessSupportFactory<OrigamiModel>();
+	public FileSelectionSupportSelector<OrigamiModel> create(final FileFactory fileFactory) {
+		var supports = new TreeMap<FileTypeProperty<OrigamiModel>, FileSelectionSupport<OrigamiModel>>();
+		var accessSupportFactory = new FileAccessSupportFactory();
 
-		OrigamiModelFileTypeKey key = OrigamiModelFileTypeKey.DXF_MODEL;
-		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
+		var key = OrigamiModelFileTypeKey.DXF_MODEL;
+		supports.put(
+				key,
+				new FileSelectionSupport<OrigamiModel>(
+						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
 
 		key = OrigamiModelFileTypeKey.OBJ_MODEL;
-		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
+		supports.put(
+				key,
+				new FileSelectionSupport<OrigamiModel>(
+						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
 
 		key = OrigamiModelFileTypeKey.SVG_MODEL;
-		supports.put(key, supportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID));
+		supports.put(
+				key,
+				new FileSelectionSupport<OrigamiModel>(
+						accessSupportFactory.createFileAccessSupport(key, StringID.ModelUI.FILE_ID)));
 
-		return new FileAccessSupportSelector<OrigamiModel>(supports, fileFactory);
+		return new FileSelectionSupportSelector<OrigamiModel>(
+				supports,
+				selectionSupportFactory,
+				accessSupportFactory,
+				fileFactory);
 	}
 
 }

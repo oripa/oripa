@@ -21,12 +21,10 @@ package oripa.application;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.FileType;
-import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -38,42 +36,16 @@ public class FileAccessService<Data> {
 
 	private final FileDAO<Data> fileDAO;
 
-	/**
-	 * The descriptions among the {@link FileAccessSupport}s contained by
-	 * {@code dao} should be unique.
-	 *
-	 * @param dao
-	 */
 	public FileAccessService(final FileDAO<Data> dao) {
 		this.fileDAO = dao;
 	}
 
 	public FileSelectionService<Data> getFileSelectionService() {
-		return new FileSelectionService<>(fileDAO.getFileAccessSupportSelector());
+		return new FileSelectionService<>(fileDAO.getFileSelectionSupportSelector());
 	}
 
 	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
 		fileDAO.setConfigToSavingAction(key, configSupplier);
-	}
-
-	/**
-	 *
-	 * @param key
-	 * @param beforeSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setBeforeSave(final FileType<Data> key, final BiConsumer<Data, String> beforeSave) {
-		fileDAO.setBeforeSave(key, beforeSave);
-	}
-
-	/**
-	 *
-	 * @param key
-	 * @param afterSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setAfterSave(final FileType<Data> key, final BiConsumer<Data, String> afterSave) {
-		fileDAO.setAfterSave(key, afterSave);
 	}
 
 	public boolean canLoad(final String filePath) {

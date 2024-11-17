@@ -30,7 +30,7 @@ import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
+import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelAllExporterFOLD;
 import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
@@ -52,7 +52,7 @@ public class CommandLineFolder {
 
 		var fileFactory = new FileFactory();
 		var creasePatternFileAccess = new FileAccessService<Doc>(
-				new FileDAO<>(new DocFileAccessSupportSelectorFactory().create(fileFactory), fileFactory));
+				new FileDAO<>(new DocFileSelectionSupportSelectorFactory().create(fileFactory), fileFactory));
 
 		try {
 			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();

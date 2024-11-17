@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -41,52 +40,28 @@ import oripa.util.file.FileFactory;
 public class FileDAO<Data> implements DataAccessObject<Data> {
 	private static Logger logger = LoggerFactory.getLogger(FileDAO.class);
 
-	private final FileAccessSupportSelector<Data> fileAccessSupportSelector;
+	private final FileSelectionSupportSelector<Data> fileSelectionSupportSelector;
 
 	private final FileFactory fileFactory;
 
-	public FileDAO(final FileAccessSupportSelector<Data> selector, final FileFactory fileFactory) {
-		this.fileAccessSupportSelector = selector;
+	public FileDAO(final FileSelectionSupportSelector<Data> selector, final FileFactory fileFactory) {
+		this.fileSelectionSupportSelector = selector;
 		this.fileFactory = fileFactory;
 	}
 
-	public FileAccessSupportSelector<Data> getFileAccessSupportSelector() {
-		return fileAccessSupportSelector;
+	public FileSelectionSupportSelector<Data> getFileSelectionSupportSelector() {
+		return fileSelectionSupportSelector;
 	}
 
 	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
-		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
+		var supportOpt = fileSelectionSupportSelector.getFileSelectionSupport(key);
 
 		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
 	}
 
-	/**
-	 *
-	 * @param key
-	 * @param beforeSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setBeforeSave(final FileType<Data> key, final BiConsumer<Data, String> beforeSave) {
-		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
-
-		supportOpt.ifPresent(support -> support.setBeforeSave(beforeSave));
-	}
-
-	/**
-	 *
-	 * @param key
-	 * @param afterSave
-	 *            a consumer whose parameters are data and file path.
-	 */
-	public void setAfterSave(final FileType<Data> key, final BiConsumer<Data, String> afterSave) {
-		var supportOpt = fileAccessSupportSelector.getFileAccessSupport(key);
-
-		supportOpt.ifPresent(support -> support.setAfterSave(afterSave));
-	}
-
 	public boolean canLoad(final String filePath) {
 		try {
-			fileAccessSupportSelector.getLoadableOf(filePath);
+			fileSelectionSupportSelector.getLoadableOf(filePath);
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
@@ -94,7 +69,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 	}
 
 	public boolean hasLoaders() {
-		return !fileAccessSupportSelector.getLoadables().isEmpty();
+		return !fileSelectionSupportSelector.getLoadables().isEmpty();
 	}
 
 	@Override
@@ -108,7 +83,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 			throw new FileNotFoundException(canonicalPath + " doesn't exist.");
 		}
 
-		var loadingAction = fileAccessSupportSelector.getLoadableOf(canonicalPath).getLoadingAction();
+		var loadingAction = fileSelectionSupportSelector.getLoadableOf(canonicalPath).getLoadingAction();
 
 		return loadingAction.load(canonicalPath);
 	}
@@ -119,7 +94,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 
 		logger.info("save(): path = {}", path);
 
-		var support = fileAccessSupportSelector.getSavableOf(path);
+		var support = fileSelectionSupportSelector.getSavableOf(path);
 		var savingAction = support.getSavingAction();
 
 		savingAction.save(data, canonicalPath(path));
@@ -140,7 +115,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 
 		logger.info("save(): path = {}", path);
 
-		var support = fileAccessSupportSelector.getSavablesOf(List.of(type)).stream()
+		var support = fileSelectionSupportSelector.getSavablesOf(List.of(type)).stream()
 				.findFirst()
 				.get();
 		var savingAction = support.getSavingAction();

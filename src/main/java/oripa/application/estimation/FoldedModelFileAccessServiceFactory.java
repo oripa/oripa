@@ -21,7 +21,7 @@ package oripa.application.estimation;
 import oripa.application.FileAccessService;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.entity.FoldedModelFileAccessSupportSelectorFactory;
+import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
 import oripa.util.file.FileFactory;
 
 /**
@@ -29,11 +29,11 @@ import oripa.util.file.FileFactory;
  *
  */
 public class FoldedModelFileAccessServiceFactory {
-	private final FoldedModelFileAccessSupportSelectorFactory selectorFactory;
+	private final FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
 	private final FileFactory fileFactory;
 
 	public FoldedModelFileAccessServiceFactory(
-			final FoldedModelFileAccessSupportSelectorFactory selectorFactory,
+			final FoldedModelFileSelectionSupportSelectorFactory selectorFactory,
 			final FileFactory fileFactory) {
 		this.selectorFactory = selectorFactory;
 		this.fileFactory = fileFactory;

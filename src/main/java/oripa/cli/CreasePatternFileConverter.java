@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import oripa.application.FileAccessService;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileAccessSupportSelectorFactory;
+import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.util.file.FileFactory;
@@ -40,7 +40,7 @@ public class CreasePatternFileConverter {
 		var fileFactory = new FileFactory();
 
 		var creasePatternFileAccess = new FileAccessService<Doc>(
-				new FileDAO<>(new DocFileAccessSupportSelectorFactory().create(fileFactory), fileFactory));
+				new FileDAO<>(new DocFileSelectionSupportSelectorFactory().create(fileFactory), fileFactory));
 
 		try {
 			creasePatternFileAccess.setConfigToSavingAction(DocFileTypes.fold(),
