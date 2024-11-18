@@ -43,7 +43,6 @@ import oripa.application.main.PaintContextModification;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
-import oripa.domain.projectprop.Property;
 import oripa.file.FileHistory;
 import oripa.file.InitData;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
@@ -93,6 +92,9 @@ public class MainFramePresentationLogicTest {
 
 	@Mock
 	MainComponentPresenterFactory componentPresenterFactory;
+
+	@Mock
+	FileAccessPresentationLogic fileAccessPresentationLogic;
 
 	@Mock
 	ChildFrameManager childFrameManager;
@@ -253,35 +255,31 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void succeedsWhenFileIsSelected() {
 
-			PaintContext paintContext = mock();
-			when(paintContext.getCreasePattern()).thenReturn(mock());
-			setupDomainContext(paintContext);
-
 			when(fileHistory.getLastDirectory()).thenReturn("directory");
 
 			when(project.getDataFileName()).thenReturn(Optional.of("file name"));
-			when(project.getProperty()).thenReturn(mock());
 
 			File defaultFile = mock();
 			when(defaultFile.getPath()).thenReturn("path");
 			when(fileFactory.create("directory", "file name")).thenReturn(defaultFile);
 
 			DocFileSelectionPresenter selectionPresenter = mock();
+			String selectedPath = "selected path";
 			FileSelectionResult<Doc> selectionResult = FileSelectionResult
 					.createSelectedForSave(
-							"selected path",
+							selectedPath,
 							mock());
 			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
 			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
+			when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
+
 			// execute
 			var presentationLogic = construct();
-			var selectedPath = presentationLogic.saveFileUsingGUIImpl();
+			var returnedPath = presentationLogic.saveFileUsingGUIImpl();
 
-			verify(dataFileAccess).saveFile(any(), eq("selected path"), any());
-
-			assertEquals("selected path", selectedPath);
+			assertEquals(selectedPath, returnedPath);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -319,15 +317,11 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void noChangesWhenDataAccessErrors() {
 
-			PaintContext paintContext = mock();
-			when(paintContext.getCreasePattern()).thenReturn(mock());
-			setupDomainContext(paintContext);
-
 			when(fileHistory.getLastDirectory()).thenReturn("directory");
 
+			String projectPath = "project path";
 			when(project.getDataFileName()).thenReturn(Optional.of("file name"));
-			when(project.getDataFilePath()).thenReturn("project path");
-			when(project.getProperty()).thenReturn(mock());
+			when(project.getDataFilePath()).thenReturn(projectPath);
 
 			File defaultFile = mock();
 			when(defaultFile.getPath()).thenReturn("path");
@@ -342,14 +336,13 @@ public class MainFramePresentationLogicTest {
 			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
-			doThrow(DataAccessException.class).when(dataFileAccess).saveFile(any(), anyString(), any());
+			doThrow(DataAccessException.class).when(fileAccessPresentationLogic).saveFile(anyString(), any());
 
 			// execute
 			var presentationLogic = construct();
-			var selectedPath = presentationLogic.saveFileUsingGUIImpl();
+			var returnedPath = presentationLogic.saveFileUsingGUIImpl();
 
-			verify(view).showSaveFailureErrorMessage(any());
-			assertEquals("project path", selectedPath);
+			assertEquals(projectPath, returnedPath);
 		}
 
 	}
@@ -368,31 +361,14 @@ public class MainFramePresentationLogicTest {
 			setupDomainContext();
 
 			String path = "path";
-			Property loadedProperty = mock();
-			Doc loadedDoc = mock();
-			when(loadedDoc.getProperty()).thenReturn(loadedProperty);
-			when(loadedDoc.getCreasePattern()).thenReturn(mock());
-			when(dataFileAccess.loadFile(eq(path))).thenReturn(Optional.of(loadedDoc));
 
-			Property currentProperty = mock();
-			when(project.getProperty()).thenReturn(currentProperty);
+			when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(path);
 
 			// execute
 			var presentationLogic = construct();
 			var loadedPath = presentationLogic.loadFileImpl(path);
 
 			assertEquals(path, loadedPath);
-
-			verify(childFrameManager).closeAll(view);
-
-			verify(dataFileAccess).loadFile(path);
-			verify(project).setProperty(loadedProperty);
-			verify(project).setDataFilePath(anyString());
-			verify(view).setEstimationResultColors(any(), any());
-			verify(screenSetting).setGridVisible(false);
-			verify(paintContextModification).setCreasePatternToPaintContext(any(), any(), eq(cutModelOutlinesHolder));
-			verify(screenPresenter).updateCameraCenter();
-
 		}
 
 		@Test
@@ -407,56 +383,13 @@ public class MainFramePresentationLogicTest {
 
 			String path = "path";
 			// couldn't load
-			when(dataFileAccess.loadFile(eq(path))).thenReturn(Optional.empty());
+			when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(null);
 
 			// execute
 			var presentationLogic = construct();
 			var loadedPath = presentationLogic.loadFileImpl(path);
 
 			assertNull(loadedPath);
-
-			verify(childFrameManager).closeAll(view);
-
-			verify(dataFileAccess).loadFile(path);
-
-			verify(project, never()).setProperty(any());
-			verify(project, never()).setDataFilePath(anyString());
-			verify(view, never()).setEstimationResultColors(any(), any());
-			verify(screenSetting, never()).setGridVisible(anyBoolean());
-			verify(paintContextModification, never())
-					.setCreasePatternToPaintContext(any(), any(), eq(cutModelOutlinesHolder));
-
-		}
-
-		@Test
-		void noChangesWhenDataAccessErrors() {
-
-			PainterScreenSetting screenSetting = mock();
-			setupViewSetting(screenSetting);
-
-			setupViewUpdateSupport();
-
-			setupDomainContext();
-
-			doThrow(DataAccessException.class).when(dataFileAccess).loadFile(anyString());
-
-			when(project.getDataFilePath()).thenReturn("project path");
-
-			// execute
-			var presentationLogic = construct();
-			var loadedPath = presentationLogic.loadFileImpl("path");
-
-			assertEquals("project path", loadedPath);
-
-			verify(view).showLoadFailureErrorMessage(any());
-
-			verify(childFrameManager).closeAll(view);
-			verify(project, never()).setDataFilePath(anyString());
-			verify(view, never()).setEstimationResultColors(any(), any());
-			verify(screenSetting, never()).setGridVisible(false);
-			verify(paintContextModification, never()).setCreasePatternToPaintContext(any(), any(),
-					eq(cutModelOutlinesHolder));
-			verify(screenPresenter, never()).updateCameraCenter();
 
 		}
 
@@ -529,6 +462,7 @@ public class MainFramePresentationLogicTest {
 				screenPresenter,
 				uiPanelPresenter,
 				componentPresenterFactory,
+				fileAccessPresentationLogic,
 				presentationContext,
 				childFrameManager,
 				bindingFactory,

@@ -18,7 +18,6 @@
  */
 package oripa.gui.presenter.main;
 
-import java.awt.Color;
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -68,6 +67,7 @@ public class MainFramePresentationLogic {
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
 	private final MainComponentPresenterFactory componentPresenterFactory;
+	private final FileAccessPresentationLogic fileAccessPresentationLogic;
 
 	private final CreasePatternViewContext viewContext;
 
@@ -100,6 +100,7 @@ public class MainFramePresentationLogic {
 			final PainterScreenPresenter screenPresenter,
 			final UIPanelPresenter uiPanelPresenter,
 			final MainComponentPresenterFactory componentPresenterFactory,
+			final FileAccessPresentationLogic fileAccessPresentationLogic,
 			final CreasePatternPresentationContext presentationContext,
 			final ChildFrameManager childFrameManager,
 			final BindingObjectFactoryFacade bindingFactory,
@@ -118,6 +119,8 @@ public class MainFramePresentationLogic {
 		this.childFrameManager = childFrameManager;
 
 		this.componentPresenterFactory = componentPresenterFactory;
+
+		this.fileAccessPresentationLogic = fileAccessPresentationLogic;
 
 		this.viewContext = presentationContext.getViewContext();
 
@@ -249,7 +252,7 @@ public class MainFramePresentationLogic {
 		var filePath = project.getDataFilePath();
 
 		try {
-			return saveFile(filePath, type);
+			return fileAccessPresentationLogic.saveFile(filePath, type);
 		} catch (DataAccessException | IllegalArgumentException e) {
 			return filePath;
 		}
@@ -280,26 +283,10 @@ public class MainFramePresentationLogic {
 		}
 
 		try {
-			return saveFile(selection.path(), selection.type());
+			return fileAccessPresentationLogic.saveFile(selection.path(), selection.type());
 		} catch (DataAccessException | IllegalArgumentException e) {
 			return project.getDataFilePath();
 		}
-
-	}
-
-	private String saveFile(final String path, final FileType<Doc> type)
-			throws DataAccessException, IllegalArgumentException {
-		try {
-			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
-			dataFileAccess.saveFile(doc, path, type);
-
-		} catch (DataAccessException | IllegalArgumentException e) {
-			logger.error("Failed to save", e);
-			view.showSaveFailureErrorMessage(e);
-			throw e;
-		}
-
-		return path;
 
 	}
 
@@ -316,7 +303,7 @@ public class MainFramePresentationLogic {
 			return;
 		}
 
-		loadFileImpl(selection.path());
+		fileAccessPresentationLogic.loadFile(selection.path());
 	}
 
 	/**
@@ -326,53 +313,7 @@ public class MainFramePresentationLogic {
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	public String loadFileImpl(final String filePath) {
-
-		childFrameManager.closeAll(view);
-
-		try {
-
-			var docOpt = dataFileAccess.loadFile(filePath);
-			return docOpt
-					.map(doc -> {
-						project.setProperty(doc.getProperty());
-						project.setDataFilePath(filePath);
-
-						var property = project.getProperty();
-						view.setEstimationResultColors(
-								convertCodeToColor(property.extractFrontColorCode()),
-								convertCodeToColor(property.extractBackColorCode()));
-
-						screenSetting.setGridVisible(false);
-						paintContextModification
-								.setCreasePatternToPaintContext(
-										doc.getCreasePattern(), paintContext, cutModelOutlinesHolder);
-						screenPresenter.updateCameraCenter();
-						return filePath;
-					}).orElse(null);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			logger.error("failed to load", e);
-			view.showLoadFailureErrorMessage(e);
-			return project.getDataFilePath();
-		}
-	}
-
-	/**
-	 * Can return null because the returned value will be passed to other
-	 * method.
-	 *
-	 * @param code
-	 * @return
-	 */
-	private Color convertCodeToColor(final String code) {
-		if (code == null) {
-			return null;
-		}
-
-		try {
-			return new Color(Integer.decode(code));
-		} catch (NumberFormatException e) {
-			return null;
-		}
+		return fileAccessPresentationLogic.loadFile(filePath);
 	}
 
 }

@@ -55,6 +55,7 @@ import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
+import oripa.gui.presenter.main.FileAccessPresentationLogic;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresentationLogic;
 import oripa.gui.presenter.main.MainFramePresenter;
@@ -265,6 +266,17 @@ public class ORIPA {
 			var uiPanelPresenter = mainComponentPresenterFactory
 					.createUIPanelPresenter(mainFrame.getUIPanelView());
 
+			var fileAccessPresentationLogic = new FileAccessPresentationLogic(
+					mainFrame,
+					childFrameManager,
+					screenPresenter,
+					mainViewSetting.getPainterScreenSetting(),
+					paintContextModification,
+					paintContext,
+					cutModelOutlinesHolder,
+					project,
+					docFileAccessService);
+
 			var presentationLogic = new MainFramePresentationLogic(
 					mainFrame,
 					mainViewSetting,
@@ -274,6 +286,7 @@ public class ORIPA {
 					screenPresenter,
 					uiPanelPresenter,
 					mainComponentPresenterFactory,
+					fileAccessPresentationLogic,
 					presentationContext,
 					childFrameManager,
 					bindingFactory,

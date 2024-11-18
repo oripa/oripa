@@ -33,4 +33,16 @@ public class ColorUtil {
 	public static String convertColorToCode(final Color color) {
 		return String.format("#%06X", color.getRGB() & 0x00FFFFFF);
 	}
+
+	public static Color convertCodeToColor(final String code) {
+		if (code == null) {
+			return null;
+		}
+
+		try {
+			return new Color(Integer.decode(code));
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
 }
