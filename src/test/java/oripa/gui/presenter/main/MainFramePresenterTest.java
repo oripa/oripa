@@ -565,7 +565,7 @@ class MainFramePresenterTest {
 
 				@SuppressWarnings("unchecked")
 				@Test
-				void saveCPAndSaveIniWhenChangeOnCPAndFileIsSelected() {
+				void saveCPAndSaveIniWhenCPChangedAndFileIsSelected() {
 					PaintContext paintContext = mock();
 					when(paintContext.creasePatternChangeExists()).thenReturn(true);
 					setupDomainContext(paintContext);
@@ -580,7 +580,7 @@ class MainFramePresenterTest {
 
 					listenerCaptor.getValue().run();
 
-					verify(presentationLogic).saveFileUsingGUIImpl();
+					verify(presentationLogic).saveFileUsingGUI();
 					verify(presentationLogic).saveIniFile();
 
 				}

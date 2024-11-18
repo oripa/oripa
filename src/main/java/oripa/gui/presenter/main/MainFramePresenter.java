@@ -341,7 +341,7 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void saveFileUsingGUI(final FileType<Doc>... types) {
-		var filePath = presentationLogic.saveFileUsingGUIImpl(types);
+		var filePath = presentationLogic.saveFileUsingGUI(types);
 
 		afterSaveFile(filePath);
 	}
@@ -352,7 +352,7 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void exportFileUsingGUI(final FileType<Doc>... types) {
-		presentationLogic.saveFileUsingGUIImpl(types);
+		presentationLogic.saveFileUsingGUI(types);
 	}
 
 	/**
@@ -413,7 +413,7 @@ public class MainFramePresenter {
 	 * @param filePath
 	 */
 	private void loadFile(final String filePath) {
-		presentationLogic.loadFileImpl(filePath);
+		presentationLogic.loadFile(filePath);
 		afterLoadFile();
 	}
 

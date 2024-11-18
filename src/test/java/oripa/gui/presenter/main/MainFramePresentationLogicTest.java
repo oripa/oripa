@@ -250,7 +250,7 @@ public class MainFramePresentationLogicTest {
 	}
 
 	@Nested
-	class TestSaveFileUsingGUIImpl {
+	class TestSaveFileUsingGUI {
 		@SuppressWarnings("unchecked")
 		@Test
 		void succeedsWhenFileIsSelected() {
@@ -277,7 +277,7 @@ public class MainFramePresentationLogicTest {
 
 			// execute
 			var presentationLogic = construct();
-			var returnedPath = presentationLogic.saveFileUsingGUIImpl();
+			var returnedPath = presentationLogic.saveFileUsingGUI();
 
 			assertEquals(selectedPath, returnedPath);
 		}
@@ -306,7 +306,7 @@ public class MainFramePresentationLogicTest {
 
 			// execute
 			var presentationLogic = construct();
-			var selectedPath = presentationLogic.saveFileUsingGUIImpl();
+			var selectedPath = presentationLogic.saveFileUsingGUI();
 
 			verify(dataFileAccess, never()).saveFile(any(), anyString(), any());
 
@@ -340,7 +340,7 @@ public class MainFramePresentationLogicTest {
 
 			// execute
 			var presentationLogic = construct();
-			var returnedPath = presentationLogic.saveFileUsingGUIImpl();
+			var returnedPath = presentationLogic.saveFileUsingGUI();
 
 			assertEquals(projectPath, returnedPath);
 		}
@@ -348,7 +348,7 @@ public class MainFramePresentationLogicTest {
 	}
 
 	@Nested
-	class TestLoadFileImpl {
+	class TestLoadFile {
 
 		@Test
 		void succeedsWhenFileIsLoaded() {
@@ -366,7 +366,7 @@ public class MainFramePresentationLogicTest {
 
 			// execute
 			var presentationLogic = construct();
-			var loadedPath = presentationLogic.loadFileImpl(path);
+			var loadedPath = presentationLogic.loadFile(path);
 
 			assertEquals(path, loadedPath);
 		}
@@ -387,7 +387,7 @@ public class MainFramePresentationLogicTest {
 
 			// execute
 			var presentationLogic = construct();
-			var loadedPath = presentationLogic.loadFileImpl(path);
+			var loadedPath = presentationLogic.loadFile(path);
 
 			assertNull(loadedPath);
 

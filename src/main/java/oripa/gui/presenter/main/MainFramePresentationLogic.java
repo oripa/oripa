@@ -262,7 +262,7 @@ public class MainFramePresentationLogic {
 	/**
 	 * save file without origami model check
 	 */
-	public String saveFileUsingGUIImpl(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
+	public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
 		var directory = fileHistory.getLastDirectory();
 		var fileName = project.getDataFileName().get();
 
@@ -312,7 +312,7 @@ public class MainFramePresentationLogic {
 	 * @param filePath
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
-	public String loadFileImpl(final String filePath) {
+	public String loadFile(final String filePath) {
 		return fileAccessPresentationLogic.loadFile(filePath);
 	}
 
