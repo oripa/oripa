@@ -20,6 +20,7 @@ package oripa;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.function.Supplier;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -55,6 +56,7 @@ import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
+import oripa.gui.presenter.main.MainFramePresentationLogic;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
@@ -250,28 +252,57 @@ public class ORIPA {
 			var iniFileAccess = new IniFileAccess(
 					new InitDataFileReader(), new InitDataFileWriter());
 
-			var presenter = new MainFramePresenter(
+			var project = new Project();
+
+			var paintContextModification = new PaintContextModification();
+
+			Supplier<CreasePatternFOLDConfig> foldConfigFactory = () -> new CreasePatternFOLDConfig();
+
+			var resourceHolder = ResourceHolder.getInstance();
+
+			var screenPresenter = mainComponentPresenterFactory
+					.createPainterScreenPresenter(mainFrame.getPainterScreenView());
+			var uiPanelPresenter = mainComponentPresenterFactory
+					.createUIPanelPresenter(mainFrame.getUIPanelView());
+
+			var presentationLogic = new MainFramePresentationLogic(
 					mainFrame,
 					mainViewSetting,
 					viewUpdateSupport,
 					dialogFactory,
 					subFrameFactory,
+					screenPresenter,
+					uiPanelPresenter,
 					mainComponentPresenterFactory,
 					presentationContext,
 					childFrameManager,
 					bindingFactory,
-					statePopperFactory,
-					new Project(),
+					project,
 					domainContext,
-					new PaintContextModification(),
+					paintContextModification,
 					cutModelOutlinesHolder,
 					fileHistory,
 					iniFileAccess,
 					docFileAccessService,
 					fileFactory,
+					resourceHolder);
+
+			var presenter = new MainFramePresenter(
+					mainFrame,
+					dialogFactory,
+					subFrameFactory,
+					presentationLogic,
+					mainComponentPresenterFactory,
+					presentationContext,
+					bindingFactory,
+					statePopperFactory,
+					project,
+					domainContext,
+					paintContextModification,
+					fileHistory,
+					docFileAccessService,
 					plugins,
-					() -> new CreasePatternFOLDConfig(),
-					ResourceHolder.getInstance());
+					foldConfigFactory);
 			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {

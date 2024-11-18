@@ -22,7 +22,6 @@ import java.awt.Color;
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +33,12 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.file.FileHistory;
+import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.file.UserAction;
+import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
@@ -49,7 +50,6 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -65,8 +65,9 @@ public class MainFramePresentationLogic {
 
 	private final MainFrameView view;
 
-	private final MainComponentPresenterFactory componentPresenterFactory;
 	private final PainterScreenPresenter screenPresenter;
+	private final UIPanelPresenter uiPanelPresenter;
+	private final MainComponentPresenterFactory componentPresenterFactory;
 
 	private final CreasePatternViewContext viewContext;
 
@@ -97,6 +98,7 @@ public class MainFramePresentationLogic {
 			final MainFrameDialogFactory dialogFactory,
 			final SubFrameFactory subFrameFactory,
 			final PainterScreenPresenter screenPresenter,
+			final UIPanelPresenter uiPanelPresenter,
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final CreasePatternPresentationContext presentationContext,
 			final ChildFrameManager childFrameManager,
@@ -109,7 +111,6 @@ public class MainFramePresentationLogic {
 			final IniFileAccess iniFileAccess,
 			final FileAccessService<Doc> dataFileAccess,
 			final FileFactory fileFactory,
-			final Supplier<CreasePatternFOLDConfig> foldConfigFactory,
 			final ResourceHolder resourceHolder) {
 
 		this.view = view;
@@ -133,9 +134,30 @@ public class MainFramePresentationLogic {
 		this.screenSetting = viewSetting.getPainterScreenSetting();
 		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 
+		this.uiPanelPresenter = uiPanelPresenter;
 		this.screenPresenter = screenPresenter;
 
 		this.resourceHolder = resourceHolder;
+	}
+
+	public void setPaperDomainOfModel(final RectangleDomain domain) {
+		screenPresenter.setPaperDomainOfModel(domain);
+	}
+
+	public void updateCameraCenter() {
+		screenPresenter.updateCameraCenter();
+	}
+
+	public void updateScreen() {
+		screenUpdater.updateScreen();
+	}
+
+	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
+		uiPanelPresenter.addPlugins(plugins);
+	}
+
+	public void updateValuePanelFractionDigits() {
+		uiPanelPresenter.updateValuePanelFractionDigits();
 	}
 
 	public void updateMRUFilesMenuItem(final int index) {
@@ -152,13 +174,29 @@ public class MainFramePresentationLogic {
 		doExit.run();
 	}
 
-	private void saveIniFile() {
+	public void saveIniFile() {
 		try {
 			iniFileAccess.save(fileHistory, viewContext);
 		} catch (IllegalStateException e) {
 			logger.error("error when building ini file data", e);
 			view.showSaveIniFileFailureErrorMessage(e);
 		}
+	}
+
+	public void loadIniFile() {
+		var ini = iniFileAccess.load();
+
+		fileHistory.loadFromInitData(ini);
+		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
+
+		logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
+		screenSetting.setMVLineVisible(ini.isMvLineVisible());
+
+		logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
+		screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
+
+		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
+		screenSetting.setVertexVisible(ini.isVertexVisible());
 	}
 
 	public void clear() {
@@ -173,7 +211,7 @@ public class MainFramePresentationLogic {
 		updateTitleText();
 	}
 
-	private void updateTitleText() {
+	public void updateTitleText() {
 
 		view.setFileNameToTitle(getTitleText());
 	}
@@ -202,6 +240,25 @@ public class MainFramePresentationLogic {
 		fileHistory.useFile(filePath);
 
 		view.buildFileMenu();
+	}
+
+	/**
+	 * saves project without opening a dialog
+	 */
+	public String saveFileImpl(final FileType<Doc> type) {
+		var filePath = project.getDataFilePath();
+
+		try {
+			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
+			dataFileAccess.saveFile(doc, filePath, type);
+
+		} catch (DataAccessException | IllegalArgumentException e) {
+			logger.error("Failed to save", e);
+			view.showSaveFailureErrorMessage(e);
+		}
+
+		return filePath;
+
 	}
 
 	/**

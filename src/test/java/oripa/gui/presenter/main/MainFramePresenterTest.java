@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -30,9 +29,6 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -65,7 +61,6 @@ import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
-import oripa.resource.StringID;
 import oripa.util.file.FileFactory;
 
 /**
@@ -86,6 +81,15 @@ class MainFramePresenterTest {
 
 	@Mock
 	SubFrameFactory subFrameFactory;
+
+	@Mock
+	PainterScreenPresenter screenPresenter;
+
+	@Mock
+	UIPanelPresenter uiPanelPresenter;
+
+	@Mock
+	MainFramePresentationLogic presentationLogic;
 
 	@Mock
 	MainComponentPresenterFactory componentPresenterFactory;
@@ -144,68 +148,19 @@ class MainFramePresenterTest {
 		@Nested
 		class TestLoadIniFile {
 
-			@MethodSource("createIniFileShouldBeLoadedArguments")
-			@ParameterizedTest
-			void iniFileShouldBeLoaded(
-					final boolean isZeroLineWidth,
-					final boolean isMvLineVisible,
-					final boolean isAuxLineVisible,
-					final boolean isVertexVisible) {
-				setupResourceHolder();
-
-				setupView();
-
-				PainterScreenSetting screenSetting = mock();
-				setupViewSetting(screenSetting);
-
-				setupViewUpdateSupport();
-
-				setupPresentationContext();
+			@Test
+			void iniFileShouldBeLoaded() {
 
 				setupDomainContext(mock());
 
-				setupComponentPresenterFactory();
-
 				setupBindingFactory();
-
-				InitData initData = mock();
-				when(initData.isZeroLineWidth()).thenReturn(isZeroLineWidth);
-				when(initData.isMvLineVisible()).thenReturn(isMvLineVisible);
-				when(initData.isAuxLineVisible()).thenReturn(isAuxLineVisible);
-				when(initData.isVertexVisible()).thenReturn(isVertexVisible);
-
-				setupIniFileAccess(initData);
-
-				setupProject();
 
 				construct();
 
-				verify(iniFileAccess).load();
+				verify(presentationLogic).loadIniFile();
 
-				verify(fileHistory).loadFromInitData(initData);
-
-				verify(screenSetting).setZeroLineWidth(isZeroLineWidth);
-				verify(screenSetting).setMVLineVisible(isMvLineVisible);
-				verify(screenSetting).setAuxLineVisible(isAuxLineVisible);
-				verify(screenSetting).setVertexVisible(isVertexVisible);
 			}
 
-			static List<Arguments> createIniFileShouldBeLoadedArguments() {
-				var booleanValues = List.of(true, false);
-
-				var args = new ArrayList<Arguments>();
-
-				for (var zeroWidth : booleanValues) {
-					for (var mvLine : booleanValues) {
-						for (var auxLine : booleanValues) {
-							for (var vertex : booleanValues) {
-								args.add(Arguments.of(zeroWidth, mvLine, auxLine, vertex));
-							}
-						}
-					}
-				}
-				return args;
-			}
 		}
 
 		@Nested
@@ -215,30 +170,15 @@ class MainFramePresenterTest {
 
 			@Test
 			void saveConfigurationOfFOLDShouldBeDone() {
-				setupResourceHolder();
-
-				setupView();
-
-				setupViewSetting();
-
-				setupViewUpdateSupport();
-
-				setupPresentationContext();
 
 				PaintContext paintContext = mock();
 				when(paintContext.getPointEps()).thenReturn(1e-8);
 				setupDomainContext(paintContext);
 
-				setupComponentPresenterFactory();
-
 				setupBindingFactory();
-
-				setupIniFileAccess();
 
 				CreasePatternFOLDConfig config = mock();
 				setupFOLDConfigFactory(config);
-
-				setupProject();
 
 				construct();
 
@@ -256,30 +196,14 @@ class MainFramePresenterTest {
 		class TestAddPlugins {
 			@Test
 			void givenPluginsShouldBeAdded() {
-				setupResourceHolder();
-
-				setupView();
-
-				setupViewSetting();
-
-				setupViewUpdateSupport();
-
-				setupPresentationContext();
 
 				setupDomainContext();
 
-				UIPanelPresenter uiPanelPresenter = mock();
-				setupComponentPresenterFactory(mock(), uiPanelPresenter);
-
 				setupBindingFactory();
-
-				setupIniFileAccess();
-
-				setupProject();
 
 				construct();
 
-				verify(uiPanelPresenter).addPlugins(plugins);
+				verify(presentationLogic).addPlugins(plugins);
 			}
 		}
 
@@ -287,25 +211,10 @@ class MainFramePresenterTest {
 		class TestBuildFileMenu {
 			@Test
 			void buildFileMenuShouldBeCalled() {
-				setupResourceHolder();
-
-				setupView();
-
-				setupViewSetting();
-
-				setupViewUpdateSupport();
-
-				setupPresentationContext();
 
 				setupDomainContext();
 
-				setupComponentPresenterFactory();
-
 				setupBindingFactory();
-
-				setupIniFileAccess();
-
-				setupProject();
 
 				construct();
 
@@ -324,116 +233,34 @@ class MainFramePresenterTest {
 			@Test
 			void titleTextShouldBeUpdatedWithDefaultText() {
 
-				setupView();
-
-				setupViewSetting();
-
-				setupViewUpdateSupport();
-
-				setupPresentationContext();
-
 				setupDomainContext();
-
-				setupComponentPresenterFactory();
 
 				setupBindingFactory();
 
-				setupIniFileAccess();
-
-				setupProject();
-
-				String defaultText = "title text";
-				setupResourceHolder(defaultText);
-
 				construct();
 
-				verify(resourceHolder).getString(resourceKeyCaptor.capture(), textIdCaptor.capture());
-
-				assertEquals(ResourceKey.DEFAULT, resourceKeyCaptor.getValue());
-				assertEquals(StringID.Default.FILE_NAME_ID, textIdCaptor.getValue());
-
-				verify(view).setFileNameToTitle(defaultText);
+				verify(presentationLogic).updateTitleText();
 
 			}
 		}
 
-//		@Nested
-//		class TestAddListeners {
-//			@Captor
-//			ArgumentCaptor<Runnable> runnableCaptor;
-//
-//			@Captor
-//			ArgumentCaptor<Function<Doc, String>> loadFileMapperCaptor;
-//
-//			void addsOpenButtonListener() {
-//				setupResourceHolder();
-//
-//				setupView();
-//
-//				PainterScreenSetting screenSetting = mock();
-//				setupViewSetting(screenSetting);
-//
-//				ViewScreenUpdater screenUpdater = mock();
-//				setupViewUpdateSupport(screenUpdater);
-//
-//				setupPresentationContext();
-//
-//				PaintContext paintContext = mock();
-//				setupDomainContext(paintContext);
-//
-//				PainterScreenPresenter screenPresenter = mock();
-//				setupComponentPresenterFactory(screenPresenter, mock());
-//
-//				// setup GUI interaction
-//				DocFileSelectionPresenter selectionPresenter = mock();
-//				FileSelectionResult<Doc> result = mock();
-//				String path = "last path";
-//				when(selectionPresenter.loadUsingGUI(anyString())).thenReturn(result);
-//				when(result.action()).thenReturn(UserAction.SELECTED);
-//				when(result.path()).thenReturn(path);
-//				when(componentPresenterFactory.createDocFileSelectionPresenter(view, any()))
-//						.thenReturn(selectionPresenter);
-//				when(dataFileAccess.getFileSelectionService()).thenReturn(mock());
-//				when(fileHistory.getLastPath()).thenReturn(path);
-//
-//				setupBindingFactory();
-//
-//				setupIniFileAccess();
-//
-//				setupProject();
-//
-//				construct();
-//
-//				verify(view).addOpenButtonListener(runnableCaptor.capture());
-//				runnableCaptor.getValue().run();
-//
-//			}
-//
-//		}
-
 		MainFramePresenter construct() {
 			return new MainFramePresenter(
 					view,
-					viewSetting,
-					viewUpdateSupport,
 					dialogFactory,
 					subFrameFactory,
+					presentationLogic,
 					componentPresenterFactory,
 					presentationContext,
-					childFrameManager,
 					bindingFactory,
 					statePopperFactory,
 					project,
 					domainContext,
 					paintContextModification,
-					cutModelOutlinesHolder,
 					fileHistory,
-					iniFileAccess,
 					dataFileAccess,
-					fileFactory,
 					plugins,
-					foldConfigFactory,
-					resourceHolder);
+					foldConfigFactory);
 		}
 
 		void setupResourceHolder() {

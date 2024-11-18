@@ -18,9 +18,8 @@
  */
 package oripa.gui.presenter.main;
 
-import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
@@ -29,16 +28,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.FileAccessService;
-import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -46,14 +42,9 @@ import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
-import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.MainViewSetting;
-import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
-import oripa.gui.view.main.ViewUpdateSupport;
-import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
@@ -61,48 +52,33 @@ import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
-import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class MainFramePresenter {
-	private static final Logger logger = LoggerFactory.getLogger(MainFramePresenter.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final MainFrameView view;
 	private final MainFrameDialogFactory dialogFactory;
 
+	private final MainFramePresentationLogic presentationLogic;
 	private final MainComponentPresenterFactory componentPresenterFactory;
-	private final PainterScreenPresenter screenPresenter;
-	private final UIPanelPresenter uiPanelPresenter;
-
-	private final ResourceHolder resourceHolder;
 
 	private final StatePopperFactory<EditMode> statePopperFactory;
 
-	private final ViewScreenUpdater screenUpdater;
-	private final PainterScreenSetting screenSetting;
-
 	private final BindingObjectFactoryFacade bindingFactory;
 
-	private final ChildFrameManager childFrameManager;
-
-	private Project project;
+	private final Project project;
 
 	private final PaintContext paintContext;
-	private final CreasePatternViewContext viewContext;
 	private final MouseActionHolder actionHolder;
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 
 	// data access
-	private final IniFileAccess iniFileAccess;
 	private final FileAccessService<Doc> dataFileAccess;
 	private final FileHistory fileHistory;
-	private final FileFactory fileFactory;
 
 	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
 
@@ -111,66 +87,42 @@ public class MainFramePresenter {
 
 	public MainFramePresenter(
 			final MainFrameView view,
-			final MainViewSetting viewSetting,
-			final ViewUpdateSupport viewUpdateSupport,
 			final MainFrameDialogFactory dialogFactory,
 			final SubFrameFactory subFrameFactory,
+			final MainFramePresentationLogic presentationLogic,
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final CreasePatternPresentationContext presentationContext,
-			final ChildFrameManager childFrameManager,
 			final BindingObjectFactoryFacade bindingFactory,
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final Project project,
 			final PaintDomainContext domainContext,
 			final PaintContextModification paintContextModification,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileHistory fileHistory,
-			final IniFileAccess iniFileAccess,
 			final FileAccessService<Doc> dataFileAccess,
-			final FileFactory fileFactory,
 			final List<GraphicMouseActionPlugin> plugins,
-			final Supplier<CreasePatternFOLDConfig> foldConfigFactory,
-			final ResourceHolder resourceHolder) {
-		this.resourceHolder = resourceHolder;
+			final Supplier<CreasePatternFOLDConfig> foldConfigFactory) {
 
 		this.view = view;
 		this.dialogFactory = dialogFactory;
 
-		this.childFrameManager = childFrameManager;
-
 		this.bindingFactory = bindingFactory;
 
+		this.presentationLogic = presentationLogic;
 		this.componentPresenterFactory = componentPresenterFactory;
 
 		this.project = project;
 		this.paintContext = domainContext.getPaintContext();
 		this.paintContextModification = paintContextModification;
-		this.viewContext = presentationContext.getViewContext();
-		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 
 		this.actionHolder = presentationContext.getActionHolder();
 		this.statePopperFactory = statePopperFactory;
 		this.fileHistory = fileHistory;
-		this.iniFileAccess = iniFileAccess;
+
 		this.dataFileAccess = dataFileAccess;
-		this.fileFactory = fileFactory;
 
 		this.foldConfigFactory = foldConfigFactory;
 
-		this.screenSetting = viewSetting.getPainterScreenSetting();
-
-		var screen = view.getPainterScreenView();
-		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
-
-		var uiPanel = view.getUIPanelView();
-
-		screenPresenter = componentPresenterFactory.createPainterScreenPresenter(
-				screen);
-
-		uiPanelPresenter = componentPresenterFactory.createUIPanelPresenter(
-				uiPanel);
-
-		loadIniFile();
+		presentationLogic.loadIniFile();
 
 		modifySavingActions();
 
@@ -179,7 +131,7 @@ public class MainFramePresenter {
 		addPlugins(plugins);
 
 		view.buildFileMenu();
-		updateTitleText();
+		presentationLogic.updateTitleText();
 	}
 
 	public void setViewVisible(final boolean visible) {
@@ -187,7 +139,7 @@ public class MainFramePresenter {
 	}
 
 	private void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
-		uiPanelPresenter.addPlugins(plugins);
+		presentationLogic.addPlugins(plugins);
 	}
 
 	private void addListeners() {
@@ -225,7 +177,7 @@ public class MainFramePresenter {
 			} catch (Exception ex) {
 				logger.error("Wrong implementation.", ex);
 			}
-			screenUpdater.updateScreen();
+			presentationLogic.updateScreen();
 		});
 
 		view.addRedoButtonListener(() -> {
@@ -236,10 +188,10 @@ public class MainFramePresenter {
 			} catch (Exception ex) {
 				logger.error("Wrong implementation.", ex);
 			}
-			screenUpdater.updateScreen();
+			presentationLogic.updateScreen();
 		});
 
-		view.addClearButtonListener(this::clear);
+		view.addClearButtonListener(presentationLogic::clear);
 
 		view.addAboutButtonListener(view::showAboutAppMessage);
 
@@ -255,7 +207,7 @@ public class MainFramePresenter {
 		addPaintMenuItemsListener();
 
 		view.addMRUFileButtonListener(this::loadFile);
-		view.addMRUFilesMenuItemUpdateListener(this::updateMRUFilesMenuItem);
+		view.addMRUFilesMenuItemUpdateListener(presentationLogic::updateMRUFilesMenuItem);
 
 		view.setEstimationResultSaveColorsListener((front, back) -> {
 			var property = project.getProperty();
@@ -264,7 +216,7 @@ public class MainFramePresenter {
 
 		});
 
-		view.setPaperDomainOfModelChangeListener(screenPresenter::setPaperDomainOfModel);
+		view.setPaperDomainOfModelChangeListener(presentationLogic::setPaperDomainOfModel);
 
 		view.addWindowClosingListener(this::windowClosing);
 	}
@@ -330,10 +282,10 @@ public class MainFramePresenter {
 
 		var statePopper = statePopperFactory.createForState();
 		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
-				screenUpdater::updateScreen);
+				presentationLogic::updateScreen);
 		view.addUnselectAllButtonListener(unselectListener);
 
-		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, screenUpdater::updateScreen);
+		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, presentationLogic::updateScreen);
 		view.addDeleteSelectedLinesButtonListener(deleteLinesListener);
 
 	}
@@ -342,30 +294,8 @@ public class MainFramePresenter {
 		dataFileAccess.setConfigToSavingAction(DocFileTypes.fold(), this::createFOLDConfig);
 	}
 
-	private void updateMRUFilesMenuItem(final int index) {
-		var histories = fileHistory.getHistory();
-		if (index < histories.size()) {
-			view.setMRUFilesMenuItem(index, histories.get(index));
-		} else {
-			view.setMRUFilesMenuItem(index, "");
-		}
-	}
-
 	private void exit() {
-		saveIniFile();
-		System.exit(0);
-	}
-
-	private void clear() {
-		paintContextModification.clear(paintContext, cutModelOutlinesHolder);
-		project = new Project();
-
-		screenSetting.setGridVisible(true);
-
-		childFrameManager.closeAll(view);
-
-		screenUpdater.updateScreen();
-		updateTitleText();
+		presentationLogic.exit(() -> System.exit(0));
 	}
 
 	private void showPropertyDialog() {
@@ -402,34 +332,13 @@ public class MainFramePresenter {
 		presenter.setViewVisible(true);
 	}
 
-	private void updateTitleText() {
-
-		view.setFileNameToTitle(getTitleText());
-	}
-
-	private String getTitleText() {
-		var defaultFileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
-		var fileName = project.getDataFileName().orElse(defaultFileName);
-
-		return fileName.isEmpty() ? defaultFileName : fileName;
-
-	}
-
 	/**
 	 * saves project without opening a dialog
 	 */
 	private void saveFile(final FileType<Doc> type) {
-		var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
+		var filePath = presentationLogic.saveFileImpl(type);
 
-		try {
-			var filePath = project.getDataFilePath();
-			dataFileAccess.saveFile(doc, filePath, type);
-
-			afterSaveFile(filePath);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			logger.error("Failed to save", e);
-			view.showSaveFailureErrorMessage(e);
-		}
+		afterSaveFile(filePath);
 	}
 
 	/**
@@ -437,7 +346,7 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void saveFileUsingGUI(final FileType<Doc>... types) {
-		var filePath = saveFileUsingGUIImpl(types);
+		var filePath = presentationLogic.saveFileUsingGUIImpl(types);
 
 		afterSaveFile(filePath);
 	}
@@ -448,46 +357,7 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void exportFileUsingGUI(final FileType<Doc>... types) {
-		saveFileUsingGUIImpl(types);
-	}
-
-	/**
-	 * save file without origami model check
-	 */
-	@SafeVarargs
-	private String saveFileUsingGUIImpl(final FileType<Doc>... types) {
-		var directory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName().get();
-
-		try {
-
-			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-					view, dataFileAccess.getFileSelectionService());
-
-			File givenFile = fileFactory.create(
-					directory,
-					(fileName.isEmpty()) ? "newFile.opx" : fileName);
-
-			var filePath = givenFile.getPath();
-
-			var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
-					: presenter.saveUsingGUI(filePath, List.of(types));
-
-			if (selection.action() == UserAction.CANCELED) {
-				return project.getDataFilePath();
-			}
-
-			var path = selection.path();
-
-			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
-			dataFileAccess.saveFile(doc, selection.path(), selection.type());
-
-			return path;
-
-		} catch (IllegalArgumentException | DataAccessException e) {
-			// ignore
-			return project.getDataFilePath();
-		}
+		presentationLogic.saveFileUsingGUIImpl(types);
 	}
 
 	/**
@@ -497,14 +367,14 @@ public class MainFramePresenter {
 	 * @param path
 	 */
 	private void afterSaveFile(final String path) {
-		paintContext.creasePatternUndo().clearChanged();
 
 		if (Project.projectFileTypeMatch(path)) {
-			project = new Project(project.getProperty(), path);
+			paintContext.creasePatternUndo().clearChanged();
+			project.setDataFilePath(path);
 		}
 
-		updateMenu();
-		updateTitleText();
+		presentationLogic.updateMenu();
+		presentationLogic.updateTitleText();
 	}
 
 	private CreasePatternFOLDConfig createFOLDConfig() {
@@ -543,31 +413,12 @@ public class MainFramePresenter {
 	}
 
 	/**
-	 * Update file menu. Do nothing if the given {@code filePath} is null or
-	 * wrong.
-	 *
-	 * @param filePath
-	 */
-	private void updateMenu() {
-		var filePath = project.getDataFilePath();
-
-		if (!project.isProjectFile()) {
-			logger.debug("updating menu is canceled: {}", filePath);
-			return;
-		}
-
-		fileHistory.useFile(filePath);
-
-		view.buildFileMenu();
-	}
-
-	/**
 	 * This method tries to read data from the path.
 	 *
 	 * @param filePath
 	 */
 	private void loadFile(final String filePath) {
-		loadFileImpl(filePath);
+		presentationLogic.loadFileImpl(filePath);
 		afterLoadFile();
 	}
 
@@ -584,44 +435,8 @@ public class MainFramePresenter {
 			return;
 		}
 
-		loadFileImpl(selection.path());
+		presentationLogic.loadFileImpl(selection.path());
 		afterLoadFile();
-	}
-
-	/**
-	 * This method tries to read data from the path.
-	 *
-	 * @param filePath
-	 * @return file path for loaded file. {@code null} if loading is not done.
-	 */
-	private String loadFileImpl(final String filePath) {
-
-		childFrameManager.closeAll(view);
-
-		try {
-
-			var DocOpt = dataFileAccess.loadFile(filePath);
-			return DocOpt
-					.map(doc -> {
-						project = new Project(doc.getProperty(), filePath);
-
-						var property = project.getProperty();
-						view.setEstimationResultColors(
-								convertCodeToColor(property.extractFrontColorCode()),
-								convertCodeToColor(property.extractBackColorCode()));
-
-						screenSetting.setGridVisible(false);
-						paintContextModification
-								.setCreasePatternToPaintContext(
-										doc.getCreasePattern(), paintContext, cutModelOutlinesHolder);
-						screenPresenter.updateCameraCenter();
-						return project.getDataFilePath();
-					}).orElse(null);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			logger.error("failed to load", e);
-			view.showLoadFailureErrorMessage(e);
-			return project.getDataFilePath();
-		}
 	}
 
 	/**
@@ -630,54 +445,10 @@ public class MainFramePresenter {
 	 * @param filePath
 	 */
 	private void afterLoadFile() {
-		screenUpdater.updateScreen();
-		updateMenu();
-		updateTitleText();
-		uiPanelPresenter.updateValuePanelFractionDigits();
-	}
-
-	/**
-	 * Can return null because the returned value will be passed to other
-	 * method.
-	 *
-	 * @param code
-	 * @return
-	 */
-	private Color convertCodeToColor(final String code) {
-		if (code == null) {
-			return null;
-		}
-
-		try {
-			return new Color(Integer.decode(code));
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
-
-	private void saveIniFile() {
-		try {
-			iniFileAccess.save(fileHistory, viewContext);
-		} catch (IllegalStateException e) {
-			logger.error("error when building ini file data", e);
-			view.showSaveIniFileFailureErrorMessage(e);
-		}
-	}
-
-	private void loadIniFile() {
-		var ini = iniFileAccess.load();
-
-		fileHistory.loadFromInitData(ini);
-		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
-
-		logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
-		screenSetting.setMVLineVisible(ini.isMvLineVisible());
-
-		logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
-		screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
-
-		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
-		screenSetting.setVertexVisible(ini.isVertexVisible());
+		presentationLogic.updateScreen();
+		presentationLogic.updateMenu();
+		presentationLogic.updateTitleText();
+		presentationLogic.updateValuePanelFractionDigits();
 	}
 
 	private void windowClosing() {
@@ -690,7 +461,7 @@ public class MainFramePresenter {
 			}
 		}
 
-		saveIniFile();
+		presentationLogic.saveIniFile();
 	}
 
 }

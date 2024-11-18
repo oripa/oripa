@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -30,6 +31,9 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -83,6 +87,9 @@ public class MainFramePresentationLogicTest {
 
 	@Mock
 	PainterScreenPresenter screenPresenter;
+
+	@Mock
+	UIPanelPresenter uiPanelPresenter;
 
 	@Mock
 	MainComponentPresenterFactory componentPresenterFactory;
@@ -455,6 +462,63 @@ public class MainFramePresentationLogicTest {
 
 	}
 
+	@Nested
+	class TestLoadIniFile {
+
+		@MethodSource("createIniFileShouldBeLoadedArguments")
+		@ParameterizedTest
+		void iniFileShouldBeLoaded(
+				final boolean isZeroLineWidth,
+				final boolean isMvLineVisible,
+				final boolean isAuxLineVisible,
+				final boolean isVertexVisible) {
+
+			PainterScreenSetting screenSetting = mock();
+			setupViewSetting(screenSetting);
+
+			setupViewUpdateSupport();
+
+			setupDomainContext(mock());
+
+			InitData initData = mock();
+			when(initData.isZeroLineWidth()).thenReturn(isZeroLineWidth);
+			when(initData.isMvLineVisible()).thenReturn(isMvLineVisible);
+			when(initData.isAuxLineVisible()).thenReturn(isAuxLineVisible);
+			when(initData.isVertexVisible()).thenReturn(isVertexVisible);
+
+			setupIniFileAccess(initData);
+
+			var presentationLogic = construct();
+			presentationLogic.loadIniFile();
+
+			verify(iniFileAccess).load();
+
+			verify(fileHistory).loadFromInitData(initData);
+
+			verify(screenSetting).setZeroLineWidth(isZeroLineWidth);
+			verify(screenSetting).setMVLineVisible(isMvLineVisible);
+			verify(screenSetting).setAuxLineVisible(isAuxLineVisible);
+			verify(screenSetting).setVertexVisible(isVertexVisible);
+		}
+
+		static List<Arguments> createIniFileShouldBeLoadedArguments() {
+			var booleanValues = List.of(true, false);
+
+			var args = new ArrayList<Arguments>();
+
+			for (var zeroWidth : booleanValues) {
+				for (var mvLine : booleanValues) {
+					for (var auxLine : booleanValues) {
+						for (var vertex : booleanValues) {
+							args.add(Arguments.of(zeroWidth, mvLine, auxLine, vertex));
+						}
+					}
+				}
+			}
+			return args;
+		}
+	}
+
 	MainFramePresentationLogic construct() {
 		return new MainFramePresentationLogic(
 				view,
@@ -463,6 +527,7 @@ public class MainFramePresentationLogicTest {
 				dialogFactory,
 				subFrameFactory,
 				screenPresenter,
+				uiPanelPresenter,
 				componentPresenterFactory,
 				presentationContext,
 				childFrameManager,
@@ -475,7 +540,6 @@ public class MainFramePresentationLogicTest {
 				iniFileAccess,
 				dataFileAccess,
 				fileFactory,
-				foldConfigFactory,
 				resourceHolder);
 	}
 
