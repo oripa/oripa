@@ -128,7 +128,7 @@ public class MainFramePresenter {
 
 		addListeners();
 
-		addPlugins(plugins);
+		presentationLogic.addPlugins(plugins);
 
 		view.buildFileMenu();
 		presentationLogic.updateTitleText();
@@ -136,10 +136,6 @@ public class MainFramePresenter {
 
 	public void setViewVisible(final boolean visible) {
 		view.setVisible(visible);
-	}
-
-	private void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
-		presentationLogic.addPlugins(plugins);
 	}
 
 	private void addListeners() {
@@ -213,7 +209,6 @@ public class MainFramePresenter {
 			var property = project.getProperty();
 			property.putFrontColorCode(ColorUtil.convertColorToCode(front));
 			property.putBackColorCode(ColorUtil.convertColorToCode(back));
-
 		});
 
 		view.setPaperDomainOfModelChangeListener(presentationLogic::setPaperDomainOfModel);
@@ -307,7 +302,7 @@ public class MainFramePresenter {
 	}
 
 	private void showArrayCopyDialog() {
-		if (paintContext.getPainter().countSelectedLines() == 0) {
+		if (paintContext.countSelectedLines() == 0) {
 			view.showNoSelectionMessageForArrayCopy();
 			return;
 		}
@@ -320,7 +315,7 @@ public class MainFramePresenter {
 	}
 
 	private void showCircleCopyDialog() {
-		if (paintContext.getPainter().countSelectedLines() == 0) {
+		if (paintContext.countSelectedLines() == 0) {
 			view.showNoSelectionMessageForCircleCopy();
 			return;
 		}
@@ -453,7 +448,7 @@ public class MainFramePresenter {
 
 	private void windowClosing() {
 
-		if (paintContext.creasePatternUndo().changeExists()) {
+		if (paintContext.creasePatternChangeExists()) {
 			// confirm saving edited opx
 			if (view.showSaveOnCloseDialog()) {
 
