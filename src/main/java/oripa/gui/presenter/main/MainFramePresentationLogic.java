@@ -67,7 +67,6 @@ public class MainFramePresentationLogic {
 
 	private final MainComponentPresenterFactory componentPresenterFactory;
 	private final PainterScreenPresenter screenPresenter;
-	private final UIPanelPresenter uiPanelPresenter;
 
 	private final CreasePatternViewContext viewContext;
 
@@ -98,7 +97,6 @@ public class MainFramePresentationLogic {
 			final MainFrameDialogFactory dialogFactory,
 			final SubFrameFactory subFrameFactory,
 			final PainterScreenPresenter screenPresenter,
-			final UIPanelPresenter uiPanelPresenter,
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final CreasePatternPresentationContext presentationContext,
 			final ChildFrameManager childFrameManager,
@@ -136,8 +134,6 @@ public class MainFramePresentationLogic {
 		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 
 		this.screenPresenter = screenPresenter;
-
-		this.uiPanelPresenter = uiPanelPresenter;
 
 		this.resourceHolder = resourceHolder;
 	}
@@ -187,7 +183,6 @@ public class MainFramePresentationLogic {
 		var fileName = project.getDataFileName().orElse(defaultFileName);
 
 		return fileName.isEmpty() ? defaultFileName : fileName;
-
 	}
 
 	/**
@@ -196,7 +191,7 @@ public class MainFramePresentationLogic {
 	 *
 	 * @param filePath
 	 */
-	private void updateMenu() {
+	public void updateMenu() {
 		var filePath = project.getDataFilePath();
 
 		if (!project.isProjectFile()) {
@@ -218,14 +213,14 @@ public class MainFramePresentationLogic {
 
 		try {
 
+			File defaultFile = fileFactory.create(
+					directory,
+					fileName.isEmpty() ? "newFile.opx" : fileName);
+
+			var filePath = defaultFile.getPath();
+
 			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
 					view, dataFileAccess.getFileSelectionService());
-
-			File givenFile = fileFactory.create(
-					directory,
-					(fileName.isEmpty()) ? "newFile.opx" : fileName);
-
-			var filePath = givenFile.getPath();
 
 			var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
 					: presenter.saveUsingGUI(filePath, List.of(types));
@@ -242,26 +237,10 @@ public class MainFramePresentationLogic {
 			return path;
 
 		} catch (IllegalArgumentException | DataAccessException e) {
-			// ignore
+			logger.error("failed to save", e);
+			view.showSaveFailureErrorMessage(e);
 			return project.getDataFilePath();
 		}
-	}
-
-	/**
-	 * Call this method when save is done.
-	 *
-	 * @param data
-	 * @param path
-	 */
-	public void afterSaveFile(final String path) {
-		paintContext.creasePatternUndo().clearChanged();
-
-		if (Project.projectFileTypeMatch(path)) {
-			project.setDataFilePath(path);
-		}
-
-		updateMenu();
-		updateTitleText();
 	}
 
 	/**
@@ -299,18 +278,6 @@ public class MainFramePresentationLogic {
 			view.showLoadFailureErrorMessage(e);
 			return project.getDataFilePath();
 		}
-	}
-
-	/**
-	 * Update UI.
-	 *
-	 * @param filePath
-	 */
-	public void afterLoadFile() {
-		screenUpdater.updateScreen();
-		updateMenu();
-		updateTitleText();
-		uiPanelPresenter.updateValuePanelFractionDigits();
 	}
 
 	/**

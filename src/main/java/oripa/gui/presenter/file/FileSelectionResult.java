@@ -25,7 +25,7 @@ import oripa.persistence.dao.FileType;
  *
  */
 public record FileSelectionResult<Data>(UserAction action, String path, FileType<Data> type) {
-	public static <Data> FileSelectionResult<Data> createCancel() {
+	public static <Data> FileSelectionResult<Data> createCanceled() {
 		return new FileSelectionResult<>(UserAction.CANCELED, null, null);
 	}
 

@@ -81,7 +81,7 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 
 		if (!origamiModel.isLocallyFlatFoldable()) {
 			if (!acceptModelError.get()) {
-				return FileSelectionResult.createCancel();
+				return FileSelectionResult.createCanceled();
 			}
 		}
 
