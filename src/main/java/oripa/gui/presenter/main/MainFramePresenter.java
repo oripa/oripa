@@ -148,7 +148,7 @@ public class MainFramePresenter {
 		view.addSaveButtonListener(() -> {
 			project.getProjectFileType()
 					.ifPresentOrElse(
-							type -> saveFile(type),
+							type -> saveFileToCurrentPath(type),
 							() -> saveFileUsingGUI());
 
 		});
@@ -330,8 +330,8 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveFile(final FileType<Doc> type) {
-		var filePath = presentationLogic.saveFileImpl(type);
+	private void saveFileToCurrentPath(final FileType<Doc> type) {
+		var filePath = presentationLogic.saveFileToCurrentPathImpl(type);
 
 		afterSaveFile(filePath);
 	}
@@ -421,16 +421,7 @@ public class MainFramePresenter {
 	 * This method opens the file dialog and load the selected file.
 	 */
 	private void loadFileUsingGUI() {
-		var selection = componentPresenterFactory.createDocFileSelectionPresenter(
-				view,
-				dataFileAccess.getFileSelectionService())
-				.loadUsingGUI(fileHistory.getLastPath());
-
-		if (selection.action() == UserAction.CANCELED) {
-			return;
-		}
-
-		presentationLogic.loadFileImpl(selection.path());
+		presentationLogic.loadFileUsingGUIImpl();
 		afterLoadFile();
 	}
 

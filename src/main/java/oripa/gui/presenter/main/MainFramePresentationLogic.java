@@ -245,19 +245,14 @@ public class MainFramePresentationLogic {
 	/**
 	 * saves project without opening a dialog
 	 */
-	public String saveFileImpl(final FileType<Doc> type) {
+	public String saveFileToCurrentPathImpl(final FileType<Doc> type) {
 		var filePath = project.getDataFilePath();
 
 		try {
-			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
-			dataFileAccess.saveFile(doc, filePath, type);
-
+			return saveFile(filePath, type);
 		} catch (DataAccessException | IllegalArgumentException e) {
-			logger.error("Failed to save", e);
-			view.showSaveFailureErrorMessage(e);
+			return filePath;
 		}
-
-		return filePath;
 
 	}
 
@@ -268,36 +263,60 @@ public class MainFramePresentationLogic {
 		var directory = fileHistory.getLastDirectory();
 		var fileName = project.getDataFileName().get();
 
-		try {
+		File defaultFile = fileFactory.create(
+				directory,
+				fileName.isEmpty() ? "newFile.opx" : fileName);
 
-			File defaultFile = fileFactory.create(
-					directory,
-					fileName.isEmpty() ? "newFile.opx" : fileName);
+		var filePath = defaultFile.getPath();
 
-			var filePath = defaultFile.getPath();
+		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
+				view, dataFileAccess.getFileSelectionService());
 
-			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-					view, dataFileAccess.getFileSelectionService());
+		var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
+				: presenter.saveUsingGUI(filePath, List.of(types));
 
-			var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
-					: presenter.saveUsingGUI(filePath, List.of(types));
-
-			if (selection.action() == UserAction.CANCELED) {
-				return project.getDataFilePath();
-			}
-
-			var path = selection.path();
-
-			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
-			dataFileAccess.saveFile(doc, selection.path(), selection.type());
-
-			return path;
-
-		} catch (IllegalArgumentException | DataAccessException e) {
-			logger.error("failed to save", e);
-			view.showSaveFailureErrorMessage(e);
+		if (selection.action() == UserAction.CANCELED) {
 			return project.getDataFilePath();
 		}
+
+		try {
+			return saveFile(selection.path(), selection.type());
+		} catch (DataAccessException | IllegalArgumentException e) {
+			return project.getDataFilePath();
+		}
+
+	}
+
+	private String saveFile(final String path, final FileType<Doc> type)
+			throws DataAccessException, IllegalArgumentException {
+		try {
+			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
+			dataFileAccess.saveFile(doc, path, type);
+
+		} catch (DataAccessException | IllegalArgumentException e) {
+			logger.error("Failed to save", e);
+			view.showSaveFailureErrorMessage(e);
+			throw e;
+		}
+
+		return path;
+
+	}
+
+	/**
+	 * This method opens the file dialog and load the selected file.
+	 */
+	public void loadFileUsingGUIImpl() {
+		var selection = componentPresenterFactory.createDocFileSelectionPresenter(
+				view,
+				dataFileAccess.getFileSelectionService())
+				.loadUsingGUI(fileHistory.getLastPath());
+
+		if (selection.action() == UserAction.CANCELED) {
+			return;
+		}
+
+		loadFileImpl(selection.path());
 	}
 
 	/**
