@@ -147,4 +147,12 @@ public class FileAccessPresentationLogic {
 		}
 	}
 
+	public void importFile(final String path) {
+
+		var docOpt = dataFileAccess.loadFile(path);
+		docOpt.ifPresent(
+				doc -> paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext));
+
+	}
+
 }

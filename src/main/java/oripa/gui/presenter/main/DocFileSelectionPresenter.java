@@ -41,14 +41,18 @@ import oripa.util.file.FileFactory;
  *
  */
 public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
+	private final TestedOrigamiModelFactory modelFactory;
 
 	public DocFileSelectionPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
+			final TestedOrigamiModelFactory modelFactory,
 			final FileFactory fileFactory,
 			final FileSelectionService<Doc> fileSelectionService,
 			final ExtensionCorrector extensionCorrector) {
 		super(parent, chooserFactory, fileFactory, fileSelectionService, extensionCorrector);
+
+		this.modelFactory = modelFactory;
 	}
 
 	/**
@@ -74,7 +78,6 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 		File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
-		var modelFactory = new TestedOrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, pointEps);
 

@@ -27,25 +27,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.FileAccessService;
-import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintDomainContext;
-import oripa.file.FileHistory;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
-import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.util.ColorUtil;
-import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
@@ -77,12 +71,8 @@ public class MainFramePresenter {
 
 	// data access
 	private final FileAccessService<Doc> dataFileAccess;
-	private final FileHistory fileHistory;
 
 	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
-
-	// services
-	private final PaintContextModification paintContextModification;
 
 	public MainFramePresenter(
 			final MainFrameView view,
@@ -90,13 +80,11 @@ public class MainFramePresenter {
 			final SubFrameFactory subFrameFactory,
 			final MainFramePresentationLogic presentationLogic,
 			final MainComponentPresenterFactory componentPresenterFactory,
-			final CreasePatternPresentationContext presentationContext,
+			final MouseActionHolder mouseActionHolder,
 			final BindingObjectFactoryFacade bindingFactory,
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final Project project,
-			final PaintDomainContext domainContext,
-			final PaintContextModification paintContextModification,
-			final FileHistory fileHistory,
+			final PaintContext paintContext,
 			final FileAccessService<Doc> dataFileAccess,
 			final List<GraphicMouseActionPlugin> plugins,
 			final Supplier<CreasePatternFOLDConfig> foldConfigFactory) {
@@ -110,12 +98,10 @@ public class MainFramePresenter {
 		this.componentPresenterFactory = componentPresenterFactory;
 
 		this.project = project;
-		this.paintContext = domainContext.getPaintContext();
-		this.paintContextModification = paintContextModification;
+		this.paintContext = paintContext;
 
-		this.actionHolder = presentationContext.getActionHolder();
+		this.actionHolder = mouseActionHolder;
 		this.statePopperFactory = statePopperFactory;
-		this.fileHistory = fileHistory;
 
 		this.dataFileAccess = dataFileAccess;
 
@@ -215,32 +201,10 @@ public class MainFramePresenter {
 		view.addWindowClosingListener(this::windowClosing);
 	}
 
-	/**
-	 * Ensure the execution order as loading file comes first.
-	 */
 	private void addImportActionListener() {
 		var state = bindingFactory.createState(StringID.IMPORT_CP_ID);
 
-		view.addImportButtonListener(() -> {
-			try {
-				var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-						view,
-						dataFileAccess.getFileSelectionService());
-
-				var selection = presenter.loadUsingGUI(fileHistory.getLastPath());
-				if (selection.action() == UserAction.CANCELED) {
-					return;
-				}
-
-				var docOpt = dataFileAccess.loadFile(selection.path());
-				docOpt.ifPresent(
-						doc -> paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext));
-
-				state.performActions();
-			} catch (DataAccessException | IllegalArgumentException e) {
-				view.showLoadFailureErrorMessage(e);
-			}
-		});
+		view.addImportButtonListener(() -> presentationLogic.importFileUsingGUI(state));
 
 	}
 
@@ -400,7 +364,7 @@ public class MainFramePresenter {
 	 * This method opens the file dialog and load the selected file.
 	 */
 	private void loadFileUsingGUI() {
-		presentationLogic.loadFileUsingGUIImpl();
+		presentationLogic.loadFileUsingGUI();
 		afterLoadFile();
 	}
 

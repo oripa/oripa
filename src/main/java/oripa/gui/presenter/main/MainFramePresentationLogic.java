@@ -29,24 +29,22 @@ import org.slf4j.LoggerFactory;
 import oripa.application.FileAccessService;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
+import oripa.appstate.ApplicationState;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintDomainContext;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
-import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
@@ -71,7 +69,7 @@ public class MainFramePresentationLogic {
 	private final MainComponentPresenterFactory componentPresenterFactory;
 	private final FileAccessPresentationLogic fileAccessPresentationLogic;
 
-	private final CreasePatternViewContext viewContext;
+	private final CreasePatternViewContext creasePatternViewContext;
 
 	private final ViewScreenUpdater screenUpdater;
 	private final PainterScreenSetting screenSetting;
@@ -95,19 +93,19 @@ public class MainFramePresentationLogic {
 
 	public MainFramePresentationLogic(
 			final MainFrameView view,
-			final MainViewSetting viewSetting,
-			final ViewUpdateSupport viewUpdateSupport,
+			final PainterScreenSetting screenSetting,
+			final ViewScreenUpdater screenUpdater,
 			final MainFrameDialogFactory dialogFactory,
 			final SubFrameFactory subFrameFactory,
 			final PainterScreenPresenter screenPresenter,
 			final UIPanelPresenter uiPanelPresenter,
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final FileAccessPresentationLogic fileAccessPresentationLogic,
-			final CreasePatternPresentationContext presentationContext,
+			final CreasePatternViewContext creasePatternViewContext,
 			final ChildFrameManager childFrameManager,
 			final BindingObjectFactoryFacade bindingFactory,
 			final Project project,
-			final PaintDomainContext domainContext,
+			final PaintContext paintContext,
 			final PaintContextModification paintContextModification,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileHistory fileHistory,
@@ -124,10 +122,10 @@ public class MainFramePresentationLogic {
 
 		this.fileAccessPresentationLogic = fileAccessPresentationLogic;
 
-		this.viewContext = presentationContext.getViewContext();
+		this.creasePatternViewContext = creasePatternViewContext;
 
 		this.project = project;
-		this.paintContext = domainContext.getPaintContext();
+		this.paintContext = paintContext;
 		this.paintContextModification = paintContextModification;
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 
@@ -136,8 +134,8 @@ public class MainFramePresentationLogic {
 		this.dataFileAccess = dataFileAccess;
 		this.fileFactory = fileFactory;
 
-		this.screenSetting = viewSetting.getPainterScreenSetting();
-		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
+		this.screenSetting = screenSetting;
+		this.screenUpdater = screenUpdater;
 
 		this.uiPanelPresenter = uiPanelPresenter;
 		this.screenPresenter = screenPresenter;
@@ -181,7 +179,7 @@ public class MainFramePresentationLogic {
 
 	public void saveIniFile() {
 		try {
-			iniFileAccess.save(fileHistory, viewContext);
+			iniFileAccess.save(fileHistory, creasePatternViewContext);
 		} catch (IllegalStateException e) {
 			logger.error("error when building ini file data", e);
 			view.showSaveIniFileFailureErrorMessage(e);
@@ -324,7 +322,7 @@ public class MainFramePresentationLogic {
 	/**
 	 * This method opens the file dialog and load the selected file.
 	 */
-	public void loadFileUsingGUIImpl() {
+	public void loadFileUsingGUI() {
 		var selection = componentPresenterFactory.createDocFileSelectionPresenter(
 				view,
 				dataFileAccess.getFileSelectionService())
@@ -345,6 +343,26 @@ public class MainFramePresentationLogic {
 	 */
 	public String loadFile(final String filePath) {
 		return fileAccessPresentationLogic.loadFile(filePath);
+	}
+
+	public void importFileUsingGUI(final ApplicationState<EditMode> state) {
+		try {
+			var selection = componentPresenterFactory.createDocFileSelectionPresenter(
+					view,
+					dataFileAccess.getFileSelectionService())
+					.loadUsingGUI(fileHistory.getLastPath());
+
+			if (selection.action() == UserAction.CANCELED) {
+				return;
+			}
+
+			fileAccessPresentationLogic.importFile(selection.path());
+
+			state.performActions();
+		} catch (DataAccessException | IllegalArgumentException e) {
+			view.showLoadFailureErrorMessage(e);
+		}
+
 	}
 
 }

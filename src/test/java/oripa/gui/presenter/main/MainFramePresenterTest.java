@@ -39,17 +39,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.application.FileAccessService;
 import oripa.application.main.IniFileAccess;
-import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.projectprop.Property;
-import oripa.file.FileHistory;
-import oripa.file.InitData;
 import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -96,22 +91,16 @@ class MainFramePresenterTest {
 	Project project;
 
 	@Mock
-	PaintDomainContext domainContext;
-
-	@Mock
-	PaintContextModification paintContextModification;
+	PaintContext paintContext;
 
 	@Mock
 	CutModelOutlinesHolder cutModelOutlinesHolder;
 
 	@Mock
-	CreasePatternPresentationContext presentationContext;
+	MouseActionHolder mouseActionHolder;
 
 	@Mock
 	StatePopperFactory<EditMode> statePopperFactory;
-
-	@Mock
-	FileHistory fileHistory;
 
 	@Mock
 	IniFileAccess iniFileAccess;
@@ -134,8 +123,6 @@ class MainFramePresenterTest {
 			@Test
 			void iniFileShouldBeLoaded() {
 
-				setupDomainContext(mock());
-
 				setupBindingFactory();
 
 				construct();
@@ -154,9 +141,7 @@ class MainFramePresenterTest {
 			@Test
 			void saveConfigurationOfFOLDShouldBeDone() {
 
-				PaintContext paintContext = mock();
 				when(paintContext.getPointEps()).thenReturn(1e-8);
-				setupDomainContext(paintContext);
 
 				setupBindingFactory();
 
@@ -180,8 +165,6 @@ class MainFramePresenterTest {
 			@Test
 			void givenPluginsShouldBeAdded() {
 
-				setupDomainContext();
-
 				setupBindingFactory();
 
 				construct();
@@ -194,8 +177,6 @@ class MainFramePresenterTest {
 		class TestBuildFileMenu {
 			@Test
 			void buildFileMenuShouldBeCalled() {
-
-				setupDomainContext();
 
 				setupBindingFactory();
 
@@ -216,8 +197,6 @@ class MainFramePresenterTest {
 			@Test
 			void titleTextShouldBeUpdatedWithDefaultText() {
 
-				setupDomainContext();
-
 				setupBindingFactory();
 
 				construct();
@@ -237,7 +216,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void exitLogicShouldBeCalled() {
-					setupDomainContext();
 
 					setupBindingFactory();
 
@@ -258,7 +236,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void clearLogicShouldBeCalled() {
-					setupDomainContext();
 
 					setupBindingFactory();
 
@@ -280,12 +257,9 @@ class MainFramePresenterTest {
 
 				@Test
 				void undoLogicShouldBeCalled() {
-					setupDomainContext();
 
-					MouseActionHolder actionHolder = mock();
 					GraphicMouseAction action = mock();
-					when(actionHolder.getMouseAction()).thenReturn(Optional.of(action));
-					setupPresentationContext(actionHolder);
+					when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
 
 					setupBindingFactory();
 
@@ -308,12 +282,9 @@ class MainFramePresenterTest {
 
 				@Test
 				void redoLogicShouldBeCalled() {
-					setupDomainContext();
 
-					MouseActionHolder actionHolder = mock();
 					GraphicMouseAction action = mock();
-					when(actionHolder.getMouseAction()).thenReturn(Optional.of(action));
-					setupPresentationContext(actionHolder);
+					when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
 
 					setupBindingFactory();
 
@@ -336,7 +307,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void propertyDialogShouldBeShown() {
-					setupDomainContext();
 
 					setupBindingFactory();
 
@@ -364,9 +334,8 @@ class MainFramePresenterTest {
 
 				@Test
 				void arrayCopyDialogShouldBeShownWhenLinesAreSelected() {
-					PaintContext paintContext = mock();
+
 					when(paintContext.countSelectedLines()).thenReturn(1);
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -388,9 +357,8 @@ class MainFramePresenterTest {
 
 				@Test
 				void warningShouldBeShownWhenLinesAreNotSelected() {
-					PaintContext paintContext = mock();
+
 					when(paintContext.countSelectedLines()).thenReturn(0);
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -412,9 +380,8 @@ class MainFramePresenterTest {
 
 				@Test
 				void circleCopyDialogShouldBeShownWhenLinesAreSelected() {
-					PaintContext paintContext = mock();
+
 					when(paintContext.countSelectedLines()).thenReturn(1);
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -436,9 +403,8 @@ class MainFramePresenterTest {
 
 				@Test
 				void warningShouldBeShownWhenLinesAreNotSelected() {
-					PaintContext paintContext = mock();
+
 					when(paintContext.countSelectedLines()).thenReturn(0);
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -460,7 +426,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void updateLogicShouldBeCalled() {
-					setupDomainContext();
 
 					setupBindingFactory();
 
@@ -481,7 +446,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void putColorCodeLogicShouldBeCalled() {
-					setupDomainContext();
 
 					setupBindingFactory();
 
@@ -508,7 +472,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void setPaperDomainOfModelLogicShouldBeCalled() {
-					setupDomainContext();
 
 					setupBindingFactory();
 
@@ -530,9 +493,8 @@ class MainFramePresenterTest {
 
 				@Test
 				void saveIniWhenNoChangeOnCP() {
-					PaintContext paintContext = mock();
+
 					when(paintContext.creasePatternChangeExists()).thenReturn(false);
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -547,9 +509,8 @@ class MainFramePresenterTest {
 
 				@Test
 				void saveIniWhenSaveCPIsCanceled() {
-					PaintContext paintContext = mock();
+
 					when(paintContext.creasePatternChangeExists()).thenReturn(true);
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -567,9 +528,8 @@ class MainFramePresenterTest {
 				@SuppressWarnings("unchecked")
 				@Test
 				void saveCPAndSaveIniWhenCPChangedAndFileIsSelected() {
-					PaintContext paintContext = mock();
+
 					when(paintContext.creasePatternChangeExists()).thenReturn(true);
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -589,14 +549,12 @@ class MainFramePresenterTest {
 			}
 
 			@Nested
-			class TestSaveAs {
+			class TestSave {
 				@Captor
 				ArgumentCaptor<Runnable> listenerCaptor;
 
 				@Test
 				void saveToCurrentPathLogicShouldBeCalledWhenProjectIsProjectFile() {
-					PaintContext paintContext = mock();
-					setupDomainContext(paintContext);
 
 					setupBindingFactory();
 
@@ -626,7 +584,6 @@ class MainFramePresenterTest {
 				@SuppressWarnings("unchecked")
 				@Test
 				void saveUsingGUILogicShouldBeCalledWhenProjectIsNotProjectFile() {
-					setupDomainContext();
 
 					setupBindingFactory();
 
@@ -653,99 +610,291 @@ class MainFramePresenterTest {
 
 				}
 
-				void verifyAfterSave(
-						final boolean projectFileTypeMatch,
-						final String path,
-						final PaintContext paintContext) {
-					if (projectFileTypeMatch) {
-						verify(paintContext).clearCreasePatternChanged();
-						verify(project).setDataFilePath(path);
-					}
-					verify(presentationLogic).updateMenu();
-					verify(presentationLogic, atLeastOnce()).updateTitleText();
+			}
 
+			@Nested
+			class TestSaveAs {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@SuppressWarnings("unchecked")
+				@Test
+				void succeeds() {
+
+					setupBindingFactory();
+
+					try (var projectStatic = mockStatic(Project.class)) {
+						String path = "path";
+
+						projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(true);
+
+						when(presentationLogic.saveFileUsingGUI()).thenReturn(path);
+
+						construct();
+
+						verify(view).addSaveAsButtonListener(listenerCaptor.capture());
+
+						listenerCaptor.getValue().run();
+
+						verify(presentationLogic).saveFileUsingGUI();
+
+						// verify after save
+						verifyAfterSave(true, path, paintContext);
+					}
+				}
+
+			}
+
+			void verifyAfterSave(
+					final boolean projectFileTypeMatch,
+					final String path,
+					final PaintContext paintContext) {
+				if (projectFileTypeMatch) {
+					verify(paintContext).clearCreasePatternChanged();
+					verify(project).setDataFilePath(path);
+				}
+				verify(presentationLogic).updateMenu();
+				verify(presentationLogic, atLeastOnce()).updateTitleText();
+
+			}
+
+			@Nested
+			class TestExportFOLD {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void succeeds() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addExportFOLDButtonListener(listenerCaptor.capture());
+
+					testExportWithTypeTemplate(DocFileTypes.fold(), true, listenerCaptor.getValue());
 				}
 			}
 
+			@Nested
+			class TestExportPicture {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void succeeds() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addSaveAsImageButtonListener(listenerCaptor.capture());
+
+					testExportWithTypeTemplate(DocFileTypes.pictutre(), false, listenerCaptor.getValue());
+				}
+			}
+
+			@SuppressWarnings("unchecked")
+			void testExportWithTypeTemplate(final FileType<Doc> type, final boolean isProjectFile,
+					final Runnable listener) {
+
+				try (var projectStatic = mockStatic(Project.class)) {
+					listener.run();
+
+					String path = "path";
+
+					projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
+
+					verify(presentationLogic).saveFileUsingGUI(eq(type));
+					verifyNoCallsAfterExport(isProjectFile, path, paintContext);
+				}
+
+			}
+
+			@Nested
+			class TestExportDXF {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void succeeds() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addExportDXFButtonListener(listenerCaptor.capture());
+
+					testExportWithModelCheckTemplate(DocFileTypes.dxf(), false, listenerCaptor.getValue());
+				}
+			}
+
+			@Nested
+			class TestExportCP {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void succeeds() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addExportCPButtonListener(listenerCaptor.capture());
+
+					testExportWithModelCheckTemplate(DocFileTypes.cp(), false, listenerCaptor.getValue());
+				}
+			}
+
+			@Nested
+			class TestExportSVG {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void succeeds() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addExportSVGButtonListener(listenerCaptor.capture());
+
+					testExportWithModelCheckTemplate(DocFileTypes.svg(), false, listenerCaptor.getValue());
+				}
+			}
+
+			@SuppressWarnings("unchecked")
+			void testExportWithModelCheckTemplate(final FileType<Doc> type, final boolean isProjectFile,
+					final Runnable listener) {
+
+				try (var projectStatic = mockStatic(Project.class)) {
+					listener.run();
+
+					String path = "path";
+
+					projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
+
+					verify(presentationLogic).exportFileUsingGUIWithModelCheck(type);
+					verifyNoCallsAfterExport(isProjectFile, path, paintContext);
+				}
+
+			}
+
+			void verifyNoCallsAfterExport(
+					final boolean projectFileTypeMatch,
+					final String path,
+					final PaintContext paintContext) {
+				if (projectFileTypeMatch) {
+					verify(paintContext, never()).clearCreasePatternChanged();
+					verify(project, never()).setDataFilePath(path);
+				}
+				verify(presentationLogic, never()).updateMenu();
+				verify(presentationLogic).updateTitleText();
+
+			}
+
+			@Nested
+			class TestOpen {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void loadUsingGUILogicShouldBeCalled() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addOpenButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().run();
+
+					verify(presentationLogic).loadFileUsingGUI();
+
+					verifyAfterLoad();
+				}
+			}
+
+			@Nested
+			class TestMRUFileLoad {
+				@Captor
+				ArgumentCaptor<Consumer<String>> listenerCaptor;
+
+				@Test
+				void loadLogicShouldBeCalled() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addMRUFileButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().accept("path");
+
+					verify(presentationLogic).loadFile("path");
+
+					verifyAfterLoad();
+				}
+			}
+
+			void verifyAfterLoad() {
+				verify(presentationLogic).updateScreen();
+				verify(presentationLogic).updateMenu();
+				verify(presentationLogic, atLeastOnce()).updateTitleText();
+				verify(presentationLogic).updateValuePanelFractionDigits();
+
+			}
+
+			@Nested
+			class TestImport {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void setsImportedCPAndDoStateAction() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addImportButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().run();
+
+					verify(presentationLogic).importFileUsingGUI(any());
+
+				}
+			}
 		}
 
-		MainFramePresenter construct() {
-			return new MainFramePresenter(
-					view,
-					dialogFactory,
-					subFrameFactory,
-					presentationLogic,
-					componentPresenterFactory,
-					presentationContext,
-					bindingFactory,
-					statePopperFactory,
-					project,
-					domainContext,
-					paintContextModification,
-					fileHistory,
-					dataFileAccess,
-					plugins,
-					foldConfigFactory);
-		}
+	}
 
-		void setupProject() {
-			when(project.getDataFileName()).thenReturn(Optional.empty());
-		}
+	MainFramePresenter construct() {
+		return new MainFramePresenter(
+				view,
+				dialogFactory,
+				subFrameFactory,
+				presentationLogic,
+				componentPresenterFactory,
+				mouseActionHolder,
+				bindingFactory,
+				statePopperFactory,
+				project,
+				paintContext,
+				dataFileAccess,
+				plugins,
+				foldConfigFactory);
+	}
 
-		void setupView() {
-			when(view.getPainterScreenView()).thenReturn(mock());
-			when(view.getUIPanelView()).thenReturn(mock());
-		}
+	void setupBindingFactory() {
+		when(bindingFactory.createState(anyString())).thenReturn(mock());
+		when(bindingFactory.createState(anyString(), any(), any())).thenReturn(mock());
+	}
 
-		void setupPresentationContext(
-				final MouseActionHolder actionHolder) {
-			when(presentationContext.getActionHolder()).thenReturn(actionHolder);
-		}
-
-		void setupPresentationContext() {
-			setupPresentationContext(mock());
-		}
-
-		void setupDomainContext(final PaintContext paintContext) {
-			when(domainContext.getPaintContext()).thenReturn(paintContext);
-		}
-
-		void setupDomainContext() {
-			setupDomainContext(mock());
-		}
-
-		void setupComponentPresenterFactory(
-				final PainterScreenPresenter screenPresenter,
-				final UIPanelPresenter uiPanelPresenter) {
-			when(componentPresenterFactory.createPainterScreenPresenter(any())).thenReturn(screenPresenter);
-			when(componentPresenterFactory.createUIPanelPresenter(any())).thenReturn(uiPanelPresenter);
-		}
-
-		void setupComponentPresenterFactory() {
-			setupComponentPresenterFactory(mock(), mock());
-		}
-
-		void setupBindingFactory() {
-			when(bindingFactory.createState(anyString())).thenReturn(mock());
-			when(bindingFactory.createState(anyString(), any(), any())).thenReturn(mock());
-		}
-
-		void setupIniFileAccess(final InitData initData) {
-			when(iniFileAccess.load()).thenReturn(initData);
-		}
-
-		void setupIniFileAccess() {
-			setupIniFileAccess(mock());
-		}
-
-		void setupFOLDConfigFactory(final CreasePatternFOLDConfig config) {
-			when(foldConfigFactory.get()).thenReturn(config);
-		}
-
-		void setupFOLDConfigFactory() {
-			setupFOLDConfigFactory(mock());
-		}
-
+	void setupFOLDConfigFactory(final CreasePatternFOLDConfig config) {
+		when(foldConfigFactory.get()).thenReturn(config);
 	}
 
 	@Test

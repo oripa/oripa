@@ -233,7 +233,7 @@ public class ORIPA {
 			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
 					new TestedOrigamiModelFactory(),
 					new FolderFactory());
-
+			var modelFactory = new TestedOrigamiModelFactory();
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
 					mainViewSetting.getPainterScreenSetting(),
 					subFrameFactory,
@@ -246,6 +246,7 @@ public class ORIPA {
 					domainContext,
 					cutModelOutlinesHolder,
 					bindingFactory,
+					modelFactory,
 					fileFactory,
 					extensionCorrector);
 
@@ -279,19 +280,19 @@ public class ORIPA {
 
 			var presentationLogic = new MainFramePresentationLogic(
 					mainFrame,
-					mainViewSetting,
-					viewUpdateSupport,
+					mainViewSetting.getPainterScreenSetting(),
+					screenUpdater,
 					dialogFactory,
 					subFrameFactory,
 					screenPresenter,
 					uiPanelPresenter,
 					mainComponentPresenterFactory,
 					fileAccessPresentationLogic,
-					presentationContext,
+					presentationContext.getViewContext(),
 					childFrameManager,
 					bindingFactory,
 					project,
-					domainContext,
+					paintContext,
 					paintContextModification,
 					cutModelOutlinesHolder,
 					fileHistory,
@@ -306,13 +307,11 @@ public class ORIPA {
 					subFrameFactory,
 					presentationLogic,
 					mainComponentPresenterFactory,
-					presentationContext,
+					mouseActionHolder,
 					bindingFactory,
 					statePopperFactory,
 					project,
-					domainContext,
-					paintContextModification,
-					fileHistory,
+					paintContext,
 					docFileAccessService,
 					plugins,
 					foldConfigFactory);

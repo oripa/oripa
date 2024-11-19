@@ -21,6 +21,7 @@ package oripa.gui.presenter.main;
 import oripa.application.FileSelectionService;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
@@ -55,6 +56,7 @@ public class MainComponentPresenterFactory {
 	private final PaintDomainContext domainContext;
 	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 	private final BindingObjectFactoryFacade bindingFactory;
+	private final TestedOrigamiModelFactory modelFactory;
 	private final FileFactory fileFactory;
 	private final PainterScreenSetting mainScreenSetting;
 	private final ExtensionCorrector extensionCorrector;
@@ -71,6 +73,7 @@ public class MainComponentPresenterFactory {
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
+			final TestedOrigamiModelFactory modelFactory,
 			final FileFactory fileFactory,
 			final ExtensionCorrector extensionCorrector) {
 
@@ -84,6 +87,7 @@ public class MainComponentPresenterFactory {
 		this.domainContext = domainContext;
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.bindingFactory = bindingFactory;
+		this.modelFactory = modelFactory;
 		this.fileFactory = fileFactory;
 		this.mainScreenSetting = mainScreenSetting;
 		this.extensionCorrector = extensionCorrector;
@@ -144,6 +148,7 @@ public class MainComponentPresenterFactory {
 		return new DocFileSelectionPresenter(
 				parent,
 				fileChooserFactory,
+				modelFactory,
 				fileFactory,
 				fileSelectionService,
 				extensionCorrector);

@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,29 +35,32 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.application.FileAccessService;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
+import oripa.appstate.ApplicationState;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintDomainContext;
 import oripa.file.FileHistory;
 import oripa.file.InitData;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
-import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
@@ -72,11 +76,14 @@ import oripa.util.file.FileFactory;
 @ExtendWith(MockitoExtension.class)
 public class MainFramePresentationLogicTest {
 
+	@InjectMocks
+	MainFramePresentationLogic presentationLogic;
+
 	@Mock
 	MainFrameView view;
 
 	@Mock
-	ViewUpdateSupport viewUpdateSupport;
+	ViewScreenUpdater screenUpdater;
 
 	@Mock
 	MainFrameDialogFactory dialogFactory;
@@ -100,7 +107,7 @@ public class MainFramePresentationLogicTest {
 	ChildFrameManager childFrameManager;
 
 	@Mock
-	MainViewSetting viewSetting;
+	PainterScreenSetting screenSetting;
 
 	@Mock
 	BindingObjectFactoryFacade bindingFactory;
@@ -109,7 +116,7 @@ public class MainFramePresentationLogicTest {
 	Project project;
 
 	@Mock
-	PaintDomainContext domainContext;
+	PaintContext paintContext;
 
 	@Mock
 	PaintContextModification paintContextModification;
@@ -118,7 +125,7 @@ public class MainFramePresentationLogicTest {
 	CutModelOutlinesHolder cutModelOutlinesHolder;
 
 	@Mock
-	CreasePatternPresentationContext presentationContext;
+	CreasePatternViewContext creasePatternViewContext;
 
 	@Mock
 	FileHistory fileHistory;
@@ -145,7 +152,6 @@ public class MainFramePresentationLogicTest {
 			List<String> filePaths = List.of("1", "2");
 			when(fileHistory.getHistory()).thenReturn(filePaths);
 
-			var presentationLogic = construct();
 			presentationLogic.updateMRUFilesMenuItem(0);
 
 			verify(view).setMRUFilesMenuItem(0, filePaths.get(0));
@@ -156,7 +162,6 @@ public class MainFramePresentationLogicTest {
 			List<String> filePaths = List.of("1", "2");
 			when(fileHistory.getHistory()).thenReturn(filePaths);
 
-			var presentationLogic = construct();
 			presentationLogic.updateMRUFilesMenuItem(2);
 
 			verify(view).setMRUFilesMenuItem(2, "");
@@ -167,8 +172,6 @@ public class MainFramePresentationLogicTest {
 	class TestExit {
 		@Test
 		void shouldSaveIniFile() {
-
-			var presentationLogic = construct();
 
 			Runnable doExit = mock();
 			presentationLogic.exit(doExit);
@@ -184,15 +187,8 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void succeeds() {
 
-			PainterScreenSetting screenSetting = mock();
-			setupViewSetting(screenSetting);
-
-			ViewScreenUpdater screenUpdater = mock();
-			setupViewUpdateSupport(screenUpdater);
-
 			setupGetTitleText("default", "");
 
-			var presentationLogic = construct();
 			presentationLogic.clear();
 
 			verify(paintContextModification).clear(any(), eq(cutModelOutlinesHolder));
@@ -226,7 +222,6 @@ public class MainFramePresentationLogicTest {
 			when(project.getDataFilePath()).thenReturn("path");
 			when(project.isProjectFile()).thenReturn(true);
 
-			var presentationLogic = construct();
 			presentationLogic.updateMenu();
 
 			verify(fileHistory).useFile("path");
@@ -239,7 +234,6 @@ public class MainFramePresentationLogicTest {
 			when(project.getDataFilePath()).thenReturn("path");
 			when(project.isProjectFile()).thenReturn(false);
 
-			var presentationLogic = construct();
 			presentationLogic.updateMenu();
 
 			verify(fileHistory, never()).useFile("path");
@@ -276,7 +270,7 @@ public class MainFramePresentationLogicTest {
 			when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
 
 			// execute
-			var presentationLogic = construct();
+
 			var returnedPath = presentationLogic.saveFileUsingGUI();
 
 			assertEquals(selectedPath, returnedPath);
@@ -285,8 +279,6 @@ public class MainFramePresentationLogicTest {
 		@SuppressWarnings("unchecked")
 		@Test
 		void noChangesWhenCanceled() {
-
-			setupDomainContext();
 
 			when(fileHistory.getLastDirectory()).thenReturn("directory");
 
@@ -305,7 +297,7 @@ public class MainFramePresentationLogicTest {
 					.thenReturn(selectionPresenter);
 
 			// execute
-			var presentationLogic = construct();
+
 			var selectedPath = presentationLogic.saveFileUsingGUI();
 
 			verify(dataFileAccess, never()).saveFile(any(), anyString(), any());
@@ -339,10 +331,71 @@ public class MainFramePresentationLogicTest {
 			doThrow(DataAccessException.class).when(fileAccessPresentationLogic).saveFile(anyString(), any());
 
 			// execute
-			var presentationLogic = construct();
+
 			var returnedPath = presentationLogic.saveFileUsingGUI();
 
 			assertEquals(projectPath, returnedPath);
+		}
+
+	}
+
+	@Nested
+	class TestExportFileUsingGUIWithModelCheck {
+		@Test
+		void succeedsWhenCheckIsPassed() throws IOException {
+			when(fileHistory.getLastDirectory()).thenReturn("directory");
+
+			CreasePattern creasePattern = mock();
+			when(paintContext.getCreasePattern()).thenReturn(creasePattern);
+			when(paintContext.getPointEps()).thenReturn(0.1);
+
+			DocFileSelectionPresenter selectionPresenter = mock();
+			String selectedPath = "selected path";
+			FileSelectionResult<Doc> selectionResult = FileSelectionResult
+					.createSelectedForSave(
+							selectedPath,
+							mock());
+
+			when(selectionPresenter.saveFileWithModelCheck(
+					eq(creasePattern), anyString(), any(), any(), any(), anyDouble()))
+							.thenReturn(selectionResult);
+			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+					.thenReturn(selectionPresenter);
+
+			FileType<Doc> type = mock();
+
+			// execute
+
+			presentationLogic.exportFileUsingGUIWithModelCheck(type);
+
+			verify(fileAccessPresentationLogic).saveFile(anyString(), eq(type));
+		}
+
+		@Test
+		void noCHangessWhenCanceledByUserOrCheck() throws IOException {
+			when(fileHistory.getLastDirectory()).thenReturn("directory");
+
+			CreasePattern creasePattern = mock();
+			when(paintContext.getCreasePattern()).thenReturn(creasePattern);
+			when(paintContext.getPointEps()).thenReturn(0.1);
+
+			DocFileSelectionPresenter selectionPresenter = mock();
+			FileSelectionResult<Doc> selectionResult = FileSelectionResult
+					.createCanceled();
+
+			when(selectionPresenter.saveFileWithModelCheck(
+					eq(creasePattern), anyString(), any(), any(), any(), anyDouble()))
+							.thenReturn(selectionResult);
+			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+					.thenReturn(selectionPresenter);
+
+			FileType<Doc> type = mock();
+
+			// execute
+
+			presentationLogic.exportFileUsingGUIWithModelCheck(type);
+
+			verify(fileAccessPresentationLogic, never()).saveFile(anyString(), eq(type));
 		}
 
 	}
@@ -353,19 +406,12 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void succeedsWhenFileIsLoaded() {
 
-			PainterScreenSetting screenSetting = mock();
-			setupViewSetting(screenSetting);
-
-			setupViewUpdateSupport();
-
-			setupDomainContext();
-
 			String path = "path";
 
 			when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(path);
 
 			// execute
-			var presentationLogic = construct();
+
 			var loadedPath = presentationLogic.loadFile(path);
 
 			assertEquals(path, loadedPath);
@@ -374,25 +420,76 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void noChangesWhenFileIsNotLoaded() {
 
-			PainterScreenSetting screenSetting = mock();
-			setupViewSetting(screenSetting);
-
-			setupViewUpdateSupport();
-
-			setupDomainContext();
-
 			String path = "path";
 			// couldn't load
 			when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(null);
 
 			// execute
-			var presentationLogic = construct();
+
 			var loadedPath = presentationLogic.loadFile(path);
 
 			assertNull(loadedPath);
 
 		}
 
+	}
+
+	@Nested
+	class TestLoadFileUsingGUI {
+
+		@Test
+		void succeedsWhenFileIsLoaded() {
+
+			var lastPath = "last path";
+			when(fileHistory.getLastPath()).thenReturn(lastPath);
+
+			var selectedPath = "path";
+
+			FileSelectionResult<Doc> selection = FileSelectionResult.createSelectedForLoad(selectedPath);
+			DocFileSelectionPresenter selectionPresenter = mock();
+			when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
+
+			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+					.thenReturn(selectionPresenter);
+
+			// execute
+
+			presentationLogic.loadFileUsingGUI();
+
+			verify(fileAccessPresentationLogic).loadFile(eq(selectedPath));
+
+		}
+	}
+
+	@Nested
+	class TestImport {
+
+		@Test
+		void succeedsWhenFileIsLoaded() {
+
+			var lastPath = "last path";
+			when(fileHistory.getLastPath()).thenReturn(lastPath);
+
+			var selectedPath = "path";
+
+			FileSelectionResult<Doc> selection = FileSelectionResult.createSelectedForLoad(selectedPath);
+			DocFileSelectionPresenter selectionPresenter = mock();
+			when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
+
+			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+					.thenReturn(selectionPresenter);
+
+			ApplicationState<EditMode> state = mock();
+
+			InOrder inOrder = inOrder(fileAccessPresentationLogic, state);
+
+			// execute
+
+			presentationLogic.importFileUsingGUI(state);
+
+			inOrder.verify(fileAccessPresentationLogic).importFile(eq(selectedPath));
+			inOrder.verify(state).performActions();
+		}
 	}
 
 	@Nested
@@ -406,13 +503,6 @@ public class MainFramePresentationLogicTest {
 				final boolean isAuxLineVisible,
 				final boolean isVertexVisible) {
 
-			PainterScreenSetting screenSetting = mock();
-			setupViewSetting(screenSetting);
-
-			setupViewUpdateSupport();
-
-			setupDomainContext(mock());
-
 			InitData initData = mock();
 			when(initData.isZeroLineWidth()).thenReturn(isZeroLineWidth);
 			when(initData.isMvLineVisible()).thenReturn(isMvLineVisible);
@@ -421,7 +511,6 @@ public class MainFramePresentationLogicTest {
 
 			setupIniFileAccess(initData);
 
-			var presentationLogic = construct();
 			presentationLogic.loadIniFile();
 
 			verify(iniFileAccess).load();
@@ -452,108 +541,8 @@ public class MainFramePresentationLogicTest {
 		}
 	}
 
-	MainFramePresentationLogic construct() {
-		return new MainFramePresentationLogic(
-				view,
-				viewSetting,
-				viewUpdateSupport,
-				dialogFactory,
-				subFrameFactory,
-				screenPresenter,
-				uiPanelPresenter,
-				componentPresenterFactory,
-				fileAccessPresentationLogic,
-				presentationContext,
-				childFrameManager,
-				bindingFactory,
-				project,
-				domainContext,
-				paintContextModification,
-				cutModelOutlinesHolder,
-				fileHistory,
-				iniFileAccess,
-				dataFileAccess,
-				fileFactory,
-				resourceHolder);
-	}
-
-	void setupResourceHolder() {
-		setupResourceHolder("");
-	}
-
-	void setupResourceHolder(final String value) {
-		when(resourceHolder.getString(any(), anyString())).thenReturn(value);
-	}
-
-	void setupProject() {
-		when(project.getDataFileName()).thenReturn(Optional.empty());
-	}
-
-	void setupView() {
-		when(view.getPainterScreenView()).thenReturn(mock());
-		when(view.getUIPanelView()).thenReturn(mock());
-	}
-
-	void setupViewSetting(final PainterScreenSetting screenSetting) {
-		when(viewSetting.getPainterScreenSetting()).thenReturn(screenSetting);
-	}
-
-	void setupViewSetting() {
-		setupViewSetting(mock());
-	}
-
-	void setupViewUpdateSupport(final ViewScreenUpdater screenUpdater) {
-		when(viewUpdateSupport.getViewScreenUpdater()).thenReturn(screenUpdater);
-	}
-
-	void setupViewUpdateSupport() {
-		setupViewUpdateSupport(mock());
-	}
-
-	void setupPresentationContext() {
-		when(presentationContext.getViewContext()).thenReturn(mock());
-		when(presentationContext.getActionHolder()).thenReturn(mock());
-
-	}
-
-	void setupDomainContext(final PaintContext paintContext) {
-		when(domainContext.getPaintContext()).thenReturn(paintContext);
-	}
-
-	void setupDomainContext() {
-		setupDomainContext(mock());
-	}
-
-	void setupComponentPresenterFactory(
-			final PainterScreenPresenter screenPresenter,
-			final UIPanelPresenter uiPanelPresenter) {
-		when(componentPresenterFactory.createPainterScreenPresenter(any())).thenReturn(screenPresenter);
-		when(componentPresenterFactory.createUIPanelPresenter(any())).thenReturn(uiPanelPresenter);
-	}
-
-	void setupComponentPresenterFactory() {
-		setupComponentPresenterFactory(mock(), mock());
-	}
-
-	void setupBindingFactory() {
-		when(bindingFactory.createState(anyString())).thenReturn(mock());
-		when(bindingFactory.createState(anyString(), any(), any())).thenReturn(mock());
-	}
-
 	void setupIniFileAccess(final InitData initData) {
 		when(iniFileAccess.load()).thenReturn(initData);
-	}
-
-	void setupIniFileAccess() {
-		setupIniFileAccess(mock());
-	}
-
-	void setupFOLDConfigFactory(final CreasePatternFOLDConfig config) {
-		when(foldConfigFactory.get()).thenReturn(config);
-	}
-
-	void setupFOLDConfigFactory() {
-		setupFOLDConfigFactory(mock());
 	}
 
 }
