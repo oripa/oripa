@@ -41,14 +41,18 @@ import oripa.util.file.FileFactory;
  *
  */
 public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
+	private final TestedOrigamiModelFactory modelFactory;
 
 	public DocFileSelectionPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
+			final TestedOrigamiModelFactory modelFactory,
 			final FileFactory fileFactory,
 			final FileSelectionService<Doc> fileSelectionService,
 			final ExtensionCorrector extensionCorrector) {
 		super(parent, chooserFactory, fileFactory, fileSelectionService, extensionCorrector);
+
+		this.modelFactory = modelFactory;
 	}
 
 	/**
@@ -64,24 +68,22 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 	 * @throws IOException
 	 * @throws UserCanceledException
 	 */
-	public FileSelectionResult<Doc> saveFileWithModelCheck(final Doc doc,
+	public FileSelectionResult<Doc> saveFileWithModelCheck(
+			final CreasePattern creasePattern,
 			final String directory,
 			final FileType<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError,
 			final double pointEps)
-			throws IOException, UserCanceledException {
+			throws IOException {
 		File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
-		CreasePattern creasePattern = doc.getCreasePattern();
-
-		var modelFactory = new TestedOrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, pointEps);
 
 		if (!origamiModel.isLocallyFlatFoldable()) {
 			if (!acceptModelError.get()) {
-				return FileSelectionResult.createCancel();
+				return FileSelectionResult.createCanceled();
 			}
 		}
 

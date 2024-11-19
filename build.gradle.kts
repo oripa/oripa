@@ -7,6 +7,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 plugins {
     `java-library`
     `maven-publish`
+    jacoco
     alias(libs.plugins.spotless)
     alias(libs.plugins.shadow)
     alias(libs.plugins.jpackage)
@@ -72,6 +73,11 @@ tasks.withType<Test>() {
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
     }
+}
+
+// Coverage report
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
 }
 
 task("copyDependencies", Copy::class) {

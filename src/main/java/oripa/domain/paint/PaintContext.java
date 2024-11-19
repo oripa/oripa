@@ -234,13 +234,25 @@ public interface PaintContext extends CreasePatternHolder {
 
 	void clearGrids();
 
-	public void setCircleCopyParameter(CircleCopyParameter p);
+	void setCircleCopyParameter(CircleCopyParameter p);
 
-	public CircleCopyParameter getCircleCopyParameter();
+	CircleCopyParameter getCircleCopyParameter();
 
-	public void setArrayCopyParameter(ArrayCopyParameter p);
+	void setArrayCopyParameter(ArrayCopyParameter p);
 
-	public ArrayCopyParameter getArrayCopyParameter();
+	ArrayCopyParameter getArrayCopyParameter();
+
+	default int countSelectedLines() {
+		return getPainter().countSelectedLines();
+	}
+
+	default boolean creasePatternChangeExists() {
+		return creasePatternUndo().changeExists();
+	}
+
+	default void clearCreasePatternChanged() {
+		creasePatternUndo().clearChanged();
+	}
 
 	public double getPointEps();
 }

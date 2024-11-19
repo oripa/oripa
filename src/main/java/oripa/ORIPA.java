@@ -20,6 +20,7 @@ package oripa;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.function.Supplier;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -27,6 +28,7 @@ import javax.swing.SwingUtilities;
 import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.main.IniFileAccess;
+import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
@@ -53,7 +55,9 @@ import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
+import oripa.gui.presenter.main.FileAccessPresentationLogic;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
+import oripa.gui.presenter.main.MainFramePresentationLogic;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
@@ -71,10 +75,12 @@ import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
+import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
 import oripa.persistence.entity.OrigamiModelFileSelectionSupportSelectorFactory;
 import oripa.project.Project;
 import oripa.resource.Constants;
+import oripa.resource.ResourceHolder;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
 import oripa.swing.view.file.FileChooserSwingFactory;
 import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
@@ -227,7 +233,7 @@ public class ORIPA {
 			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
 					new TestedOrigamiModelFactory(),
 					new FolderFactory());
-
+			var modelFactory = new TestedOrigamiModelFactory();
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
 					mainViewSetting.getPainterScreenSetting(),
 					subFrameFactory,
@@ -240,6 +246,7 @@ public class ORIPA {
 					domainContext,
 					cutModelOutlinesHolder,
 					bindingFactory,
+					modelFactory,
 					fileFactory,
 					extensionCorrector);
 
@@ -247,25 +254,67 @@ public class ORIPA {
 			var iniFileAccess = new IniFileAccess(
 					new InitDataFileReader(), new InitDataFileWriter());
 
-			var presenter = new MainFramePresenter(
+			var project = new Project();
+
+			var paintContextModification = new PaintContextModification();
+
+			Supplier<CreasePatternFOLDConfig> foldConfigFactory = () -> new CreasePatternFOLDConfig();
+
+			var resourceHolder = ResourceHolder.getInstance();
+
+			var screenPresenter = mainComponentPresenterFactory
+					.createPainterScreenPresenter(mainFrame.getPainterScreenView());
+			var uiPanelPresenter = mainComponentPresenterFactory
+					.createUIPanelPresenter(mainFrame.getUIPanelView());
+
+			var fileAccessPresentationLogic = new FileAccessPresentationLogic(
 					mainFrame,
-					viewUpdateSupport,
+					childFrameManager,
+					screenPresenter,
+					mainViewSetting.getPainterScreenSetting(),
+					paintContextModification,
+					paintContext,
+					cutModelOutlinesHolder,
+					project,
+					docFileAccessService);
+
+			var presentationLogic = new MainFramePresentationLogic(
+					mainFrame,
+					mainViewSetting.getPainterScreenSetting(),
+					screenUpdater,
 					dialogFactory,
 					subFrameFactory,
+					screenPresenter,
+					uiPanelPresenter,
 					mainComponentPresenterFactory,
+					fileAccessPresentationLogic,
+					presentationContext.getViewContext(),
 					childFrameManager,
-					mainViewSetting,
 					bindingFactory,
-					new Project(),
-					domainContext,
+					project,
+					paintContext,
+					paintContextModification,
 					cutModelOutlinesHolder,
-					presentationContext,
-					statePopperFactory,
 					fileHistory,
 					iniFileAccess,
 					docFileAccessService,
 					fileFactory,
-					plugins);
+					resourceHolder);
+
+			var presenter = new MainFramePresenter(
+					mainFrame,
+					dialogFactory,
+					subFrameFactory,
+					presentationLogic,
+					mainComponentPresenterFactory,
+					mouseActionHolder,
+					bindingFactory,
+					statePopperFactory,
+					project,
+					paintContext,
+					docFileAccessService,
+					plugins,
+					foldConfigFactory);
 			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {

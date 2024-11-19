@@ -66,15 +66,28 @@ public class Project implements PropertyHolder {
 		dataFilePath = filePath;
 	}
 
+	public void clear() {
+		property = new Property();
+		dataFilePath = "";
+	}
+
 	public String getDataFilePath() {
 		return dataFilePath;
 	}
 
-	public String getDataFileName() {
+	public void setDataFilePath(final String path) {
+		dataFilePath = path;
+	}
+
+	public Optional<String> getDataFileName() {
+		if (dataFilePath == null || dataFilePath.isEmpty()) {
+			return Optional.empty();
+		}
+
 		File file = new File(dataFilePath);
 		String fileName = file.getName();
 
-		return fileName;
+		return Optional.of(fileName);
 
 	}
 

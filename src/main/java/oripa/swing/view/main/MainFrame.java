@@ -177,7 +177,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 		logger.info("start constructing UI panel.");
 		try {
-			uiPanel = new UIPanel(viewSetting);
+			uiPanel = new UIPanel(viewSetting, dialogService, resourceHolder);
 		} catch (RuntimeException ex) {
 			logger.error("UI panel construction failed", ex);
 			Dialogs.showErrorDialog(

@@ -86,7 +86,9 @@ public interface MainFrameView extends FrameView {
 
 	void setPaperDomainOfModelChangeListener(Consumer<RectangleDomain> listener);
 
-//	void setPaperDomainOfModel(RectangleDomain domain);
+	default void setEstimationResultColors(final Color front, final Color back) {
+		getUIPanelView().setEstimationResultColors(front, back);
+	};
 
 	/**
 	 * invoked when MRU file menu item is clicked.

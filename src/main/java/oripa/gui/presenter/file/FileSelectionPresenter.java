@@ -77,7 +77,7 @@ public class FileSelectionPresenter<Data> {
 				toFileFilterProperties(savableSupports));
 
 		if (!chooser.showDialog(parent)) {
-			return FileSelectionResult.createCancel();
+			return FileSelectionResult.createCanceled();
 		}
 
 		var file = chooser.getSelectedFile();
@@ -89,7 +89,7 @@ public class FileSelectionPresenter<Data> {
 
 		if (correctedFile.exists()) {
 			if (!chooser.showOverwriteConfirmMessage()) {
-				return FileSelectionResult.createCancel();
+				return FileSelectionResult.createCanceled();
 			}
 		}
 
@@ -106,7 +106,7 @@ public class FileSelectionPresenter<Data> {
 				toFileFilterProperties(fileSelectionService.getLoadableSupportsWithMultiType()));
 
 		if (!chooser.showDialog(parent)) {
-			return FileSelectionResult.createCancel();
+			return FileSelectionResult.createCanceled();
 		}
 
 		var file = chooser.getSelectedFile();
