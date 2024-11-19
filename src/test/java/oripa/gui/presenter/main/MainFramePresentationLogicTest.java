@@ -244,6 +244,22 @@ public class MainFramePresentationLogicTest {
 	}
 
 	@Nested
+	class TestSsveFileToCurrentPath {
+		@Test
+		void succeeds() {
+			var path = "path";
+
+			when(project.getDataFilePath()).thenReturn(path);
+			FileType<Doc> type = mock();
+
+			// execute
+			presentationLogic.saveFileToCurrentPath(type);
+
+			verify(fileAccessPresentationLogic).saveFile(path, type);
+		}
+	}
+
+	@Nested
 	class TestSaveFileUsingGUI {
 		@SuppressWarnings("unchecked")
 		@Test
