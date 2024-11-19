@@ -18,7 +18,6 @@
  */
 package oripa.gui.presenter.main;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -331,7 +330,7 @@ public class MainFramePresenter {
 	 * saves project without opening a dialog
 	 */
 	private void saveFileToCurrentPath(final FileType<Doc> type) {
-		var filePath = presentationLogic.saveFileToCurrentPathImpl(type);
+		var filePath = presentationLogic.saveFileToCurrentPath(type);
 
 		afterSaveFile(filePath);
 	}
@@ -364,7 +363,7 @@ public class MainFramePresenter {
 	private void afterSaveFile(final String path) {
 
 		if (Project.projectFileTypeMatch(path)) {
-			paintContext.creasePatternUndo().clearChanged();
+			paintContext.clearCreasePatternChanged();
 			project.setDataFilePath(path);
 		}
 
@@ -384,27 +383,7 @@ public class MainFramePresenter {
 	 * model check before saving.
 	 */
 	private void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
-		try {
-			var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-					view,
-					dataFileAccess.getFileSelectionService());
-
-			var selection = presenter.saveFileWithModelCheck(
-					Doc.forSaving(paintContext.getCreasePattern(), project.getProperty()),
-					fileHistory.getLastDirectory(),
-					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
-
-			if (selection.action() == UserAction.CANCELED) {
-				return;
-			}
-
-			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
-			dataFileAccess.saveFile(doc, selection.path(), type);
-
-		} catch (IOException e) {
-			logger.error("IO trouble", e);
-			view.showSaveFailureErrorMessage(e);
-		}
+		presentationLogic.exportFileUsingGUIWithModelCheck(type);
 	}
 
 	/**

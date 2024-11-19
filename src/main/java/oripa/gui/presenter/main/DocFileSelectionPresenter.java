@@ -64,7 +64,8 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 	 * @throws IOException
 	 * @throws UserCanceledException
 	 */
-	public FileSelectionResult<Doc> saveFileWithModelCheck(final Doc doc,
+	public FileSelectionResult<Doc> saveFileWithModelCheck(
+			final CreasePattern creasePattern,
 			final String directory,
 			final FileType<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError,
@@ -72,8 +73,6 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 			throws IOException {
 		File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
-
-		CreasePattern creasePattern = doc.getCreasePattern();
 
 		var modelFactory = new TestedOrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(

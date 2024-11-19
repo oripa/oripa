@@ -58,6 +58,7 @@ import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PropertyDialogView;
 import oripa.gui.view.main.SubFrameFactory;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
@@ -585,6 +586,85 @@ class MainFramePresenterTest {
 
 				}
 
+			}
+
+			@Nested
+			class TestSaveAs {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void saveToCurrentPathLogicShouldBeCalledWhenProjectIsProjectFile() {
+					PaintContext paintContext = mock();
+					setupDomainContext(paintContext);
+
+					setupBindingFactory();
+
+					try (var projectStatic = mockStatic(Project.class)) {
+
+						String path = "path";
+						FileType<Doc> fileType = mock();
+						when(project.getProjectFileType()).thenReturn(Optional.of(fileType));
+						projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(true);
+
+						when(presentationLogic.saveFileToCurrentPath(fileType)).thenReturn(path);
+
+						construct();
+
+						verify(view).addSaveButtonListener(listenerCaptor.capture());
+
+						listenerCaptor.getValue().run();
+
+						verify(presentationLogic).saveFileToCurrentPath(fileType);
+
+						// verify after save
+						verifyAfterSave(true, path, paintContext);
+					}
+
+				}
+
+				@SuppressWarnings("unchecked")
+				@Test
+				void saveUsingGUILogicShouldBeCalledWhenProjectIsNotProjectFile() {
+					setupDomainContext();
+
+					setupBindingFactory();
+
+					try (var projectStatic = mockStatic(Project.class)) {
+
+						String path = "path";
+
+						when(project.getProjectFileType()).thenReturn(Optional.empty());
+						projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(false);
+
+						when(presentationLogic.saveFileUsingGUI()).thenReturn(path);
+
+						construct();
+
+						verify(view).addSaveButtonListener(listenerCaptor.capture());
+
+						listenerCaptor.getValue().run();
+
+						verify(presentationLogic).saveFileUsingGUI();
+
+						// verify after save
+						verifyAfterSave(false, path, null);
+					}
+
+				}
+
+				void verifyAfterSave(
+						final boolean projectFileTypeMatch,
+						final String path,
+						final PaintContext paintContext) {
+					if (projectFileTypeMatch) {
+						verify(paintContext).clearCreasePatternChanged();
+						verify(project).setDataFilePath(path);
+					}
+					verify(presentationLogic).updateMenu();
+					verify(presentationLogic, atLeastOnce()).updateTitleText();
+
+				}
 			}
 
 		}

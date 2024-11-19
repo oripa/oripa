@@ -85,6 +85,15 @@ public class FileAccessPresentationLogic {
 
 	}
 
+	/**
+	 * Saves file. Shows dialog when error.
+	 *
+	 * @param path
+	 * @param type
+	 * @return
+	 * @throws DataAccessException
+	 * @throws IllegalArgumentException
+	 */
 	public String saveFile(final String path, final FileType<Doc> type)
 			throws DataAccessException, IllegalArgumentException {
 		try {

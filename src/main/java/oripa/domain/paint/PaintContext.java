@@ -250,5 +250,9 @@ public interface PaintContext extends CreasePatternHolder {
 		return creasePatternUndo().changeExists();
 	}
 
+	default void clearCreasePatternChanged() {
+		creasePatternUndo().clearChanged();
+	}
+
 	public double getPointEps();
 }

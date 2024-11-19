@@ -19,6 +19,7 @@
 package oripa.gui.presenter.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
@@ -248,7 +250,7 @@ public class MainFramePresentationLogic {
 	/**
 	 * saves project without opening a dialog
 	 */
-	public String saveFileToCurrentPathImpl(final FileType<Doc> type) {
+	public String saveFileToCurrentPath(final FileType<Doc> type) {
 		var filePath = project.getDataFilePath();
 
 		try {
@@ -287,6 +289,35 @@ public class MainFramePresentationLogic {
 		} catch (DataAccessException | IllegalArgumentException e) {
 			return project.getDataFilePath();
 		}
+
+	}
+
+	/**
+	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
+	 * model check before saving.
+	 */
+	public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
+		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
+				view,
+				dataFileAccess.getFileSelectionService());
+
+		FileSelectionResult<Doc> selection;
+		try {
+			selection = presenter.saveFileWithModelCheck(
+					paintContext.getCreasePattern(),
+					fileHistory.getLastDirectory(),
+					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
+		} catch (IOException e) {
+			logger.error("error", e);
+			view.showSaveFailureErrorMessage(e);
+			return;
+		}
+
+		if (selection.action() == UserAction.CANCELED) {
+			return;
+		}
+
+		fileAccessPresentationLogic.saveFile(selection.path(), type);
 
 	}
 
