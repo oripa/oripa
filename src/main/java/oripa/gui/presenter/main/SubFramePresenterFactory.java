@@ -121,7 +121,7 @@ public class SubFramePresenterFactory {
 				lastFilePathChangeListener);
 	}
 
-	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameView(
+	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
 			final FoldabilityCheckFrameView view,
 			final CreasePattern creasePattern,
 			final boolean isZeroLineWidth,
@@ -134,7 +134,7 @@ public class SubFramePresenterFactory {
 				creasePattern,
 				pointEps);
 
-		return createFoldabilityCheckFrameView(
+		return createFoldabilityCheckFrameViewPresenter(
 				view,
 				creasePattern,
 				origamiModel,
@@ -144,7 +144,7 @@ public class SubFramePresenterFactory {
 
 	}
 
-	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameView(
+	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
 			final FoldabilityCheckFrameView view,
 			final CreasePattern creasePattern,
 			final OrigamiModel origamiModel,

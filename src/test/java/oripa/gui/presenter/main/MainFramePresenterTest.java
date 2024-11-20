@@ -765,7 +765,6 @@ class MainFramePresenterTest {
 				}
 			}
 
-			@SuppressWarnings("unchecked")
 			void testExportWithModelCheckTemplate(final FileType<Doc> type, final boolean isProjectFile,
 					final Runnable listener) {
 

@@ -27,15 +27,12 @@ import org.slf4j.LoggerFactory;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
@@ -51,7 +48,6 @@ import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
-import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.resource.StringID;
 import oripa.util.MathUtil;
@@ -80,14 +76,13 @@ public class UIPanelPresenter {
 
 	private final ByValueContext byValueContext;
 
-	final CutModelOutlinesHolder cutOutlinesHolder;
-	final PainterScreenSetting mainScreenSetting;
+	private final PainterScreenSetting mainScreenSetting;
 
 	private final StatePopperFactory<EditMode> statePopperFactory;
 	private final ViewScreenUpdater screenUpdater;
 	private final KeyProcessing keyProcessing;
 	private final PaintContext paintContext;
-	private final CreasePatternViewContext viewContext;
+	private final CreasePatternViewContext creasePatternViewContext;
 
 	private final TypeForChangeContext typeForChangeContext;
 
@@ -103,30 +98,34 @@ public class UIPanelPresenter {
 			final SubFramePresenterFactory subFramePresenterFactory,
 			final ModelComputationFacadeFactory computationFacadeFactory,
 			final StatePopperFactory<EditMode> statePopperFactory,
-			final ViewUpdateSupport viewUpdateSupport,
-			final CreasePatternPresentationContext presentationContext,
-			final PaintDomainContext domainContext,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
+			final ViewScreenUpdater screenUpdater,
+			final KeyProcessing keyProcessing,
+			final TypeForChangeContext typeForChangeContext,
+			final CreasePatternViewContext creasePatternViewContext,
+			final PaintContext paintContext,
+			final ByValueContext byValueContext,
 			final BindingObjectFactoryFacade bindingFactory,
 			final PainterScreenSetting mainScreenSetting) {
+
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
 		this.subFramePresenterFactory = subFramePresenterFactory;
 		this.computationFacadeFactory = computationFacadeFactory;
 
-		this.byValueContext = domainContext.getByValueContext();
-		typeForChangeContext = presentationContext.getTypeForChangeContext();
-		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
-		this.keyProcessing = viewUpdateSupport.getKeyProcessing();
-		this.paintContext = domainContext.getPaintContext();
-		this.viewContext = presentationContext.getViewContext();
+		this.screenUpdater = screenUpdater;
+		this.keyProcessing = keyProcessing;
+
+		this.typeForChangeContext = typeForChangeContext;
+		this.creasePatternViewContext = creasePatternViewContext;
+
+		this.paintContext = paintContext;
+		this.byValueContext = byValueContext;
 
 		this.statePopperFactory = statePopperFactory;
 
 		this.bindingFactory = bindingFactory;
 
 		this.mainScreenSetting = mainScreenSetting;
-		this.cutOutlinesHolder = cutModelOutlinesHolder;
 
 		Stream.of(alterLineComboDataFrom).forEach(item -> view.addItemOfAlterLineComboFrom(item.toString()));
 		Stream.of(alterLineComboDataTo).forEach(item -> view.addItemOfAlterLineComboTo(item.toString()));
@@ -298,7 +297,7 @@ public class UIPanelPresenter {
 		// ------------------------------------------------------------
 		// fold
 
-		view.addCheckWindowButtonListener(() -> showCheckerWindow());
+		view.addCheckWindowButtonListener(this::showCheckerWindow);
 		view.setModelComputationListener(this::computeModels);
 		view.setShowFoldedModelWindowsListener(this::showFoldedModelWindows);
 	}
@@ -348,10 +347,10 @@ public class UIPanelPresenter {
 	 */
 	private void showCheckerWindow() {
 		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
-		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameView(
+		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
 				frame,
 				paintContext.getCreasePattern(),
-				viewContext.isZeroLineWidth(),
+				creasePatternViewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
 
 		presenter.setViewVisible(true);
@@ -359,12 +358,12 @@ public class UIPanelPresenter {
 
 	private void showCheckerWindow(final OrigamiModel origamiModel, final EstimationResultRules estimationRules) {
 		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
-		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameView(
+		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
 				frame,
 				paintContext.getCreasePattern(),
 				origamiModel,
 				estimationRules,
-				viewContext.isZeroLineWidth(),
+				creasePatternViewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
 
 		presenter.setViewVisible(true);
@@ -417,7 +416,8 @@ public class UIPanelPresenter {
 				// wrong crease pattern exists.
 				view.showNoAnswerMessage();
 				logger.debug("estimation rules: {}", computationResult.getEstimationResultRules());
-				showCheckerWindow(computationResult.getMergedOrigamiModel(),
+				showCheckerWindow(
+						computationResult.getMergedOrigamiModel(),
 						computationResult.getEstimationResultRules());
 			} else {
 				logger.info("foldable layer layout is found.");
@@ -446,7 +446,7 @@ public class UIPanelPresenter {
 		modelViewPresenter.setViewVisible(true);
 	}
 
-	public void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
+	private void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
 			final EstimationResultFrameView resultFrame) {
 		if (modelViewFrame == null || resultFrame == null) {
 			return;
