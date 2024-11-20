@@ -103,10 +103,12 @@ public class MainComponentPresenterFactory {
 				subFramePresenterFactory,
 				modelComputationFacadeFactory,
 				statePopperFactory,
-				viewUpdateSupport,
-				presentationContext,
-				domainContext,
-				cutModelOutlinesHolder,
+				viewUpdateSupport.getViewScreenUpdater(),
+				viewUpdateSupport.getKeyProcessing(),
+				presentationContext.getTypeForChangeContext(),
+				presentationContext.getViewContext(),
+				domainContext.getPaintContext(),
+				domainContext.getByValueContext(),
 				bindingFactory,
 				mainScreenSetting);
 	}
