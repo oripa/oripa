@@ -32,6 +32,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.swing.view.estimation.EstimationResultFrame;
 import oripa.swing.view.util.ListItemSelectionPanel;

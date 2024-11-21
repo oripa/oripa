@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.main;
+package oripa.gui.presenter.main.logic;
 
 import java.lang.invoke.MethodHandles;
 
@@ -27,6 +27,7 @@ import oripa.application.FileAccessService;
 import oripa.application.main.PaintContextModification;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
+import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.ChildFrameManager;

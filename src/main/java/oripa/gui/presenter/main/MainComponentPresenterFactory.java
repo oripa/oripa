@@ -27,6 +27,8 @@ import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
+import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.ArrayCopyDialogView;
