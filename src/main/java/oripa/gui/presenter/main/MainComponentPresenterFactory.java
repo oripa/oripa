@@ -48,6 +48,7 @@ import oripa.util.file.FileFactory;
 public class MainComponentPresenterFactory {
 	private final SubFrameFactory subFrameFactory;
 	private final SubFramePresenterFactory subFramePresenterFactory;
+	private final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 	private final ModelComputationFacadeFactory modelComputationFacadeFactory;
 	private final FileChooserFactory fileChooserFactory;
 	private final StatePopperFactory<EditMode> statePopperFactory;
@@ -65,6 +66,7 @@ public class MainComponentPresenterFactory {
 			final PainterScreenSetting mainScreenSetting,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
+			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
 			final FileChooserFactory fileChooserFactory,
 			final ModelComputationFacadeFactory computationFacadeFactory,
 			final CreasePatternPresentationContext presentationContext,
@@ -79,6 +81,7 @@ public class MainComponentPresenterFactory {
 
 		this.subFrameFactory = subFrameFactory;
 		this.subFramePresenterFactory = subFramePresenterFactory;
+		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
 		this.modelComputationFacadeFactory = computationFacadeFactory;
 		this.fileChooserFactory = fileChooserFactory;
 		this.statePopperFactory = statePopperFactory;
@@ -101,6 +104,7 @@ public class MainComponentPresenterFactory {
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
+				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
 				statePopperFactory,
 				viewUpdateSupport.getViewScreenUpdater(),

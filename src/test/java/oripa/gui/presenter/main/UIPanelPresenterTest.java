@@ -73,6 +73,9 @@ class UIPanelPresenterTest {
 	SubFramePresenterFactory subFramePresenterFactory;
 
 	@Mock
+	ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
+
+	@Mock
 	ByValueContext byValueContext;
 
 	@Mock
@@ -337,6 +340,7 @@ class UIPanelPresenterTest {
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
+				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
 				statePopperFactory,
 				screenUpdater,

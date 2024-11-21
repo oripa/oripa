@@ -20,6 +20,7 @@ package oripa.swing.view.util;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -81,6 +82,16 @@ public class ListItemSelectionPanel extends JPanel {
 	public void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(final PropertyChangeListener listener) {
+		support.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListeners(final String propertyName) {
+		Stream.of(support.getPropertyChangeListeners(propertyName))
+				.forEach(listener -> support.removePropertyChangeListener(listener));
 	}
 
 	private void build() {

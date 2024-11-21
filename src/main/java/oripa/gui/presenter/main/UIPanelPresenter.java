@@ -62,6 +62,8 @@ public class UIPanelPresenter {
 
 	private final UIPanelView view;
 	private final SubFrameFactory subFrameFactory;
+
+	private final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 	private final SubFramePresenterFactory subFramePresenterFactory;
 
 	private final TypeForChange[] alterLineComboDataFrom = {
@@ -96,6 +98,7 @@ public class UIPanelPresenter {
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
+			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
 			final ModelComputationFacadeFactory computationFacadeFactory,
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final ViewScreenUpdater screenUpdater,
@@ -109,6 +112,8 @@ public class UIPanelPresenter {
 
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
+
+		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
 		this.subFramePresenterFactory = subFramePresenterFactory;
 		this.computationFacadeFactory = computationFacadeFactory;
 
@@ -448,18 +453,6 @@ public class UIPanelPresenter {
 
 	private void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
 			final EstimationResultFrameView resultFrame) {
-		if (modelViewFrame == null || resultFrame == null) {
-			return;
-		}
-		modelViewFrame.putModelIndexChangeListener(resultFrame,
-				e -> {
-					logger.debug("modelViewFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
-					resultFrame.selectModel((Integer) e.getNewValue());
-				});
-		resultFrame.putModelIndexChangeListener(modelViewFrame,
-				e -> {
-					logger.debug("resultFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
-					modelViewFrame.selectModel((Integer) e.getNewValue());
-				});
+		modelIndexChangeListenerPutter.put(modelViewFrame, resultFrame);
 	}
 }

@@ -121,10 +121,17 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 
 	@Override
 	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
-		if (modelIndexChangeListenerMap.get(parentOfListener) == null) {
-			modelIndexChangeListenerMap.put(parentOfListener, listener);
-			modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
-		}
+		var oldListener = modelIndexChangeListenerMap.get(parentOfListener);
+		modelSelectionPanel.removePropertyChangeListener(oldListener);
+
+		modelIndexChangeListenerMap.put(parentOfListener, listener);
+		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
+	}
+
+	@Override
+	public void removeModelIndexChangeListeners() {
+		modelIndexChangeListenerMap.clear();
+		modelSelectionPanel.removePropertyChangeListeners(ListItemSelectionPanel.INDEX);
 	}
 
 	@Override
@@ -149,6 +156,8 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	@Override
 	public void windowClosed(final WindowEvent e) {
 		onCloseListener.accept(this);
+
+		removeModelIndexChangeListeners();
 	}
 
 	@Override

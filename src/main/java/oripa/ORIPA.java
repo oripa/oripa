@@ -60,6 +60,7 @@ import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresentationLogic;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacadeFactory;
+import oripa.gui.presenter.main.ModelIndexChangeListenerPutter;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
@@ -233,11 +234,13 @@ public class ORIPA {
 			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
 					new TestedOrigamiModelFactory(),
 					new FolderFactory());
+			var modelIndexChangeListenerPutter = new ModelIndexChangeListenerPutter();
 			var modelFactory = new TestedOrigamiModelFactory();
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
 					mainViewSetting.getPainterScreenSetting(),
 					subFrameFactory,
 					subFramePresenterFactory,
+					modelIndexChangeListenerPutter,
 					fileChooserFactory,
 					modelComputationFacadeFactory,
 					presentationContext,

@@ -201,10 +201,17 @@ public class ModelViewFrame extends JFrame
 
 	@Override
 	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
-		if (modelIndexChangeListenerMap.get(parentOfListener) == null) {
-			modelIndexChangeListenerMap.put(parentOfListener, listener);
-			modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
-		}
+		var oldListener = modelIndexChangeListenerMap.get(parentOfListener);
+		modelSelectionPanel.removePropertyChangeListener(oldListener);
+
+		modelIndexChangeListenerMap.put(parentOfListener, listener);
+		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
+	}
+
+	@Override
+	public void removeModelIndexChangeListeners() {
+		modelIndexChangeListenerMap.clear();
+		modelSelectionPanel.removePropertyChangeListeners(ListItemSelectionPanel.INDEX);
 	}
 
 	@Override
@@ -242,6 +249,8 @@ public class ModelViewFrame extends JFrame
 		setDomainBeforeFolding(null);
 		onCloseListener.accept(this);
 		mainScreenSetting.setCrossLineVisible(false);
+
+		removeModelIndexChangeListeners();
 	}
 
 	@Override

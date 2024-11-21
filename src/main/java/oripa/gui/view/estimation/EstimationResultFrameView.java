@@ -42,6 +42,8 @@ public interface EstimationResultFrameView extends FrameView {
 
 	void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
+	void removeModelIndexChangeListeners();
+
 	void setOnCloseListener(final Consumer<FrameView> listener);
 
 	void selectModel(final int index);
