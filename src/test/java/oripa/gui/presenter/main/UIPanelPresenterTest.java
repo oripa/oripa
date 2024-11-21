@@ -43,8 +43,11 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
-import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
-import oripa.gui.presenter.main.ModelComputationFacade.ComputationType;
+import oripa.gui.presenter.main.logic.ModelComputationFacade;
+import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
+import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
+import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
+import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
@@ -71,6 +74,9 @@ class UIPanelPresenterTest {
 	SubFrameFactory subFrameFactory;
 	@Mock
 	SubFramePresenterFactory subFramePresenterFactory;
+
+	@Mock
+	ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 
 	@Mock
 	ByValueContext byValueContext;
@@ -337,6 +343,7 @@ class UIPanelPresenterTest {
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
+				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
 				statePopperFactory,
 				screenUpdater,

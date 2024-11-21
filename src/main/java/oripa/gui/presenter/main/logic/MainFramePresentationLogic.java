@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.main;
+package oripa.gui.presenter.main.logic;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +39,10 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
+import oripa.gui.presenter.main.DocFileSelectionPresenter;
+import oripa.gui.presenter.main.MainComponentPresenterFactory;
+import oripa.gui.presenter.main.PainterScreenPresenter;
+import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameDialogFactory;
