@@ -41,11 +41,9 @@ import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.projectprop.Property;
 import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
@@ -240,56 +238,6 @@ class MainFramePresenterTest {
 			}
 
 			@Nested
-			class TestUndo {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
-
-				@Test
-				void undoLogicShouldBeCalled() {
-
-					GraphicMouseAction action = mock();
-					when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
-
-					setupBindingFactory();
-
-					construct();
-
-					verify(view).addUndoButtonListener(listenerCaptor.capture());
-
-					listenerCaptor.getValue().run();
-
-					verify(action).undo(any());
-					verify(presentationLogic).updateScreen();
-
-				}
-			}
-
-			@Nested
-			class TestRedo {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
-
-				@Test
-				void redoLogicShouldBeCalled() {
-
-					GraphicMouseAction action = mock();
-					when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
-
-					setupBindingFactory();
-
-					construct();
-
-					verify(view).addRedoButtonListener(listenerCaptor.capture());
-
-					listenerCaptor.getValue().run();
-
-					verify(action).redo(any());
-					verify(presentationLogic).updateScreen();
-
-				}
-			}
-
-			@Nested
 			class TestShowPropertyDIalog {
 				@Captor
 				ArgumentCaptor<Runnable> listenerCaptor;
@@ -438,9 +386,6 @@ class MainFramePresenterTest {
 
 					setupBindingFactory();
 
-					Property property = mock();
-					when(project.getProperty()).thenReturn(property);
-
 					construct();
 
 					verify(view).setEstimationResultSaveColorsListener(listenerCaptor.capture());
@@ -449,8 +394,7 @@ class MainFramePresenterTest {
 					Color back = mock();
 					listenerCaptor.getValue().accept(front, back);
 
-					verify(property).putFrontColorCode(anyString());
-					verify(property).putBackColorCode(anyString());
+					verify(presentationLogic).setEstimationResultSaveColors(front, back);
 				}
 			}
 
@@ -535,6 +479,46 @@ class MainFramePresenterTest {
 
 				}
 
+			}
+
+			@Nested
+			class TestUndo {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void undoLogicShouldBeCalled() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addUndoButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().run();
+
+					verify(presentationLogic).undo();
+				}
+			}
+
+			@Nested
+			class TestRedo {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void redoLogicShouldBeCalled() {
+
+					setupBindingFactory();
+
+					construct();
+
+					verify(view).addRedoButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().run();
+
+					verify(presentationLogic).redo();
+				}
 			}
 
 			@Nested

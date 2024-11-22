@@ -20,7 +20,6 @@ package oripa.gui.presenter.main;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -39,7 +38,6 @@ import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.SubFrameFactory;
-import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
@@ -140,24 +138,18 @@ public class MainFramePresenter {
 
 		view.addUndoButtonListener(() -> {
 			try {
-				actionHolder.getMouseAction().orElseThrow().undo(paintContext);
-			} catch (NoSuchElementException ex) {
-				logger.error("mouseAction should not be null.", ex);
+				presentationLogic.undo();
 			} catch (Exception ex) {
 				logger.error("Wrong implementation.", ex);
 			}
-			presentationLogic.updateScreen();
 		});
 
 		view.addRedoButtonListener(() -> {
 			try {
-				actionHolder.getMouseAction().orElseThrow().redo(paintContext);
-			} catch (NoSuchElementException ex) {
-				logger.error("mouseAction should not be null.", ex);
+				presentationLogic.redo();
 			} catch (Exception ex) {
 				logger.error("Wrong implementation.", ex);
 			}
-			presentationLogic.updateScreen();
 		});
 
 		view.addClearButtonListener(presentationLogic::clear);
@@ -178,11 +170,7 @@ public class MainFramePresenter {
 		view.addMRUFileButtonListener(this::loadFile);
 		view.addMRUFilesMenuItemUpdateListener(presentationLogic::updateMRUFilesMenuItem);
 
-		view.setEstimationResultSaveColorsListener((front, back) -> {
-			var property = project.getProperty();
-			property.putFrontColorCode(ColorUtil.convertColorToCode(front));
-			property.putBackColorCode(ColorUtil.convertColorToCode(back));
-		});
+		view.setEstimationResultSaveColorsListener(presentationLogic::setEstimationResultSaveColors);
 
 		view.setPaperDomainOfModelChangeListener(presentationLogic::setPaperDomainOfModel);
 
@@ -214,7 +202,7 @@ public class MainFramePresenter {
 		/*
 		 * For starting copy-and-paste
 		 */
-		Supplier<Boolean> detectCopyPasteError = () -> paintContext.getPainter().countSelectedLines() == 0;
+		Supplier<Boolean> detectCopyPasteError = () -> paintContext.countSelectedLines() == 0;
 		var copyPasteState = bindingFactory.createState(StringID.COPY_PASTE_ID,
 				detectCopyPasteError, view::showCopyPasteErrorMessage);
 		view.addCopyAndPasteButtonListener(copyPasteState::performActions);
@@ -284,7 +272,6 @@ public class MainFramePresenter {
 	private void saveFileToCurrentPath(final FileType<Doc> type) {
 		try {
 			var filePath = presentationLogic.saveFileToCurrentPath(type);
-
 			afterSaveFile(filePath);
 		} catch (Exception e) {
 			view.showSaveFailureErrorMessage(e);
@@ -298,7 +285,6 @@ public class MainFramePresenter {
 	private void saveFileUsingGUI(final FileType<Doc>... types) {
 		try {
 			var filePath = presentationLogic.saveFileUsingGUI(types);
-
 			afterSaveFile(filePath);
 		} catch (Exception e) {
 			view.showSaveFailureErrorMessage(e);

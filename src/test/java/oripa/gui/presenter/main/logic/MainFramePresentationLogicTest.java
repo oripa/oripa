@@ -22,11 +22,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Nested;
@@ -49,21 +51,22 @@ import oripa.appstate.ApplicationState;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.projectprop.Property;
 import oripa.file.FileHistory;
 import oripa.file.InitData;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.main.DocFileSelectionPresenter;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
-import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
@@ -93,10 +96,7 @@ public class MainFramePresentationLogicTest {
 	ViewScreenUpdater screenUpdater;
 
 	@Mock
-	MainFrameDialogFactory dialogFactory;
-
-	@Mock
-	SubFrameFactory subFrameFactory;
+	MouseActionHolder mouseActionHolder;
 
 	@Mock
 	PainterScreenPresenter screenPresenter;
@@ -248,6 +248,40 @@ public class MainFramePresentationLogicTest {
 			verify(view, never()).buildFileMenu();
 		}
 
+	}
+
+	@Nested
+	class TestUndo {
+
+		@Test
+		void undoLogicShouldBeCalled() {
+
+			GraphicMouseAction action = mock();
+			when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
+
+			presentationLogic.undo();
+
+			verify(action).undo(any());
+			verify(screenUpdater).updateScreen();
+
+		}
+	}
+
+	@Nested
+	class TestRedo {
+
+		@Test
+		void redoLogicShouldBeCalled() {
+
+			GraphicMouseAction action = mock();
+			when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
+
+			presentationLogic.redo();
+
+			verify(action).redo(any());
+			verify(screenUpdater).updateScreen();
+
+		}
 	}
 
 	@Nested
@@ -619,6 +653,27 @@ public class MainFramePresentationLogicTest {
 				}
 			}
 			return args;
+		}
+	}
+
+	@Nested
+	class TestSetEstimationResultSaveColors {
+		@Captor
+		ArgumentCaptor<BiConsumer<Color, Color>> listenerCaptor;
+
+		@Test
+		void putColorCodeLogicShouldBeCalled() {
+
+			Property property = mock();
+			when(project.getProperty()).thenReturn(property);
+
+			Color front = mock();
+			Color back = mock();
+
+			presentationLogic.setEstimationResultSaveColors(front, back);
+
+			verify(property).putFrontColorCode(anyString());
+			verify(property).putBackColorCode(anyString());
 		}
 	}
 

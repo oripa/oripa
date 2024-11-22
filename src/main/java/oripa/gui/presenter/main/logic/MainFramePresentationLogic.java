@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -35,9 +36,9 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
-import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
@@ -45,11 +46,10 @@ import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
-import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
@@ -79,6 +79,7 @@ public class MainFramePresentationLogic {
 
 	private final ViewScreenUpdater screenUpdater;
 	private final PainterScreenSetting screenSetting;
+	private final MouseActionHolder mouseActionHolder;
 
 	private final ChildFrameManager childFrameManager;
 
@@ -102,15 +103,13 @@ public class MainFramePresentationLogic {
 			final MainFrameView view,
 			final PainterScreenSetting screenSetting,
 			final ViewScreenUpdater screenUpdater,
-			final MainFrameDialogFactory dialogFactory,
-			final SubFrameFactory subFrameFactory,
+			final MouseActionHolder mouseActionHolder,
 			final PainterScreenPresenter screenPresenter,
 			final UIPanelPresenter uiPanelPresenter,
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final FileAccessPresentationLogic fileAccessPresentationLogic,
 			final CreasePatternViewContext creasePatternViewContext,
 			final ChildFrameManager childFrameManager,
-			final BindingObjectFactoryFacade bindingFactory,
 			final Project project,
 			final PaintContext paintContext,
 			final PaintContextModification paintContextModification,
@@ -144,6 +143,8 @@ public class MainFramePresentationLogic {
 
 		this.screenSetting = screenSetting;
 		this.screenUpdater = screenUpdater;
+
+		this.mouseActionHolder = mouseActionHolder;
 
 		this.uiPanelPresenter = uiPanelPresenter;
 		this.screenPresenter = screenPresenter;
@@ -252,6 +253,16 @@ public class MainFramePresentationLogic {
 		fileHistory.useFile(filePath);
 
 		view.buildFileMenu();
+	}
+
+	public void undo() {
+		mouseActionHolder.getMouseAction().orElseThrow().undo(paintContext);
+		screenUpdater.updateScreen();
+	}
+
+	public void redo() {
+		mouseActionHolder.getMouseAction().orElseThrow().redo(paintContext);
+		screenUpdater.updateScreen();
 	}
 
 	public void modifySavingActions() {
@@ -385,6 +396,12 @@ public class MainFramePresentationLogic {
 			view.showLoadFailureErrorMessage(e);
 		}
 
+	}
+
+	public void setEstimationResultSaveColors(final Color front, final Color back) {
+		var property = project.getProperty();
+		property.putFrontColorCode(ColorUtil.convertColorToCode(front));
+		property.putBackColorCode(ColorUtil.convertColorToCode(back));
 	}
 
 }
