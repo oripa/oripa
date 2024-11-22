@@ -25,7 +25,6 @@ import static org.mockito.Mockito.*;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -34,9 +33,6 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
@@ -44,8 +40,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.application.FileAccessService;
-import oripa.application.main.IniFileAccess;
+import oripa.application.main.DocFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.ApplicationState;
 import oripa.domain.creasepattern.CreasePattern;
@@ -53,9 +48,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.projectprop.Property;
 import oripa.file.FileHistory;
-import oripa.file.InitData;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -71,8 +64,6 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -105,6 +96,9 @@ public class MainFramePresentationLogicTest {
 	UIPanelPresenter uiPanelPresenter;
 
 	@Mock
+	ClearActionPresentationLogic clearActionPresentationLogic;
+
+	@Mock
 	MainComponentPresenterFactory componentPresenterFactory;
 
 	@Mock
@@ -132,22 +126,16 @@ public class MainFramePresentationLogicTest {
 	CutModelOutlinesHolder cutModelOutlinesHolder;
 
 	@Mock
-	CreasePatternViewContext creasePatternViewContext;
+	IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
 	@Mock
 	FileHistory fileHistory;
 
 	@Mock
-	IniFileAccess iniFileAccess;
-
-	@Mock
-	FileAccessService<Doc> dataFileAccess;
+	DocFileAccess docFileAccess;
 
 	@Mock
 	FileFactory fileFactory;
-
-	@Mock
-	Supplier<CreasePatternFOLDConfig> foldConfigFactory;
 
 	@Mock
 	ResourceHolder resourceHolder;
@@ -183,7 +171,7 @@ public class MainFramePresentationLogicTest {
 			Runnable doExit = mock();
 			presentationLogic.exit(doExit);
 
-			verify(iniFileAccess).save(eq(fileHistory), any());
+			verify(iniFileAccessPresentationLogic).saveIniFile();
 
 			verify(doExit).run();
 		}
@@ -198,15 +186,7 @@ public class MainFramePresentationLogicTest {
 
 			presentationLogic.clear();
 
-			verify(paintContextModification).clear(any(), eq(cutModelOutlinesHolder));
-			verify(project).clear();
-
-			verify(screenSetting).setGridVisible(true);
-
-			verify(childFrameManager).closeAll(view);
-
-			verify(screenUpdater).updateScreen();
-
+			verify(clearActionPresentationLogic).clear();
 			verifyUpdateTitleText("default");
 		}
 	}
@@ -294,20 +274,10 @@ public class MainFramePresentationLogicTest {
 
 			when(paintContext.getPointEps()).thenReturn(1e-8);
 
-			CreasePatternFOLDConfig config = mock();
-
-			when(foldConfigFactory.get()).thenReturn(config);
-
 			// execute
 			presentationLogic.modifySavingActions();
 
-			verify(dataFileAccess).setConfigToSavingAction(eq(DocFileTypes.fold()), foldConfigCaptor.capture());
-
-			var createdConfig = foldConfigCaptor.getValue().get();
-
-			assertEquals(config, createdConfig);
-
-			verify(config).setEps(anyDouble());
+			verify(docFileAccess).setupFOLDConfigForSaving(1e-8);
 		}
 	}
 
@@ -415,7 +385,7 @@ public class MainFramePresentationLogicTest {
 
 			var selectedPath = presentationLogic.saveFileUsingGUI();
 
-			verify(dataFileAccess, never()).saveFile(any(), anyString(), any());
+			verify(docFileAccess, never()).saveFile(any(), anyString(), any());
 
 			assertEquals("project path", selectedPath);
 		}
@@ -610,49 +580,13 @@ public class MainFramePresentationLogicTest {
 	@Nested
 	class TestLoadIniFile {
 
-		@MethodSource("createIniFileShouldBeLoadedArguments")
-		@ParameterizedTest
-		void iniFileShouldBeLoaded(
-				final boolean isZeroLineWidth,
-				final boolean isMvLineVisible,
-				final boolean isAuxLineVisible,
-				final boolean isVertexVisible) {
-
-			InitData initData = mock();
-			when(initData.isZeroLineWidth()).thenReturn(isZeroLineWidth);
-			when(initData.isMvLineVisible()).thenReturn(isMvLineVisible);
-			when(initData.isAuxLineVisible()).thenReturn(isAuxLineVisible);
-			when(initData.isVertexVisible()).thenReturn(isVertexVisible);
-
-			setupIniFileAccess(initData);
+		@Test
+		void iniFileShouldBeLoaded() {
 
 			presentationLogic.loadIniFile();
 
-			verify(iniFileAccess).load();
+			verify(iniFileAccessPresentationLogic).loadIniFile();
 
-			verify(fileHistory).loadFromInitData(initData);
-
-			verify(screenSetting).setZeroLineWidth(isZeroLineWidth);
-			verify(screenSetting).setMVLineVisible(isMvLineVisible);
-			verify(screenSetting).setAuxLineVisible(isAuxLineVisible);
-			verify(screenSetting).setVertexVisible(isVertexVisible);
-		}
-
-		static List<Arguments> createIniFileShouldBeLoadedArguments() {
-			var booleanValues = List.of(true, false);
-
-			var args = new ArrayList<Arguments>();
-
-			for (var zeroWidth : booleanValues) {
-				for (var mvLine : booleanValues) {
-					for (var auxLine : booleanValues) {
-						for (var vertex : booleanValues) {
-							args.add(Arguments.of(zeroWidth, mvLine, auxLine, vertex));
-						}
-					}
-				}
-			}
-			return args;
 		}
 	}
 
@@ -675,10 +609,6 @@ public class MainFramePresentationLogicTest {
 			verify(property).putFrontColorCode(anyString());
 			verify(property).putBackColorCode(anyString());
 		}
-	}
-
-	void setupIniFileAccess(final InitData initData) {
-		when(iniFileAccess.load()).thenReturn(initData);
 	}
 
 }

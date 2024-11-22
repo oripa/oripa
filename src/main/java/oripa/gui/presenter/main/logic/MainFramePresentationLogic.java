@@ -23,20 +23,16 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.FileAccessService;
-import oripa.application.main.IniFileAccess;
-import oripa.application.main.PaintContextModification;
+import oripa.application.main.DocFileAccess;
 import oripa.appstate.ApplicationState;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.file.FileSelectionResult;
@@ -47,14 +43,10 @@ import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.PainterScreenSetting;
-import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -73,75 +65,57 @@ public class MainFramePresentationLogic {
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
 	private final MainComponentPresenterFactory componentPresenterFactory;
-	private final FileAccessPresentationLogic fileAccessPresentationLogic;
 
-	private final CreasePatternViewContext creasePatternViewContext;
+	private final ClearActionPresentationLogic clearActionPresentationLogic;
+	private final FileAccessPresentationLogic fileAccessPresentationLogic;
+	private final IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
 	private final ViewScreenUpdater screenUpdater;
-	private final PainterScreenSetting screenSetting;
 	private final MouseActionHolder mouseActionHolder;
-
-	private final ChildFrameManager childFrameManager;
 
 	private final Project project;
 
 	private final PaintContext paintContext;
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 
-	private final IniFileAccess iniFileAccess;
-	private final FileAccessService<Doc> dataFileAccess;
+	private final DocFileAccess dataFileAccess;
 	private final FileHistory fileHistory;
 	private final FileFactory fileFactory;
-	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
-
-	// services
-	private final PaintContextModification paintContextModification;
 
 	private final ResourceHolder resourceHolder;
 
 	public MainFramePresentationLogic(
 			final MainFrameView view,
-			final PainterScreenSetting screenSetting,
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder mouseActionHolder,
 			final PainterScreenPresenter screenPresenter,
 			final UIPanelPresenter uiPanelPresenter,
 			final MainComponentPresenterFactory componentPresenterFactory,
+			final ClearActionPresentationLogic clearActionPresentationLogic,
 			final FileAccessPresentationLogic fileAccessPresentationLogic,
-			final CreasePatternViewContext creasePatternViewContext,
-			final ChildFrameManager childFrameManager,
+			final IniFileAccessPresentationLogic iniFileAccessPresentationLogic,
 			final Project project,
 			final PaintContext paintContext,
-			final PaintContextModification paintContextModification,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileHistory fileHistory,
-			final IniFileAccess iniFileAccess,
-			final FileAccessService<Doc> dataFileAccess,
+			final DocFileAccess dataFileAccess,
 			final FileFactory fileFactory,
-			final Supplier<CreasePatternFOLDConfig> foldConfigFactory,
 			final ResourceHolder resourceHolder) {
 
 		this.view = view;
 
-		this.childFrameManager = childFrameManager;
-
 		this.componentPresenterFactory = componentPresenterFactory;
 
+		this.clearActionPresentationLogic = clearActionPresentationLogic;
 		this.fileAccessPresentationLogic = fileAccessPresentationLogic;
-
-		this.creasePatternViewContext = creasePatternViewContext;
+		this.iniFileAccessPresentationLogic = iniFileAccessPresentationLogic;
 
 		this.project = project;
 		this.paintContext = paintContext;
-		this.paintContextModification = paintContextModification;
-		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 
 		this.fileHistory = fileHistory;
-		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
 		this.fileFactory = fileFactory;
 
-		this.screenSetting = screenSetting;
 		this.screenUpdater = screenUpdater;
 
 		this.mouseActionHolder = mouseActionHolder;
@@ -149,7 +123,6 @@ public class MainFramePresentationLogic {
 		this.uiPanelPresenter = uiPanelPresenter;
 		this.screenPresenter = screenPresenter;
 
-		this.foldConfigFactory = foldConfigFactory;
 		this.resourceHolder = resourceHolder;
 	}
 
@@ -189,38 +162,19 @@ public class MainFramePresentationLogic {
 
 	public void saveIniFile() {
 		try {
-			iniFileAccess.save(fileHistory, creasePatternViewContext);
-		} catch (IllegalStateException e) {
-			logger.error("error when building ini file data", e);
+			iniFileAccessPresentationLogic.saveIniFile();
+		} catch (Exception e) {
+			logger.error("error when saving ini data", e);
 			view.showSaveIniFileFailureErrorMessage(e);
 		}
 	}
 
 	public void loadIniFile() {
-		var ini = iniFileAccess.load();
-
-		fileHistory.loadFromInitData(ini);
-		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
-
-		logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
-		screenSetting.setMVLineVisible(ini.isMvLineVisible());
-
-		logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
-		screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
-
-		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
-		screenSetting.setVertexVisible(ini.isVertexVisible());
+		iniFileAccessPresentationLogic.loadIniFile();
 	}
 
 	public void clear() {
-		paintContextModification.clear(paintContext, cutModelOutlinesHolder);
-		project.clear();
-
-		screenSetting.setGridVisible(true);
-
-		childFrameManager.closeAll(view);
-
-		screenUpdater.updateScreen();
+		clearActionPresentationLogic.clear();
 		updateTitleText();
 	}
 
@@ -266,14 +220,7 @@ public class MainFramePresentationLogic {
 	}
 
 	public void modifySavingActions() {
-		dataFileAccess.setConfigToSavingAction(DocFileTypes.fold(), this::createFOLDConfig);
-	}
-
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = foldConfigFactory.get();
-		config.setEps(paintContext.getPointEps());
-
-		return config;
+		dataFileAccess.setupFOLDConfigForSaving(paintContext.getPointEps());
 	}
 
 	/**
