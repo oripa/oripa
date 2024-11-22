@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.FileAccessService;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
@@ -44,7 +43,6 @@ import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.StringID;
 
@@ -70,11 +68,6 @@ public class MainFramePresenter {
 	private final PaintContext paintContext;
 	private final MouseActionHolder actionHolder;
 
-	// data access
-	private final FileAccessService<Doc> dataFileAccess;
-
-	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
-
 	public MainFramePresenter(
 			final MainFrameView view,
 			final MainFrameDialogFactory dialogFactory,
@@ -86,9 +79,7 @@ public class MainFramePresenter {
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final Project project,
 			final PaintContext paintContext,
-			final FileAccessService<Doc> dataFileAccess,
-			final List<GraphicMouseActionPlugin> plugins,
-			final Supplier<CreasePatternFOLDConfig> foldConfigFactory) {
+			final List<GraphicMouseActionPlugin> plugins) {
 
 		this.view = view;
 		this.dialogFactory = dialogFactory;
@@ -103,10 +94,6 @@ public class MainFramePresenter {
 
 		this.actionHolder = mouseActionHolder;
 		this.statePopperFactory = statePopperFactory;
-
-		this.dataFileAccess = dataFileAccess;
-
-		this.foldConfigFactory = foldConfigFactory;
 
 		presentationLogic.loadIniFile();
 
@@ -250,7 +237,7 @@ public class MainFramePresenter {
 	}
 
 	private void modifySavingActions() {
-		dataFileAccess.setConfigToSavingAction(DocFileTypes.fold(), this::createFOLDConfig);
+		presentationLogic.modifySavingActions();
 	}
 
 	private void exit() {
@@ -295,9 +282,13 @@ public class MainFramePresenter {
 	 * saves project without opening a dialog
 	 */
 	private void saveFileToCurrentPath(final FileType<Doc> type) {
-		var filePath = presentationLogic.saveFileToCurrentPath(type);
+		try {
+			var filePath = presentationLogic.saveFileToCurrentPath(type);
 
-		afterSaveFile(filePath);
+			afterSaveFile(filePath);
+		} catch (Exception e) {
+			view.showSaveFailureErrorMessage(e);
+		}
 	}
 
 	/**
@@ -305,9 +296,13 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void saveFileUsingGUI(final FileType<Doc>... types) {
-		var filePath = presentationLogic.saveFileUsingGUI(types);
+		try {
+			var filePath = presentationLogic.saveFileUsingGUI(types);
 
-		afterSaveFile(filePath);
+			afterSaveFile(filePath);
+		} catch (Exception e) {
+			view.showSaveFailureErrorMessage(e);
+		}
 	}
 
 	/**
@@ -316,7 +311,11 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void exportFileUsingGUI(final FileType<Doc>... types) {
-		presentationLogic.saveFileUsingGUI(types);
+		try {
+			presentationLogic.saveFileUsingGUI(types);
+		} catch (Exception e) {
+			view.showSaveFailureErrorMessage(e);
+		}
 	}
 
 	/**
@@ -336,13 +335,6 @@ public class MainFramePresenter {
 		presentationLogic.updateTitleText();
 	}
 
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = foldConfigFactory.get();
-		config.setEps(paintContext.getPointEps());
-
-		return config;
-	}
-
 	/**
 	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
 	 * model check before saving.
@@ -357,16 +349,24 @@ public class MainFramePresenter {
 	 * @param filePath
 	 */
 	private void loadFile(final String filePath) {
-		presentationLogic.loadFile(filePath);
-		afterLoadFile();
+		try {
+			presentationLogic.loadFile(filePath);
+			afterLoadFile();
+		} catch (Exception e) {
+			view.showLoadFailureErrorMessage(e);
+		}
 	}
 
 	/**
 	 * This method opens the file dialog and load the selected file.
 	 */
 	private void loadFileUsingGUI() {
-		presentationLogic.loadFileUsingGUI();
-		afterLoadFile();
+		try {
+			presentationLogic.loadFileUsingGUI();
+			afterLoadFile();
+		} catch (Exception e) {
+			view.showLoadFailureErrorMessage(e);
+		}
 	}
 
 	/**

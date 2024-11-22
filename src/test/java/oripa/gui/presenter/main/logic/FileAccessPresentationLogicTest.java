@@ -37,7 +37,6 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.projectprop.Property;
 import oripa.gui.presenter.main.PainterScreenPresenter;
-import oripa.gui.presenter.main.logic.FileAccessPresentationLogic;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.ChildFrameManager;

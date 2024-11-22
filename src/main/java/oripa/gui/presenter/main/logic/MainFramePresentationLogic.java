@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,6 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
-import oripa.gui.presenter.main.DocFileSelectionPresenter;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
@@ -53,6 +53,8 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
+import oripa.persistence.doc.DocFileTypes;
+import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -89,6 +91,7 @@ public class MainFramePresentationLogic {
 	private final FileAccessService<Doc> dataFileAccess;
 	private final FileHistory fileHistory;
 	private final FileFactory fileFactory;
+	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
 
 	// services
 	private final PaintContextModification paintContextModification;
@@ -116,6 +119,7 @@ public class MainFramePresentationLogic {
 			final IniFileAccess iniFileAccess,
 			final FileAccessService<Doc> dataFileAccess,
 			final FileFactory fileFactory,
+			final Supplier<CreasePatternFOLDConfig> foldConfigFactory,
 			final ResourceHolder resourceHolder) {
 
 		this.view = view;
@@ -144,6 +148,7 @@ public class MainFramePresentationLogic {
 		this.uiPanelPresenter = uiPanelPresenter;
 		this.screenPresenter = screenPresenter;
 
+		this.foldConfigFactory = foldConfigFactory;
 		this.resourceHolder = resourceHolder;
 	}
 
@@ -249,6 +254,17 @@ public class MainFramePresentationLogic {
 		view.buildFileMenu();
 	}
 
+	public void modifySavingActions() {
+		dataFileAccess.setConfigToSavingAction(DocFileTypes.fold(), this::createFOLDConfig);
+	}
+
+	private CreasePatternFOLDConfig createFOLDConfig() {
+		var config = foldConfigFactory.get();
+		config.setEps(paintContext.getPointEps());
+
+		return config;
+	}
+
 	/**
 	 * saves project without opening a dialog
 	 */
@@ -268,11 +284,13 @@ public class MainFramePresentationLogic {
 	 */
 	public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
 		var directory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName().get();
+		var fileName = project.getDataFileName().orElse("newFile.opx");
+
+		logger.debug("saveFilelUsingGUI at {}, {}", directory, fileName);
 
 		File defaultFile = fileFactory.create(
 				directory,
-				fileName.isEmpty() ? "newFile.opx" : fileName);
+				fileName);
 
 		var filePath = defaultFile.getPath();
 
