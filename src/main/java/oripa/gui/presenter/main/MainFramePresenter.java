@@ -282,9 +282,13 @@ public class MainFramePresenter {
 	 * saves project without opening a dialog
 	 */
 	private void saveFileToCurrentPath(final FileType<Doc> type) {
-		var filePath = presentationLogic.saveFileToCurrentPath(type);
+		try {
+			var filePath = presentationLogic.saveFileToCurrentPath(type);
 
-		afterSaveFile(filePath);
+			afterSaveFile(filePath);
+		} catch (Exception e) {
+			view.showSaveFailureErrorMessage(e);
+		}
 	}
 
 	/**
@@ -292,9 +296,13 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void saveFileUsingGUI(final FileType<Doc>... types) {
-		var filePath = presentationLogic.saveFileUsingGUI(types);
+		try {
+			var filePath = presentationLogic.saveFileUsingGUI(types);
 
-		afterSaveFile(filePath);
+			afterSaveFile(filePath);
+		} catch (Exception e) {
+			view.showSaveFailureErrorMessage(e);
+		}
 	}
 
 	/**
@@ -303,7 +311,11 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private void exportFileUsingGUI(final FileType<Doc>... types) {
-		presentationLogic.saveFileUsingGUI(types);
+		try {
+			presentationLogic.saveFileUsingGUI(types);
+		} catch (Exception e) {
+			view.showSaveFailureErrorMessage(e);
+		}
 	}
 
 	/**
@@ -337,16 +349,24 @@ public class MainFramePresenter {
 	 * @param filePath
 	 */
 	private void loadFile(final String filePath) {
-		presentationLogic.loadFile(filePath);
-		afterLoadFile();
+		try {
+			presentationLogic.loadFile(filePath);
+			afterLoadFile();
+		} catch (Exception e) {
+			view.showLoadFailureErrorMessage(e);
+		}
 	}
 
 	/**
 	 * This method opens the file dialog and load the selected file.
 	 */
 	private void loadFileUsingGUI() {
-		presentationLogic.loadFileUsingGUI();
-		afterLoadFile();
+		try {
+			presentationLogic.loadFileUsingGUI();
+			afterLoadFile();
+		} catch (Exception e) {
+			view.showLoadFailureErrorMessage(e);
+		}
 	}
 
 	/**
