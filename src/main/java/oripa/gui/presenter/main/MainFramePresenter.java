@@ -37,7 +37,6 @@ import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.SubFrameFactory;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
@@ -69,7 +68,6 @@ public class MainFramePresenter {
 	public MainFramePresenter(
 			final MainFrameView view,
 			final MainFrameDialogFactory dialogFactory,
-			final SubFrameFactory subFrameFactory,
 			final MainFramePresentationLogic presentationLogic,
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final MouseActionHolder mouseActionHolder,

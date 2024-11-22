@@ -306,7 +306,6 @@ public class ORIPA {
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					dialogFactory,
-					subFrameFactory,
 					presentationLogic,
 					mainComponentPresenterFactory,
 					mouseActionHolder,

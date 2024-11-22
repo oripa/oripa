@@ -36,10 +36,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.application.FileAccessService;
-import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
@@ -50,11 +47,9 @@ import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PropertyDialogView;
-import oripa.gui.view.main.SubFrameFactory;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceKey;
 import oripa.swing.view.main.ArrayCopyDialog;
@@ -74,9 +69,6 @@ class MainFramePresenterTest {
 	MainFrameDialogFactory dialogFactory;
 
 	@Mock
-	SubFrameFactory subFrameFactory;
-
-	@Mock
 	MainFramePresentationLogic presentationLogic;
 
 	@Mock
@@ -92,25 +84,13 @@ class MainFramePresenterTest {
 	PaintContext paintContext;
 
 	@Mock
-	CutModelOutlinesHolder cutModelOutlinesHolder;
-
-	@Mock
 	MouseActionHolder mouseActionHolder;
 
 	@Mock
 	StatePopperFactory<EditMode> statePopperFactory;
 
 	@Mock
-	IniFileAccess iniFileAccess;
-
-	@Mock
-	FileAccessService<Doc> dataFileAccess;
-
-	@Mock
 	List<GraphicMouseActionPlugin> plugins;
-
-	@Mock
-	Supplier<CreasePatternFOLDConfig> foldConfigFactory;
 
 	@Nested
 	class Constructor {
@@ -847,7 +827,6 @@ class MainFramePresenterTest {
 		return new MainFramePresenter(
 				view,
 				dialogFactory,
-				subFrameFactory,
 				presentationLogic,
 				componentPresenterFactory,
 				mouseActionHolder,
