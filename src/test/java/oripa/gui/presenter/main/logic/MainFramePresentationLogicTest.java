@@ -35,6 +35,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -57,8 +59,6 @@ import oripa.gui.presenter.main.DocFileSelectionPresenter;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
-import oripa.gui.presenter.main.logic.FileAccessPresentationLogic;
-import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
@@ -68,6 +68,7 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
+import oripa.persistence.doc.DocFileTypes;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
@@ -247,6 +248,33 @@ public class MainFramePresentationLogicTest {
 			verify(view, never()).buildFileMenu();
 		}
 
+	}
+
+	@Nested
+	class TestModifySavingActions {
+		@Captor
+		ArgumentCaptor<Supplier<Object>> foldConfigCaptor;
+
+		@Test
+		void saveConfigurationOfFOLDShouldBeDone() {
+
+			when(paintContext.getPointEps()).thenReturn(1e-8);
+
+			CreasePatternFOLDConfig config = mock();
+
+			when(foldConfigFactory.get()).thenReturn(config);
+
+			// execute
+			presentationLogic.modifySavingActions();
+
+			verify(dataFileAccess).setConfigToSavingAction(eq(DocFileTypes.fold()), foldConfigCaptor.capture());
+
+			var createdConfig = foldConfigCaptor.getValue().get();
+
+			assertEquals(config, createdConfig);
+
+			verify(config).setEps(anyDouble());
+		}
 	}
 
 	@Nested

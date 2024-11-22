@@ -18,7 +18,6 @@
  */
 package oripa.gui.presenter.main;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -142,22 +141,11 @@ class MainFramePresenterTest {
 			@Test
 			void saveConfigurationOfFOLDShouldBeDone() {
 
-				when(paintContext.getPointEps()).thenReturn(1e-8);
-
 				setupBindingFactory();
-
-				CreasePatternFOLDConfig config = mock();
-				setupFOLDConfigFactory(config);
 
 				construct();
 
-				verify(dataFileAccess).setConfigToSavingAction(eq(DocFileTypes.fold()), foldConfigCaptor.capture());
-
-				var createdConfig = foldConfigCaptor.getValue().get();
-
-				assertEquals(config, createdConfig);
-
-				verify(config).setEps(anyDouble());
+				verify(presentationLogic).modifySavingActions();
 			}
 		}
 
@@ -883,23 +871,12 @@ class MainFramePresenterTest {
 				statePopperFactory,
 				project,
 				paintContext,
-				dataFileAccess,
-				plugins,
-				foldConfigFactory);
+				plugins);
 	}
 
 	void setupBindingFactory() {
 		when(bindingFactory.createState(anyString())).thenReturn(mock());
 		when(bindingFactory.createState(anyString(), any(), any())).thenReturn(mock());
-	}
-
-	void setupFOLDConfigFactory(final CreasePatternFOLDConfig config) {
-		when(foldConfigFactory.get()).thenReturn(config);
-	}
-
-	@Test
-	void test() {
-		assertNotNull("Not yet implemented");
 	}
 
 }

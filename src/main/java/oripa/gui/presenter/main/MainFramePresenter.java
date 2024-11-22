@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.FileAccessService;
 import oripa.appstate.StatePopperFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
@@ -44,7 +43,6 @@ import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.StringID;
 
@@ -70,11 +68,6 @@ public class MainFramePresenter {
 	private final PaintContext paintContext;
 	private final MouseActionHolder actionHolder;
 
-	// data access
-	private final FileAccessService<Doc> dataFileAccess;
-
-	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
-
 	public MainFramePresenter(
 			final MainFrameView view,
 			final MainFrameDialogFactory dialogFactory,
@@ -86,9 +79,7 @@ public class MainFramePresenter {
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final Project project,
 			final PaintContext paintContext,
-			final FileAccessService<Doc> dataFileAccess,
-			final List<GraphicMouseActionPlugin> plugins,
-			final Supplier<CreasePatternFOLDConfig> foldConfigFactory) {
+			final List<GraphicMouseActionPlugin> plugins) {
 
 		this.view = view;
 		this.dialogFactory = dialogFactory;
@@ -103,10 +94,6 @@ public class MainFramePresenter {
 
 		this.actionHolder = mouseActionHolder;
 		this.statePopperFactory = statePopperFactory;
-
-		this.dataFileAccess = dataFileAccess;
-
-		this.foldConfigFactory = foldConfigFactory;
 
 		presentationLogic.loadIniFile();
 
@@ -250,7 +237,7 @@ public class MainFramePresenter {
 	}
 
 	private void modifySavingActions() {
-		dataFileAccess.setConfigToSavingAction(DocFileTypes.fold(), this::createFOLDConfig);
+		presentationLogic.modifySavingActions();
 	}
 
 	private void exit() {
@@ -334,13 +321,6 @@ public class MainFramePresenter {
 
 		presentationLogic.updateMenu();
 		presentationLogic.updateTitleText();
-	}
-
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = foldConfigFactory.get();
-		config.setEps(paintContext.getPointEps());
-
-		return config;
 	}
 
 	/**

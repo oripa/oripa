@@ -302,6 +302,7 @@ public class ORIPA {
 					iniFileAccess,
 					docFileAccessService,
 					fileFactory,
+					foldConfigFactory,
 					resourceHolder);
 
 			var presenter = new MainFramePresenter(
@@ -315,9 +316,7 @@ public class ORIPA {
 					statePopperFactory,
 					project,
 					paintContext,
-					docFileAccessService,
-					plugins,
-					foldConfigFactory);
+					plugins);
 			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {
