@@ -284,11 +284,13 @@ public class MainFramePresentationLogic {
 	 */
 	public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
 		var directory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName().get();
+		var fileName = project.getDataFileName().orElse("newFile.opx");
+
+		logger.debug("saveFilelUsingGUI at {}, {}", directory, fileName);
 
 		File defaultFile = fileFactory.create(
 				directory,
-				fileName.isEmpty() ? "newFile.opx" : fileName);
+				fileName);
 
 		var filePath = defaultFile.getPath();
 

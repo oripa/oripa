@@ -19,8 +19,12 @@
 package oripa.project;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.domain.projectprop.Property;
 import oripa.domain.projectprop.PropertyHolder;
@@ -35,6 +39,8 @@ import oripa.persistence.doc.DocFileTypes;
  *
  */
 public class Project implements PropertyHolder {
+
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * Project property
@@ -92,9 +98,14 @@ public class Project implements PropertyHolder {
 	}
 
 	public Optional<FileType<Doc>> getProjectFileType() {
-		return projectFileTypes.stream()
+
+		var typeOpt = projectFileTypes.stream()
 				.filter(type -> type.extensionsMatch(dataFilePath))
 				.findFirst();
+
+		logger.debug("project file type: {}", typeOpt);
+
+		return typeOpt;
 	}
 
 	public boolean isProjectFile() {

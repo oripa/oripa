@@ -328,6 +328,37 @@ public class MainFramePresentationLogicTest {
 
 		@SuppressWarnings("unchecked")
 		@Test
+		void newFileOpxWhenProjectIsNotLoaded() {
+
+			when(fileHistory.getLastDirectory()).thenReturn("directory");
+
+			when(project.getDataFileName()).thenReturn(Optional.empty());
+
+			File defaultFile = mock();
+			when(defaultFile.getPath()).thenReturn("path");
+			when(fileFactory.create("directory", "newFile.opx")).thenReturn(defaultFile);
+
+			DocFileSelectionPresenter selectionPresenter = mock();
+			String selectedPath = "selected path";
+			FileSelectionResult<Doc> selectionResult = FileSelectionResult
+					.createSelectedForSave(
+							selectedPath,
+							mock());
+			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
+			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+					.thenReturn(selectionPresenter);
+
+			when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
+
+			// execute
+
+			var returnedPath = presentationLogic.saveFileUsingGUI();
+
+			assertEquals(selectedPath, returnedPath);
+		}
+
+		@SuppressWarnings("unchecked")
+		@Test
 		void noChangesWhenCanceled() {
 
 			when(fileHistory.getLastDirectory()).thenReturn("directory");
