@@ -20,13 +20,14 @@ package oripa;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.function.Supplier;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
+import oripa.application.main.DocFileAccess;
+import oripa.application.main.FileModelCheckService;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
@@ -58,11 +59,7 @@ import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
-import oripa.gui.presenter.main.logic.FileAccessPresentationLogic;
-import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
-import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
-import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
-import oripa.gui.presenter.main.logic.SwitcherBetweenPasteAndChangeOrigin;
+import oripa.gui.presenter.main.logic.*;
 import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
@@ -74,9 +71,7 @@ import oripa.gui.viewsetting.main.MainFrameSettingImpl;
 import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.dao.FileDAO;
-import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
 import oripa.persistence.entity.OrigamiModelFileSelectionSupportSelectorFactory;
 import oripa.project.Project;
@@ -127,6 +122,9 @@ public class ORIPA {
 					new MainFrameSettingImpl(),
 					new PainterScreenSettingImpl(),
 					new UIPanelSettingImpl());
+
+			var screenSetting = mainViewSetting.getPainterScreenSetting();
+
 			var mainFrame = new MainFrame(mainViewSetting, viewUpdateSupport);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -180,14 +178,17 @@ public class ORIPA {
 							domainContext.getByValueContext(),
 							presentationContext.getTypeForChangeContext()));
 
-			var bindingFactory = new BindingObjectFactoryFacade(stateFactory, setterFactory,
+			var bindingFactory = new BindingObjectFactoryFacade(
+					stateFactory,
+					setterFactory,
+					statePopperFactory,
 					new PluginPaintBoundStateFactory(stateManager, setterFactory));
 
 			var fileFactory = new FileFactory();
 
 			var subFrameFactory = new SubSwingFrameFactory(
 					new FoldabilityCheckSwingFrameFactory(childFrameManager),
-					new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
+					new ModelViewSwingFrameFactory(screenSetting,
 							childFrameManager),
 					new EstimationResultSwingFrameFactory(childFrameManager));
 			var fileChooserFactory = new FileChooserSwingFactory();
@@ -217,7 +218,7 @@ public class ORIPA {
 
 			var subFramePresenterFactory = new SubFramePresenterFactory(
 					fileChooserFactory,
-					mainViewSetting.getPainterScreenSetting(),
+					screenSetting,
 					foldedModelfileSelectionPresenterFactory,
 					foldedModelFileAccessFactory,
 					modelViewComponentPresenterFactory,
@@ -226,30 +227,33 @@ public class ORIPA {
 					cutModelOutlinesHolder,
 					fileFactory);
 
-			var docFileAccessService = new FileAccessService<Doc>(
+			var docFileAccess = new DocFileAccess(
 					new FileDAO<>(
 							new DocFileSelectionSupportSelectorFactory().create(fileFactory),
-							fileFactory));
+							fileFactory),
+					paintContext);
 
 			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
 					new TestedOrigamiModelFactory(),
 					new FolderFactory());
 			var modelIndexChangeListenerPutter = new ModelIndexChangeListenerPutter();
 			var modelFactory = new TestedOrigamiModelFactory();
+
+			var fileModelCheckService = new FileModelCheckService(paintContext, modelFactory);
+
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
-					mainViewSetting.getPainterScreenSetting(),
+					screenSetting,
 					subFrameFactory,
 					subFramePresenterFactory,
 					modelIndexChangeListenerPutter,
 					fileChooserFactory,
 					modelComputationFacadeFactory,
 					presentationContext,
-					statePopperFactory,
 					viewUpdateSupport,
 					domainContext,
 					cutModelOutlinesHolder,
 					bindingFactory,
-					modelFactory,
+					fileModelCheckService,
 					fileFactory,
 					extensionCorrector);
 
@@ -260,8 +264,6 @@ public class ORIPA {
 			var project = new Project();
 
 			var paintContextModification = new PaintContextModification();
-
-			Supplier<CreasePatternFOLDConfig> foldConfigFactory = () -> new CreasePatternFOLDConfig();
 
 			var resourceHolder = ResourceHolder.getInstance();
 
@@ -274,46 +276,68 @@ public class ORIPA {
 					mainFrame,
 					childFrameManager,
 					screenPresenter,
-					mainViewSetting.getPainterScreenSetting(),
+					screenSetting,
 					paintContextModification,
 					paintContext,
 					cutModelOutlinesHolder,
 					project,
-					docFileAccessService);
+					docFileAccess);
+
+			var creasePatternViewContext = presentationContext.getViewContext();
+			var iniFileAccessPresentationLogic = new IniFileAccessPresentationLogic(
+					mainFrame,
+					screenSetting,
+					creasePatternViewContext,
+					iniFileAccess,
+					fileHistory);
+
+			var clearActionPresentationLogic = new ClearActionPresentationLogic(
+					mainFrame,
+					screenUpdater,
+					screenSetting,
+					childFrameManager,
+					paintContext,
+					cutModelOutlinesHolder,
+					project,
+					paintContextModification);
+
+			var undoRedoPresentationLogic = new UndoRedoPresentationLogic(
+					screenUpdater,
+					mouseActionHolder,
+					paintContext);
+
+			var mainFrameFilePresentationLogic = new MainFrameFilePresentationLogic(
+					mainFrame,
+					mainComponentPresenterFactory,
+					fileAccessPresentationLogic,
+					project,
+					docFileAccess,
+					fileHistory,
+					fileFactory);
 
 			var presentationLogic = new MainFramePresentationLogic(
 					mainFrame,
-					mainViewSetting.getPainterScreenSetting(),
-					screenUpdater,
-					dialogFactory,
-					subFrameFactory,
 					screenPresenter,
 					uiPanelPresenter,
-					mainComponentPresenterFactory,
-					fileAccessPresentationLogic,
-					presentationContext.getViewContext(),
-					childFrameManager,
-					bindingFactory,
+					mainFrameFilePresentationLogic,
+					clearActionPresentationLogic,
+					undoRedoPresentationLogic,
+					iniFileAccessPresentationLogic,
 					project,
-					paintContext,
-					paintContextModification,
-					cutModelOutlinesHolder,
 					fileHistory,
-					iniFileAccess,
-					docFileAccessService,
-					fileFactory,
-					foldConfigFactory,
 					resourceHolder);
+
+			var paintMenuListenerFactory = new MainFramePaintMenuListenerFactory(
+					paintContext,
+					mouseActionHolder,
+					bindingFactory);
 
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					dialogFactory,
-					subFrameFactory,
 					presentationLogic,
 					mainComponentPresenterFactory,
-					mouseActionHolder,
-					bindingFactory,
-					statePopperFactory,
+					paintMenuListenerFactory,
 					project,
 					paintContext,
 					plugins);

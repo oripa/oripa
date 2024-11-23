@@ -20,31 +20,20 @@ package oripa.gui.presenter.main;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.StatePopperFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
-import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
+import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.SubFrameFactory;
-import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.project.Project;
-import oripa.resource.StringID;
 
 /**
  * @author OUCHI Koji
@@ -59,24 +48,17 @@ public class MainFramePresenter {
 	private final MainFramePresentationLogic presentationLogic;
 	private final MainComponentPresenterFactory componentPresenterFactory;
 
-	private final StatePopperFactory<EditMode> statePopperFactory;
-
-	private final BindingObjectFactoryFacade bindingFactory;
-
 	private final Project project;
 
 	private final PaintContext paintContext;
-	private final MouseActionHolder actionHolder;
+	private final MainFramePaintMenuListenerFactory paintMenuListenerFactory;
 
 	public MainFramePresenter(
 			final MainFrameView view,
 			final MainFrameDialogFactory dialogFactory,
-			final SubFrameFactory subFrameFactory,
 			final MainFramePresentationLogic presentationLogic,
 			final MainComponentPresenterFactory componentPresenterFactory,
-			final MouseActionHolder mouseActionHolder,
-			final BindingObjectFactoryFacade bindingFactory,
-			final StatePopperFactory<EditMode> statePopperFactory,
+			final MainFramePaintMenuListenerFactory paintMenuListenerFactory,
 			final Project project,
 			final PaintContext paintContext,
 			final List<GraphicMouseActionPlugin> plugins) {
@@ -84,20 +66,15 @@ public class MainFramePresenter {
 		this.view = view;
 		this.dialogFactory = dialogFactory;
 
-		this.bindingFactory = bindingFactory;
-
 		this.presentationLogic = presentationLogic;
 		this.componentPresenterFactory = componentPresenterFactory;
 
 		this.project = project;
 		this.paintContext = paintContext;
 
-		this.actionHolder = mouseActionHolder;
-		this.statePopperFactory = statePopperFactory;
+		this.paintMenuListenerFactory = paintMenuListenerFactory;
 
 		presentationLogic.loadIniFile();
-
-		modifySavingActions();
 
 		addListeners();
 
@@ -140,24 +117,18 @@ public class MainFramePresenter {
 
 		view.addUndoButtonListener(() -> {
 			try {
-				actionHolder.getMouseAction().orElseThrow().undo(paintContext);
-			} catch (NoSuchElementException ex) {
-				logger.error("mouseAction should not be null.", ex);
+				presentationLogic.undo();
 			} catch (Exception ex) {
 				logger.error("Wrong implementation.", ex);
 			}
-			presentationLogic.updateScreen();
 		});
 
 		view.addRedoButtonListener(() -> {
 			try {
-				actionHolder.getMouseAction().orElseThrow().redo(paintContext);
-			} catch (NoSuchElementException ex) {
-				logger.error("mouseAction should not be null.", ex);
+				presentationLogic.redo();
 			} catch (Exception ex) {
 				logger.error("Wrong implementation.", ex);
 			}
-			presentationLogic.updateScreen();
 		});
 
 		view.addClearButtonListener(presentationLogic::clear);
@@ -178,11 +149,7 @@ public class MainFramePresenter {
 		view.addMRUFileButtonListener(this::loadFile);
 		view.addMRUFilesMenuItemUpdateListener(presentationLogic::updateMRUFilesMenuItem);
 
-		view.setEstimationResultSaveColorsListener((front, back) -> {
-			var property = project.getProperty();
-			property.putFrontColorCode(ColorUtil.convertColorToCode(front));
-			property.putBackColorCode(ColorUtil.convertColorToCode(back));
-		});
+		view.setEstimationResultSaveColorsListener(presentationLogic::setEstimationResultSaveColors);
 
 		view.setPaperDomainOfModelChangeListener(presentationLogic::setPaperDomainOfModel);
 
@@ -190,54 +157,45 @@ public class MainFramePresenter {
 	}
 
 	private void addImportActionListener() {
-		var state = bindingFactory.createState(StringID.IMPORT_CP_ID);
-
-		view.addImportButtonListener(() -> presentationLogic.importFileUsingGUI(state));
-
+		var listener = paintMenuListenerFactory.createImportButtonListener(presentationLogic::importFileUsingGUI);
+		view.addImportButtonListener(listener);
 	}
 
 	private void addPaintMenuItemsListener() {
 		/*
 		 * For changing outline
 		 */
-		var changeOutlineState = bindingFactory.createState(StringID.EDIT_CONTOUR_ID);
-		view.addChangeOutlineButtonListener(changeOutlineState::performActions);
+		var changeOutlineListener = paintMenuListenerFactory.createChangeOutlineButtonListener();
+		view.addChangeOutlineButtonListener(changeOutlineListener);
 
 		/*
 		 * For selecting all lines
 		 */
-		var selectAllState = bindingFactory.createState(StringID.SELECT_ALL_LINE_ID);
-		view.addSelectAllButtonListener(selectAllState::performActions);
-		var selectAllListener = new SelectAllLineActionListener(paintContext);
+		var selectAllListener = paintMenuListenerFactory.createSelectAllLineActionListener();
 		view.addSelectAllButtonListener(selectAllListener);
 
 		/*
 		 * For starting copy-and-paste
 		 */
-		Supplier<Boolean> detectCopyPasteError = () -> paintContext.getPainter().countSelectedLines() == 0;
-		var copyPasteState = bindingFactory.createState(StringID.COPY_PASTE_ID,
-				detectCopyPasteError, view::showCopyPasteErrorMessage);
-		view.addCopyAndPasteButtonListener(copyPasteState::performActions);
+		var copyPasteListener = paintMenuListenerFactory
+				.createCopyAndPasteButtonListener(view::showCopyPasteErrorMessage);
+		view.addCopyAndPasteButtonListener(copyPasteListener);
 
 		/*
 		 * For starting cut-and-paste
 		 */
-		var cutPasteState = bindingFactory.createState(StringID.CUT_PASTE_ID,
-				detectCopyPasteError, view::showCopyPasteErrorMessage);
-		view.addCutAndPasteButtonListener(cutPasteState::performActions);
+		var cutPasteListener = paintMenuListenerFactory
+				.createCutAndPasteButtonListener(view::showCopyPasteErrorMessage);
+		view.addCutAndPasteButtonListener(cutPasteListener);
 
-		var statePopper = statePopperFactory.createForState();
-		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
-				presentationLogic::updateScreen);
+		var unselectListener = paintMenuListenerFactory
+				.createUnselectAllItemsActionListener(presentationLogic::updateScreen);
 		view.addUnselectAllButtonListener(unselectListener);
 
-		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, presentationLogic::updateScreen);
+		var deleteLinesListener = paintMenuListenerFactory
+				.createDeleteSelectedLinesActionListener(presentationLogic::updateScreen);
 		view.addDeleteSelectedLinesButtonListener(deleteLinesListener);
 
-	}
-
-	private void modifySavingActions() {
-		presentationLogic.modifySavingActions();
 	}
 
 	private void exit() {
@@ -283,8 +241,8 @@ public class MainFramePresenter {
 	 */
 	private void saveFileToCurrentPath(final FileType<Doc> type) {
 		try {
+			beforeSave();
 			var filePath = presentationLogic.saveFileToCurrentPath(type);
-
 			afterSaveFile(filePath);
 		} catch (Exception e) {
 			view.showSaveFailureErrorMessage(e);
@@ -297,8 +255,8 @@ public class MainFramePresenter {
 	@SafeVarargs
 	private void saveFileUsingGUI(final FileType<Doc>... types) {
 		try {
+			beforeSave();
 			var filePath = presentationLogic.saveFileUsingGUI(types);
-
 			afterSaveFile(filePath);
 		} catch (Exception e) {
 			view.showSaveFailureErrorMessage(e);
@@ -312,10 +270,15 @@ public class MainFramePresenter {
 	@SafeVarargs
 	private void exportFileUsingGUI(final FileType<Doc>... types) {
 		try {
+			beforeSave();
 			presentationLogic.saveFileUsingGUI(types);
 		} catch (Exception e) {
 			view.showSaveFailureErrorMessage(e);
 		}
+	}
+
+	private void beforeSave() {
+		presentationLogic.modifySavingActions();
 	}
 
 	/**

@@ -18,48 +18,26 @@
  */
 package oripa.gui.presenter.main.logic;
 
-import java.io.File;
-import java.io.IOException;
+import java.awt.Color;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.FileAccessService;
-import oripa.application.main.IniFileAccess;
-import oripa.application.main.PaintContextModification;
-import oripa.appstate.ApplicationState;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.paint.PaintContext;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
-import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.file.FileSelectionResult;
-import oripa.gui.presenter.file.UserAction;
-import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
-import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.PainterScreenSetting;
-import oripa.gui.view.main.SubFrameFactory;
-import oripa.gui.view.util.ChildFrameManager;
-import oripa.persistence.dao.DataAccessException;
+import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -72,83 +50,45 @@ public class MainFramePresentationLogic {
 
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
-	private final MainComponentPresenterFactory componentPresenterFactory;
-	private final FileAccessPresentationLogic fileAccessPresentationLogic;
 
-	private final CreasePatternViewContext creasePatternViewContext;
-
-	private final ViewScreenUpdater screenUpdater;
-	private final PainterScreenSetting screenSetting;
-
-	private final ChildFrameManager childFrameManager;
+	private final MainFrameFilePresentationLogic mainFrameFilePresentationLogic;
+	private final UndoRedoPresentationLogic undoRedoPresentationLogic;
+	private final ClearActionPresentationLogic clearActionPresentationLogic;
+	private final IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
 	private final Project project;
 
-	private final PaintContext paintContext;
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
-
-	private final IniFileAccess iniFileAccess;
-	private final FileAccessService<Doc> dataFileAccess;
 	private final FileHistory fileHistory;
-	private final FileFactory fileFactory;
-	private final Supplier<CreasePatternFOLDConfig> foldConfigFactory;
-
-	// services
-	private final PaintContextModification paintContextModification;
 
 	private final ResourceHolder resourceHolder;
 
 	public MainFramePresentationLogic(
 			final MainFrameView view,
-			final PainterScreenSetting screenSetting,
-			final ViewScreenUpdater screenUpdater,
-			final MainFrameDialogFactory dialogFactory,
-			final SubFrameFactory subFrameFactory,
 			final PainterScreenPresenter screenPresenter,
 			final UIPanelPresenter uiPanelPresenter,
-			final MainComponentPresenterFactory componentPresenterFactory,
-			final FileAccessPresentationLogic fileAccessPresentationLogic,
-			final CreasePatternViewContext creasePatternViewContext,
-			final ChildFrameManager childFrameManager,
-			final BindingObjectFactoryFacade bindingFactory,
+			final MainFrameFilePresentationLogic mainFrameFilePresentationLogic,
+			final ClearActionPresentationLogic clearActionPresentationLogic,
+			final UndoRedoPresentationLogic undoRedoPresentationLogic,
+			final IniFileAccessPresentationLogic iniFileAccessPresentationLogic,
 			final Project project,
-			final PaintContext paintContext,
-			final PaintContextModification paintContextModification,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileHistory fileHistory,
-			final IniFileAccess iniFileAccess,
-			final FileAccessService<Doc> dataFileAccess,
-			final FileFactory fileFactory,
-			final Supplier<CreasePatternFOLDConfig> foldConfigFactory,
 			final ResourceHolder resourceHolder) {
 
 		this.view = view;
 
-		this.childFrameManager = childFrameManager;
-
-		this.componentPresenterFactory = componentPresenterFactory;
-
-		this.fileAccessPresentationLogic = fileAccessPresentationLogic;
-
-		this.creasePatternViewContext = creasePatternViewContext;
+		this.mainFrameFilePresentationLogic = mainFrameFilePresentationLogic;
+		this.clearActionPresentationLogic = clearActionPresentationLogic;
+		this.iniFileAccessPresentationLogic = iniFileAccessPresentationLogic;
 
 		this.project = project;
-		this.paintContext = paintContext;
-		this.paintContextModification = paintContextModification;
-		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 
 		this.fileHistory = fileHistory;
-		this.iniFileAccess = iniFileAccess;
-		this.dataFileAccess = dataFileAccess;
-		this.fileFactory = fileFactory;
 
-		this.screenSetting = screenSetting;
-		this.screenUpdater = screenUpdater;
+		this.undoRedoPresentationLogic = undoRedoPresentationLogic;
 
 		this.uiPanelPresenter = uiPanelPresenter;
 		this.screenPresenter = screenPresenter;
 
-		this.foldConfigFactory = foldConfigFactory;
 		this.resourceHolder = resourceHolder;
 	}
 
@@ -161,7 +101,7 @@ public class MainFramePresentationLogic {
 	}
 
 	public void updateScreen() {
-		screenUpdater.updateScreen();
+		screenPresenter.updateScreen();
 	}
 
 	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
@@ -188,38 +128,19 @@ public class MainFramePresentationLogic {
 
 	public void saveIniFile() {
 		try {
-			iniFileAccess.save(fileHistory, creasePatternViewContext);
-		} catch (IllegalStateException e) {
-			logger.error("error when building ini file data", e);
+			iniFileAccessPresentationLogic.saveIniFile();
+		} catch (Exception e) {
+			logger.error("error when saving ini data", e);
 			view.showSaveIniFileFailureErrorMessage(e);
 		}
 	}
 
 	public void loadIniFile() {
-		var ini = iniFileAccess.load();
-
-		fileHistory.loadFromInitData(ini);
-		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
-
-		logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
-		screenSetting.setMVLineVisible(ini.isMvLineVisible());
-
-		logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
-		screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
-
-		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
-		screenSetting.setVertexVisible(ini.isVertexVisible());
+		iniFileAccessPresentationLogic.loadIniFile();
 	}
 
 	public void clear() {
-		paintContextModification.clear(paintContext, cutModelOutlinesHolder);
-		project.clear();
-
-		screenSetting.setGridVisible(true);
-
-		childFrameManager.closeAll(view);
-
-		screenUpdater.updateScreen();
+		clearActionPresentationLogic.clear();
 		updateTitleText();
 	}
 
@@ -254,28 +175,23 @@ public class MainFramePresentationLogic {
 		view.buildFileMenu();
 	}
 
-	public void modifySavingActions() {
-		dataFileAccess.setConfigToSavingAction(DocFileTypes.fold(), this::createFOLDConfig);
+	public void undo() {
+		undoRedoPresentationLogic.undo();
 	}
 
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = foldConfigFactory.get();
-		config.setEps(paintContext.getPointEps());
+	public void redo() {
+		undoRedoPresentationLogic.redo();
+	}
 
-		return config;
+	public void modifySavingActions() {
+		mainFrameFilePresentationLogic.modifySavingActions();
 	}
 
 	/**
 	 * saves project without opening a dialog
 	 */
 	public String saveFileToCurrentPath(final FileType<Doc> type) {
-		var filePath = project.getDataFilePath();
-
-		try {
-			return fileAccessPresentationLogic.saveFile(filePath, type);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			return filePath;
-		}
+		return mainFrameFilePresentationLogic.saveFileToCurrentPath(type);
 
 	}
 
@@ -283,33 +199,7 @@ public class MainFramePresentationLogic {
 	 * save file without origami model check
 	 */
 	public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
-		var directory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName().orElse("newFile.opx");
-
-		logger.debug("saveFilelUsingGUI at {}, {}", directory, fileName);
-
-		File defaultFile = fileFactory.create(
-				directory,
-				fileName);
-
-		var filePath = defaultFile.getPath();
-
-		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-				view, dataFileAccess.getFileSelectionService());
-
-		var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
-				: presenter.saveUsingGUI(filePath, List.of(types));
-
-		if (selection.action() == UserAction.CANCELED) {
-			return project.getDataFilePath();
-		}
-
-		try {
-			return fileAccessPresentationLogic.saveFile(selection.path(), selection.type());
-		} catch (DataAccessException | IllegalArgumentException e) {
-			return project.getDataFilePath();
-		}
-
+		return mainFrameFilePresentationLogic.saveFileUsingGUI(types);
 	}
 
 	/**
@@ -317,44 +207,14 @@ public class MainFramePresentationLogic {
 	 * model check before saving.
 	 */
 	public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
-		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-				view,
-				dataFileAccess.getFileSelectionService());
-
-		FileSelectionResult<Doc> selection;
-		try {
-			selection = presenter.saveFileWithModelCheck(
-					paintContext.getCreasePattern(),
-					fileHistory.getLastDirectory(),
-					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
-		} catch (IOException e) {
-			logger.error("error", e);
-			view.showSaveFailureErrorMessage(e);
-			return;
-		}
-
-		if (selection.action() == UserAction.CANCELED) {
-			return;
-		}
-
-		fileAccessPresentationLogic.saveFile(selection.path(), type);
-
+		mainFrameFilePresentationLogic.exportFileUsingGUIWithModelCheck(type);
 	}
 
 	/**
 	 * This method opens the file dialog and load the selected file.
 	 */
 	public void loadFileUsingGUI() {
-		var selection = componentPresenterFactory.createDocFileSelectionPresenter(
-				view,
-				dataFileAccess.getFileSelectionService())
-				.loadUsingGUI(fileHistory.getLastPath());
-
-		if (selection.action() == UserAction.CANCELED) {
-			return;
-		}
-
-		fileAccessPresentationLogic.loadFile(selection.path());
+		mainFrameFilePresentationLogic.loadFileUsingGUI();
 	}
 
 	/**
@@ -364,27 +224,19 @@ public class MainFramePresentationLogic {
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	public String loadFile(final String filePath) {
-		return fileAccessPresentationLogic.loadFile(filePath);
+		return mainFrameFilePresentationLogic.loadFile(filePath);
 	}
 
-	public void importFileUsingGUI(final ApplicationState<EditMode> state) {
-		try {
-			var selection = componentPresenterFactory.createDocFileSelectionPresenter(
-					view,
-					dataFileAccess.getFileSelectionService())
-					.loadUsingGUI(fileHistory.getLastPath());
+	public void importFileUsingGUI(final Runnable importStateAction) {
+		mainFrameFilePresentationLogic.importFileUsingGUI();
+		importStateAction.run();
+		;
+	}
 
-			if (selection.action() == UserAction.CANCELED) {
-				return;
-			}
-
-			fileAccessPresentationLogic.importFile(selection.path());
-
-			state.performActions();
-		} catch (DataAccessException | IllegalArgumentException e) {
-			view.showLoadFailureErrorMessage(e);
-		}
-
+	public void setEstimationResultSaveColors(final Color front, final Color back) {
+		var property = project.getProperty();
+		property.putFrontColorCode(ColorUtil.convertColorToCode(front));
+		property.putBackColorCode(ColorUtil.convertColorToCode(back));
 	}
 
 }

@@ -34,7 +34,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StatePopperFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
@@ -84,8 +83,6 @@ class UIPanelPresenterTest {
 	@Mock
 	PainterScreenSetting mainScreenSetting;
 
-	@Mock
-	StatePopperFactory<EditMode> statePopperFactory;
 	@Mock
 	ViewScreenUpdater screenUpdater;
 	@Mock
@@ -345,7 +342,6 @@ class UIPanelPresenterTest {
 				subFramePresenterFactory,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
-				statePopperFactory,
 				screenUpdater,
 				keyProcessing,
 				typeForChangeContext,

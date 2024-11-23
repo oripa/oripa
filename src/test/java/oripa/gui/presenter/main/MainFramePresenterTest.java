@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,27 +35,18 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.application.FileAccessService;
-import oripa.application.main.IniFileAccess;
-import oripa.appstate.StatePopperFactory;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.projectprop.Property;
 import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PropertyDialogView;
-import oripa.gui.view.main.SubFrameFactory;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.project.Project;
 import oripa.resource.ResourceKey;
 import oripa.swing.view.main.ArrayCopyDialog;
@@ -76,9 +66,6 @@ class MainFramePresenterTest {
 	MainFrameDialogFactory dialogFactory;
 
 	@Mock
-	SubFrameFactory subFrameFactory;
-
-	@Mock
 	MainFramePresentationLogic presentationLogic;
 
 	@Mock
@@ -94,25 +81,10 @@ class MainFramePresenterTest {
 	PaintContext paintContext;
 
 	@Mock
-	CutModelOutlinesHolder cutModelOutlinesHolder;
-
-	@Mock
-	MouseActionHolder mouseActionHolder;
-
-	@Mock
-	StatePopperFactory<EditMode> statePopperFactory;
-
-	@Mock
-	IniFileAccess iniFileAccess;
-
-	@Mock
-	FileAccessService<Doc> dataFileAccess;
+	MainFramePaintMenuListenerFactory paintMenuListenerFactory;
 
 	@Mock
 	List<GraphicMouseActionPlugin> plugins;
-
-	@Mock
-	Supplier<CreasePatternFOLDConfig> foldConfigFactory;
 
 	@Nested
 	class Constructor {
@@ -123,8 +95,6 @@ class MainFramePresenterTest {
 			@Test
 			void iniFileShouldBeLoaded() {
 
-				setupBindingFactory();
-
 				construct();
 
 				verify(presentationLogic).loadIniFile();
@@ -134,27 +104,9 @@ class MainFramePresenterTest {
 		}
 
 		@Nested
-		class TestModifySavingActions {
-			@Captor
-			ArgumentCaptor<Supplier<Object>> foldConfigCaptor;
-
-			@Test
-			void saveConfigurationOfFOLDShouldBeDone() {
-
-				setupBindingFactory();
-
-				construct();
-
-				verify(presentationLogic).modifySavingActions();
-			}
-		}
-
-		@Nested
 		class TestAddPlugins {
 			@Test
 			void givenPluginsShouldBeAdded() {
-
-				setupBindingFactory();
 
 				construct();
 
@@ -166,8 +118,6 @@ class MainFramePresenterTest {
 		class TestBuildFileMenu {
 			@Test
 			void buildFileMenuShouldBeCalled() {
-
-				setupBindingFactory();
 
 				construct();
 
@@ -185,8 +135,6 @@ class MainFramePresenterTest {
 
 			@Test
 			void titleTextShouldBeUpdatedWithDefaultText() {
-
-				setupBindingFactory();
 
 				construct();
 
@@ -206,8 +154,6 @@ class MainFramePresenterTest {
 				@Test
 				void exitLogicShouldBeCalled() {
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addExitButtonListener(listenerCaptor.capture());
@@ -226,8 +172,6 @@ class MainFramePresenterTest {
 				@Test
 				void clearLogicShouldBeCalled() {
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addClearButtonListener(listenerCaptor.capture());
@@ -240,64 +184,12 @@ class MainFramePresenterTest {
 			}
 
 			@Nested
-			class TestUndo {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
-
-				@Test
-				void undoLogicShouldBeCalled() {
-
-					GraphicMouseAction action = mock();
-					when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
-
-					setupBindingFactory();
-
-					construct();
-
-					verify(view).addUndoButtonListener(listenerCaptor.capture());
-
-					listenerCaptor.getValue().run();
-
-					verify(action).undo(any());
-					verify(presentationLogic).updateScreen();
-
-				}
-			}
-
-			@Nested
-			class TestRedo {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
-
-				@Test
-				void redoLogicShouldBeCalled() {
-
-					GraphicMouseAction action = mock();
-					when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
-
-					setupBindingFactory();
-
-					construct();
-
-					verify(view).addRedoButtonListener(listenerCaptor.capture());
-
-					listenerCaptor.getValue().run();
-
-					verify(action).redo(any());
-					verify(presentationLogic).updateScreen();
-
-				}
-			}
-
-			@Nested
 			class TestShowPropertyDIalog {
 				@Captor
 				ArgumentCaptor<Runnable> listenerCaptor;
 
 				@Test
 				void propertyDialogShouldBeShown() {
-
-					setupBindingFactory();
 
 					PropertyDialogView dialog = mock();
 					when(dialogFactory.createPropertyDialog(view)).thenReturn(dialog);
@@ -326,8 +218,6 @@ class MainFramePresenterTest {
 
 					when(paintContext.countSelectedLines()).thenReturn(1);
 
-					setupBindingFactory();
-
 					ArrayCopyDialog dialog = mock();
 					when(dialogFactory.createArrayCopyDialog(view)).thenReturn(dialog);
 
@@ -348,8 +238,6 @@ class MainFramePresenterTest {
 				void warningShouldBeShownWhenLinesAreNotSelected() {
 
 					when(paintContext.countSelectedLines()).thenReturn(0);
-
-					setupBindingFactory();
 
 					construct();
 
@@ -372,8 +260,6 @@ class MainFramePresenterTest {
 
 					when(paintContext.countSelectedLines()).thenReturn(1);
 
-					setupBindingFactory();
-
 					CircleCopyDialog dialog = mock();
 					when(dialogFactory.createCircleCopyDialog(view)).thenReturn(dialog);
 
@@ -395,8 +281,6 @@ class MainFramePresenterTest {
 
 					when(paintContext.countSelectedLines()).thenReturn(0);
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addCircleCopyButtonListener(listenerCaptor.capture());
@@ -416,8 +300,6 @@ class MainFramePresenterTest {
 				@Test
 				void updateLogicShouldBeCalled() {
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addMRUFilesMenuItemUpdateListener(listenerCaptor.capture());
@@ -436,11 +318,6 @@ class MainFramePresenterTest {
 				@Test
 				void putColorCodeLogicShouldBeCalled() {
 
-					setupBindingFactory();
-
-					Property property = mock();
-					when(project.getProperty()).thenReturn(property);
-
 					construct();
 
 					verify(view).setEstimationResultSaveColorsListener(listenerCaptor.capture());
@@ -449,8 +326,7 @@ class MainFramePresenterTest {
 					Color back = mock();
 					listenerCaptor.getValue().accept(front, back);
 
-					verify(property).putFrontColorCode(anyString());
-					verify(property).putBackColorCode(anyString());
+					verify(presentationLogic).setEstimationResultSaveColors(front, back);
 				}
 			}
 
@@ -461,8 +337,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void setPaperDomainOfModelLogicShouldBeCalled() {
-
-					setupBindingFactory();
 
 					construct();
 
@@ -485,8 +359,6 @@ class MainFramePresenterTest {
 
 					when(paintContext.creasePatternChangeExists()).thenReturn(false);
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addWindowClosingListener(listenerCaptor.capture());
@@ -500,8 +372,6 @@ class MainFramePresenterTest {
 				void saveIniWhenSaveCPIsCanceled() {
 
 					when(paintContext.creasePatternChangeExists()).thenReturn(true);
-
-					setupBindingFactory();
 
 					when(view.showSaveOnCloseDialog()).thenReturn(false);
 
@@ -520,8 +390,6 @@ class MainFramePresenterTest {
 
 					when(paintContext.creasePatternChangeExists()).thenReturn(true);
 
-					setupBindingFactory();
-
 					when(view.showSaveOnCloseDialog()).thenReturn(true);
 
 					construct();
@@ -538,14 +406,48 @@ class MainFramePresenterTest {
 			}
 
 			@Nested
+			class TestUndo {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void undoLogicShouldBeCalled() {
+
+					construct();
+
+					verify(view).addUndoButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().run();
+
+					verify(presentationLogic).undo();
+				}
+			}
+
+			@Nested
+			class TestRedo {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void redoLogicShouldBeCalled() {
+
+					construct();
+
+					verify(view).addRedoButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().run();
+
+					verify(presentationLogic).redo();
+				}
+			}
+
+			@Nested
 			class TestSave {
 				@Captor
 				ArgumentCaptor<Runnable> listenerCaptor;
 
 				@Test
 				void saveToCurrentPathLogicShouldBeCalledWhenProjectIsProjectFile() {
-
-					setupBindingFactory();
 
 					try (var projectStatic = mockStatic(Project.class)) {
 
@@ -562,6 +464,9 @@ class MainFramePresenterTest {
 
 						listenerCaptor.getValue().run();
 
+						// verify before save
+						verifyBeforeSave();
+
 						verify(presentationLogic).saveFileToCurrentPath(fileType);
 
 						// verify after save
@@ -573,8 +478,6 @@ class MainFramePresenterTest {
 				@SuppressWarnings("unchecked")
 				@Test
 				void saveUsingGUILogicShouldBeCalledWhenProjectIsNotProjectFile() {
-
-					setupBindingFactory();
 
 					try (var projectStatic = mockStatic(Project.class)) {
 
@@ -590,6 +493,9 @@ class MainFramePresenterTest {
 						verify(view).addSaveButtonListener(listenerCaptor.capture());
 
 						listenerCaptor.getValue().run();
+
+						// verify before save
+						verifyBeforeSave();
 
 						verify(presentationLogic).saveFileUsingGUI();
 
@@ -610,8 +516,6 @@ class MainFramePresenterTest {
 				@Test
 				void succeeds() {
 
-					setupBindingFactory();
-
 					try (var projectStatic = mockStatic(Project.class)) {
 						String path = "path";
 
@@ -625,6 +529,9 @@ class MainFramePresenterTest {
 
 						listenerCaptor.getValue().run();
 
+						// verify before save
+						verifyBeforeSave();
+
 						verify(presentationLogic).saveFileUsingGUI();
 
 						// verify after save
@@ -632,6 +539,10 @@ class MainFramePresenterTest {
 					}
 				}
 
+			}
+
+			void verifyBeforeSave() {
+				verify(presentationLogic).modifySavingActions();
 			}
 
 			void verifyAfterSave(
@@ -655,8 +566,6 @@ class MainFramePresenterTest {
 				@Test
 				void succeeds() {
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addExportFOLDButtonListener(listenerCaptor.capture());
@@ -672,8 +581,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void succeeds() {
-
-					setupBindingFactory();
 
 					construct();
 
@@ -694,6 +601,9 @@ class MainFramePresenterTest {
 
 					projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
 
+					// verify before save
+					verify(presentationLogic).modifySavingActions();
+
 					verify(presentationLogic).saveFileUsingGUI(eq(type));
 					verifyNoCallsAfterExport(isProjectFile, path, paintContext);
 				}
@@ -707,8 +617,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void succeeds() {
-
-					setupBindingFactory();
 
 					construct();
 
@@ -726,8 +634,6 @@ class MainFramePresenterTest {
 				@Test
 				void succeeds() {
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addExportCPButtonListener(listenerCaptor.capture());
@@ -743,8 +649,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void succeeds() {
-
-					setupBindingFactory();
 
 					construct();
 
@@ -791,8 +695,6 @@ class MainFramePresenterTest {
 				@Test
 				void loadUsingGUILogicShouldBeCalled() {
 
-					setupBindingFactory();
-
 					construct();
 
 					verify(view).addOpenButtonListener(listenerCaptor.capture());
@@ -812,8 +714,6 @@ class MainFramePresenterTest {
 
 				@Test
 				void loadLogicShouldBeCalled() {
-
-					setupBindingFactory();
 
 					construct();
 
@@ -837,22 +737,13 @@ class MainFramePresenterTest {
 
 			@Nested
 			class TestImport {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
 
 				@Test
-				void setsImportedCPAndDoStateAction() {
-
-					setupBindingFactory();
+				void listenerShouldBeAdded() {
 
 					construct();
 
-					verify(view).addImportButtonListener(listenerCaptor.capture());
-
-					listenerCaptor.getValue().run();
-
-					verify(presentationLogic).importFileUsingGUI(any());
-
+					verify(view).addImportButtonListener(any());
 				}
 			}
 		}
@@ -863,20 +754,12 @@ class MainFramePresenterTest {
 		return new MainFramePresenter(
 				view,
 				dialogFactory,
-				subFrameFactory,
 				presentationLogic,
 				componentPresenterFactory,
-				mouseActionHolder,
-				bindingFactory,
-				statePopperFactory,
+				paintMenuListenerFactory,
 				project,
 				paintContext,
 				plugins);
-	}
-
-	void setupBindingFactory() {
-		when(bindingFactory.createState(anyString())).thenReturn(mock());
-		when(bindingFactory.createState(anyString(), any(), any())).thenReturn(mock());
 	}
 
 }

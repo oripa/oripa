@@ -19,14 +19,12 @@
 package oripa.gui.presenter.main;
 
 import oripa.application.FileSelectionService;
-import oripa.appstate.StatePopperFactory;
+import oripa.application.main.FileModelCheckService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
 import oripa.gui.view.FrameView;
@@ -53,13 +51,12 @@ public class MainComponentPresenterFactory {
 	private final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 	private final ModelComputationFacadeFactory modelComputationFacadeFactory;
 	private final FileChooserFactory fileChooserFactory;
-	private final StatePopperFactory<EditMode> statePopperFactory;
 	private final ViewUpdateSupport viewUpdateSupport;
 	private final CreasePatternPresentationContext presentationContext;
 	private final PaintDomainContext domainContext;
 	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 	private final BindingObjectFactoryFacade bindingFactory;
-	private final TestedOrigamiModelFactory modelFactory;
+	private final FileModelCheckService fileModelCheckService;
 	private final FileFactory fileFactory;
 	private final PainterScreenSetting mainScreenSetting;
 	private final ExtensionCorrector extensionCorrector;
@@ -72,12 +69,11 @@ public class MainComponentPresenterFactory {
 			final FileChooserFactory fileChooserFactory,
 			final ModelComputationFacadeFactory computationFacadeFactory,
 			final CreasePatternPresentationContext presentationContext,
-			final StatePopperFactory<EditMode> statePopperFactory,
 			final ViewUpdateSupport viewUpdateSupport,
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
-			final TestedOrigamiModelFactory modelFactory,
+			final FileModelCheckService fileModelCheckService,
 			final FileFactory fileFactory,
 			final ExtensionCorrector extensionCorrector) {
 
@@ -86,13 +82,12 @@ public class MainComponentPresenterFactory {
 		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
 		this.modelComputationFacadeFactory = computationFacadeFactory;
 		this.fileChooserFactory = fileChooserFactory;
-		this.statePopperFactory = statePopperFactory;
 		this.viewUpdateSupport = viewUpdateSupport;
 		this.presentationContext = presentationContext;
 		this.domainContext = domainContext;
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.bindingFactory = bindingFactory;
-		this.modelFactory = modelFactory;
+		this.fileModelCheckService = fileModelCheckService;
 		this.fileFactory = fileFactory;
 		this.mainScreenSetting = mainScreenSetting;
 		this.extensionCorrector = extensionCorrector;
@@ -108,7 +103,6 @@ public class MainComponentPresenterFactory {
 				subFramePresenterFactory,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
-				statePopperFactory,
 				viewUpdateSupport.getViewScreenUpdater(),
 				viewUpdateSupport.getKeyProcessing(),
 				presentationContext.getTypeForChangeContext(),
@@ -156,7 +150,7 @@ public class MainComponentPresenterFactory {
 		return new DocFileSelectionPresenter(
 				parent,
 				fileChooserFactory,
-				modelFactory,
+				fileModelCheckService,
 				fileFactory,
 				fileSelectionService,
 				extensionCorrector);

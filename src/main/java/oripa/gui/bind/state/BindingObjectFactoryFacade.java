@@ -21,6 +21,9 @@ package oripa.gui.bind.state;
 import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.CommandStatePopper;
+import oripa.appstate.StatePopper;
+import oripa.appstate.StatePopperFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionSetter;
@@ -35,12 +38,15 @@ public class BindingObjectFactoryFacade {
 	private final PaintBoundStateFactory stateFactory;
 	private final MouseActionSetterFactory setterFactory;
 	private final PluginPaintBoundStateFactory pluginFactory;
+	private final StatePopperFactory<EditMode> statePopperFactory;
 
 	public BindingObjectFactoryFacade(final PaintBoundStateFactory stateFactory,
 			final MouseActionSetterFactory setterFactory,
+			final StatePopperFactory<EditMode> statePopperFactory,
 			final PluginPaintBoundStateFactory pluginFactory) {
 		this.stateFactory = stateFactory;
 		this.setterFactory = setterFactory;
+		this.statePopperFactory = statePopperFactory;
 		this.pluginFactory = pluginFactory;
 	}
 
@@ -63,5 +69,13 @@ public class BindingObjectFactoryFacade {
 
 	public MouseActionSetter createActionSetter(final GraphicMouseAction action) {
 		return setterFactory.create(action);
+	}
+
+	public StatePopper<EditMode> createStatePopperForState() {
+		return statePopperFactory.createForState();
+	}
+
+	public CommandStatePopper<EditMode> createStatePopperForCommand(final EditMode editMode) {
+		return statePopperFactory.createForCommand(editMode);
 	}
 }
