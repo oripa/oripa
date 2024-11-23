@@ -21,6 +21,7 @@ package oripa.gui.bind.state;
 import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.CommandStatePopper;
 import oripa.appstate.StatePopper;
 import oripa.appstate.StatePopperFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -72,5 +73,9 @@ public class BindingObjectFactoryFacade {
 
 	public StatePopper<EditMode> createStatePopperForState() {
 		return statePopperFactory.createForState();
+	}
+
+	public CommandStatePopper<EditMode> createStatePopperForCommand(final EditMode editMode) {
+		return statePopperFactory.createForCommand(editMode);
 	}
 }

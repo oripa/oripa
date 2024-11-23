@@ -25,8 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
+import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;

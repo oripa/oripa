@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.StatePopperFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.EstimationResultRules;
@@ -82,7 +81,6 @@ public class UIPanelPresenter {
 
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final StatePopperFactory<EditMode> statePopperFactory;
 	private final ViewScreenUpdater screenUpdater;
 	private final KeyProcessing keyProcessing;
 	private final PaintContext paintContext;
@@ -102,7 +100,6 @@ public class UIPanelPresenter {
 			final SubFramePresenterFactory subFramePresenterFactory,
 			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
 			final ModelComputationFacadeFactory computationFacadeFactory,
-			final StatePopperFactory<EditMode> statePopperFactory,
 			final ViewScreenUpdater screenUpdater,
 			final KeyProcessing keyProcessing,
 			final TypeForChangeContext typeForChangeContext,
@@ -127,8 +124,6 @@ public class UIPanelPresenter {
 
 		this.paintContext = paintContext;
 		this.byValueContext = byValueContext;
-
-		this.statePopperFactory = statePopperFactory;
 
 		this.bindingFactory = bindingFactory;
 
@@ -166,11 +161,11 @@ public class UIPanelPresenter {
 		// edit mode buttons
 
 		view.addEditModeInputLineButtonListener(
-				statePopperFactory.createForCommand(EditMode.INPUT),
+				bindingFactory.createStatePopperForCommand(EditMode.INPUT),
 				keyProcessing);
 
 		view.addEditModeLineSelectionButtonListener(
-				statePopperFactory.createForCommand(EditMode.SELECT),
+				bindingFactory.createStatePopperForCommand(EditMode.SELECT),
 				keyProcessing);
 
 		var deleteLineState = bindingFactory.createState(StringID.DELETE_LINE_ID);

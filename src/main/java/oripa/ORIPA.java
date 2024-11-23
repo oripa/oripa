@@ -249,7 +249,6 @@ public class ORIPA {
 					fileChooserFactory,
 					modelComputationFacadeFactory,
 					presentationContext,
-					statePopperFactory,
 					viewUpdateSupport,
 					domainContext,
 					cutModelOutlinesHolder,

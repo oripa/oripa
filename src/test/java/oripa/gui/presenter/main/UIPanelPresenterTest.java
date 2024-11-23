@@ -345,7 +345,6 @@ class UIPanelPresenterTest {
 				subFramePresenterFactory,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
-				statePopperFactory,
 				screenUpdater,
 				keyProcessing,
 				typeForChangeContext,
