@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -109,22 +108,6 @@ class MainFramePresenterTest {
 
 			}
 
-		}
-
-		@Nested
-		class TestModifySavingActions {
-			@Captor
-			ArgumentCaptor<Supplier<Object>> foldConfigCaptor;
-
-			@Test
-			void saveConfigurationOfFOLDShouldBeDone() {
-
-				setupBindingFactory();
-
-				construct();
-
-				verify(presentationLogic).modifySavingActions();
-			}
 		}
 
 		@Nested
@@ -526,6 +509,9 @@ class MainFramePresenterTest {
 
 						listenerCaptor.getValue().run();
 
+						// verify before save
+						verifyBeforeSave();
+
 						verify(presentationLogic).saveFileToCurrentPath(fileType);
 
 						// verify after save
@@ -554,6 +540,9 @@ class MainFramePresenterTest {
 						verify(view).addSaveButtonListener(listenerCaptor.capture());
 
 						listenerCaptor.getValue().run();
+
+						// verify before save
+						verifyBeforeSave();
 
 						verify(presentationLogic).saveFileUsingGUI();
 
@@ -589,6 +578,9 @@ class MainFramePresenterTest {
 
 						listenerCaptor.getValue().run();
 
+						// verify before save
+						verifyBeforeSave();
+
 						verify(presentationLogic).saveFileUsingGUI();
 
 						// verify after save
@@ -596,6 +588,10 @@ class MainFramePresenterTest {
 					}
 				}
 
+			}
+
+			void verifyBeforeSave() {
+				verify(presentationLogic).modifySavingActions();
 			}
 
 			void verifyAfterSave(
@@ -657,6 +653,9 @@ class MainFramePresenterTest {
 					String path = "path";
 
 					projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
+
+					// verify before save
+					verify(presentationLogic).modifySavingActions();
 
 					verify(presentationLogic).saveFileUsingGUI(eq(type));
 					verifyNoCallsAfterExport(isProjectFile, path, paintContext);
@@ -831,7 +830,6 @@ class MainFramePresenterTest {
 				componentPresenterFactory,
 				mouseActionHolder,
 				bindingFactory,
-				statePopperFactory,
 				project,
 				paintContext,
 				plugins);

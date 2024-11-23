@@ -16,37 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.main;
+package oripa.gui.presenter.main.logic;
 
-import oripa.application.FileAccessService;
 import oripa.domain.paint.PaintContext;
-import oripa.persistence.dao.FileDAO;
-import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.view.ViewScreenUpdater;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DocFileAccess extends FileAccessService<Doc> {
+public class UndoRedoPresentationLogic {
+	private final ViewScreenUpdater screenUpdater;
+	private final MouseActionHolder mouseActionHolder;
 	private final PaintContext paintContext;
 
-	public DocFileAccess(final FileDAO<Doc> dao, final PaintContext paintContext) {
-		super(dao);
+	public UndoRedoPresentationLogic(
+			final ViewScreenUpdater screenUpdater,
+			final MouseActionHolder mouseActionHolder,
+			final PaintContext paintContext) {
+
+		this.screenUpdater = screenUpdater;
+		this.mouseActionHolder = mouseActionHolder;
 		this.paintContext = paintContext;
 	}
 
-	public void setupFOLDConfigForSaving() {
-
-		setConfigToSavingAction(DocFileTypes.fold(), () -> createFOLDConfig());
+	public void undo() {
+		mouseActionHolder.getMouseAction().orElseThrow().undo(paintContext);
+		screenUpdater.updateScreen();
 	}
 
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = new CreasePatternFOLDConfig();
-		config.setEps(paintContext.getPointEps());
-
-		return config;
+	public void redo() {
+		mouseActionHolder.getMouseAction().orElseThrow().redo(paintContext);
+		screenUpdater.updateScreen();
 	}
 
 }

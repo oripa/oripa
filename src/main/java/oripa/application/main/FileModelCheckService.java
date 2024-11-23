@@ -18,35 +18,46 @@
  */
 package oripa.application.main;
 
-import oripa.application.FileAccessService;
+import java.io.IOException;
+import java.util.function.Supplier;
+
+import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.persistence.dao.FileDAO;
+import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DocFileAccess extends FileAccessService<Doc> {
+public class FileModelCheckService {
+
 	private final PaintContext paintContext;
+	private final TestedOrigamiModelFactory modelFactory;
 
-	public DocFileAccess(final FileDAO<Doc> dao, final PaintContext paintContext) {
-		super(dao);
+	public FileModelCheckService(
+			final PaintContext paintContext,
+			final TestedOrigamiModelFactory modelFactory) {
 		this.paintContext = paintContext;
+		this.modelFactory = modelFactory;
 	}
 
-	public void setupFOLDConfigForSaving() {
+	public boolean checkFoldability(
+			final String directory,
+			final FileType<Doc> type,
+			final Supplier<Boolean> acceptModelError)
+			throws IOException {
+		var creasePattern = paintContext.getCreasePattern();
+		double pointEps = paintContext.getPointEps();
 
-		setConfigToSavingAction(DocFileTypes.fold(), () -> createFOLDConfig());
-	}
+		var origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, pointEps);
 
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = new CreasePatternFOLDConfig();
-		config.setEps(paintContext.getPointEps());
+		if (!origamiModel.isLocallyFlatFoldable()) {
+			return acceptModelError.get();
+		}
 
-		return config;
+		return true;
 	}
 
 }

@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.main.DocFileAccess;
+import oripa.application.main.FileModelCheckService;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
@@ -65,6 +66,7 @@ import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
 import oripa.gui.presenter.main.logic.SwitcherBetweenPasteAndChangeOrigin;
+import oripa.gui.presenter.main.logic.UndoRedoPresentationLogic;
 import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
@@ -183,7 +185,10 @@ public class ORIPA {
 							domainContext.getByValueContext(),
 							presentationContext.getTypeForChangeContext()));
 
-			var bindingFactory = new BindingObjectFactoryFacade(stateFactory, setterFactory,
+			var bindingFactory = new BindingObjectFactoryFacade(
+					stateFactory,
+					setterFactory,
+					statePopperFactory,
 					new PluginPaintBoundStateFactory(stateManager, setterFactory));
 
 			var fileFactory = new FileFactory();
@@ -232,13 +237,17 @@ public class ORIPA {
 			var docFileAccess = new DocFileAccess(
 					new FileDAO<>(
 							new DocFileSelectionSupportSelectorFactory().create(fileFactory),
-							fileFactory));
+							fileFactory),
+					paintContext);
 
 			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
 					new TestedOrigamiModelFactory(),
 					new FolderFactory());
 			var modelIndexChangeListenerPutter = new ModelIndexChangeListenerPutter();
 			var modelFactory = new TestedOrigamiModelFactory();
+
+			var fileModelCheckService = new FileModelCheckService(paintContext, modelFactory);
+
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
 					mainViewSetting.getPainterScreenSetting(),
 					subFrameFactory,
@@ -252,7 +261,7 @@ public class ORIPA {
 					domainContext,
 					cutModelOutlinesHolder,
 					bindingFactory,
-					modelFactory,
+					fileModelCheckService,
 					fileFactory,
 					extensionCorrector);
 
@@ -291,21 +300,30 @@ public class ORIPA {
 					fileHistory);
 
 			var clearActionPresentationLogic = new ClearActionPresentationLogic(
-					null, null, null, null, null, null, null, null);
+					mainFrame,
+					screenUpdater,
+					screenSetting,
+					childFrameManager,
+					paintContext,
+					cutModelOutlinesHolder,
+					project,
+					paintContextModification);
+
+			var undoRedoPresentationLogic = new UndoRedoPresentationLogic(
+					screenUpdater,
+					mouseActionHolder,
+					paintContext);
 
 			var presentationLogic = new MainFramePresentationLogic(
 					mainFrame,
-					screenUpdater,
-					mouseActionHolder,
 					screenPresenter,
 					uiPanelPresenter,
 					mainComponentPresenterFactory,
 					clearActionPresentationLogic,
+					undoRedoPresentationLogic,
 					fileAccessPresentationLogic,
 					iniFileAccessPresentationLogic,
 					project,
-					paintContext,
-					cutModelOutlinesHolder,
 					fileHistory,
 					docFileAccess,
 					fileFactory,
@@ -318,7 +336,6 @@ public class ORIPA {
 					mainComponentPresenterFactory,
 					mouseActionHolder,
 					bindingFactory,
-					statePopperFactory,
 					project,
 					paintContext,
 					plugins);

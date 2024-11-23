@@ -41,17 +41,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.application.main.DocFileAccess;
-import oripa.application.main.PaintContextModification;
 import oripa.appstate.ApplicationState;
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.projectprop.Property;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.main.DocFileSelectionPresenter;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
@@ -59,8 +54,6 @@ import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.PainterScreenSetting;
-import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
@@ -75,7 +68,7 @@ import oripa.util.file.FileFactory;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class MainFramePresentationLogicTest {
+class MainFramePresentationLogicTest {
 
 	@InjectMocks
 	MainFramePresentationLogic presentationLogic;
@@ -87,9 +80,6 @@ public class MainFramePresentationLogicTest {
 	ViewScreenUpdater screenUpdater;
 
 	@Mock
-	MouseActionHolder mouseActionHolder;
-
-	@Mock
 	PainterScreenPresenter screenPresenter;
 
 	@Mock
@@ -99,16 +89,16 @@ public class MainFramePresentationLogicTest {
 	ClearActionPresentationLogic clearActionPresentationLogic;
 
 	@Mock
+	UndoRedoPresentationLogic undoRedoPresentationLogic;
+
+	@Mock
 	MainComponentPresenterFactory componentPresenterFactory;
 
 	@Mock
 	FileAccessPresentationLogic fileAccessPresentationLogic;
 
 	@Mock
-	ChildFrameManager childFrameManager;
-
-	@Mock
-	PainterScreenSetting screenSetting;
+	IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
 	@Mock
 	BindingObjectFactoryFacade bindingFactory;
@@ -118,15 +108,6 @@ public class MainFramePresentationLogicTest {
 
 	@Mock
 	PaintContext paintContext;
-
-	@Mock
-	PaintContextModification paintContextModification;
-
-	@Mock
-	CutModelOutlinesHolder cutModelOutlinesHolder;
-
-	@Mock
-	IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
 	@Mock
 	FileHistory fileHistory;
@@ -182,18 +163,14 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void succeeds() {
 
-			setupGetTitleText("default", "");
+			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
+			when(project.getDataFileName()).thenReturn(Optional.empty());
 
 			presentationLogic.clear();
 
 			verify(clearActionPresentationLogic).clear();
 			verifyUpdateTitleText("default");
 		}
-	}
-
-	void setupGetTitleText(final String defaultText, final String projectGetDataFileNameValue) {
-		when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn(defaultText);
-		when(project.getDataFileName()).thenReturn(Optional.of(projectGetDataFileNameValue));
 	}
 
 	void verifyUpdateTitleText(final String dataFileName) {
@@ -236,14 +213,9 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void undoLogicShouldBeCalled() {
 
-			GraphicMouseAction action = mock();
-			when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
-
 			presentationLogic.undo();
 
-			verify(action).undo(any());
-			verify(screenUpdater).updateScreen();
-
+			verify(undoRedoPresentationLogic).undo();
 		}
 	}
 
@@ -253,14 +225,9 @@ public class MainFramePresentationLogicTest {
 		@Test
 		void redoLogicShouldBeCalled() {
 
-			GraphicMouseAction action = mock();
-			when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
-
 			presentationLogic.redo();
 
-			verify(action).redo(any());
-			verify(screenUpdater).updateScreen();
-
+			verify(undoRedoPresentationLogic).redo();
 		}
 	}
 
@@ -271,13 +238,10 @@ public class MainFramePresentationLogicTest {
 
 		@Test
 		void saveConfigurationOfFOLDShouldBeDone() {
-
-			when(paintContext.getPointEps()).thenReturn(1e-8);
-
 			// execute
 			presentationLogic.modifySavingActions();
 
-			verify(docFileAccess).setupFOLDConfigForSaving(1e-8);
+			verify(docFileAccess).setupFOLDConfigForSaving();
 		}
 	}
 
@@ -430,10 +394,6 @@ public class MainFramePresentationLogicTest {
 		void succeedsWhenCheckIsPassed() throws IOException {
 			when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			CreasePattern creasePattern = mock();
-			when(paintContext.getCreasePattern()).thenReturn(creasePattern);
-			when(paintContext.getPointEps()).thenReturn(0.1);
-
 			DocFileSelectionPresenter selectionPresenter = mock();
 			String selectedPath = "selected path";
 			FileSelectionResult<Doc> selectionResult = FileSelectionResult
@@ -442,7 +402,7 @@ public class MainFramePresentationLogicTest {
 							mock());
 
 			when(selectionPresenter.saveFileWithModelCheck(
-					eq(creasePattern), anyString(), any(), any(), any(), anyDouble()))
+					anyString(), any(), any()))
 							.thenReturn(selectionResult);
 			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
@@ -460,16 +420,12 @@ public class MainFramePresentationLogicTest {
 		void noCHangessWhenCanceledByUserOrCheck() throws IOException {
 			when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			CreasePattern creasePattern = mock();
-			when(paintContext.getCreasePattern()).thenReturn(creasePattern);
-			when(paintContext.getPointEps()).thenReturn(0.1);
-
 			DocFileSelectionPresenter selectionPresenter = mock();
 			FileSelectionResult<Doc> selectionResult = FileSelectionResult
 					.createCanceled();
 
 			when(selectionPresenter.saveFileWithModelCheck(
-					eq(creasePattern), anyString(), any(), any(), any(), anyDouble()))
+					anyString(), any(), any()))
 							.thenReturn(selectionResult);
 			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);

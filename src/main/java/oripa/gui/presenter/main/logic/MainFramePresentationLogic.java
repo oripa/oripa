@@ -29,19 +29,15 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.main.DocFileAccess;
 import oripa.appstate.ApplicationState;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.paint.PaintContext;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
-import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.dao.DataAccessException;
@@ -66,16 +62,12 @@ public class MainFramePresentationLogic {
 	private final UIPanelPresenter uiPanelPresenter;
 	private final MainComponentPresenterFactory componentPresenterFactory;
 
+	private final UndoRedoPresentationLogic undoRedoPresentationLogic;
 	private final ClearActionPresentationLogic clearActionPresentationLogic;
 	private final FileAccessPresentationLogic fileAccessPresentationLogic;
 	private final IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
-	private final ViewScreenUpdater screenUpdater;
-	private final MouseActionHolder mouseActionHolder;
-
 	private final Project project;
-
-	private final PaintContext paintContext;
 
 	private final DocFileAccess dataFileAccess;
 	private final FileHistory fileHistory;
@@ -85,17 +77,14 @@ public class MainFramePresentationLogic {
 
 	public MainFramePresentationLogic(
 			final MainFrameView view,
-			final ViewScreenUpdater screenUpdater,
-			final MouseActionHolder mouseActionHolder,
 			final PainterScreenPresenter screenPresenter,
 			final UIPanelPresenter uiPanelPresenter,
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final ClearActionPresentationLogic clearActionPresentationLogic,
+			final UndoRedoPresentationLogic undoRedoPresentationLogic,
 			final FileAccessPresentationLogic fileAccessPresentationLogic,
 			final IniFileAccessPresentationLogic iniFileAccessPresentationLogic,
 			final Project project,
-			final PaintContext paintContext,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileHistory fileHistory,
 			final DocFileAccess dataFileAccess,
 			final FileFactory fileFactory,
@@ -110,15 +99,12 @@ public class MainFramePresentationLogic {
 		this.iniFileAccessPresentationLogic = iniFileAccessPresentationLogic;
 
 		this.project = project;
-		this.paintContext = paintContext;
 
 		this.fileHistory = fileHistory;
 		this.dataFileAccess = dataFileAccess;
 		this.fileFactory = fileFactory;
 
-		this.screenUpdater = screenUpdater;
-
-		this.mouseActionHolder = mouseActionHolder;
+		this.undoRedoPresentationLogic = undoRedoPresentationLogic;
 
 		this.uiPanelPresenter = uiPanelPresenter;
 		this.screenPresenter = screenPresenter;
@@ -135,7 +121,7 @@ public class MainFramePresentationLogic {
 	}
 
 	public void updateScreen() {
-		screenUpdater.updateScreen();
+		screenPresenter.updateScreen();
 	}
 
 	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
@@ -210,17 +196,15 @@ public class MainFramePresentationLogic {
 	}
 
 	public void undo() {
-		mouseActionHolder.getMouseAction().orElseThrow().undo(paintContext);
-		screenUpdater.updateScreen();
+		undoRedoPresentationLogic.undo();
 	}
 
 	public void redo() {
-		mouseActionHolder.getMouseAction().orElseThrow().redo(paintContext);
-		screenUpdater.updateScreen();
+		undoRedoPresentationLogic.redo();
 	}
 
 	public void modifySavingActions() {
-		dataFileAccess.setupFOLDConfigForSaving(paintContext.getPointEps());
+		dataFileAccess.setupFOLDConfigForSaving();
 	}
 
 	/**
@@ -282,9 +266,8 @@ public class MainFramePresentationLogic {
 		FileSelectionResult<Doc> selection;
 		try {
 			selection = presenter.saveFileWithModelCheck(
-					paintContext.getCreasePattern(),
 					fileHistory.getLastDirectory(),
-					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
+					type, view::showModelBuildFailureDialog);
 		} catch (IOException e) {
 			logger.error("error", e);
 			view.showSaveFailureErrorMessage(e);

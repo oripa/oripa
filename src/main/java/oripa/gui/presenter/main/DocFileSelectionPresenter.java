@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import oripa.application.FileSelectionService;
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.fold.TestedOrigamiModelFactory;
+import oripa.application.main.FileModelCheckService;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileSelectionPresenter;
 import oripa.gui.presenter.file.FileSelectionResult;
@@ -41,18 +40,18 @@ import oripa.util.file.FileFactory;
  *
  */
 public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
-	private final TestedOrigamiModelFactory modelFactory;
+	private final FileModelCheckService fileModelCheckService;
 
 	public DocFileSelectionPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
-			final TestedOrigamiModelFactory modelFactory,
+			final FileModelCheckService fileModelCheckService,
 			final FileFactory fileFactory,
 			final FileSelectionService<Doc> fileSelectionService,
 			final ExtensionCorrector extensionCorrector) {
 		super(parent, chooserFactory, fileFactory, fileSelectionService, extensionCorrector);
 
-		this.modelFactory = modelFactory;
+		this.fileModelCheckService = fileModelCheckService;
 	}
 
 	/**
@@ -63,29 +62,22 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 	 * @param document
 	 * @param directory
 	 * @param type
-	 * @param owner
 	 * @throws FileChooserCanceledException
 	 * @throws IOException
 	 * @throws UserCanceledException
 	 */
 	public FileSelectionResult<Doc> saveFileWithModelCheck(
-			final CreasePattern creasePattern,
 			final String directory,
-			final FileType<Doc> type, final FrameView owner,
-			final Supplier<Boolean> acceptModelError,
-			final double pointEps)
+			final FileType<Doc> type,
+			final Supplier<Boolean> acceptModelError)
 			throws IOException {
+
+		if (!fileModelCheckService.checkFoldability(directory, type, acceptModelError)) {
+			return FileSelectionResult.createCanceled();
+		}
+
 		File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
-
-		var origamiModel = modelFactory.createOrigamiModel(
-				creasePattern, pointEps);
-
-		if (!origamiModel.isLocallyFlatFoldable()) {
-			if (!acceptModelError.get()) {
-				return FileSelectionResult.createCanceled();
-			}
-		}
 
 		return saveUsingGUI(filePath, List.of(type));
 	}

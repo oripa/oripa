@@ -55,9 +55,7 @@ public class ClearActionPresentationLogic {
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final Project project,
-			final PaintContextModification paintContextModification
-
-	) {
+			final PaintContextModification paintContextModification) {
 		this.view = view;
 		this.screenUpdater = screenUpdater;
 		this.screenSetting = screenSetting;

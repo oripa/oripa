@@ -210,4 +210,8 @@ public class PainterScreenPresenter {
 		actionOpt.ifPresent(action -> view.setUsingCtrlKeyOnDrag(action.isUsingCtrlKeyOnDrag()));
 	}
 
+	public void updateScreen() {
+		screenUpdater.updateScreen();
+	}
+
 }

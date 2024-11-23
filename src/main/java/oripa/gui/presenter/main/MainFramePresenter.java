@@ -25,11 +25,9 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.StatePopperFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
@@ -56,8 +54,6 @@ public class MainFramePresenter {
 	private final MainFramePresentationLogic presentationLogic;
 	private final MainComponentPresenterFactory componentPresenterFactory;
 
-	private final StatePopperFactory<EditMode> statePopperFactory;
-
 	private final BindingObjectFactoryFacade bindingFactory;
 
 	private final Project project;
@@ -72,7 +68,6 @@ public class MainFramePresenter {
 			final MainComponentPresenterFactory componentPresenterFactory,
 			final MouseActionHolder mouseActionHolder,
 			final BindingObjectFactoryFacade bindingFactory,
-			final StatePopperFactory<EditMode> statePopperFactory,
 			final Project project,
 			final PaintContext paintContext,
 			final List<GraphicMouseActionPlugin> plugins) {
@@ -89,11 +84,8 @@ public class MainFramePresenter {
 		this.paintContext = paintContext;
 
 		this.actionHolder = mouseActionHolder;
-		this.statePopperFactory = statePopperFactory;
 
 		presentationLogic.loadIniFile();
-
-		modifySavingActions();
 
 		addListeners();
 
@@ -212,7 +204,7 @@ public class MainFramePresenter {
 				detectCopyPasteError, view::showCopyPasteErrorMessage);
 		view.addCutAndPasteButtonListener(cutPasteState::performActions);
 
-		var statePopper = statePopperFactory.createForState();
+		var statePopper = bindingFactory.createStatePopperForState();
 		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
 				presentationLogic::updateScreen);
 		view.addUnselectAllButtonListener(unselectListener);
@@ -220,10 +212,6 @@ public class MainFramePresenter {
 		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, presentationLogic::updateScreen);
 		view.addDeleteSelectedLinesButtonListener(deleteLinesListener);
 
-	}
-
-	private void modifySavingActions() {
-		presentationLogic.modifySavingActions();
 	}
 
 	private void exit() {
@@ -269,6 +257,7 @@ public class MainFramePresenter {
 	 */
 	private void saveFileToCurrentPath(final FileType<Doc> type) {
 		try {
+			beforeSave();
 			var filePath = presentationLogic.saveFileToCurrentPath(type);
 			afterSaveFile(filePath);
 		} catch (Exception e) {
@@ -282,6 +271,7 @@ public class MainFramePresenter {
 	@SafeVarargs
 	private void saveFileUsingGUI(final FileType<Doc>... types) {
 		try {
+			beforeSave();
 			var filePath = presentationLogic.saveFileUsingGUI(types);
 			afterSaveFile(filePath);
 		} catch (Exception e) {
@@ -296,10 +286,15 @@ public class MainFramePresenter {
 	@SafeVarargs
 	private void exportFileUsingGUI(final FileType<Doc>... types) {
 		try {
+			beforeSave();
 			presentationLogic.saveFileUsingGUI(types);
 		} catch (Exception e) {
 			view.showSaveFailureErrorMessage(e);
 		}
+	}
+
+	private void beforeSave() {
+		presentationLogic.modifySavingActions();
 	}
 
 	/**
