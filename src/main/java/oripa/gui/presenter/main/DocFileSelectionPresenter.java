@@ -72,7 +72,7 @@ public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
 			final Supplier<Boolean> acceptModelError)
 			throws IOException {
 
-		if (!fileModelCheckService.checkFoldability(directory, type, acceptModelError)) {
+		if (!fileModelCheckService.checkFoldability(acceptModelError)) {
 			return FileSelectionResult.createCanceled();
 		}
 

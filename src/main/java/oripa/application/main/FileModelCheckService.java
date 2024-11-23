@@ -23,8 +23,6 @@ import java.util.function.Supplier;
 
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.persistence.dao.FileType;
-import oripa.persistence.doc.Doc;
 
 /**
  * @author OUCHI Koji
@@ -43,8 +41,6 @@ public class FileModelCheckService {
 	}
 
 	public boolean checkFoldability(
-			final String directory,
-			final FileType<Doc> type,
 			final Supplier<Boolean> acceptModelError)
 			throws IOException {
 		var creasePattern = paintContext.getCreasePattern();
