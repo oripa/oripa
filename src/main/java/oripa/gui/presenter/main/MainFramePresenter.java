@@ -20,18 +20,13 @@ package oripa.gui.presenter.main;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.PaintContext;
-import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
-import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
+import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
@@ -39,7 +34,6 @@ import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.project.Project;
-import oripa.resource.StringID;
 
 /**
  * @author OUCHI Koji
@@ -54,20 +48,17 @@ public class MainFramePresenter {
 	private final MainFramePresentationLogic presentationLogic;
 	private final MainComponentPresenterFactory componentPresenterFactory;
 
-	private final BindingObjectFactoryFacade bindingFactory;
-
 	private final Project project;
 
 	private final PaintContext paintContext;
-	private final MouseActionHolder actionHolder;
+	private final MainFramePaintMenuListenerFactory paintMenuListenerFactory;
 
 	public MainFramePresenter(
 			final MainFrameView view,
 			final MainFrameDialogFactory dialogFactory,
 			final MainFramePresentationLogic presentationLogic,
 			final MainComponentPresenterFactory componentPresenterFactory,
-			final MouseActionHolder mouseActionHolder,
-			final BindingObjectFactoryFacade bindingFactory,
+			final MainFramePaintMenuListenerFactory paintMenuListenerFactory,
 			final Project project,
 			final PaintContext paintContext,
 			final List<GraphicMouseActionPlugin> plugins) {
@@ -75,15 +66,13 @@ public class MainFramePresenter {
 		this.view = view;
 		this.dialogFactory = dialogFactory;
 
-		this.bindingFactory = bindingFactory;
-
 		this.presentationLogic = presentationLogic;
 		this.componentPresenterFactory = componentPresenterFactory;
 
 		this.project = project;
 		this.paintContext = paintContext;
 
-		this.actionHolder = mouseActionHolder;
+		this.paintMenuListenerFactory = paintMenuListenerFactory;
 
 		presentationLogic.loadIniFile();
 
@@ -168,48 +157,43 @@ public class MainFramePresenter {
 	}
 
 	private void addImportActionListener() {
-		var state = bindingFactory.createState(StringID.IMPORT_CP_ID);
-
-		view.addImportButtonListener(() -> presentationLogic.importFileUsingGUI(state));
-
+		var listener = paintMenuListenerFactory.createImportButtonListener(presentationLogic::importFileUsingGUI);
+		view.addImportButtonListener(listener);
 	}
 
 	private void addPaintMenuItemsListener() {
 		/*
 		 * For changing outline
 		 */
-		var changeOutlineState = bindingFactory.createState(StringID.EDIT_CONTOUR_ID);
-		view.addChangeOutlineButtonListener(changeOutlineState::performActions);
+		var changeOutlineListener = paintMenuListenerFactory.createChangeOutlineButtonListener();
+		view.addChangeOutlineButtonListener(changeOutlineListener);
 
 		/*
 		 * For selecting all lines
 		 */
-		var selectAllState = bindingFactory.createState(StringID.SELECT_ALL_LINE_ID);
-		view.addSelectAllButtonListener(selectAllState::performActions);
-		var selectAllListener = new SelectAllLineActionListener(paintContext);
+		var selectAllListener = paintMenuListenerFactory.createSelectAllLineActionListener();
 		view.addSelectAllButtonListener(selectAllListener);
 
 		/*
 		 * For starting copy-and-paste
 		 */
-		Supplier<Boolean> detectCopyPasteError = () -> paintContext.countSelectedLines() == 0;
-		var copyPasteState = bindingFactory.createState(StringID.COPY_PASTE_ID,
-				detectCopyPasteError, view::showCopyPasteErrorMessage);
-		view.addCopyAndPasteButtonListener(copyPasteState::performActions);
+		var copyPasteListener = paintMenuListenerFactory
+				.createCopyAndPasteButtonListener(view::showCopyPasteErrorMessage);
+		view.addCopyAndPasteButtonListener(copyPasteListener);
 
 		/*
 		 * For starting cut-and-paste
 		 */
-		var cutPasteState = bindingFactory.createState(StringID.CUT_PASTE_ID,
-				detectCopyPasteError, view::showCopyPasteErrorMessage);
-		view.addCutAndPasteButtonListener(cutPasteState::performActions);
+		var cutPasteListener = paintMenuListenerFactory
+				.createCutAndPasteButtonListener(view::showCopyPasteErrorMessage);
+		view.addCutAndPasteButtonListener(cutPasteListener);
 
-		var statePopper = bindingFactory.createStatePopperForState();
-		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
-				presentationLogic::updateScreen);
+		var unselectListener = paintMenuListenerFactory
+				.createUnselectAllItemsActionListener(presentationLogic::updateScreen);
 		view.addUnselectAllButtonListener(unselectListener);
 
-		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, presentationLogic::updateScreen);
+		var deleteLinesListener = paintMenuListenerFactory
+				.createDeleteSelectedLinesActionListener(presentationLogic::updateScreen);
 		view.addDeleteSelectedLinesButtonListener(deleteLinesListener);
 
 	}

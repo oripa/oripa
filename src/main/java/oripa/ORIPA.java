@@ -59,15 +59,7 @@ import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
-import oripa.gui.presenter.main.logic.ClearActionPresentationLogic;
-import oripa.gui.presenter.main.logic.FileAccessPresentationLogic;
-import oripa.gui.presenter.main.logic.IniFileAccessPresentationLogic;
-import oripa.gui.presenter.main.logic.MainFrameFilePresentationLogic;
-import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
-import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
-import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
-import oripa.gui.presenter.main.logic.SwitcherBetweenPasteAndChangeOrigin;
-import oripa.gui.presenter.main.logic.UndoRedoPresentationLogic;
+import oripa.gui.presenter.main.logic.*;
 import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
@@ -250,7 +242,7 @@ public class ORIPA {
 			var fileModelCheckService = new FileModelCheckService(paintContext, modelFactory);
 
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
-					mainViewSetting.getPainterScreenSetting(),
+					screenSetting,
 					subFrameFactory,
 					subFramePresenterFactory,
 					modelIndexChangeListenerPutter,
@@ -285,7 +277,7 @@ public class ORIPA {
 					mainFrame,
 					childFrameManager,
 					screenPresenter,
-					mainViewSetting.getPainterScreenSetting(),
+					screenSetting,
 					paintContextModification,
 					paintContext,
 					cutModelOutlinesHolder,
@@ -336,13 +328,17 @@ public class ORIPA {
 					fileHistory,
 					resourceHolder);
 
+			var paintMenuListenerFactory = new MainFramePaintMenuListenerFactory(
+					paintContext,
+					mouseActionHolder,
+					bindingFactory);
+
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					dialogFactory,
 					presentationLogic,
 					mainComponentPresenterFactory,
-					mouseActionHolder,
-					bindingFactory,
+					paintMenuListenerFactory,
 					project,
 					paintContext,
 					plugins);

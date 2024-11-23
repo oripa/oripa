@@ -32,15 +32,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.application.main.DocFileAccess;
-import oripa.appstate.ApplicationState;
 import oripa.file.FileHistory;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.main.DocFileSelectionPresenter;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
@@ -371,16 +368,10 @@ class MainFrameFilePresentationLogicTest {
 			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
-			ApplicationState<EditMode> state = mock();
-
-			InOrder inOrder = inOrder(fileAccessPresentationLogic, state);
-
 			// execute
+			presentationLogic.importFileUsingGUI();
 
-			presentationLogic.importFileUsingGUI(state);
-
-			inOrder.verify(fileAccessPresentationLogic).importFile(eq(selectedPath));
-			inOrder.verify(state).performActions();
+			verify(fileAccessPresentationLogic).importFile(eq(selectedPath));
 		}
 	}
 

@@ -25,10 +25,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.ApplicationState;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
@@ -229,8 +227,10 @@ public class MainFramePresentationLogic {
 		return mainFrameFilePresentationLogic.loadFile(filePath);
 	}
 
-	public void importFileUsingGUI(final ApplicationState<EditMode> state) {
-		mainFrameFilePresentationLogic.importFileUsingGUI(state);
+	public void importFileUsingGUI(final Runnable importStateAction) {
+		mainFrameFilePresentationLogic.importFileUsingGUI();
+		importStateAction.run();
+		;
 	}
 
 	public void setEstimationResultSaveColors(final Color front, final Color back) {

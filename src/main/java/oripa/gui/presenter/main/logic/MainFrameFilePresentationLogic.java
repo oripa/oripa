@@ -27,9 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.main.DocFileAccess;
-import oripa.appstate.ApplicationState;
 import oripa.file.FileHistory;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
@@ -179,7 +177,7 @@ public class MainFrameFilePresentationLogic {
 		return fileAccessPresentationLogic.loadFile(filePath);
 	}
 
-	public void importFileUsingGUI(final ApplicationState<EditMode> state) {
+	public void importFileUsingGUI() {
 		try {
 			var selection = componentPresenterFactory.createDocFileSelectionPresenter(
 					view,
@@ -192,7 +190,6 @@ public class MainFrameFilePresentationLogic {
 
 			fileAccessPresentationLogic.importFile(selection.path());
 
-			state.performActions();
 		} catch (DataAccessException | IllegalArgumentException e) {
 			view.showLoadFailureErrorMessage(e);
 		}

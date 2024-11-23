@@ -308,7 +308,7 @@ class MainFramePresentationLogicTest {
 			// execute
 			presentationLogic.importFileUsingGUI(mock());
 
-			verify(mainFrameFilePresentationLogic).importFileUsingGUI(any());
+			verify(mainFrameFilePresentationLogic).importFileUsingGUI();
 		}
 	}
 
