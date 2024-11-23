@@ -305,10 +305,15 @@ class MainFramePresentationLogicTest {
 
 		@Test
 		void importFileUsingGUILogicShouldBeCalled() {
-			// execute
-			presentationLogic.importFileUsingGUI(mock());
+			Runnable stateAction = mock();
 
-			verify(mainFrameFilePresentationLogic).importFileUsingGUI();
+			// execute
+			presentationLogic.importFileUsingGUI(stateAction);
+
+			var inOrder = inOrder(mainFrameFilePresentationLogic, stateAction);
+
+			inOrder.verify(mainFrameFilePresentationLogic).importFileUsingGUI();
+			inOrder.verify(stateAction).run();
 		}
 	}
 
