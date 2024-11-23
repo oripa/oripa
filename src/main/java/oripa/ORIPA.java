@@ -62,6 +62,7 @@ import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.logic.ClearActionPresentationLogic;
 import oripa.gui.presenter.main.logic.FileAccessPresentationLogic;
 import oripa.gui.presenter.main.logic.IniFileAccessPresentationLogic;
+import oripa.gui.presenter.main.logic.MainFrameFilePresentationLogic;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
@@ -314,19 +315,25 @@ public class ORIPA {
 					mouseActionHolder,
 					paintContext);
 
+			var mainFrameFilePresentationLogic = new MainFrameFilePresentationLogic(
+					mainFrame,
+					mainComponentPresenterFactory,
+					fileAccessPresentationLogic,
+					project,
+					docFileAccess,
+					fileHistory,
+					fileFactory);
+
 			var presentationLogic = new MainFramePresentationLogic(
 					mainFrame,
 					screenPresenter,
 					uiPanelPresenter,
-					mainComponentPresenterFactory,
+					mainFrameFilePresentationLogic,
 					clearActionPresentationLogic,
 					undoRedoPresentationLogic,
-					fileAccessPresentationLogic,
 					iniFileAccessPresentationLogic,
 					project,
 					fileHistory,
-					docFileAccess,
-					fileFactory,
 					resourceHolder);
 
 			var presenter = new MainFramePresenter(

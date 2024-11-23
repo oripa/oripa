@@ -19,35 +19,27 @@
 package oripa.gui.presenter.main.logic;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.main.DocFileAccess;
 import oripa.appstate.ApplicationState;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.file.FileSelectionResult;
-import oripa.gui.presenter.file.UserAction;
-import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.util.ColorUtil;
-import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.project.Project;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -60,18 +52,15 @@ public class MainFramePresentationLogic {
 
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
-	private final MainComponentPresenterFactory componentPresenterFactory;
 
+	private final MainFrameFilePresentationLogic mainFrameFilePresentationLogic;
 	private final UndoRedoPresentationLogic undoRedoPresentationLogic;
 	private final ClearActionPresentationLogic clearActionPresentationLogic;
-	private final FileAccessPresentationLogic fileAccessPresentationLogic;
 	private final IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
 	private final Project project;
 
-	private final DocFileAccess dataFileAccess;
 	private final FileHistory fileHistory;
-	private final FileFactory fileFactory;
 
 	private final ResourceHolder resourceHolder;
 
@@ -79,30 +68,23 @@ public class MainFramePresentationLogic {
 			final MainFrameView view,
 			final PainterScreenPresenter screenPresenter,
 			final UIPanelPresenter uiPanelPresenter,
-			final MainComponentPresenterFactory componentPresenterFactory,
+			final MainFrameFilePresentationLogic mainFrameFilePresentationLogic,
 			final ClearActionPresentationLogic clearActionPresentationLogic,
 			final UndoRedoPresentationLogic undoRedoPresentationLogic,
-			final FileAccessPresentationLogic fileAccessPresentationLogic,
 			final IniFileAccessPresentationLogic iniFileAccessPresentationLogic,
 			final Project project,
 			final FileHistory fileHistory,
-			final DocFileAccess dataFileAccess,
-			final FileFactory fileFactory,
 			final ResourceHolder resourceHolder) {
 
 		this.view = view;
 
-		this.componentPresenterFactory = componentPresenterFactory;
-
+		this.mainFrameFilePresentationLogic = mainFrameFilePresentationLogic;
 		this.clearActionPresentationLogic = clearActionPresentationLogic;
-		this.fileAccessPresentationLogic = fileAccessPresentationLogic;
 		this.iniFileAccessPresentationLogic = iniFileAccessPresentationLogic;
 
 		this.project = project;
 
 		this.fileHistory = fileHistory;
-		this.dataFileAccess = dataFileAccess;
-		this.fileFactory = fileFactory;
 
 		this.undoRedoPresentationLogic = undoRedoPresentationLogic;
 
@@ -204,20 +186,14 @@ public class MainFramePresentationLogic {
 	}
 
 	public void modifySavingActions() {
-		dataFileAccess.setupFOLDConfigForSaving();
+		mainFrameFilePresentationLogic.modifySavingActions();
 	}
 
 	/**
 	 * saves project without opening a dialog
 	 */
 	public String saveFileToCurrentPath(final FileType<Doc> type) {
-		var filePath = project.getDataFilePath();
-
-		try {
-			return fileAccessPresentationLogic.saveFile(filePath, type);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			return filePath;
-		}
+		return mainFrameFilePresentationLogic.saveFileToCurrentPath(type);
 
 	}
 
@@ -225,33 +201,7 @@ public class MainFramePresentationLogic {
 	 * save file without origami model check
 	 */
 	public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
-		var directory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName().orElse("newFile.opx");
-
-		logger.debug("saveFilelUsingGUI at {}, {}", directory, fileName);
-
-		File defaultFile = fileFactory.create(
-				directory,
-				fileName);
-
-		var filePath = defaultFile.getPath();
-
-		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-				view, dataFileAccess.getFileSelectionService());
-
-		var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
-				: presenter.saveUsingGUI(filePath, List.of(types));
-
-		if (selection.action() == UserAction.CANCELED) {
-			return project.getDataFilePath();
-		}
-
-		try {
-			return fileAccessPresentationLogic.saveFile(selection.path(), selection.type());
-		} catch (DataAccessException | IllegalArgumentException e) {
-			return project.getDataFilePath();
-		}
-
+		return mainFrameFilePresentationLogic.saveFileUsingGUI(types);
 	}
 
 	/**
@@ -259,43 +209,14 @@ public class MainFramePresentationLogic {
 	 * model check before saving.
 	 */
 	public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
-		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
-				view,
-				dataFileAccess.getFileSelectionService());
-
-		FileSelectionResult<Doc> selection;
-		try {
-			selection = presenter.saveFileWithModelCheck(
-					fileHistory.getLastDirectory(),
-					type, view::showModelBuildFailureDialog);
-		} catch (IOException e) {
-			logger.error("error", e);
-			view.showSaveFailureErrorMessage(e);
-			return;
-		}
-
-		if (selection.action() == UserAction.CANCELED) {
-			return;
-		}
-
-		fileAccessPresentationLogic.saveFile(selection.path(), type);
-
+		mainFrameFilePresentationLogic.exportFileUsingGUIWithModelCheck(type);
 	}
 
 	/**
 	 * This method opens the file dialog and load the selected file.
 	 */
 	public void loadFileUsingGUI() {
-		var selection = componentPresenterFactory.createDocFileSelectionPresenter(
-				view,
-				dataFileAccess.getFileSelectionService())
-				.loadUsingGUI(fileHistory.getLastPath());
-
-		if (selection.action() == UserAction.CANCELED) {
-			return;
-		}
-
-		fileAccessPresentationLogic.loadFile(selection.path());
+		mainFrameFilePresentationLogic.loadFileUsingGUI();
 	}
 
 	/**
@@ -305,27 +226,11 @@ public class MainFramePresentationLogic {
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	public String loadFile(final String filePath) {
-		return fileAccessPresentationLogic.loadFile(filePath);
+		return mainFrameFilePresentationLogic.loadFile(filePath);
 	}
 
 	public void importFileUsingGUI(final ApplicationState<EditMode> state) {
-		try {
-			var selection = componentPresenterFactory.createDocFileSelectionPresenter(
-					view,
-					dataFileAccess.getFileSelectionService())
-					.loadUsingGUI(fileHistory.getLastPath());
-
-			if (selection.action() == UserAction.CANCELED) {
-				return;
-			}
-
-			fileAccessPresentationLogic.importFile(selection.path());
-
-			state.performActions();
-		} catch (DataAccessException | IllegalArgumentException e) {
-			view.showLoadFailureErrorMessage(e);
-		}
-
+		mainFrameFilePresentationLogic.importFileUsingGUI(state);
 	}
 
 	public void setEstimationResultSaveColors(final Color front, final Color back) {
