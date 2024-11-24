@@ -21,10 +21,8 @@ package oripa.gui.presenter.main;
 import java.util.List;
 import java.util.function.Consumer;
 
-import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -32,15 +30,12 @@ import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
-import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
-import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
+import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
-import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.util.file.FileFactory;
 
 /**
@@ -48,57 +43,39 @@ import oripa.util.file.FileFactory;
  *
  */
 public class SubFramePresenterFactory {
+	private final ModelViewFramePresenterFactory modelViewFramePresenterFactory;
+
 	private final FileChooserFactory fileChooserFactory;
-	private final PainterScreenSetting mainScreenSetting;
 
 	private final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory;
 	private final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory;
 
-	private final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory;
-	private final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory;
-	private final FileAccessService<OrigamiModel> origamiModelFileAccessService;
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
-
 	private final FileFactory fileFactory;
 
 	public SubFramePresenterFactory(
+			final ModelViewFramePresenterFactory modelViewFramePresenterFactory,
 			final FileChooserFactory fileChooserFactory,
-			final PainterScreenSetting mainScreenSetting,
 			final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory,
 			final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory,
-			final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory,
-			final FileAccessService<OrigamiModel> origamiModelFileAccessService,
-			final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final FileFactory fileFactory) {
+
+		this.modelViewFramePresenterFactory = modelViewFramePresenterFactory;
+
 		this.fileChooserFactory = fileChooserFactory;
-		this.mainScreenSetting = mainScreenSetting;
 
 		this.foldedModelFileSelectionPresenterFactory = foldedModelFileSelectionPresenterFactory;
 		this.foldedModelFileAccessFactory = foldedModelFileAccessFactory;
 
-		this.modelViewComponentPresenterFactory = modelViewComponentPresenterFactory;
-		this.origamiModelFileAccessService = origamiModelFileAccessService;
-		this.origamiModelFileSelectionPresenterFactory = origamiModelFileSelectionPresenterFactory;
-
-		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.fileFactory = fileFactory;
 	}
 
 	public ModelViewFramePresenter createModelViewFramePresenter(
 			final ModelViewFrameView view,
 			final List<OrigamiModel> origamiModels,
-			final CallbackOnUpdate onUpdateScissorsLine,
 			final double eps) {
-		return new ModelViewFramePresenter(
+		return modelViewFramePresenterFactory.create(
 				view,
-				modelViewComponentPresenterFactory,
-				origamiModelFileSelectionPresenterFactory,
-				mainScreenSetting,
 				origamiModels,
-				cutModelOutlinesHolder,
-				onUpdateScissorsLine,
-				origamiModelFileAccessService,
 				eps);
 	}
 

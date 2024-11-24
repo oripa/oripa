@@ -61,6 +61,7 @@ import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.logic.*;
 import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
+import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
 import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
@@ -111,19 +112,19 @@ public class ORIPA {
 
 			var screenUpdaterFactory = new ViewScreenUpdaterFactory();
 
-			var screenUpdater = screenUpdaterFactory.create();
+			var mainScreenUpdater = screenUpdaterFactory.create();
 			var mouseActionHolder = new MouseActionHolder();
 			var keyProcessing = new KeyProcessingImpl(
 					new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder),
-					screenUpdater);
-			var viewUpdateSupport = new ViewUpdateSupport(screenUpdater, keyProcessing);
+					mainScreenUpdater);
+			var viewUpdateSupport = new ViewUpdateSupport(mainScreenUpdater, keyProcessing);
 
 			var mainViewSetting = new MainViewSetting(
 					new MainFrameSettingImpl(),
 					new PainterScreenSettingImpl(),
 					new UIPanelSettingImpl());
 
-			var screenSetting = mainViewSetting.getPainterScreenSetting();
+			var mainScreenSetting = mainViewSetting.getPainterScreenSetting();
 
 			var mainFrame = new MainFrame(mainViewSetting, viewUpdateSupport);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -164,7 +165,7 @@ public class ORIPA {
 			var stateManager = new EditModeStateManager();
 
 			var setterFactory = new MouseActionSetterFactory(
-					mouseActionHolder, screenUpdater::updateScreen, paintContext);
+					mouseActionHolder, mainScreenUpdater::updateScreen, paintContext);
 
 			var statePopperFactory = new StatePopperFactory<>(stateManager);
 			var stateFactory = new PaintBoundStateFactory(
@@ -188,7 +189,7 @@ public class ORIPA {
 
 			var subFrameFactory = new SubSwingFrameFactory(
 					new FoldabilityCheckSwingFrameFactory(childFrameManager),
-					new ModelViewSwingFrameFactory(screenSetting,
+					new ModelViewSwingFrameFactory(mainScreenSetting,
 							childFrameManager),
 					new EstimationResultSwingFrameFactory(childFrameManager));
 			var fileChooserFactory = new FileChooserSwingFactory();
@@ -209,22 +210,26 @@ public class ORIPA {
 					fileFactory,
 					extensionCorrector);
 
-			var origamiModelfileSelectionPresenterFactory = new OrigamiModelFileSelectionPresenterFactory(
+			var origamiModelFileSelectionPresenterFactory = new OrigamiModelFileSelectionPresenterFactory(
 					fileChooserFactory,
 					fileFactory,
 					extensionCorrector);
 
 			var modelViewComponentPresenterFactory = new ModelViewComponentPresenterFactory(cutModelOutlinesHolder);
 
+			var modelViewFramePresenterFactory = new ModelViewFramePresenterFactory(
+					mainScreenUpdater::updateScreen,
+					mainScreenSetting,
+					modelViewComponentPresenterFactory,
+					origamiModelFileSelectionPresenterFactory,
+					origamiModelFileAccessService,
+					cutModelOutlinesHolder);
+
 			var subFramePresenterFactory = new SubFramePresenterFactory(
+					modelViewFramePresenterFactory,
 					fileChooserFactory,
-					screenSetting,
 					foldedModelfileSelectionPresenterFactory,
 					foldedModelFileAccessFactory,
-					modelViewComponentPresenterFactory,
-					origamiModelFileAccessService,
-					origamiModelfileSelectionPresenterFactory,
-					cutModelOutlinesHolder,
 					fileFactory);
 
 			var docFileAccess = new DocFileAccess(
@@ -242,7 +247,7 @@ public class ORIPA {
 			var fileModelCheckService = new FileModelCheckService(paintContext, modelFactory);
 
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
-					screenSetting,
+					mainScreenSetting,
 					subFrameFactory,
 					subFramePresenterFactory,
 					modelIndexChangeListenerPutter,
@@ -251,6 +256,7 @@ public class ORIPA {
 					presentationContext,
 					viewUpdateSupport,
 					domainContext,
+					paintContext,
 					cutModelOutlinesHolder,
 					bindingFactory,
 					fileModelCheckService,
@@ -276,7 +282,7 @@ public class ORIPA {
 					mainFrame,
 					childFrameManager,
 					screenPresenter,
-					screenSetting,
+					mainScreenSetting,
 					paintContextModification,
 					paintContext,
 					cutModelOutlinesHolder,
@@ -286,15 +292,15 @@ public class ORIPA {
 			var creasePatternViewContext = presentationContext.getViewContext();
 			var iniFileAccessPresentationLogic = new IniFileAccessPresentationLogic(
 					mainFrame,
-					screenSetting,
+					mainScreenSetting,
 					creasePatternViewContext,
 					iniFileAccess,
 					fileHistory);
 
 			var clearActionPresentationLogic = new ClearActionPresentationLogic(
 					mainFrame,
-					screenUpdater,
-					screenSetting,
+					mainScreenUpdater,
+					mainScreenSetting,
 					childFrameManager,
 					paintContext,
 					cutModelOutlinesHolder,
@@ -302,7 +308,7 @@ public class ORIPA {
 					paintContextModification);
 
 			var undoRedoPresentationLogic = new UndoRedoPresentationLogic(
-					screenUpdater,
+					mainScreenUpdater,
 					mouseActionHolder,
 					paintContext);
 

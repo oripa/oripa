@@ -42,6 +42,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
+import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacade;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
@@ -73,6 +74,9 @@ class UIPanelPresenterTest {
 	SubFrameFactory subFrameFactory;
 	@Mock
 	SubFramePresenterFactory subFramePresenterFactory;
+
+	@Mock
+	GridDivNumPresentationLogic gridDivNumPresentationLogic;
 
 	@Mock
 	ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
@@ -193,7 +197,7 @@ class UIPanelPresenterTest {
 				when(subFrameFactory.createModelViewFrame(any(), any())).thenReturn(modelFrame);
 
 				ModelViewFramePresenter modelPresenter = mock();
-				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), any(), anyDouble()))
+				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
 						.thenReturn(modelPresenter);
 
 				EstimationResultFrameView estimationFrame = mock();
@@ -239,7 +243,7 @@ class UIPanelPresenterTest {
 				when(subFrameFactory.createModelViewFrame(any(), any())).thenReturn(modelFrame);
 
 				ModelViewFramePresenter modelPresenter = mock();
-				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), any(), anyDouble()))
+				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
 						.thenReturn(modelPresenter);
 
 				FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
@@ -336,13 +340,14 @@ class UIPanelPresenterTest {
 	}
 
 	UIPanelPresenter construct() {
+
 		return new UIPanelPresenter(
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
+				gridDivNumPresentationLogic,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
-				screenUpdater,
 				keyProcessing,
 				typeForChangeContext,
 				creasePatternViewContext,

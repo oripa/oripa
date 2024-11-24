@@ -21,10 +21,12 @@ package oripa.gui.presenter.main;
 import oripa.application.FileSelectionService;
 import oripa.application.main.FileModelCheckService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
+import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
 import oripa.gui.view.FrameView;
@@ -54,6 +56,7 @@ public class MainComponentPresenterFactory {
 	private final ViewUpdateSupport viewUpdateSupport;
 	private final CreasePatternPresentationContext presentationContext;
 	private final PaintDomainContext domainContext;
+	private final PaintContext paintContext;
 	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 	private final BindingObjectFactoryFacade bindingFactory;
 	private final FileModelCheckService fileModelCheckService;
@@ -71,6 +74,7 @@ public class MainComponentPresenterFactory {
 			final CreasePatternPresentationContext presentationContext,
 			final ViewUpdateSupport viewUpdateSupport,
 			final PaintDomainContext domainContext,
+			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
 			final FileModelCheckService fileModelCheckService,
@@ -85,6 +89,7 @@ public class MainComponentPresenterFactory {
 		this.viewUpdateSupport = viewUpdateSupport;
 		this.presentationContext = presentationContext;
 		this.domainContext = domainContext;
+		this.paintContext = paintContext;
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.bindingFactory = bindingFactory;
 		this.fileModelCheckService = fileModelCheckService;
@@ -97,13 +102,18 @@ public class MainComponentPresenterFactory {
 	public UIPanelPresenter createUIPanelPresenter(
 			final UIPanelView view) {
 
+		var gridDivNumPresentationLogic = new GridDivNumPresentationLogic(
+				view,
+				viewUpdateSupport.getViewScreenUpdater(),
+				paintContext);
+
 		return new UIPanelPresenter(
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
+				gridDivNumPresentationLogic,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
-				viewUpdateSupport.getViewScreenUpdater(),
 				viewUpdateSupport.getKeyProcessing(),
 				presentationContext.getTypeForChangeContext(),
 				presentationContext.getViewContext(),

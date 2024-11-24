@@ -37,13 +37,13 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
+import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
-import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -64,6 +64,8 @@ public class UIPanelPresenter {
 	private final UIPanelView view;
 	private final SubFrameFactory subFrameFactory;
 
+	private final GridDivNumPresentationLogic gridDivNumPresentationLogic;
+
 	private final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 	private final SubFramePresenterFactory subFramePresenterFactory;
 
@@ -81,7 +83,6 @@ public class UIPanelPresenter {
 
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final ViewScreenUpdater screenUpdater;
 	private final KeyProcessing keyProcessing;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext creasePatternViewContext;
@@ -98,9 +99,9 @@ public class UIPanelPresenter {
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
+			final GridDivNumPresentationLogic gridDivNumPresentationLogic,
 			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
 			final ModelComputationFacadeFactory computationFacadeFactory,
-			final ViewScreenUpdater screenUpdater,
 			final KeyProcessing keyProcessing,
 			final TypeForChangeContext typeForChangeContext,
 			final CreasePatternViewContext creasePatternViewContext,
@@ -112,11 +113,12 @@ public class UIPanelPresenter {
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
 
+		this.gridDivNumPresentationLogic = gridDivNumPresentationLogic;
+
 		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
 		this.subFramePresenterFactory = subFramePresenterFactory;
 		this.computationFacadeFactory = computationFacadeFactory;
 
-		this.screenUpdater = screenUpdater;
 		this.keyProcessing = keyProcessing;
 
 		this.typeForChangeContext = typeForChangeContext;
@@ -265,9 +267,9 @@ public class UIPanelPresenter {
 		view.addDispGridCheckBoxListener(checked -> {
 			mainScreenSetting.setGridVisible(checked);
 		});
-		view.addGridSmallButtonListener(this::makeGridSizeHalf);
-		view.addGridLargeButtonListener(this::makeGridSizeTwiceLarge);
-		view.addGridChangeButtonListener(this::updateGridDivNum);
+		view.addGridSmallButtonListener(gridDivNumPresentationLogic::makeGridSizeHalf);
+		view.addGridLargeButtonListener(gridDivNumPresentationLogic::makeGridSizeTwiceLarge);
+		view.addGridChangeButtonListener(gridDivNumPresentationLogic::updateGridDivNum);
 
 		// ------------------------------------------------------------
 		// display setting
@@ -302,32 +304,6 @@ public class UIPanelPresenter {
 		view.addCheckWindowButtonListener(this::showCheckerWindow);
 		view.setModelComputationListener(this::computeModels);
 		view.setShowFoldedModelWindowsListener(this::showFoldedModelWindows);
-	}
-
-	private void makeGridSizeHalf() {
-		setGridDivNumIfValid(paintContext.getGridDivNum() * 2);
-	}
-
-	private void makeGridSizeTwiceLarge() {
-		setGridDivNumIfValid(paintContext.getGridDivNum() / 2);
-	}
-
-	private void updateGridDivNum(final int gridDivNum) {
-		setGridDivNumIfValid(gridDivNum);
-	}
-
-	private void setGridDivNumIfValid(final int gridDivNum) {
-		if (!isValidGridDivNum(gridDivNum)) {
-			return;
-		}
-		paintContext.setGridDivNum(gridDivNum);
-		view.setGridDivNum(gridDivNum);
-
-		screenUpdater.updateScreen();
-	}
-
-	private boolean isValidGridDivNum(final int gridDivNum) {
-		return gridDivNum >= 2 && gridDivNum <= 256;
 	}
 
 	/**
@@ -407,7 +383,6 @@ public class UIPanelPresenter {
 		var modelViewPresenter = subFramePresenterFactory.createModelViewFramePresenter(
 				modelViewFrame,
 				origamiModels,
-				screenUpdater::updateScreen,
 				paintContext.getPointEps());
 		modelViewPresenter.setViewVisible(true);
 
