@@ -30,7 +30,7 @@ import oripa.application.main.DocFileAccess;
 import oripa.file.FileHistory;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.file.UserAction;
-import oripa.gui.presenter.main.MainComponentPresenterFactory;
+import oripa.gui.presenter.main.MainDialogPresenterFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
@@ -47,7 +47,7 @@ public class MainFrameFilePresentationLogic {
 
 	private final MainFrameView view;
 
-	private final MainComponentPresenterFactory componentPresenterFactory;
+	private final MainDialogPresenterFactory dialogPresenterFactory;
 	private final FileAccessPresentationLogic fileAccessPresentationLogic;
 	private final Project project;
 
@@ -57,14 +57,14 @@ public class MainFrameFilePresentationLogic {
 
 	public MainFrameFilePresentationLogic(
 			final MainFrameView view,
-			final MainComponentPresenterFactory componentPresenterFactory,
+			final MainDialogPresenterFactory dialogPresenterFactory,
 			final FileAccessPresentationLogic fileAccessPresentationLogic,
 			final Project project,
 			final DocFileAccess dataFileAccess,
 			final FileHistory fileHistory,
 			final FileFactory fileFactory) {
 		this.view = view;
-		this.componentPresenterFactory = componentPresenterFactory;
+		this.dialogPresenterFactory = dialogPresenterFactory;
 		this.fileAccessPresentationLogic = fileAccessPresentationLogic;
 		this.project = project;
 		this.dataFileAccess = dataFileAccess;
@@ -105,7 +105,7 @@ public class MainFrameFilePresentationLogic {
 
 		var filePath = defaultFile.getPath();
 
-		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
+		var presenter = dialogPresenterFactory.createDocFileSelectionPresenter(
 				view, dataFileAccess.getFileSelectionService());
 
 		var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
@@ -128,7 +128,7 @@ public class MainFrameFilePresentationLogic {
 	 * model check before saving.
 	 */
 	public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
-		var presenter = componentPresenterFactory.createDocFileSelectionPresenter(
+		var presenter = dialogPresenterFactory.createDocFileSelectionPresenter(
 				view,
 				dataFileAccess.getFileSelectionService());
 
@@ -155,7 +155,7 @@ public class MainFrameFilePresentationLogic {
 	 * This method opens the file dialog and load the selected file.
 	 */
 	public void loadFileUsingGUI() {
-		var selection = componentPresenterFactory.createDocFileSelectionPresenter(
+		var selection = dialogPresenterFactory.createDocFileSelectionPresenter(
 				view,
 				dataFileAccess.getFileSelectionService())
 				.loadUsingGUI(fileHistory.getLastPath());
@@ -179,7 +179,7 @@ public class MainFrameFilePresentationLogic {
 
 	public void importFileUsingGUI() {
 		try {
-			var selection = componentPresenterFactory.createDocFileSelectionPresenter(
+			var selection = dialogPresenterFactory.createDocFileSelectionPresenter(
 					view,
 					dataFileAccess.getFileSelectionService())
 					.loadUsingGUI(fileHistory.getLastPath());

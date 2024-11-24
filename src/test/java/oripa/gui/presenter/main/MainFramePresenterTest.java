@@ -69,7 +69,7 @@ class MainFramePresenterTest {
 	MainFramePresentationLogic presentationLogic;
 
 	@Mock
-	MainComponentPresenterFactory componentPresenterFactory;
+	MainDialogPresenterFactory dialogPresenterFactory;
 
 	@Mock
 	BindingObjectFactoryFacade bindingFactory;
@@ -195,7 +195,7 @@ class MainFramePresenterTest {
 					when(dialogFactory.createPropertyDialog(view)).thenReturn(dialog);
 
 					PropertyDialogPresenter dialogPresenter = mock();
-					when(componentPresenterFactory.createPropertyDialogPresenter(dialog, project))
+					when(dialogPresenterFactory.createPropertyDialogPresenter(dialog, project))
 							.thenReturn(dialogPresenter);
 
 					construct();
@@ -222,7 +222,7 @@ class MainFramePresenterTest {
 					when(dialogFactory.createArrayCopyDialog(view)).thenReturn(dialog);
 
 					ArrayCopyDialogPresenter dialogPresenter = mock();
-					when(componentPresenterFactory.createArrayCopyDialogPresenter(dialog))
+					when(dialogPresenterFactory.createArrayCopyDialogPresenter(dialog))
 							.thenReturn(dialogPresenter);
 
 					construct();
@@ -264,7 +264,7 @@ class MainFramePresenterTest {
 					when(dialogFactory.createCircleCopyDialog(view)).thenReturn(dialog);
 
 					CircleCopyDialogPresenter dialogPresenter = mock();
-					when(componentPresenterFactory.createCircleCopyDialogPresenter(dialog))
+					when(dialogPresenterFactory.createCircleCopyDialogPresenter(dialog))
 							.thenReturn(dialogPresenter);
 
 					construct();
@@ -755,7 +755,7 @@ class MainFramePresenterTest {
 				view,
 				dialogFactory,
 				presentationLogic,
-				componentPresenterFactory,
+				dialogPresenterFactory,
 				paintMenuListenerFactory,
 				project,
 				paintContext,

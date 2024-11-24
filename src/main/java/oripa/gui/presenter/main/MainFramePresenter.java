@@ -46,7 +46,7 @@ public class MainFramePresenter {
 	private final MainFrameDialogFactory dialogFactory;
 
 	private final MainFramePresentationLogic presentationLogic;
-	private final MainComponentPresenterFactory componentPresenterFactory;
+	private final MainDialogPresenterFactory dialogPresenterFactory;
 
 	private final Project project;
 
@@ -57,7 +57,7 @@ public class MainFramePresenter {
 			final MainFrameView view,
 			final MainFrameDialogFactory dialogFactory,
 			final MainFramePresentationLogic presentationLogic,
-			final MainComponentPresenterFactory componentPresenterFactory,
+			final MainDialogPresenterFactory dialogPresenterFactory,
 			final MainFramePaintMenuListenerFactory paintMenuListenerFactory,
 			final Project project,
 			final PaintContext paintContext,
@@ -67,7 +67,7 @@ public class MainFramePresenter {
 		this.dialogFactory = dialogFactory;
 
 		this.presentationLogic = presentationLogic;
-		this.componentPresenterFactory = componentPresenterFactory;
+		this.dialogPresenterFactory = dialogPresenterFactory;
 
 		this.project = project;
 		this.paintContext = paintContext;
@@ -205,7 +205,7 @@ public class MainFramePresenter {
 	private void showPropertyDialog() {
 		var dialog = dialogFactory.createPropertyDialog(view);
 
-		var presenter = componentPresenterFactory.createPropertyDialogPresenter(dialog, project);
+		var presenter = dialogPresenterFactory.createPropertyDialogPresenter(dialog, project);
 
 		presenter.setViewVisible(true);
 	}
@@ -218,7 +218,7 @@ public class MainFramePresenter {
 
 		var dialog = dialogFactory.createArrayCopyDialog(view);
 
-		var presenter = componentPresenterFactory.createArrayCopyDialogPresenter(dialog);
+		var presenter = dialogPresenterFactory.createArrayCopyDialogPresenter(dialog);
 
 		presenter.setViewVisible(true);
 	}
@@ -231,7 +231,7 @@ public class MainFramePresenter {
 
 		var dialog = dialogFactory.createCircleCopyDialog(view);
 
-		var presenter = componentPresenterFactory.createCircleCopyDialogPresenter(dialog);
+		var presenter = dialogPresenterFactory.createCircleCopyDialogPresenter(dialog);
 
 		presenter.setViewVisible(true);
 	}

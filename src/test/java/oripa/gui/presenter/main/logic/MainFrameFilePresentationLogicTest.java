@@ -40,7 +40,7 @@ import oripa.application.main.DocFileAccess;
 import oripa.file.FileHistory;
 import oripa.gui.presenter.file.FileSelectionResult;
 import oripa.gui.presenter.main.DocFileSelectionPresenter;
-import oripa.gui.presenter.main.MainComponentPresenterFactory;
+import oripa.gui.presenter.main.MainDialogPresenterFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.persistence.dao.DataAccessException;
 import oripa.persistence.dao.FileType;
@@ -77,7 +77,7 @@ class MainFrameFilePresentationLogicTest {
 	FileFactory fileFactory;
 
 	@Mock
-	MainComponentPresenterFactory componentPresenterFactory;
+	MainDialogPresenterFactory dialogPresenterFactory;
 
 	@Nested
 	class TestModifySavingActions {
@@ -130,7 +130,7 @@ class MainFrameFilePresentationLogicTest {
 							selectedPath,
 							mock());
 			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
@@ -161,7 +161,7 @@ class MainFrameFilePresentationLogicTest {
 							selectedPath,
 							mock());
 			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
@@ -190,7 +190,7 @@ class MainFrameFilePresentationLogicTest {
 			FileSelectionResult<Doc> selectionResult = FileSelectionResult
 					.createCanceled();
 			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			// execute
@@ -222,7 +222,7 @@ class MainFrameFilePresentationLogicTest {
 							"selected path",
 							mock());
 			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			doThrow(DataAccessException.class).when(fileAccessPresentationLogic).saveFile(anyString(), any());
@@ -252,7 +252,7 @@ class MainFrameFilePresentationLogicTest {
 			when(selectionPresenter.saveFileWithModelCheck(
 					anyString(), any(), any()))
 							.thenReturn(selectionResult);
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			FileType<Doc> type = mock();
@@ -275,7 +275,7 @@ class MainFrameFilePresentationLogicTest {
 			when(selectionPresenter.saveFileWithModelCheck(
 					anyString(), any(), any()))
 							.thenReturn(selectionResult);
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			FileType<Doc> type = mock();
@@ -338,7 +338,7 @@ class MainFrameFilePresentationLogicTest {
 			DocFileSelectionPresenter selectionPresenter = mock();
 			when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
 
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			// execute
@@ -365,7 +365,7 @@ class MainFrameFilePresentationLogicTest {
 			DocFileSelectionPresenter selectionPresenter = mock();
 			when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
 
-			when(componentPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
 					.thenReturn(selectionPresenter);
 
 			// execute
