@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.estimation;
+package oripa.gui.presenter.estimation.logic;
 
 import java.lang.invoke.MethodHandles;
 
@@ -38,7 +38,7 @@ import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
  * @author OUCHI Koji
  *
  */
-public class EstimationResultFilePresenter {
+public class EstimationResultFilePresentationLogic {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -46,7 +46,7 @@ public class EstimationResultFilePresenter {
 
 	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
 
-	public EstimationResultFilePresenter(
+	public EstimationResultFilePresentationLogic(
 			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
 			final FoldedModelFileAccessServiceFactory fileAccessFactory) {
 

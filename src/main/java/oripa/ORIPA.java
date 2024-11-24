@@ -55,9 +55,9 @@ import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.estimation.EstimationResultComponentPresenterFactory;
-import oripa.gui.presenter.estimation.EstimationResultFilePresenter;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenterFactory;
-import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
+import oripa.gui.presenter.estimation.logic.EstimationResultFilePresentationLogic;
+import oripa.gui.presenter.estimation.logic.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
 import oripa.gui.presenter.main.DocFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainDialogPresenterFactory;
@@ -67,7 +67,8 @@ import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.main.logic.*;
 import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
-import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
+import oripa.gui.presenter.model.logic.ModelViewFilePresentationLogic;
+import oripa.gui.presenter.model.logic.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.util.ChildFrameManager;
@@ -217,19 +218,21 @@ public class ORIPA {
 
 			var modelViewComponentPresenterFactory = new ModelViewComponentPresenterFactory(cutModelOutlinesHolder);
 
+			var modelViewFilePresentatinLogic = new ModelViewFilePresentationLogic(
+					origamiModelFileSelectionPresenterFactory,
+					origamiModelFileAccessService);
+
 			var modelViewFramePresenterFactory = new ModelViewFramePresenterFactory(
 					mainScreenUpdater::updateScreen,
 					mainScreenSetting,
 					modelViewComponentPresenterFactory,
-					origamiModelFileSelectionPresenterFactory,
-					origamiModelFileAccessService,
-					cutModelOutlinesHolder);
+					modelViewFilePresentatinLogic);
 
 			var foldabilityCheckFramePresenterFactory = new FoldabilityCheckFramePresenterFactory(
 					creasePatternViewContext,
 					new OrigamiModelFactory());
 
-			var estimationResultFilePresenter = new EstimationResultFilePresenter(
+			var estimationResultFilePresenter = new EstimationResultFilePresentationLogic(
 					foldedModelfileSelectionPresenterFactory,
 					foldedModelFileAccessFactory);
 

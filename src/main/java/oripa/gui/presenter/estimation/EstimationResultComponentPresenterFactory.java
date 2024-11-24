@@ -20,6 +20,7 @@ package oripa.gui.presenter.estimation;
 
 import java.util.function.Consumer;
 
+import oripa.gui.presenter.estimation.logic.EstimationResultFilePresentationLogic;
 import oripa.gui.view.estimation.EstimationResultUIView;
 
 /**
@@ -28,12 +29,12 @@ import oripa.gui.view.estimation.EstimationResultUIView;
  */
 public class EstimationResultComponentPresenterFactory {
 
-	private final EstimationResultFilePresenter estimationResultFilePresenter;
+	private final EstimationResultFilePresentationLogic estimationResultFilePresentationLogic;
 
 	public EstimationResultComponentPresenterFactory(
-			final EstimationResultFilePresenter estimationResultFilePresenter) {
+			final EstimationResultFilePresentationLogic estimationResultFilePresenter) {
 
-		this.estimationResultFilePresenter = estimationResultFilePresenter;
+		this.estimationResultFilePresentationLogic = estimationResultFilePresenter;
 	}
 
 	public EstimationResultUIPresenter createEstimationResultUIPresenter(
@@ -42,7 +43,7 @@ public class EstimationResultComponentPresenterFactory {
 			final Consumer<String> lastFilePathChangeListener) {
 		return new EstimationResultUIPresenter(
 				view,
-				estimationResultFilePresenter,
+				estimationResultFilePresentationLogic,
 				lastFilePath,
 				lastFilePathChangeListener);
 

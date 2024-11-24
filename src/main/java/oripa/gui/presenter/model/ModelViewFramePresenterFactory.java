@@ -20,10 +20,9 @@ package oripa.gui.presenter.model;
 
 import java.util.List;
 
-import oripa.application.FileAccessService;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.gui.presenter.model.logic.ModelViewFilePresentationLogic;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelViewFrameView;
 
@@ -36,31 +35,22 @@ public class ModelViewFramePresenterFactory {
 	private final ScreenUpdater mainScreenUpdater;
 
 	private final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory;
-	private final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory;
 
-	private final FileAccessService<OrigamiModel> origamiModelFileAccessService;
+	private final ModelViewFilePresentationLogic filePresentationLogic;
 
 	private final PainterScreenSetting mainScreenSetting;
-
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 
 	public ModelViewFramePresenterFactory(
 			final ScreenUpdater mainScreenUpdater,
 			final PainterScreenSetting mainScreenSetting,
 			final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory,
-			final OrigamiModelFileSelectionPresenterFactory origamiModelFileSelectionPresenterFactory,
-			final FileAccessService<OrigamiModel> origamiModelFileAccessService,
-			final CutModelOutlinesHolder cutModelOutlinesHolder) {
+			final ModelViewFilePresentationLogic filePresentationLogic) {
 		this.mainScreenUpdater = mainScreenUpdater;
 
 		this.mainScreenSetting = mainScreenSetting;
 
 		this.modelViewComponentPresenterFactory = modelViewComponentPresenterFactory;
-		this.origamiModelFileSelectionPresenterFactory = origamiModelFileSelectionPresenterFactory;
-
-		this.origamiModelFileAccessService = origamiModelFileAccessService;
-
-		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
+		this.filePresentationLogic = filePresentationLogic;
 
 	}
 
@@ -68,15 +58,16 @@ public class ModelViewFramePresenterFactory {
 			final ModelViewFrameView view,
 			final List<OrigamiModel> origamiModels,
 			final double eps) {
+		var screen = modelViewComponentPresenterFactory.createScreenPresenter(
+				view.getModelScreenView(),
+				mainScreenUpdater::updateScreen,
+				eps);
+
 		return new ModelViewFramePresenter(
 				view,
-				modelViewComponentPresenterFactory,
-				origamiModelFileSelectionPresenterFactory,
+				filePresentationLogic,
 				mainScreenSetting,
 				origamiModels,
-				cutModelOutlinesHolder,
-				mainScreenUpdater::updateScreen,
-				origamiModelFileAccessService,
 				eps);
 	}
 

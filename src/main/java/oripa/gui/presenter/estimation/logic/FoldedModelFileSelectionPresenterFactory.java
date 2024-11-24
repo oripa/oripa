@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.estimation;
+package oripa.gui.presenter.estimation.logic;
 
 import oripa.application.FileSelectionService;
 import oripa.gui.presenter.file.FileSelectionPresenter;

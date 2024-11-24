@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
 import oripa.domain.fold.FoldedModel;
+import oripa.gui.presenter.estimation.logic.EstimationResultFilePresentationLogic;
 import oripa.gui.presenter.estimation.logic.SubfaceToOverlapRelationIndicesFactory;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
@@ -41,7 +42,7 @@ public class EstimationResultUIPresenter {
 
 	private final EstimationResultUIView view;
 
-	private final EstimationResultFilePresenter estimationResultFilePresenter;
+	private final EstimationResultFilePresentationLogic estimationResultFilePresenter;
 
 	private String lastFilePath;
 	private final Consumer<String> lastFilePathChangeListener;
@@ -50,7 +51,7 @@ public class EstimationResultUIPresenter {
 
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
-			final EstimationResultFilePresenter estimationResultFilePresenter,
+			final EstimationResultFilePresentationLogic estimationResultFilePresenter,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
