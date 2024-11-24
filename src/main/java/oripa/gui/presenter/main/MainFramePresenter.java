@@ -28,7 +28,6 @@ import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
-import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
@@ -43,10 +42,9 @@ public class MainFramePresenter {
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final MainFrameView view;
-	private final MainFrameDialogFactory dialogFactory;
 
 	private final MainFramePresentationLogic presentationLogic;
-	private final MainComponentPresenterFactory componentPresenterFactory;
+	private final MainDialogPresenterFactory dialogPresenterFactory;
 
 	private final Project project;
 
@@ -55,19 +53,17 @@ public class MainFramePresenter {
 
 	public MainFramePresenter(
 			final MainFrameView view,
-			final MainFrameDialogFactory dialogFactory,
 			final MainFramePresentationLogic presentationLogic,
-			final MainComponentPresenterFactory componentPresenterFactory,
+			final MainDialogPresenterFactory dialogPresenterFactory,
 			final MainFramePaintMenuListenerFactory paintMenuListenerFactory,
 			final Project project,
 			final PaintContext paintContext,
 			final List<GraphicMouseActionPlugin> plugins) {
 
 		this.view = view;
-		this.dialogFactory = dialogFactory;
 
 		this.presentationLogic = presentationLogic;
-		this.componentPresenterFactory = componentPresenterFactory;
+		this.dialogPresenterFactory = dialogPresenterFactory;
 
 		this.project = project;
 		this.paintContext = paintContext;
@@ -203,9 +199,8 @@ public class MainFramePresenter {
 	}
 
 	private void showPropertyDialog() {
-		var dialog = dialogFactory.createPropertyDialog(view);
 
-		var presenter = componentPresenterFactory.createPropertyDialogPresenter(dialog, project);
+		var presenter = dialogPresenterFactory.createPropertyDialogPresenter(view, project);
 
 		presenter.setViewVisible(true);
 	}
@@ -216,9 +211,7 @@ public class MainFramePresenter {
 			return;
 		}
 
-		var dialog = dialogFactory.createArrayCopyDialog(view);
-
-		var presenter = componentPresenterFactory.createArrayCopyDialogPresenter(dialog);
+		var presenter = dialogPresenterFactory.createArrayCopyDialogPresenter(view);
 
 		presenter.setViewVisible(true);
 	}
@@ -229,9 +222,7 @@ public class MainFramePresenter {
 			return;
 		}
 
-		var dialog = dialogFactory.createCircleCopyDialog(view);
-
-		var presenter = componentPresenterFactory.createCircleCopyDialogPresenter(dialog);
+		var presenter = dialogPresenterFactory.createCircleCopyDialogPresenter(view);
 
 		presenter.setViewVisible(true);
 	}

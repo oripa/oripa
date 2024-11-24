@@ -25,34 +25,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.TypeForChange;
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.fold.EstimationResultRules;
-import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.AngleStep;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.byvalue.ByValueContext;
-import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
-import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
-import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
-import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
+import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
-import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
-import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
+import oripa.gui.presenter.main.logic.SubFramePresentationLogic;
+import oripa.gui.presenter.main.logic.UIPanelPaintMenuListenerRegistration;
+import oripa.gui.presenter.main.logic.ValuePanelPresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
-import oripa.gui.view.FrameView;
-import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.estimation.EstimationResultFrameView;
-import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
-import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
-import oripa.gui.view.model.ModelViewFrameView;
-import oripa.resource.StringID;
-import oripa.util.MathUtil;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -62,10 +44,11 @@ public class UIPanelPresenter {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
 
 	private final UIPanelView view;
-	private final SubFrameFactory subFrameFactory;
 
-	private final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
-	private final SubFramePresenterFactory subFramePresenterFactory;
+	private final SubFramePresentationLogic subFramePresentationLogic;
+	private final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
+	private final GridDivNumPresentationLogic gridDivNumPresentationLogic;
+	private final ValuePanelPresentationLogic valuePanelPresentationLogic;
 
 	private final TypeForChange[] alterLineComboDataFrom = {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
@@ -77,55 +60,23 @@ public class UIPanelPresenter {
 	private final ComputationType[] computationTypeComboData = {
 			ComputationType.FULL, ComputationType.FIRST_ONLY, ComputationType.X_RAY };
 
-	private final ByValueContext byValueContext;
-
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final ViewScreenUpdater screenUpdater;
-	private final KeyProcessing keyProcessing;
-	private final PaintContext paintContext;
-	private final CreasePatternViewContext creasePatternViewContext;
-
-	private final TypeForChangeContext typeForChangeContext;
-
-	private final BindingObjectFactoryFacade bindingFactory;
-
-	private final ModelComputationFacadeFactory computationFacadeFactory;
-	private ComputationResult computationResult;
-
-	private String lastResultFilePath;
-
 	public UIPanelPresenter(final UIPanelView view,
-			final SubFrameFactory subFrameFactory,
-			final SubFramePresenterFactory subFramePresenterFactory,
-			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
-			final ModelComputationFacadeFactory computationFacadeFactory,
-			final ViewScreenUpdater screenUpdater,
-			final KeyProcessing keyProcessing,
+			final SubFramePresentationLogic subFramePresentationLogic,
+			final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration,
+			final GridDivNumPresentationLogic gridDivNumPresentationLogic,
+			final ValuePanelPresentationLogic valuePanelPresentationLogic,
 			final TypeForChangeContext typeForChangeContext,
-			final CreasePatternViewContext creasePatternViewContext,
-			final PaintContext paintContext,
-			final ByValueContext byValueContext,
-			final BindingObjectFactoryFacade bindingFactory,
 			final PainterScreenSetting mainScreenSetting) {
 
 		this.view = view;
-		this.subFrameFactory = subFrameFactory;
 
-		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
-		this.subFramePresenterFactory = subFramePresenterFactory;
-		this.computationFacadeFactory = computationFacadeFactory;
+		this.subFramePresentationLogic = subFramePresentationLogic;
 
-		this.screenUpdater = screenUpdater;
-		this.keyProcessing = keyProcessing;
-
-		this.typeForChangeContext = typeForChangeContext;
-		this.creasePatternViewContext = creasePatternViewContext;
-
-		this.paintContext = paintContext;
-		this.byValueContext = byValueContext;
-
-		this.bindingFactory = bindingFactory;
+		this.paintMenuListenerRegistration = paintMenuListenerRegistration;
+		this.gridDivNumPresentationLogic = gridDivNumPresentationLogic;
+		this.valuePanelPresentationLogic = valuePanelPresentationLogic;
 
 		this.mainScreenSetting = mainScreenSetting;
 
@@ -148,116 +99,12 @@ public class UIPanelPresenter {
 	}
 
 	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
-		for (var plugin : plugins) {
-			var state = bindingFactory.createState(plugin);
-
-			view.addMouseActionPluginListener(plugin.getName(), state::performActions, keyProcessing);
-		}
-		view.updatePluginPanel();
+		paintMenuListenerRegistration.addPlugins(plugins);
 	}
 
 	private void addListeners() {
-		// ------------------------------------------------------------
-		// edit mode buttons
 
-		view.addEditModeInputLineButtonListener(
-				bindingFactory.createStatePopperForCommand(EditMode.INPUT),
-				keyProcessing);
-
-		view.addEditModeLineSelectionButtonListener(
-				bindingFactory.createStatePopperForCommand(EditMode.SELECT),
-				keyProcessing);
-
-		var deleteLineState = bindingFactory.createState(StringID.DELETE_LINE_ID);
-		view.addEditModeDeleteLineButtonListener(deleteLineState::performActions, keyProcessing);
-
-		var lineTypeState = bindingFactory.createState(StringID.CHANGE_LINE_TYPE_ID);
-		view.addEditModeLineTypeButtonListener(lineTypeState::performActions, keyProcessing);
-
-		view.addAlterLineComboFromSelectionListener(
-				item -> typeForChangeContext.setTypeFrom(TypeForChange.fromString(item).get()));
-		view.addAlterLineComboToSelectionListener(
-				item -> typeForChangeContext.setTypeTo(TypeForChange.fromString(item).get()));
-
-		var addVertexState = bindingFactory.createState(StringID.ADD_VERTEX_ID);
-		view.addEditModeAddVertexButtonListener(addVertexState::performActions, keyProcessing);
-
-		var deleteVertexState = bindingFactory.createState(StringID.DELETE_VERTEX_ID);
-		view.addEditModeDeleteVertexButtonListener(deleteVertexState::performActions, keyProcessing);
-
-		// ------------------------------------------------------------
-		// selection command buttons
-
-		var selectLineState = bindingFactory.createState(StringID.SELECT_LINE_ID);
-		view.addSelectionButtonListener(selectLineState::performActions, keyProcessing);
-
-		var enlargementState = bindingFactory.createState(StringID.ENLARGE_ID);
-		view.addEnlargementButtonListener(enlargementState::performActions, keyProcessing);
-
-		// ------------------------------------------------------------
-		// input command buttons
-
-		var directVState = bindingFactory.createState(StringID.DIRECT_V_ID);
-		view.addLineInputDirectVButtonListener(directVState::performActions, keyProcessing);
-
-		var onVState = bindingFactory.createState(StringID.ON_V_ID);
-		view.addLineInputOnVButtonListener(onVState::performActions, keyProcessing);
-
-		var verticalLineState = bindingFactory.createState(StringID.VERTICAL_ID);
-		view.addLineInputVerticalLineButtonListener(verticalLineState::performActions,
-				keyProcessing);
-
-		var angleBisectorState = bindingFactory.createState(StringID.BISECTOR_ID);
-		view.addLineInputAngleBisectorButtonListener(angleBisectorState::performActions,
-				keyProcessing);
-
-		var lineToLineState = bindingFactory.createState(StringID.LINE_TO_LINE_ID);
-		view.addLineInputLineToLineAxiomButtonListener(lineToLineState::performActions, keyProcessing);
-
-		var p2ltpState = bindingFactory.createState(StringID.POINT_TO_LINE_THROUGH_POINT_ID);
-		view.addLineInputP2LTPAxiomButtonListener(p2ltpState::performActions, keyProcessing);
-
-		var p2lp2lState = bindingFactory.createState(StringID.POINT_TO_LINE_POINT_TO_LINE_ID);
-		view.addLineInputP2LP2LAxiomButtonListener(p2lp2lState::performActions, keyProcessing);
-
-		var p2llState = bindingFactory.createState(StringID.POINT_TO_LINE_LINE_PERPENDICULAR_ID);
-		view.addLineInputP2LLAxiomButtonListener(p2llState::performActions, keyProcessing);
-
-		var triangleSplitState = bindingFactory.createState(StringID.TRIANGLE_ID);
-		view.addLineInputTriangleSplitButtonListener(triangleSplitState::performActions,
-				keyProcessing);
-
-		var symmetricState = bindingFactory.createState(StringID.SYMMETRIC_ID);
-		view.addLineInputSymmetricButtonListener(symmetricState::performActions, keyProcessing);
-
-		var mirrorState = bindingFactory.createState(StringID.MIRROR_ID);
-		view.addLineInputMirrorButtonListener(mirrorState::performActions, keyProcessing);
-
-		var byValueState = bindingFactory.createState(StringID.BY_VALUE_ID);
-		view.addLineInputByValueButtonListener(byValueState::performActions, keyProcessing);
-
-		view.addLengthButtonListener(
-				bindingFactory.createActionSetter(new LengthMeasuringAction(byValueContext)));
-		view.addAngleButtonListener(
-				bindingFactory.createActionSetter(new AngleMeasuringAction(byValueContext)));
-		view.addLengthTextFieldListener(byValueContext::setLength);
-		view.addAngleTextFieldListener(byValueContext::setAngle);
-
-		var pbisecState = bindingFactory.createState(StringID.PERPENDICULAR_BISECTOR_ID);
-		view.addLineInputPBisectorButtonListener(pbisecState::performActions, keyProcessing);
-
-		var angleSnapState = bindingFactory.createState(StringID.ANGLE_SNAP_ID);
-		view.addLineInputAngleSnapButtonListener(angleSnapState::performActions, keyProcessing);
-
-		view.addAngleStepComboListener(step -> paintContext.setAngleStep(AngleStep.fromString(step).get()));
-
-		var suggestionState = bindingFactory.createState(StringID.SUGGESTION_ID);
-		view.addLineInputSuggestionButtonListener(suggestionState::performActions, keyProcessing);
-
-		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
-		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
-		view.addLineTypeUnassignedButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.UNASSIGNED));
-		view.addLineTypeAuxButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
+		paintMenuListenerRegistration.register();
 
 		// ------------------------------------------------------------
 		// grid setting
@@ -265,9 +112,9 @@ public class UIPanelPresenter {
 		view.addDispGridCheckBoxListener(checked -> {
 			mainScreenSetting.setGridVisible(checked);
 		});
-		view.addGridSmallButtonListener(this::makeGridSizeHalf);
-		view.addGridLargeButtonListener(this::makeGridSizeTwiceLarge);
-		view.addGridChangeButtonListener(this::updateGridDivNum);
+		view.addGridSmallButtonListener(gridDivNumPresentationLogic::makeGridSizeHalf);
+		view.addGridLargeButtonListener(gridDivNumPresentationLogic::makeGridSizeTwiceLarge);
+		view.addGridChangeButtonListener(gridDivNumPresentationLogic::updateGridDivNum);
 
 		// ------------------------------------------------------------
 		// display setting
@@ -291,165 +138,18 @@ public class UIPanelPresenter {
 			mainScreenSetting.setZeroLineWidth(checked);
 		});
 
-		byValueContext.addPropertyChangeListener(ByValueContext.ANGLE,
-				e -> view.setByValueAngle((double) e.getNewValue()));
-		byValueContext.addPropertyChangeListener(ByValueContext.LENGTH,
-				e -> view.setByValueLength((double) e.getNewValue()));
-
 		// ------------------------------------------------------------
 		// fold
 
-		view.addCheckWindowButtonListener(this::showCheckerWindow);
-		view.setModelComputationListener(this::computeModels);
-		view.setShowFoldedModelWindowsListener(this::showFoldedModelWindows);
-	}
-
-	private void makeGridSizeHalf() {
-		setGridDivNumIfValid(paintContext.getGridDivNum() * 2);
-	}
-
-	private void makeGridSizeTwiceLarge() {
-		setGridDivNumIfValid(paintContext.getGridDivNum() / 2);
-	}
-
-	private void updateGridDivNum(final int gridDivNum) {
-		setGridDivNumIfValid(gridDivNum);
-	}
-
-	private void setGridDivNumIfValid(final int gridDivNum) {
-		if (!isValidGridDivNum(gridDivNum)) {
-			return;
-		}
-		paintContext.setGridDivNum(gridDivNum);
-		view.setGridDivNum(gridDivNum);
-
-		screenUpdater.updateScreen();
-	}
-
-	private boolean isValidGridDivNum(final int gridDivNum) {
-		return gridDivNum >= 2 && gridDivNum <= 256;
+		view.addCheckWindowButtonListener(subFramePresentationLogic::showCheckerWindow);
+		view.setModelComputationListener(subFramePresentationLogic::computeModels);
+		view.setShowFoldedModelWindowsListener(subFramePresentationLogic::showFoldedModelWindows);
 	}
 
 	/**
 	 * Updates text fields' format setting based on eps in context.
 	 */
 	public void updateValuePanelFractionDigits() {
-		view.setValuePanelFractionDigits(
-				computeValuePanelFractionDigits(paintContext.getPointEps()),
-				computeValuePanelFractionDigits(MathUtil.angleDegreeEps()));
-	}
-
-	private int computeValuePanelFractionDigits(final double eps) {
-		// 1 digit is added for precision.
-		return (int) Math.floor(Math.abs(Math.log10(eps))) + 1;
-	}
-
-	/**
-	 * display window with foldability checks
-	 */
-	private void showCheckerWindow() {
-		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
-		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-				frame,
-				paintContext.getCreasePattern(),
-				creasePatternViewContext.isZeroLineWidth(),
-				paintContext.getPointEps());
-
-		presenter.setViewVisible(true);
-	}
-
-	private void showCheckerWindow(final OrigamiModel origamiModel, final EstimationResultRules estimationRules) {
-		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
-		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-				frame,
-				paintContext.getCreasePattern(),
-				origamiModel,
-				estimationRules,
-				creasePatternViewContext.isZeroLineWidth(),
-				paintContext.getPointEps());
-
-		presenter.setViewVisible(true);
-	}
-
-	private void computeModels() {
-		var modelComputation = computationFacadeFactory.createModelComputationFacade(
-				view,
-				paintContext.getPointEps());
-
-		CreasePattern creasePattern = paintContext.getCreasePattern();
-
-		var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
-
-		computationResult = modelComputation.computeModels(
-				origamiModels,
-				getComputationType());
-	}
-
-	private ComputationType getComputationType() {
-		return ComputationType.fromString(view.getComputationType()).get();
-	}
-
-	private void showFoldedModelWindows() {
-		var parent = (FrameView) view.getTopLevelView();
-
-		if (!computationResult.allLocallyFlatFoldable()) {
-			view.showLocalFlatFoldabilityViolationMessage();
-			showCheckerWindow();
-			return;
-		}
-
-		var origamiModels = computationResult.origamiModels();
-		var foldedModels = computationResult.foldedModels();
-
-		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent,
-				view.getPaperDomainOfModelChangeListener());
-
-		var modelViewPresenter = subFramePresenterFactory.createModelViewFramePresenter(
-				modelViewFrame,
-				origamiModels,
-				screenUpdater::updateScreen,
-				paintContext.getPointEps());
-		modelViewPresenter.setViewVisible(true);
-
-		EstimationResultFrameView resultFrame = null;
-
-		if (getComputationType().isLayerOrdering()) {
-			if (!computationResult.allGloballyFlatFoldable()) {
-				// wrong crease pattern exists.
-				view.showNoAnswerMessage();
-				logger.debug("estimation rules: {}", computationResult.getEstimationResultRules());
-				showCheckerWindow(
-						computationResult.getMergedOrigamiModel(),
-						computationResult.getEstimationResultRules());
-			} else {
-				logger.info("foldable layer layout is found.");
-
-				resultFrame = subFrameFactory.createResultFrame(parent);
-
-				resultFrame.setColors(
-						view.getEstimationResultFrontColor(),
-						view.getEstimationResultBackColor());
-				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
-				// resultFrame.repaint();
-
-				var resultFramePresenter = subFramePresenterFactory.createEstimationResultFramePresenter(
-						resultFrame,
-						foldedModels,
-						paintContext.getPointEps(),
-						lastResultFilePath,
-						path -> lastResultFilePath = path);
-
-				resultFramePresenter.setViewVisible(true);
-			}
-		}
-
-		putModelIndexChangeListener(modelViewFrame, resultFrame);
-
-		modelViewPresenter.setViewVisible(true);
-	}
-
-	private void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
-			final EstimationResultFrameView resultFrame) {
-		modelIndexChangeListenerPutter.put(modelViewFrame, resultFrame);
+		valuePanelPresentationLogic.updateValuePanelFractionDigits();
 	}
 }
