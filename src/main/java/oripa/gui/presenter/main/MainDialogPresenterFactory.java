@@ -23,11 +23,11 @@ import oripa.application.main.FileModelCheckService;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.view.FrameView;
+import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.ArrayCopyDialogView;
 import oripa.gui.view.main.CircleCopyDialogView;
 import oripa.gui.view.main.PropertyDialogView;
-import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.persistence.doc.Doc;
 import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
@@ -38,7 +38,7 @@ import oripa.util.file.FileFactory;
  */
 public class MainDialogPresenterFactory {
 	private final FileChooserFactory fileChooserFactory;
-	private final ViewUpdateSupport viewUpdateSupport;
+	private final ViewScreenUpdater viewScreenUpdater;
 	private final PaintContext paintContext;
 	private final FileModelCheckService fileModelCheckService;
 	private final FileFactory fileFactory;
@@ -46,14 +46,14 @@ public class MainDialogPresenterFactory {
 
 	public MainDialogPresenterFactory(
 			final FileChooserFactory fileChooserFactory,
-			final ViewUpdateSupport viewUpdateSupport,
+			final ViewScreenUpdater viewScreenUpdater,
 			final PaintContext paintContext,
 			final FileModelCheckService fileModelCheckService,
 			final FileFactory fileFactory,
 			final ExtensionCorrector extensionCorrector) {
 
 		this.fileChooserFactory = fileChooserFactory;
-		this.viewUpdateSupport = viewUpdateSupport;
+		this.viewScreenUpdater = viewScreenUpdater;
 
 		this.paintContext = paintContext;
 
@@ -69,7 +69,7 @@ public class MainDialogPresenterFactory {
 		return new ArrayCopyDialogPresenter(
 				view,
 				paintContext,
-				viewUpdateSupport.getViewScreenUpdater());
+				viewScreenUpdater);
 	}
 
 	public CircleCopyDialogPresenter createCircleCopyDialogPresenter(
@@ -77,7 +77,7 @@ public class MainDialogPresenterFactory {
 		return new CircleCopyDialogPresenter(
 				view,
 				paintContext,
-				viewUpdateSupport.getViewScreenUpdater());
+				viewScreenUpdater);
 	}
 
 	public PropertyDialogPresenter createPropertyDialogPresenter(

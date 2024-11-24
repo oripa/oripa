@@ -145,7 +145,6 @@ public class MainFramePresentationLogic {
 	}
 
 	public void updateTitleText() {
-
 		view.setFileNameToTitle(getTitleText());
 	}
 

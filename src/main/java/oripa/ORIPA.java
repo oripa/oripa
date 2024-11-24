@@ -67,7 +67,6 @@ import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
 import oripa.gui.presenter.model.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
-import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
@@ -119,7 +118,6 @@ public class ORIPA {
 			var keyProcessing = new KeyProcessingImpl(
 					new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder),
 					mainScreenUpdater);
-			var viewUpdateSupport = new ViewUpdateSupport(mainScreenUpdater, keyProcessing);
 
 			var mainViewSetting = new MainViewSetting(
 					new MainFrameSettingImpl(),
@@ -128,7 +126,7 @@ public class ORIPA {
 
 			var mainScreenSetting = mainViewSetting.getPainterScreenSetting();
 
-			var mainFrame = new MainFrame(mainViewSetting, viewUpdateSupport);
+			var mainFrame = new MainFrame(mainViewSetting, mainScreenUpdater);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 			// Configure position and size of the frame
@@ -255,7 +253,7 @@ public class ORIPA {
 
 			var mainDialogPresenterFactory = new MainDialogPresenterFactory(
 					fileChooserFactory,
-					viewUpdateSupport,
+					mainScreenUpdater,
 					paintContext,
 					fileModelCheckService,
 					fileFactory,
@@ -284,13 +282,13 @@ public class ORIPA {
 
 			var gridDivNumPresentationLogic = new GridDivNumPresentationLogic(
 					uiPanelView,
-					viewUpdateSupport.getViewScreenUpdater(),
+					mainScreenUpdater,
 					paintContext);
 
 			var paintMenuListenerRegistration = new UIPanelPaintMenuListenerRegistration(
 					uiPanelView,
 					bindingFactory,
-					viewUpdateSupport.getKeyProcessing(),
+					keyProcessing,
 					paintContext,
 					typeForChangeContext,
 					byValueContext);

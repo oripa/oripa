@@ -43,12 +43,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.view.main.UIPanelView;
-import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -165,12 +165,12 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 	private Runnable windowClosingListener;
 
-	public MainFrame(final MainViewSetting viewSetting, final ViewUpdateSupport viewUpdateSupport) {
+	public MainFrame(final MainViewSetting viewSetting, final ViewScreenUpdater viewScreenUpdater) {
 		logger.info("frame construction starts.");
 
 		setting = viewSetting.getMainFrameSetting();
 
-		mainScreen = new PainterScreen(viewSetting.getPainterScreenSetting(), viewUpdateSupport.getViewScreenUpdater());
+		mainScreen = new PainterScreen(viewSetting.getPainterScreenSetting(), viewScreenUpdater);
 
 		// this has to be done before instantiation of UI panel.
 		addHintPropertyChangeListenersToSetting();

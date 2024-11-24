@@ -22,11 +22,6 @@ class ViewScreenUpdaterImpl implements ViewScreenUpdater {
 		addPropertyChangeListener(REDRAW_REQUESTED, e -> listener.run());
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.viewsetting.main.ViewScreenUpdater#updateScreen()
-	 */
 	@Override
 	public void updateScreen() {
 		propertyChangeSupport.firePropertyChange(REDRAW_REQUESTED, null, null);
