@@ -56,11 +56,11 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
+import oripa.gui.presenter.estimation.EstimationResultFramePresenterFactory;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
-import oripa.gui.presenter.main.SubFramePresenterFactory;
 import oripa.gui.presenter.main.logic.*;
 import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
@@ -142,11 +142,12 @@ public class ORIPA {
 
 			// Construct the presenter
 
+			var paintContext = new PaintContextFactory().createContext();
+			var byValueContext = new ByValueContextImpl();
 			var domainContext = new PaintDomainContext(
-					new PaintContextFactory().createContext(),
+					paintContext,
 					new SelectionOriginHolderImpl(),
-					new ByValueContextImpl());
-			var paintContext = domainContext.getPaintContext();
+					byValueContext);
 
 			var creasePatternViewContext = new CreasePatternViewContextFactory().createContext();
 			var typeForChangeContext = new TypeForChangeContext();
@@ -235,13 +236,16 @@ public class ORIPA {
 					creasePatternViewContext,
 					new OrigamiModelFactory());
 
-			var subFramePresenterFactory = new SubFramePresenterFactory(
-					foldabilityCheckFramePresenterFactory,
-					modelViewFramePresenterFactory,
+			var estimationResultFramePresenterFactory = new EstimationResultFramePresenterFactory(
 					fileChooserFactory,
 					foldedModelfileSelectionPresenterFactory,
 					foldedModelFileAccessFactory,
 					fileFactory);
+
+			var subFramePresenterFactory = new SubFramePresenterFactory(
+					foldabilityCheckFramePresenterFactory,
+					modelViewFramePresenterFactory,
+					estimationResultFramePresenterFactory);
 
 			var docFileAccess = new DocFileAccess(
 					new FileDAO<>(
@@ -266,7 +270,7 @@ public class ORIPA {
 					modelComputationFacadeFactory,
 					presentationContext,
 					viewUpdateSupport,
-					domainContext,
+					byValueContext,
 					paintContext,
 					cutModelOutlinesHolder,
 					bindingFactory,

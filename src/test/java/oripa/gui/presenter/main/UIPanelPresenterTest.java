@@ -19,11 +19,9 @@
 package oripa.gui.presenter.main;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,26 +31,15 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
-import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
-import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
 import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
-import oripa.gui.presenter.main.logic.ModelComputationFacade;
-import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
-import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
-import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
-import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
+import oripa.gui.presenter.main.logic.SubFramePresentationLogic;
 import oripa.gui.presenter.main.logic.UIPanelPaintMenuListenerRegistration;
-import oripa.gui.presenter.model.ModelViewFramePresenter;
+import oripa.gui.presenter.main.logic.ValuePanelPresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
-import oripa.gui.view.estimation.EstimationResultFrameView;
-import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
-import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
-import oripa.gui.view.model.ModelViewFrameView;
 
 /**
  * @author OUCHI Koji
@@ -65,9 +52,7 @@ class UIPanelPresenterTest {
 	UIPanelView view;
 
 	@Mock
-	SubFrameFactory subFrameFactory;
-	@Mock
-	SubFramePresenterFactory subFramePresenterFactory;
+	SubFramePresentationLogic subFramePresentationLogic;
 
 	@Mock
 	UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
@@ -75,19 +60,13 @@ class UIPanelPresenterTest {
 	GridDivNumPresentationLogic gridDivNumPresentationLogic;
 
 	@Mock
-	ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
+	ValuePanelPresentationLogic valuePanelPresentationLogic;
 
 	@Mock
 	PainterScreenSetting mainScreenSetting;
 
 	@Mock
-	PaintContext paintContext;
-
-	@Mock
 	TypeForChangeContext typeForChangeContext;
-
-	@Mock
-	ModelComputationFacadeFactory modelComputationFacadeFactory;
 
 	@Nested
 	class TestAddPlugin {
@@ -114,18 +93,8 @@ class UIPanelPresenterTest {
 		ArgumentCaptor<Runnable> listenerCaptor;
 
 		@Test
-		void windowShouldBeShown() {
+		void showCheckerWindowLogicShouldBeShown() {
 			setupTypeForChangeContext();
-			setupFrameView();
-
-			FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
-
-			FoldabilityCheckFramePresenter foldabilityPresenter = mock();
-			when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-					eq(foldabilityFrame),
-					any(),
-					anyDouble()))
-							.thenReturn(foldabilityPresenter);
 
 			construct();
 
@@ -133,181 +102,27 @@ class UIPanelPresenterTest {
 
 			listenerCaptor.getValue().run();
 
-			verify(foldabilityPresenter).setViewVisible(true);
+			verify(subFramePresentationLogic).showCheckerWindow();
 
 		}
-	}
-
-	FoldabilityCheckFrameView setupFoldabilityWindow() {
-		FoldabilityCheckFrameView foldabilityFrame = mock();
-		when(subFrameFactory.createFoldabilityFrame(any())).thenReturn(foldabilityFrame);
-
-		when(paintContext.getCreasePattern()).thenReturn(mock());
-		when(paintContext.getPointEps()).thenReturn(0.1);
-
-		return foldabilityFrame;
 	}
 
 	@Nested
 	class TestShowFoldedModelWindows {
 		@Captor
-		ArgumentCaptor<Runnable> computeModelCaptor;
-		@Captor
 		ArgumentCaptor<Runnable> showWindowCaptor;
 
 		@Test
-		void windowsShouldBeShownWhenNoComputationError() {
+		void showFoldedModelWindowsLogicShouldBeCalled() {
 			setupTypeForChangeContext();
 
-			setupFrameView();
+			construct();
 
-			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
+			verify(view).setShowFoldedModelWindowsListener(showWindowCaptor.capture());
 
-				computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
-						.thenReturn(Optional.of(ComputationType.FULL));
+			showWindowCaptor.getValue().run();
 
-				setupModelComputation(true, true);
-
-				ModelViewFrameView modelFrame = mock();
-				when(subFrameFactory.createModelViewFrame(any(), any())).thenReturn(modelFrame);
-
-				ModelViewFramePresenter modelPresenter = mock();
-				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
-						.thenReturn(modelPresenter);
-
-				EstimationResultFrameView estimationFrame = mock();
-				when(subFrameFactory.createResultFrame(any())).thenReturn(estimationFrame);
-
-				EstimationResultFramePresenter estimationPresenter = mock();
-				when(subFramePresenterFactory.createEstimationResultFramePresenter(
-						eq(estimationFrame),
-						any(),
-						anyDouble(),
-						// actually string but the value is not instantiated.
-						isNull(),
-						any())).thenReturn(estimationPresenter);
-
-				construct();
-
-				verify(view).setModelComputationListener(computeModelCaptor.capture());
-				verify(view).setShowFoldedModelWindowsListener(showWindowCaptor.capture());
-
-				computeModelCaptor.getValue().run();
-				showWindowCaptor.getValue().run();
-
-				verify(modelPresenter, atLeastOnce()).setViewVisible(true);
-				verify(estimationPresenter, atLeastOnce()).setViewVisible(true);
-			}
-		}
-
-		@Test
-		void modelWindowAndFoldabilityWindowWhenNotGloballyFlatFoldable() {
-			setupTypeForChangeContext();
-
-			setupFrameView();
-
-			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
-
-				computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
-						.thenReturn(Optional.of(ComputationType.FULL));
-
-				var computationResult = setupModelComputation(true, false);
-				when(computationResult.getEstimationResultRules()).thenReturn(mock());
-
-				ModelViewFrameView modelFrame = mock();
-				when(subFrameFactory.createModelViewFrame(any(), any())).thenReturn(modelFrame);
-
-				ModelViewFramePresenter modelPresenter = mock();
-				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
-						.thenReturn(modelPresenter);
-
-				FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
-
-				FoldabilityCheckFramePresenter foldabilityPresenter = mock();
-				when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-						eq(foldabilityFrame),
-						any(),
-						any(),
-						any(),
-						anyDouble()))
-								.thenReturn(foldabilityPresenter);
-
-				construct();
-
-				verify(view).setModelComputationListener(computeModelCaptor.capture());
-				verify(view).setShowFoldedModelWindowsListener(showWindowCaptor.capture());
-
-				computeModelCaptor.getValue().run();
-				showWindowCaptor.getValue().run();
-
-				verify(view).showNoAnswerMessage();
-
-				verify(foldabilityPresenter).setViewVisible(true);
-				verify(modelPresenter, atLeastOnce()).setViewVisible(true);
-			}
-		}
-
-		@Test
-		void foldabilityWindowWhenNotLocallyFlatFoldable() {
-			setupTypeForChangeContext();
-
-			setupFrameView();
-
-			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
-
-				computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
-						.thenReturn(Optional.of(ComputationType.FULL));
-
-				setupModelComputation(false, false);
-
-				FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
-
-				FoldabilityCheckFramePresenter foldabilityPresenter = mock();
-				when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-						eq(foldabilityFrame),
-						any(),
-						anyDouble()))
-								.thenReturn(foldabilityPresenter);
-
-				construct();
-
-				verify(view).setModelComputationListener(computeModelCaptor.capture());
-				verify(view).setShowFoldedModelWindowsListener(showWindowCaptor.capture());
-
-				computeModelCaptor.getValue().run();
-				showWindowCaptor.getValue().run();
-
-				verify(view).showLocalFlatFoldabilityViolationMessage();
-
-				verify(foldabilityPresenter).setViewVisible(true);
-			}
-		}
-
-		ComputationResult setupModelComputation(final boolean locallyFlatFoldable,
-				final boolean globallyFlatFoldable) {
-			when(view.getComputationType()).thenReturn("type");
-
-			when(paintContext.getPointEps()).thenReturn(0.1);
-			when(paintContext.getCreasePattern()).thenReturn(mock());
-
-			ComputationResult computationResult = mock();
-
-			if (locallyFlatFoldable) {
-				when(computationResult.allLocallyFlatFoldable()).thenReturn(locallyFlatFoldable);
-				when(computationResult.origamiModels()).thenReturn(mock());
-				when(view.getPaperDomainOfModelChangeListener()).thenReturn(mock());
-				when(computationResult.foldedModels()).thenReturn(mock());
-				when(computationResult.allGloballyFlatFoldable()).thenReturn(globallyFlatFoldable);
-			}
-
-			ModelComputationFacade computationFacade = mock();
-			when(computationFacade.buildOrigamiModels(any())).thenReturn(mock());
-			when(computationFacade.computeModels(any(), any())).thenReturn(computationResult);
-
-			when(modelComputationFacadeFactory.createModelComputationFacade(eq(view), anyDouble()))
-					.thenReturn(computationFacade);
-
-			return computationResult;
+			verify(subFramePresentationLogic).showFoldedModelWindows();
 		}
 
 	}
@@ -316,14 +131,11 @@ class UIPanelPresenterTest {
 
 		return new UIPanelPresenter(
 				view,
-				subFrameFactory,
-				subFramePresenterFactory,
+				subFramePresentationLogic,
 				paintMenuListenerRegistration,
 				gridDivNumPresentationLogic,
-				modelIndexChangeListenerPutter,
-				modelComputationFacadeFactory,
+				valuePanelPresentationLogic,
 				typeForChangeContext,
-				paintContext,
 				mainScreenSetting);
 	}
 

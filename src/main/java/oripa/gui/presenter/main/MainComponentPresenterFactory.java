@@ -22,14 +22,17 @@ import oripa.application.FileSelectionService;
 import oripa.application.main.FileModelCheckService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintDomainContext;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
+import oripa.gui.presenter.main.logic.SubFramePresentationLogic;
+import oripa.gui.presenter.main.logic.SubFramePresenterFactory;
 import oripa.gui.presenter.main.logic.UIPanelPaintMenuListenerRegistration;
+import oripa.gui.presenter.main.logic.ValuePanelPresentationLogic;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.ArrayCopyDialogView;
@@ -56,7 +59,7 @@ public class MainComponentPresenterFactory {
 	private final FileChooserFactory fileChooserFactory;
 	private final ViewUpdateSupport viewUpdateSupport;
 	private final CreasePatternPresentationContext presentationContext;
-	private final PaintDomainContext domainContext;
+	private final ByValueContext byValueContext;
 	private final PaintContext paintContext;
 	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 	private final BindingObjectFactoryFacade bindingFactory;
@@ -74,7 +77,7 @@ public class MainComponentPresenterFactory {
 			final ModelComputationFacadeFactory computationFacadeFactory,
 			final CreasePatternPresentationContext presentationContext,
 			final ViewUpdateSupport viewUpdateSupport,
-			final PaintDomainContext domainContext,
+			final ByValueContext byValueContext,
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
@@ -89,7 +92,7 @@ public class MainComponentPresenterFactory {
 		this.fileChooserFactory = fileChooserFactory;
 		this.viewUpdateSupport = viewUpdateSupport;
 		this.presentationContext = presentationContext;
-		this.domainContext = domainContext;
+		this.byValueContext = byValueContext;
 		this.paintContext = paintContext;
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.bindingFactory = bindingFactory;
@@ -114,18 +117,25 @@ public class MainComponentPresenterFactory {
 				viewUpdateSupport.getKeyProcessing(),
 				paintContext,
 				presentationContext.getTypeForChangeContext(),
-				domainContext.getByValueContext());
+				byValueContext);
 
-		return new UIPanelPresenter(
+		var subFramePresentationLogic = new SubFramePresentationLogic(
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
-				paintMenuListenerRegistration,
-				gridDivNumPresentationLogic,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
+				paintContext);
+
+		var valuePanelPresentationLogic = new ValuePanelPresentationLogic(view, paintContext);
+
+		return new UIPanelPresenter(
+				view,
+				subFramePresentationLogic,
+				paintMenuListenerRegistration,
+				gridDivNumPresentationLogic,
+				valuePanelPresentationLogic,
 				presentationContext.getTypeForChangeContext(),
-				domainContext.getPaintContext(),
 				mainScreenSetting);
 	}
 
@@ -135,7 +145,7 @@ public class MainComponentPresenterFactory {
 				view,
 				viewUpdateSupport,
 				presentationContext,
-				domainContext.getPaintContext(),
+				paintContext,
 				cutModelOutlinesHolder);
 	}
 
@@ -143,7 +153,7 @@ public class MainComponentPresenterFactory {
 			final ArrayCopyDialogView view) {
 		return new ArrayCopyDialogPresenter(
 				view,
-				domainContext.getPaintContext(),
+				paintContext,
 				viewUpdateSupport.getViewScreenUpdater());
 	}
 
@@ -151,7 +161,7 @@ public class MainComponentPresenterFactory {
 			final CircleCopyDialogView view) {
 		return new CircleCopyDialogPresenter(
 				view,
-				domainContext.getPaintContext(),
+				paintContext,
 				viewUpdateSupport.getViewScreenUpdater());
 	}
 

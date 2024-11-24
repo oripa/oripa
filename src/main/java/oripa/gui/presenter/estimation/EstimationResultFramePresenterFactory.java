@@ -16,35 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.main;
+package oripa.gui.presenter.estimation;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
-import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
-import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
-import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
-import oripa.gui.presenter.model.ModelViewFramePresenter;
-import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.file.FileChooserFactory;
-import oripa.gui.view.foldability.FoldabilityCheckFrameView;
-import oripa.gui.view.model.ModelViewFrameView;
 import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SubFramePresenterFactory {
-	private final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory;
-	private final ModelViewFramePresenterFactory modelViewFramePresenterFactory;
+public class EstimationResultFramePresenterFactory {
 
 	private final FileChooserFactory fileChooserFactory;
 
@@ -53,16 +40,11 @@ public class SubFramePresenterFactory {
 
 	private final FileFactory fileFactory;
 
-	public SubFramePresenterFactory(
-			final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory,
-			final ModelViewFramePresenterFactory modelViewFramePresenterFactory,
+	public EstimationResultFramePresenterFactory(
 			final FileChooserFactory fileChooserFactory,
 			final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory,
 			final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory,
 			final FileFactory fileFactory) {
-
-		this.foldabilityCheckFramePresenterFactory = foldabilityCheckFramePresenterFactory;
-		this.modelViewFramePresenterFactory = modelViewFramePresenterFactory;
 
 		this.fileChooserFactory = fileChooserFactory;
 
@@ -70,19 +52,10 @@ public class SubFramePresenterFactory {
 		this.foldedModelFileAccessFactory = foldedModelFileAccessFactory;
 
 		this.fileFactory = fileFactory;
+
 	}
 
-	public ModelViewFramePresenter createModelViewFramePresenter(
-			final ModelViewFrameView view,
-			final List<OrigamiModel> origamiModels,
-			final double eps) {
-		return modelViewFramePresenterFactory.create(
-				view,
-				origamiModels,
-				eps);
-	}
-
-	public EstimationResultFramePresenter createEstimationResultFramePresenter(
+	public EstimationResultFramePresenter create(
 			final EstimationResultFrameView view,
 			final List<FoldedModel> foldedModels,
 			final double eps,
@@ -99,33 +72,6 @@ public class SubFramePresenterFactory {
 				eps,
 				lastFilePath,
 				lastFilePathChangeListener);
-	}
-
-	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
-			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern,
-			final double pointEps) {
-
-		return foldabilityCheckFramePresenterFactory.create(
-				view,
-				creasePattern,
-				pointEps);
-
-	}
-
-	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
-			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern,
-			final OrigamiModel origamiModel,
-			final EstimationResultRules estimationRules,
-			final double pointEps) {
-
-		return foldabilityCheckFramePresenterFactory.create(
-				view,
-				creasePattern,
-				origamiModel,
-				estimationRules,
-				pointEps);
 	}
 
 }
