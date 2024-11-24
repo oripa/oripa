@@ -34,7 +34,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
@@ -83,8 +82,6 @@ class UIPanelPresenterTest {
 
 	@Mock
 	PaintContext paintContext;
-	@Mock
-	CreasePatternViewContext creasePatternViewContext;
 
 	@Mock
 	TypeForChangeContext typeForChangeContext;
@@ -127,7 +124,6 @@ class UIPanelPresenterTest {
 			when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
 					eq(foldabilityFrame),
 					any(),
-					anyBoolean(),
 					anyDouble()))
 							.thenReturn(foldabilityPresenter);
 
@@ -148,8 +144,6 @@ class UIPanelPresenterTest {
 
 		when(paintContext.getCreasePattern()).thenReturn(mock());
 		when(paintContext.getPointEps()).thenReturn(0.1);
-
-		when(creasePatternViewContext.isZeroLineWidth()).thenReturn(false);
 
 		return foldabilityFrame;
 	}
@@ -235,7 +229,6 @@ class UIPanelPresenterTest {
 						any(),
 						any(),
 						any(),
-						anyBoolean(),
 						anyDouble()))
 								.thenReturn(foldabilityPresenter);
 
@@ -273,7 +266,6 @@ class UIPanelPresenterTest {
 				when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
 						eq(foldabilityFrame),
 						any(),
-						anyBoolean(),
 						anyDouble()))
 								.thenReturn(foldabilityPresenter);
 
@@ -331,7 +323,6 @@ class UIPanelPresenterTest {
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
 				typeForChangeContext,
-				creasePatternViewContext,
 				paintContext,
 				mainScreenSetting);
 	}

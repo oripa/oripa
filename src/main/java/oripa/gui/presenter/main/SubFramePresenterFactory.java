@@ -26,10 +26,10 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
+import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
@@ -43,6 +43,7 @@ import oripa.util.file.FileFactory;
  *
  */
 public class SubFramePresenterFactory {
+	private final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory;
 	private final ModelViewFramePresenterFactory modelViewFramePresenterFactory;
 
 	private final FileChooserFactory fileChooserFactory;
@@ -53,12 +54,14 @@ public class SubFramePresenterFactory {
 	private final FileFactory fileFactory;
 
 	public SubFramePresenterFactory(
+			final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory,
 			final ModelViewFramePresenterFactory modelViewFramePresenterFactory,
 			final FileChooserFactory fileChooserFactory,
 			final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory,
 			final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory,
 			final FileFactory fileFactory) {
 
+		this.foldabilityCheckFramePresenterFactory = foldabilityCheckFramePresenterFactory;
 		this.modelViewFramePresenterFactory = modelViewFramePresenterFactory;
 
 		this.fileChooserFactory = fileChooserFactory;
@@ -101,22 +104,11 @@ public class SubFramePresenterFactory {
 	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
 			final FoldabilityCheckFrameView view,
 			final CreasePattern creasePattern,
-			final boolean isZeroLineWidth,
 			final double pointEps) {
 
-		OrigamiModel origamiModel;
-
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		origamiModel = modelFactory.createOrigamiModel(
-				creasePattern,
-				pointEps);
-
-		return createFoldabilityCheckFrameViewPresenter(
+		return foldabilityCheckFramePresenterFactory.create(
 				view,
 				creasePattern,
-				origamiModel,
-				new EstimationResultRules(),
-				isZeroLineWidth,
 				pointEps);
 
 	}
@@ -126,15 +118,13 @@ public class SubFramePresenterFactory {
 			final CreasePattern creasePattern,
 			final OrigamiModel origamiModel,
 			final EstimationResultRules estimationRules,
-			final boolean isZeroLineWidth,
 			final double pointEps) {
 
-		return new FoldabilityCheckFramePresenter(
+		return foldabilityCheckFramePresenterFactory.create(
 				view,
+				creasePattern,
 				origamiModel,
 				estimationRules,
-				creasePattern,
-				isZeroLineWidth,
 				pointEps);
 	}
 

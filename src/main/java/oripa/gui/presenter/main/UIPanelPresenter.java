@@ -30,7 +30,6 @@ import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
@@ -76,7 +75,6 @@ public class UIPanelPresenter {
 	private final PainterScreenSetting mainScreenSetting;
 
 	private final PaintContext paintContext;
-	private final CreasePatternViewContext creasePatternViewContext;
 
 	private final ModelComputationFacadeFactory computationFacadeFactory;
 	private ComputationResult computationResult;
@@ -91,7 +89,6 @@ public class UIPanelPresenter {
 			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
 			final ModelComputationFacadeFactory computationFacadeFactory,
 			final TypeForChangeContext typeForChangeContext,
-			final CreasePatternViewContext creasePatternViewContext,
 			final PaintContext paintContext,
 			final PainterScreenSetting mainScreenSetting) {
 
@@ -104,8 +101,6 @@ public class UIPanelPresenter {
 		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
 		this.subFramePresenterFactory = subFramePresenterFactory;
 		this.computationFacadeFactory = computationFacadeFactory;
-
-		this.creasePatternViewContext = creasePatternViewContext;
 
 		this.paintContext = paintContext;
 
@@ -199,7 +194,6 @@ public class UIPanelPresenter {
 		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
 				frame,
 				paintContext.getCreasePattern(),
-				creasePatternViewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
 
 		presenter.setViewVisible(true);
@@ -212,7 +206,6 @@ public class UIPanelPresenter {
 				paintContext.getCreasePattern(),
 				origamiModel,
 				estimationRules,
-				creasePatternViewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
 
 		presenter.setViewVisible(true);

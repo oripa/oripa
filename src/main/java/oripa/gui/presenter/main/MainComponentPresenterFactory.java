@@ -125,7 +125,6 @@ public class MainComponentPresenterFactory {
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
 				presentationContext.getTypeForChangeContext(),
-				presentationContext.getViewContext(),
 				domainContext.getPaintContext(),
 				mainScreenSetting);
 	}

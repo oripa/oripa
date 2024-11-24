@@ -36,6 +36,7 @@ import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.byvalue.ByValueContextImpl;
@@ -56,6 +57,7 @@ import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
+import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
 import oripa.gui.presenter.main.MainComponentPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.SubFramePresenterFactory;
@@ -145,10 +147,14 @@ public class ORIPA {
 					new SelectionOriginHolderImpl(),
 					new ByValueContextImpl());
 			var paintContext = domainContext.getPaintContext();
+
+			var creasePatternViewContext = new CreasePatternViewContextFactory().createContext();
+			var typeForChangeContext = new TypeForChangeContext();
+
 			var presentationContext = new CreasePatternPresentationContext(
-					new CreasePatternViewContextFactory().createContext(),
+					creasePatternViewContext,
 					mouseActionHolder,
-					new TypeForChangeContext());
+					typeForChangeContext);
 
 			var dialogFactory = new MainFrameSwingDialogFactory(
 					new ArrayCopyDialogFactory(),
@@ -225,7 +231,12 @@ public class ORIPA {
 					origamiModelFileAccessService,
 					cutModelOutlinesHolder);
 
+			var foldabilityCheckFramePresenterFactory = new FoldabilityCheckFramePresenterFactory(
+					creasePatternViewContext,
+					new OrigamiModelFactory());
+
 			var subFramePresenterFactory = new SubFramePresenterFactory(
+					foldabilityCheckFramePresenterFactory,
 					modelViewFramePresenterFactory,
 					fileChooserFactory,
 					foldedModelfileSelectionPresenterFactory,
@@ -238,13 +249,13 @@ public class ORIPA {
 							fileFactory),
 					paintContext);
 
+			var testedModelFactory = new TestedOrigamiModelFactory();
 			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
-					new TestedOrigamiModelFactory(),
+					testedModelFactory,
 					new FolderFactory());
 			var modelIndexChangeListenerPutter = new ModelIndexChangeListenerPutter();
-			var modelFactory = new TestedOrigamiModelFactory();
 
-			var fileModelCheckService = new FileModelCheckService(paintContext, modelFactory);
+			var fileModelCheckService = new FileModelCheckService(paintContext, testedModelFactory);
 
 			var mainComponentPresenterFactory = new MainComponentPresenterFactory(
 					mainScreenSetting,
@@ -289,7 +300,6 @@ public class ORIPA {
 					project,
 					docFileAccess);
 
-			var creasePatternViewContext = presentationContext.getViewContext();
 			var iniFileAccessPresentationLogic = new IniFileAccessPresentationLogic(
 					mainFrame,
 					mainScreenSetting,
