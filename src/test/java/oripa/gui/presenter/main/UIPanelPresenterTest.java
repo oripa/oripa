@@ -82,7 +82,6 @@ class UIPanelPresenterTest {
 			presenter.addPlugins(plugins);
 
 			verify(paintMenuListenerRegistration).addPlugins(plugins);
-			;
 		}
 
 	}

@@ -48,7 +48,6 @@ import oripa.gui.bind.state.EditModeStateManager;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.PluginPaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.ComplexActionFactory;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.EditOutlineActionFactory;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -149,11 +148,6 @@ public class ORIPA {
 
 			var creasePatternViewContext = new CreasePatternViewContextFactory().createContext();
 			var typeForChangeContext = new TypeForChangeContext();
-
-			var presentationContext = new CreasePatternPresentationContext(
-					creasePatternViewContext,
-					mouseActionHolder,
-					typeForChangeContext);
 
 			var dialogFactory = new MainFrameSwingDialogFactory(
 					new ArrayCopyDialogFactory(),
@@ -280,8 +274,9 @@ public class ORIPA {
 			var screenView = mainFrame.getPainterScreenView();
 			var screenPresenter = new PainterScreenPresenter(
 					screenView,
-					viewUpdateSupport,
-					presentationContext,
+					mainScreenUpdater,
+					creasePatternViewContext,
+					mouseActionHolder,
 					paintContext,
 					cutModelOutlinesHolder);
 
@@ -297,7 +292,7 @@ public class ORIPA {
 					bindingFactory,
 					viewUpdateSupport.getKeyProcessing(),
 					paintContext,
-					presentationContext.getTypeForChangeContext(),
+					typeForChangeContext,
 					byValueContext);
 
 			var subFramePresentationLogic = new SubFramePresentationLogic(
@@ -316,7 +311,7 @@ public class ORIPA {
 					paintMenuListenerRegistration,
 					gridDivNumPresentationLogic,
 					valuePanelPresentationLogic,
-					presentationContext.getTypeForChangeContext(),
+					typeForChangeContext,
 					mainScreenSetting);
 			;
 

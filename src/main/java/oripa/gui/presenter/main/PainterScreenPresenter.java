@@ -22,7 +22,6 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
@@ -31,7 +30,6 @@ import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.main.PainterScreenView;
-import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -54,16 +52,17 @@ public class PainterScreenPresenter {
 	private RectangleDomain paperDomainOfModel;
 
 	public PainterScreenPresenter(final PainterScreenView view,
-			final ViewUpdateSupport viewUpdateSupport,
-			final CreasePatternPresentationContext presentationContext,
+			final ViewScreenUpdater screenUpdater,
+			final CreasePatternViewContext viewContext,
+			final MouseActionHolder mouseActionHolder,
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutOutlineHolder) {
 		this.view = view;
 
-		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
+		this.screenUpdater = screenUpdater;
 		this.paintContext = paintContext;
-		this.viewContext = presentationContext.getViewContext();
-		this.mouseActionHolder = presentationContext.getActionHolder();
+		this.viewContext = viewContext;
+		this.mouseActionHolder = mouseActionHolder;
 		this.cutOutlinesHolder = cutOutlineHolder;
 
 		setListeners();
