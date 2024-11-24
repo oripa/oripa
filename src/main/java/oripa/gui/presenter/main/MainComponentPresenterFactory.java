@@ -29,6 +29,7 @@ import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
+import oripa.gui.presenter.main.logic.UIPanelPaintMenuListenerRegistration;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.ArrayCopyDialogView;
@@ -107,19 +108,25 @@ public class MainComponentPresenterFactory {
 				viewUpdateSupport.getViewScreenUpdater(),
 				paintContext);
 
+		var paintMenuListenerRegistration = new UIPanelPaintMenuListenerRegistration(
+				view,
+				bindingFactory,
+				viewUpdateSupport.getKeyProcessing(),
+				paintContext,
+				presentationContext.getTypeForChangeContext(),
+				domainContext.getByValueContext());
+
 		return new UIPanelPresenter(
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
+				paintMenuListenerRegistration,
 				gridDivNumPresentationLogic,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
-				viewUpdateSupport.getKeyProcessing(),
 				presentationContext.getTypeForChangeContext(),
 				presentationContext.getViewContext(),
 				domainContext.getPaintContext(),
-				domainContext.getByValueContext(),
-				bindingFactory,
 				mainScreenSetting);
 	}
 

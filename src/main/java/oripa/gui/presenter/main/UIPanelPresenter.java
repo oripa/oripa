@@ -30,29 +30,22 @@ import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.byvalue.ByValueContext;
-import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
-import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
-import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.main.logic.GridDivNumPresentationLogic;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
+import oripa.gui.presenter.main.logic.UIPanelPaintMenuListenerRegistration;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameView;
-import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.resource.StringID;
 import oripa.util.MathUtil;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -64,6 +57,7 @@ public class UIPanelPresenter {
 	private final UIPanelView view;
 	private final SubFrameFactory subFrameFactory;
 
+	private final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
 	private final GridDivNumPresentationLogic gridDivNumPresentationLogic;
 
 	private final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
@@ -79,17 +73,10 @@ public class UIPanelPresenter {
 	private final ComputationType[] computationTypeComboData = {
 			ComputationType.FULL, ComputationType.FIRST_ONLY, ComputationType.X_RAY };
 
-	private final ByValueContext byValueContext;
-
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final KeyProcessing keyProcessing;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext creasePatternViewContext;
-
-	private final TypeForChangeContext typeForChangeContext;
-
-	private final BindingObjectFactoryFacade bindingFactory;
 
 	private final ModelComputationFacadeFactory computationFacadeFactory;
 	private ComputationResult computationResult;
@@ -99,35 +86,28 @@ public class UIPanelPresenter {
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
+			final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration,
 			final GridDivNumPresentationLogic gridDivNumPresentationLogic,
 			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
 			final ModelComputationFacadeFactory computationFacadeFactory,
-			final KeyProcessing keyProcessing,
 			final TypeForChangeContext typeForChangeContext,
 			final CreasePatternViewContext creasePatternViewContext,
 			final PaintContext paintContext,
-			final ByValueContext byValueContext,
-			final BindingObjectFactoryFacade bindingFactory,
 			final PainterScreenSetting mainScreenSetting) {
 
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
 
+		this.paintMenuListenerRegistration = paintMenuListenerRegistration;
 		this.gridDivNumPresentationLogic = gridDivNumPresentationLogic;
 
 		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
 		this.subFramePresenterFactory = subFramePresenterFactory;
 		this.computationFacadeFactory = computationFacadeFactory;
 
-		this.keyProcessing = keyProcessing;
-
-		this.typeForChangeContext = typeForChangeContext;
 		this.creasePatternViewContext = creasePatternViewContext;
 
 		this.paintContext = paintContext;
-		this.byValueContext = byValueContext;
-
-		this.bindingFactory = bindingFactory;
 
 		this.mainScreenSetting = mainScreenSetting;
 
@@ -150,116 +130,12 @@ public class UIPanelPresenter {
 	}
 
 	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
-		for (var plugin : plugins) {
-			var state = bindingFactory.createState(plugin);
-
-			view.addMouseActionPluginListener(plugin.getName(), state::performActions, keyProcessing);
-		}
-		view.updatePluginPanel();
+		paintMenuListenerRegistration.addPlugins(plugins);
 	}
 
 	private void addListeners() {
-		// ------------------------------------------------------------
-		// edit mode buttons
 
-		view.addEditModeInputLineButtonListener(
-				bindingFactory.createStatePopperForCommand(EditMode.INPUT),
-				keyProcessing);
-
-		view.addEditModeLineSelectionButtonListener(
-				bindingFactory.createStatePopperForCommand(EditMode.SELECT),
-				keyProcessing);
-
-		var deleteLineState = bindingFactory.createState(StringID.DELETE_LINE_ID);
-		view.addEditModeDeleteLineButtonListener(deleteLineState::performActions, keyProcessing);
-
-		var lineTypeState = bindingFactory.createState(StringID.CHANGE_LINE_TYPE_ID);
-		view.addEditModeLineTypeButtonListener(lineTypeState::performActions, keyProcessing);
-
-		view.addAlterLineComboFromSelectionListener(
-				item -> typeForChangeContext.setTypeFrom(TypeForChange.fromString(item).get()));
-		view.addAlterLineComboToSelectionListener(
-				item -> typeForChangeContext.setTypeTo(TypeForChange.fromString(item).get()));
-
-		var addVertexState = bindingFactory.createState(StringID.ADD_VERTEX_ID);
-		view.addEditModeAddVertexButtonListener(addVertexState::performActions, keyProcessing);
-
-		var deleteVertexState = bindingFactory.createState(StringID.DELETE_VERTEX_ID);
-		view.addEditModeDeleteVertexButtonListener(deleteVertexState::performActions, keyProcessing);
-
-		// ------------------------------------------------------------
-		// selection command buttons
-
-		var selectLineState = bindingFactory.createState(StringID.SELECT_LINE_ID);
-		view.addSelectionButtonListener(selectLineState::performActions, keyProcessing);
-
-		var enlargementState = bindingFactory.createState(StringID.ENLARGE_ID);
-		view.addEnlargementButtonListener(enlargementState::performActions, keyProcessing);
-
-		// ------------------------------------------------------------
-		// input command buttons
-
-		var directVState = bindingFactory.createState(StringID.DIRECT_V_ID);
-		view.addLineInputDirectVButtonListener(directVState::performActions, keyProcessing);
-
-		var onVState = bindingFactory.createState(StringID.ON_V_ID);
-		view.addLineInputOnVButtonListener(onVState::performActions, keyProcessing);
-
-		var verticalLineState = bindingFactory.createState(StringID.VERTICAL_ID);
-		view.addLineInputVerticalLineButtonListener(verticalLineState::performActions,
-				keyProcessing);
-
-		var angleBisectorState = bindingFactory.createState(StringID.BISECTOR_ID);
-		view.addLineInputAngleBisectorButtonListener(angleBisectorState::performActions,
-				keyProcessing);
-
-		var lineToLineState = bindingFactory.createState(StringID.LINE_TO_LINE_ID);
-		view.addLineInputLineToLineAxiomButtonListener(lineToLineState::performActions, keyProcessing);
-
-		var p2ltpState = bindingFactory.createState(StringID.POINT_TO_LINE_THROUGH_POINT_ID);
-		view.addLineInputP2LTPAxiomButtonListener(p2ltpState::performActions, keyProcessing);
-
-		var p2lp2lState = bindingFactory.createState(StringID.POINT_TO_LINE_POINT_TO_LINE_ID);
-		view.addLineInputP2LP2LAxiomButtonListener(p2lp2lState::performActions, keyProcessing);
-
-		var p2llState = bindingFactory.createState(StringID.POINT_TO_LINE_LINE_PERPENDICULAR_ID);
-		view.addLineInputP2LLAxiomButtonListener(p2llState::performActions, keyProcessing);
-
-		var triangleSplitState = bindingFactory.createState(StringID.TRIANGLE_ID);
-		view.addLineInputTriangleSplitButtonListener(triangleSplitState::performActions,
-				keyProcessing);
-
-		var symmetricState = bindingFactory.createState(StringID.SYMMETRIC_ID);
-		view.addLineInputSymmetricButtonListener(symmetricState::performActions, keyProcessing);
-
-		var mirrorState = bindingFactory.createState(StringID.MIRROR_ID);
-		view.addLineInputMirrorButtonListener(mirrorState::performActions, keyProcessing);
-
-		var byValueState = bindingFactory.createState(StringID.BY_VALUE_ID);
-		view.addLineInputByValueButtonListener(byValueState::performActions, keyProcessing);
-
-		view.addLengthButtonListener(
-				bindingFactory.createActionSetter(new LengthMeasuringAction(byValueContext)));
-		view.addAngleButtonListener(
-				bindingFactory.createActionSetter(new AngleMeasuringAction(byValueContext)));
-		view.addLengthTextFieldListener(byValueContext::setLength);
-		view.addAngleTextFieldListener(byValueContext::setAngle);
-
-		var pbisecState = bindingFactory.createState(StringID.PERPENDICULAR_BISECTOR_ID);
-		view.addLineInputPBisectorButtonListener(pbisecState::performActions, keyProcessing);
-
-		var angleSnapState = bindingFactory.createState(StringID.ANGLE_SNAP_ID);
-		view.addLineInputAngleSnapButtonListener(angleSnapState::performActions, keyProcessing);
-
-		view.addAngleStepComboListener(step -> paintContext.setAngleStep(AngleStep.fromString(step).get()));
-
-		var suggestionState = bindingFactory.createState(StringID.SUGGESTION_ID);
-		view.addLineInputSuggestionButtonListener(suggestionState::performActions, keyProcessing);
-
-		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
-		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
-		view.addLineTypeUnassignedButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.UNASSIGNED));
-		view.addLineTypeAuxButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
+		paintMenuListenerRegistration.register();
 
 		// ------------------------------------------------------------
 		// grid setting
@@ -292,11 +168,6 @@ public class UIPanelPresenter {
 		view.addZeroLineWidthCheckBoxListener(checked -> {
 			mainScreenSetting.setZeroLineWidth(checked);
 		});
-
-		byValueContext.addPropertyChangeListener(ByValueContext.ANGLE,
-				e -> view.setByValueAngle((double) e.getNewValue()));
-		byValueContext.addPropertyChangeListener(ByValueContext.LENGTH,
-				e -> view.setByValueLength((double) e.getNewValue()));
 
 		// ------------------------------------------------------------
 		// fold

@@ -33,12 +33,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.appstate.ApplicationState;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.byvalue.ByValueContext;
-import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
@@ -48,13 +44,12 @@ import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
 import oripa.gui.presenter.main.logic.ModelComputationFacadeFactory;
 import oripa.gui.presenter.main.logic.ModelIndexChangeListenerPutter;
+import oripa.gui.presenter.main.logic.UIPanelPaintMenuListenerRegistration;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
-import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
-import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
@@ -76,21 +71,16 @@ class UIPanelPresenterTest {
 	SubFramePresenterFactory subFramePresenterFactory;
 
 	@Mock
+	UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
+	@Mock
 	GridDivNumPresentationLogic gridDivNumPresentationLogic;
 
 	@Mock
 	ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 
 	@Mock
-	ByValueContext byValueContext;
-
-	@Mock
 	PainterScreenSetting mainScreenSetting;
 
-	@Mock
-	ViewScreenUpdater screenUpdater;
-	@Mock
-	KeyProcessing keyProcessing;
 	@Mock
 	PaintContext paintContext;
 	@Mock
@@ -98,9 +88,6 @@ class UIPanelPresenterTest {
 
 	@Mock
 	TypeForChangeContext typeForChangeContext;
-
-	@Mock
-	BindingObjectFactoryFacade bindingFactory;
 
 	@Mock
 	ModelComputationFacadeFactory modelComputationFacadeFactory;
@@ -113,18 +100,13 @@ class UIPanelPresenterTest {
 			setupTypeForChangeContext();
 
 			GraphicMouseActionPlugin plugin = mock();
-			when(plugin.getName()).thenReturn("name");
 			var plugins = List.of(plugin);
-
-			ApplicationState<EditMode> state = mock();
-
-			when(bindingFactory.createState(plugin)).thenReturn(state);
-			when(bindingFactory.createState(anyString())).thenReturn(mock());
 
 			var presenter = construct();
 			presenter.addPlugins(plugins);
 
-			verify(view).addMouseActionPluginListener(anyString(), any(), eq(keyProcessing));
+			verify(paintMenuListenerRegistration).addPlugins(plugins);
+			;
 		}
 
 	}
@@ -137,7 +119,6 @@ class UIPanelPresenterTest {
 		@Test
 		void windowShouldBeShown() {
 			setupTypeForChangeContext();
-			setupBindingFactory();
 			setupFrameView();
 
 			FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
@@ -183,7 +164,7 @@ class UIPanelPresenterTest {
 		@Test
 		void windowsShouldBeShownWhenNoComputationError() {
 			setupTypeForChangeContext();
-			setupBindingFactory();
+
 			setupFrameView();
 
 			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
@@ -228,7 +209,7 @@ class UIPanelPresenterTest {
 		@Test
 		void modelWindowAndFoldabilityWindowWhenNotGloballyFlatFoldable() {
 			setupTypeForChangeContext();
-			setupBindingFactory();
+
 			setupFrameView();
 
 			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
@@ -276,7 +257,7 @@ class UIPanelPresenterTest {
 		@Test
 		void foldabilityWindowWhenNotLocallyFlatFoldable() {
 			setupTypeForChangeContext();
-			setupBindingFactory();
+
 			setupFrameView();
 
 			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
@@ -345,25 +326,19 @@ class UIPanelPresenterTest {
 				view,
 				subFrameFactory,
 				subFramePresenterFactory,
+				paintMenuListenerRegistration,
 				gridDivNumPresentationLogic,
 				modelIndexChangeListenerPutter,
 				modelComputationFacadeFactory,
-				keyProcessing,
 				typeForChangeContext,
 				creasePatternViewContext,
 				paintContext,
-				byValueContext,
-				bindingFactory,
 				mainScreenSetting);
 	}
 
 	void setupTypeForChangeContext() {
 		when(typeForChangeContext.getTypeFrom()).thenReturn(mock());
 		when(typeForChangeContext.getTypeTo()).thenReturn(mock());
-	}
-
-	void setupBindingFactory() {
-		when(bindingFactory.createState(anyString())).thenReturn(mock());
 	}
 
 	void setupFrameView() {
