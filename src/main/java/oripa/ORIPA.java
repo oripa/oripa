@@ -57,6 +57,7 @@ import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenterFactory;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
+import oripa.gui.presenter.main.DocFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainDialogPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.PainterScreenPresenter;
@@ -251,13 +252,17 @@ public class ORIPA {
 
 			var fileModelCheckService = new FileModelCheckService(paintContext, testedModelFactory);
 
-			var mainDialogPresenterFactory = new MainDialogPresenterFactory(
+			var docFileSelectionPresenterFactory = new DocFileSelectionPresenterFactory(
 					fileChooserFactory,
-					mainScreenUpdater,
-					paintContext,
 					fileModelCheckService,
 					fileFactory,
 					extensionCorrector);
+
+			var mainDialogPresenterFactory = new MainDialogPresenterFactory(
+					mainScreenUpdater,
+					dialogFactory,
+					docFileSelectionPresenterFactory,
+					paintContext);
 
 			var fileHistory = new FileHistory(Constants.MRUFILE_NUM, fileFactory);
 			var iniFileAccess = new IniFileAccess(
@@ -374,7 +379,6 @@ public class ORIPA {
 
 			var presenter = new MainFramePresenter(
 					mainFrame,
-					dialogFactory,
 					presentationLogic,
 					mainDialogPresenterFactory,
 					paintMenuListenerFactory,

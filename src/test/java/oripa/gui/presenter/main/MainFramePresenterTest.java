@@ -41,16 +41,12 @@ import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
-import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.PropertyDialogView;
 import oripa.persistence.dao.FileType;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.project.Project;
 import oripa.resource.ResourceKey;
-import oripa.swing.view.main.ArrayCopyDialog;
-import oripa.swing.view.main.CircleCopyDialog;
 
 /**
  * @author OUCHI Koji
@@ -61,9 +57,6 @@ class MainFramePresenterTest {
 
 	@Mock
 	MainFrameView view;
-
-	@Mock
-	MainFrameDialogFactory dialogFactory;
 
 	@Mock
 	MainFramePresentationLogic presentationLogic;
@@ -191,11 +184,8 @@ class MainFramePresenterTest {
 				@Test
 				void propertyDialogShouldBeShown() {
 
-					PropertyDialogView dialog = mock();
-					when(dialogFactory.createPropertyDialog(view)).thenReturn(dialog);
-
 					PropertyDialogPresenter dialogPresenter = mock();
-					when(dialogPresenterFactory.createPropertyDialogPresenter(dialog, project))
+					when(dialogPresenterFactory.createPropertyDialogPresenter(view, project))
 							.thenReturn(dialogPresenter);
 
 					construct();
@@ -218,11 +208,8 @@ class MainFramePresenterTest {
 
 					when(paintContext.countSelectedLines()).thenReturn(1);
 
-					ArrayCopyDialog dialog = mock();
-					when(dialogFactory.createArrayCopyDialog(view)).thenReturn(dialog);
-
 					ArrayCopyDialogPresenter dialogPresenter = mock();
-					when(dialogPresenterFactory.createArrayCopyDialogPresenter(dialog))
+					when(dialogPresenterFactory.createArrayCopyDialogPresenter(view))
 							.thenReturn(dialogPresenter);
 
 					construct();
@@ -260,11 +247,8 @@ class MainFramePresenterTest {
 
 					when(paintContext.countSelectedLines()).thenReturn(1);
 
-					CircleCopyDialog dialog = mock();
-					when(dialogFactory.createCircleCopyDialog(view)).thenReturn(dialog);
-
 					CircleCopyDialogPresenter dialogPresenter = mock();
-					when(dialogPresenterFactory.createCircleCopyDialogPresenter(dialog))
+					when(dialogPresenterFactory.createCircleCopyDialogPresenter(view))
 							.thenReturn(dialogPresenter);
 
 					construct();
@@ -753,7 +737,6 @@ class MainFramePresenterTest {
 	MainFramePresenter construct() {
 		return new MainFramePresenter(
 				view,
-				dialogFactory,
 				presentationLogic,
 				dialogPresenterFactory,
 				paintMenuListenerFactory,

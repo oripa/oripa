@@ -19,81 +19,71 @@
 package oripa.gui.presenter.main;
 
 import oripa.application.FileSelectionService;
-import oripa.application.main.FileModelCheckService;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.projectprop.PropertyHolder;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.file.FileChooserFactory;
-import oripa.gui.view.main.ArrayCopyDialogView;
-import oripa.gui.view.main.CircleCopyDialogView;
-import oripa.gui.view.main.PropertyDialogView;
+import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.persistence.doc.Doc;
-import oripa.util.file.ExtensionCorrector;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class MainDialogPresenterFactory {
-	private final FileChooserFactory fileChooserFactory;
+	private final MainFrameDialogFactory dialogFactory;
+
+	private final DocFileSelectionPresenterFactory fileSelectionPresenterFactory;
+
 	private final ViewScreenUpdater viewScreenUpdater;
 	private final PaintContext paintContext;
-	private final FileModelCheckService fileModelCheckService;
-	private final FileFactory fileFactory;
-	private final ExtensionCorrector extensionCorrector;
 
 	public MainDialogPresenterFactory(
-			final FileChooserFactory fileChooserFactory,
 			final ViewScreenUpdater viewScreenUpdater,
-			final PaintContext paintContext,
-			final FileModelCheckService fileModelCheckService,
-			final FileFactory fileFactory,
-			final ExtensionCorrector extensionCorrector) {
+			final MainFrameDialogFactory dialogFactory,
+			final DocFileSelectionPresenterFactory fileSelectionPresenterFactory,
+			final PaintContext paintContext) {
 
-		this.fileChooserFactory = fileChooserFactory;
 		this.viewScreenUpdater = viewScreenUpdater;
+		this.dialogFactory = dialogFactory;
+
+		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
 
 		this.paintContext = paintContext;
-
-		this.fileModelCheckService = fileModelCheckService;
-		this.fileFactory = fileFactory;
-
-		this.extensionCorrector = extensionCorrector;
-
 	}
 
 	public ArrayCopyDialogPresenter createArrayCopyDialogPresenter(
-			final ArrayCopyDialogView view) {
+			final FrameView parent) {
+		var dialog = dialogFactory.createArrayCopyDialog(parent);
+
 		return new ArrayCopyDialogPresenter(
-				view,
+				dialog,
 				paintContext,
 				viewScreenUpdater);
 	}
 
 	public CircleCopyDialogPresenter createCircleCopyDialogPresenter(
-			final CircleCopyDialogView view) {
+			final FrameView parent) {
+		var dialog = dialogFactory.createCircleCopyDialog(parent);
+
 		return new CircleCopyDialogPresenter(
-				view,
+				dialog,
 				paintContext,
 				viewScreenUpdater);
 	}
 
 	public PropertyDialogPresenter createPropertyDialogPresenter(
-			final PropertyDialogView view,
+			final FrameView parent,
 			final PropertyHolder propertyHolder) {
-		return new PropertyDialogPresenter(view, propertyHolder);
+		var dialog = dialogFactory.createPropertyDialog(parent);
+
+		return new PropertyDialogPresenter(dialog, propertyHolder);
 	}
 
 	public DocFileSelectionPresenter createDocFileSelectionPresenter(
 			final FrameView parent, final FileSelectionService<Doc> fileSelectionService) {
-		return new DocFileSelectionPresenter(
+		return fileSelectionPresenterFactory.create(
 				parent,
-				fileChooserFactory,
-				fileModelCheckService,
-				fileFactory,
-				fileSelectionService,
-				extensionCorrector);
+				fileSelectionService);
 	}
 }
