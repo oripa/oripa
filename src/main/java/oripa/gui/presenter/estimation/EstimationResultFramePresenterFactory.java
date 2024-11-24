@@ -21,11 +21,8 @@ package oripa.gui.presenter.estimation;
 import java.util.List;
 import java.util.function.Consumer;
 
-import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.estimation.EstimationResultFrameView;
-import oripa.gui.view.file.FileChooserFactory;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -33,25 +30,12 @@ import oripa.util.file.FileFactory;
  */
 public class EstimationResultFramePresenterFactory {
 
-	private final FileChooserFactory fileChooserFactory;
-
-	private final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory;
-	private final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory;
-
-	private final FileFactory fileFactory;
+	private final EstimationResultComponentPresenterFactory componentPresenterFactory;
 
 	public EstimationResultFramePresenterFactory(
-			final FileChooserFactory fileChooserFactory,
-			final FoldedModelFileSelectionPresenterFactory foldedModelFileSelectionPresenterFactory,
-			final FoldedModelFileAccessServiceFactory foldedModelFileAccessFactory,
-			final FileFactory fileFactory) {
+			final EstimationResultComponentPresenterFactory componentPresenterFactory) {
 
-		this.fileChooserFactory = fileChooserFactory;
-
-		this.foldedModelFileSelectionPresenterFactory = foldedModelFileSelectionPresenterFactory;
-		this.foldedModelFileAccessFactory = foldedModelFileAccessFactory;
-
-		this.fileFactory = fileFactory;
+		this.componentPresenterFactory = componentPresenterFactory;
 
 	}
 
@@ -62,16 +46,15 @@ public class EstimationResultFramePresenterFactory {
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
 
-		return new EstimationResultFramePresenter(
-				view,
-				fileChooserFactory,
-				foldedModelFileSelectionPresenterFactory,
-				foldedModelFileAccessFactory,
-				fileFactory,
-				foldedModels,
-				eps,
+		var uiPresenter = componentPresenterFactory.createEstimationResultUIPresenter(
+				view.getUI(),
 				lastFilePath,
 				lastFilePathChangeListener);
+
+		return new EstimationResultFramePresenter(
+				view,
+				foldedModels,
+				eps);
 	}
 
 }

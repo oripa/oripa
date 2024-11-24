@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.estimation;
+package oripa.gui.presenter.estimation.logic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ import oripa.util.collection.CollectionUtil;
  * @author OUCHI Koji
  *
  */
-class SubfaceToOverlapRelationIndicesFactory {
+public class SubfaceToOverlapRelationIndicesFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SubfaceToOverlapRelationIndicesFactory.class);
 
 	private record OrderValue(List<Integer> v1, Byte v2) {
