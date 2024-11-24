@@ -20,27 +20,20 @@ package oripa.gui.presenter.estimation;
 
 import java.util.function.Consumer;
 
-import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.gui.view.estimation.EstimationResultUIView;
-import oripa.gui.view.file.FileChooserFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class EstimationResultComponentPresenterFactory {
-	private final FileChooserFactory fileChooserFactory;
-	private final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
 
-	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
+	private final EstimationResultFilePresenter estimationResultFilePresenter;
 
 	public EstimationResultComponentPresenterFactory(
-			final FileChooserFactory fileChooserFactory,
-			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
-			final FoldedModelFileAccessServiceFactory fileAccessServiceFactory) {
-		this.fileChooserFactory = fileChooserFactory;
-		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
-		this.fileAccessServiceFactory = fileAccessServiceFactory;
+			final EstimationResultFilePresenter estimationResultFilePresenter) {
+
+		this.estimationResultFilePresenter = estimationResultFilePresenter;
 	}
 
 	public EstimationResultUIPresenter createEstimationResultUIPresenter(
@@ -49,9 +42,7 @@ public class EstimationResultComponentPresenterFactory {
 			final Consumer<String> lastFilePathChangeListener) {
 		return new EstimationResultUIPresenter(
 				view,
-				fileChooserFactory,
-				fileSelectionPresenterFactory,
-				fileAccessServiceFactory,
+				estimationResultFilePresenter,
 				lastFilePath,
 				lastFilePathChangeListener);
 

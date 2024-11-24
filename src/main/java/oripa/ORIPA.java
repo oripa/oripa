@@ -54,6 +54,8 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
+import oripa.gui.presenter.estimation.EstimationResultComponentPresenterFactory;
+import oripa.gui.presenter.estimation.EstimationResultFilePresenter;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenterFactory;
 import oripa.gui.presenter.estimation.FoldedModelFileSelectionPresenterFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
@@ -227,11 +229,15 @@ public class ORIPA {
 					creasePatternViewContext,
 					new OrigamiModelFactory());
 
-			var estimationResultFramePresenterFactory = new EstimationResultFramePresenterFactory(
-					fileChooserFactory,
+			var estimationResultFilePresenter = new EstimationResultFilePresenter(
 					foldedModelfileSelectionPresenterFactory,
-					foldedModelFileAccessFactory,
-					fileFactory);
+					foldedModelFileAccessFactory);
+
+			var estimationResultComponentPresenterFactory = new EstimationResultComponentPresenterFactory(
+					estimationResultFilePresenter);
+
+			var estimationResultFramePresenterFactory = new EstimationResultFramePresenterFactory(
+					estimationResultComponentPresenterFactory);
 
 			var subFramePresenterFactory = new SubFramePresenterFactory(
 					foldabilityCheckFramePresenterFactory,

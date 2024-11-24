@@ -26,18 +26,10 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
 import oripa.domain.fold.FoldedModel;
-import oripa.gui.presenter.file.UserAction;
-import oripa.gui.view.FrameView;
-import oripa.gui.view.estimation.DefaultColors;
+import oripa.gui.presenter.estimation.logic.SubfaceToOverlapRelationIndicesFactory;
 import oripa.gui.view.estimation.EstimationResultUIView;
-import oripa.gui.view.file.FileChooserFactory;
-import oripa.gui.view.util.ColorUtil;
-import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.entity.FoldedModelFileTypes;
-import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
 
 /**
@@ -49,10 +41,7 @@ public class EstimationResultUIPresenter {
 
 	private final EstimationResultUIView view;
 
-	final FileChooserFactory fileChooserFactory;
-	private final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
-
-	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
+	private final EstimationResultFilePresenter estimationResultFilePresenter;
 
 	private String lastFilePath;
 	private final Consumer<String> lastFilePathChangeListener;
@@ -61,17 +50,12 @@ public class EstimationResultUIPresenter {
 
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
-			final FileChooserFactory fileChooserFactory,
-			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
-			final FoldedModelFileAccessServiceFactory fileAccessFactory,
+			final EstimationResultFilePresenter estimationResultFilePresenter,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
 
-		this.fileChooserFactory = fileChooserFactory;
-		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
-
-		this.fileAccessServiceFactory = fileAccessFactory;
+		this.estimationResultFilePresenter = estimationResultFilePresenter;
 
 		this.lastFilePath = lastFilePath;
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
@@ -92,32 +76,8 @@ public class EstimationResultUIPresenter {
 	 */
 	private void export() {
 		try {
-			var fileAccessService = fileAccessServiceFactory.create(view.isFaceOrderFlipped());
 
-			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypes.svg(), this::createSVGConfig);
-			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypes.flippedSvg(), this::createSVGConfig);
-
-			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypes.picture(), this::createPictureConfig);
-
-			var foldedModel = view.getModel();
-
-			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
-
-			var presenter = fileSelectionPresenterFactory.create(
-					(FrameView) view.getTopLevelView(), fileAccessService.getFileSelectionService());
-
-			var selection = presenter.saveUsingGUI(lastFilePath);
-
-			if (selection.action() == UserAction.CANCELED) {
-				return;
-			}
-
-			fileAccessService.saveFile(entity, selection.path(), selection.type());
-
-			lastFilePath = selection.path();
+			lastFilePath = estimationResultFilePresenter.export(view, lastFilePath);
 
 			lastFilePathChangeListener.accept(lastFilePath);
 
@@ -127,21 +87,9 @@ public class EstimationResultUIPresenter {
 		}
 	}
 
-	private FoldedModelSVGConfig createSVGConfig() {
-		var svgConfig = new FoldedModelSVGConfig();
-
-		svgConfig.setFaceStrokeWidth(view.getSVGFaceStrokeWidth());
-		svgConfig.setPrecreaseStrokeWidth(view.getSVGPrecreaseStrokeWidth());
-
-		svgConfig.setFrontFillColorCode(ColorUtil.convertColorToCode(view.getFrontColor()));
-		svgConfig.setBackFillColorCode(ColorUtil.convertColorToCode(view.getBackColor()));
-
-		return svgConfig;
-	}
-
 	private void saveSVGConfig() {
 		try {
-			svgConfigFileAccess.save(createSVGConfig());
+			svgConfigFileAccess.save(estimationResultFilePresenter.createSVGConfig(view));
 		} catch (Exception e) {
 			view.showErrorMessage(e);
 		}
@@ -159,27 +107,6 @@ public class EstimationResultUIPresenter {
 		} catch (Exception e) {
 			view.showErrorMessage(e);
 		}
-	}
-
-	private FoldedModelPictureConfig createPictureConfig() {
-		var pictureConfig = new FoldedModelPictureConfig();
-
-		pictureConfig.setAmbientOcclusion(view.isFaceShade());
-		pictureConfig.setFillFaces(view.isFillFace());
-		pictureConfig.setDrawEdges(view.isDrawEdges());
-		pictureConfig.setFaceOrderFlipped(view.isFaceOrderFlipped());
-
-		pictureConfig.setColors(view.isUseColor() ? view.getFrontColor() : DefaultColors.WHITE,
-				view.isUseColor() ? view.getBackColor() : DefaultColors.WHITE);
-
-		pictureConfig.setDistortionMethod(view.getDistortionMethod());
-		pictureConfig.setDistortionParameter(view.getDistortionParameter());
-		pictureConfig.setVertexDepths(view.getVertexDepths());
-		pictureConfig.setEps(view.getEps());
-
-		pictureConfig.setRotateAngle(view.getRotateAngle());
-
-		return pictureConfig;
 	}
 
 	private Map<Integer, List<Set<Integer>>> createSubfaceToOverlapRelationIndices(

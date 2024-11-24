@@ -19,13 +19,9 @@
 package oripa.gui.presenter.estimation;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.estimation.EstimationResultFrameView;
-import oripa.gui.view.file.FileChooserFactory;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -40,27 +36,13 @@ public class EstimationResultFramePresenter {
 
 	public EstimationResultFramePresenter(
 			final EstimationResultFrameView view,
-			final FileChooserFactory fileChooserFactory,
-			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
-			final FoldedModelFileAccessServiceFactory fileAccessFactory,
-			final FileFactory fileFactory,
 			final List<FoldedModel> foldedModels,
-			final double eps,
-			final String lastFilePath,
-			final Consumer<String> lastFilePathChangeListener) {
+			final double eps) {
 		this.view = view;
 
 		this.foldedModels = foldedModels;
 
 		this.eps = eps;
-
-		var uiPresenter = new EstimationResultUIPresenter(
-				view.getUI(),
-				fileChooserFactory,
-				fileSelectionPresenterFactory,
-				fileAccessFactory,
-				lastFilePath,
-				lastFilePathChangeListener);
 
 		addListeners();
 
