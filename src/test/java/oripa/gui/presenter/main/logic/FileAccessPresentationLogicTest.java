@@ -32,7 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.application.FileAccessService;
-import oripa.application.main.PaintContextModification;
+import oripa.application.main.PaintContextService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.projectprop.Property;
@@ -66,7 +66,7 @@ class FileAccessPresentationLogicTest {
 	ChildFrameManager childFrameManager;
 
 	@Mock
-	PaintContextModification paintContextModification;
+	PaintContextService paintContextService;
 
 	@Mock
 	FileAccessService<Doc> dataFileAccess;
@@ -121,7 +121,7 @@ class FileAccessPresentationLogicTest {
 			verify(project).setDataFilePath(anyString());
 			verify(view).setEstimationResultColors(any(), any());
 			verify(screenSetting).setGridVisible(false);
-			verify(paintContextModification).setCreasePatternToPaintContext(any());
+			verify(paintContextService).setCreasePatternToPaintContext(any());
 			verify(screenPresenter).updateCameraCenter();
 
 		}
@@ -147,7 +147,7 @@ class FileAccessPresentationLogicTest {
 			verify(project, never()).setDataFilePath(anyString());
 			verify(view, never()).setEstimationResultColors(any(), any());
 			verify(screenSetting, never()).setGridVisible(anyBoolean());
-			verify(paintContextModification, never())
+			verify(paintContextService, never())
 					.setCreasePatternToPaintContext(any());
 
 		}
@@ -170,7 +170,7 @@ class FileAccessPresentationLogicTest {
 			verify(project, never()).setDataFilePath(anyString());
 			verify(view, never()).setEstimationResultColors(any(), any());
 			verify(screenSetting, never()).setGridVisible(false);
-			verify(paintContextModification, never()).setCreasePatternToPaintContext(any());
+			verify(paintContextService, never()).setCreasePatternToPaintContext(any());
 			verify(screenPresenter, never()).updateCameraCenter();
 
 		}

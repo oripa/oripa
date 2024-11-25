@@ -18,7 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
-import oripa.application.main.PaintContextModification;
+import oripa.application.main.PaintContextService;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -40,7 +40,7 @@ public class ClearActionPresentationLogic {
 
 	private final Project project;
 
-	private final PaintContextModification paintContextModification;
+	private final PaintContextService paintContextService;
 
 	public ClearActionPresentationLogic(
 			final MainFrameView view,
@@ -48,17 +48,17 @@ public class ClearActionPresentationLogic {
 			final PainterScreenSetting screenSetting,
 			final ChildFrameManager childFrameManager,
 			final Project project,
-			final PaintContextModification paintContextModification) {
+			final PaintContextService paintContextService) {
 		this.view = view;
 		this.screenUpdater = screenUpdater;
 		this.screenSetting = screenSetting;
 		this.childFrameManager = childFrameManager;
 		this.project = project;
-		this.paintContextModification = paintContextModification;
+		this.paintContextService = paintContextService;
 	}
 
 	public void clear() {
-		paintContextModification.clear();
+		paintContextService.clear();
 		project.clear();
 
 		screenSetting.setGridVisible(true);

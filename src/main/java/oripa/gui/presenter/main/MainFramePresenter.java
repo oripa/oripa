@@ -24,7 +24,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.paint.PaintContext;
+import oripa.application.main.PaintContextService;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
@@ -48,7 +48,7 @@ public class MainFramePresenter {
 
 	private final Project project;
 
-	private final PaintContext paintContext;
+	private final PaintContextService paintContextService;
 	private final MainFramePaintMenuListenerFactory paintMenuListenerFactory;
 
 	public MainFramePresenter(
@@ -57,7 +57,7 @@ public class MainFramePresenter {
 			final MainDialogPresenterFactory dialogPresenterFactory,
 			final MainFramePaintMenuListenerFactory paintMenuListenerFactory,
 			final Project project,
-			final PaintContext paintContext,
+			final PaintContextService paintContextService,
 			final List<GraphicMouseActionPlugin> plugins) {
 
 		this.view = view;
@@ -66,7 +66,7 @@ public class MainFramePresenter {
 		this.dialogPresenterFactory = dialogPresenterFactory;
 
 		this.project = project;
-		this.paintContext = paintContext;
+		this.paintContextService = paintContextService;
 
 		this.paintMenuListenerFactory = paintMenuListenerFactory;
 
@@ -206,7 +206,7 @@ public class MainFramePresenter {
 	}
 
 	private void showArrayCopyDialog() {
-		if (paintContext.countSelectedLines() == 0) {
+		if (!paintContextService.linesSelected()) {
 			view.showNoSelectionMessageForArrayCopy();
 			return;
 		}
@@ -217,7 +217,7 @@ public class MainFramePresenter {
 	}
 
 	private void showCircleCopyDialog() {
-		if (paintContext.countSelectedLines() == 0) {
+		if (!paintContextService.linesSelected()) {
 			view.showNoSelectionMessageForCircleCopy();
 			return;
 		}
@@ -281,7 +281,7 @@ public class MainFramePresenter {
 	private void afterSaveFile(final String path) {
 
 		if (Project.projectFileTypeMatch(path)) {
-			paintContext.clearCreasePatternChanged();
+			paintContextService.clearCreasePatternChanged();
 			project.setDataFilePath(path);
 		}
 
@@ -337,7 +337,7 @@ public class MainFramePresenter {
 
 	private void windowClosing() {
 
-		if (paintContext.creasePatternChangeExists()) {
+		if (paintContextService.creasePatternChangeExists()) {
 			// confirm saving edited opx
 			if (view.showSaveOnCloseDialog()) {
 

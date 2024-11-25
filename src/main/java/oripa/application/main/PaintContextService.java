@@ -34,11 +34,11 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class PaintContextModification {
+public class PaintContextService {
 	private final PaintContext paintContext;
 	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 
-	public PaintContextModification(
+	public PaintContextService(
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder) {
 		this.paintContext = paintContext;
@@ -70,6 +70,18 @@ public class PaintContextModification {
 	public void clear() {
 		setCreasePatternToPaintContext(
 				new CreasePatternFactory().createCreasePattern(Constants.DEFAULT_PAPER_SIZE));
+	}
+
+	public boolean linesSelected() {
+		return paintContext.countSelectedLines() > 0;
+	}
+
+	public void clearCreasePatternChanged() {
+		paintContext.clearCreasePatternChanged();
+	}
+
+	public boolean creasePatternChangeExists() {
+		return paintContext.creasePatternChangeExists();
 	}
 
 	public CreasePattern getCreasePattern() {

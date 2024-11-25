@@ -29,7 +29,7 @@ import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.main.DocFileAccess;
 import oripa.application.main.FileModelCheckService;
 import oripa.application.main.IniFileAccess;
-import oripa.application.main.PaintContextModification;
+import oripa.application.main.PaintContextService;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
@@ -279,7 +279,7 @@ public class ORIPA {
 
 			var project = new Project();
 
-			var paintContextModification = new PaintContextModification(
+			var paintContextService = new PaintContextService(
 					paintContext,
 					cutModelOutlinesHolder);
 
@@ -334,7 +334,7 @@ public class ORIPA {
 					childFrameManager,
 					screenPresenter,
 					mainScreenSetting,
-					paintContextModification,
+					paintContextService,
 					project,
 					docFileAccess);
 
@@ -351,7 +351,7 @@ public class ORIPA {
 					mainScreenSetting,
 					childFrameManager,
 					project,
-					paintContextModification);
+					paintContextService);
 
 			var undoRedoPresentationLogic = new UndoRedoPresentationLogic(
 					mainScreenUpdater,
@@ -390,7 +390,7 @@ public class ORIPA {
 					mainDialogPresenterFactory,
 					paintMenuListenerFactory,
 					project,
-					paintContext,
+					paintContextService,
 					plugins);
 			presenter.setViewVisible(true);
 

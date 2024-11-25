@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.FileAccessService;
-import oripa.application.main.PaintContextModification;
+import oripa.application.main.PaintContextService;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -50,7 +50,7 @@ public class FileAccessPresentationLogic {
 
 	private final ChildFrameManager childFrameManager;
 
-	private final PaintContextModification paintContextModification;
+	private final PaintContextService paintContextService;
 
 	private final FileAccessService<Doc> dataFileAccess;
 
@@ -61,7 +61,7 @@ public class FileAccessPresentationLogic {
 			final ChildFrameManager childFrameManager,
 			final PainterScreenPresenter screenPresenter,
 			final PainterScreenSetting screenSetting,
-			final PaintContextModification paintContextModification,
+			final PaintContextService paintContextService,
 			final Project project,
 			final FileAccessService<Doc> dataFileAccess) {
 		this.view = view;
@@ -70,7 +70,7 @@ public class FileAccessPresentationLogic {
 		this.screenPresenter = screenPresenter;
 		this.screenSetting = screenSetting;
 
-		this.paintContextModification = paintContextModification;
+		this.paintContextService = paintContextService;
 
 		this.project = project;
 
@@ -90,7 +90,7 @@ public class FileAccessPresentationLogic {
 	public String saveFile(final String path, final FileType<Doc> type)
 			throws DataAccessException, IllegalArgumentException {
 		try {
-			var doc = Doc.forSaving(paintContextModification.getCreasePattern(), project.getProperty());
+			var doc = Doc.forSaving(paintContextService.getCreasePattern(), project.getProperty());
 			dataFileAccess.saveFile(doc, path, type);
 
 		} catch (DataAccessException | IllegalArgumentException e) {
@@ -127,7 +127,7 @@ public class FileAccessPresentationLogic {
 								ColorUtil.convertCodeToColor(property.extractBackColorCode()));
 
 						screenSetting.setGridVisible(false);
-						paintContextModification
+						paintContextService
 								.setCreasePatternToPaintContext(
 										doc.getCreasePattern());
 						screenPresenter.updateCameraCenter();
@@ -144,7 +144,7 @@ public class FileAccessPresentationLogic {
 
 		var docOpt = dataFileAccess.loadFile(path);
 		docOpt.ifPresent(
-				doc -> paintContextModification.setToImportedLines(doc.getCreasePattern()));
+				doc -> paintContextService.setToImportedLines(doc.getCreasePattern()));
 
 	}
 
