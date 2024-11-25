@@ -18,7 +18,6 @@
  */
 package oripa.gui.presenter.main.logic;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Nested;
@@ -28,7 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.application.main.PaintContextModification;
+import oripa.application.main.PaintContextService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.ViewScreenUpdater;
@@ -68,7 +67,7 @@ class ClearActionPresentationLogicTest {
 	CutModelOutlinesHolder cutModelOutlinesHolder;
 
 	@Mock
-	PaintContextModification paintContextModification;
+	PaintContextService paintContextService;
 
 	@Nested
 	class TestClear {
@@ -77,7 +76,7 @@ class ClearActionPresentationLogicTest {
 
 			presentationLogic.clear();
 
-			verify(paintContextModification).clear(eq(paintContext), eq(cutModelOutlinesHolder));
+			verify(paintContextService).clear();
 			verify(project).clear();
 
 			verify(screenSetting).setGridVisible(true);

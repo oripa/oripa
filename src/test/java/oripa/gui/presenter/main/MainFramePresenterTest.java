@@ -35,7 +35,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.domain.paint.PaintContext;
+import oripa.application.main.PaintContextService;
 import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
@@ -71,7 +71,7 @@ class MainFramePresenterTest {
 	Project project;
 
 	@Mock
-	PaintContext paintContext;
+	PaintContextService paintContextService;
 
 	@Mock
 	MainFramePaintMenuListenerFactory paintMenuListenerFactory;
@@ -206,7 +206,7 @@ class MainFramePresenterTest {
 				@Test
 				void arrayCopyDialogShouldBeShownWhenLinesAreSelected() {
 
-					when(paintContext.countSelectedLines()).thenReturn(1);
+					when(paintContextService.linesSelected()).thenReturn(true);
 
 					ArrayCopyDialogPresenter dialogPresenter = mock();
 					when(dialogPresenterFactory.createArrayCopyDialogPresenter(view))
@@ -224,7 +224,7 @@ class MainFramePresenterTest {
 				@Test
 				void warningShouldBeShownWhenLinesAreNotSelected() {
 
-					when(paintContext.countSelectedLines()).thenReturn(0);
+					when(paintContextService.linesSelected()).thenReturn(false);
 
 					construct();
 
@@ -245,7 +245,7 @@ class MainFramePresenterTest {
 				@Test
 				void circleCopyDialogShouldBeShownWhenLinesAreSelected() {
 
-					when(paintContext.countSelectedLines()).thenReturn(1);
+					when(paintContextService.linesSelected()).thenReturn(true);
 
 					CircleCopyDialogPresenter dialogPresenter = mock();
 					when(dialogPresenterFactory.createCircleCopyDialogPresenter(view))
@@ -263,7 +263,7 @@ class MainFramePresenterTest {
 				@Test
 				void warningShouldBeShownWhenLinesAreNotSelected() {
 
-					when(paintContext.countSelectedLines()).thenReturn(0);
+					when(paintContextService.linesSelected()).thenReturn(false);
 
 					construct();
 
@@ -341,7 +341,7 @@ class MainFramePresenterTest {
 				@Test
 				void saveIniWhenNoChangeOnCP() {
 
-					when(paintContext.creasePatternChangeExists()).thenReturn(false);
+					when(paintContextService.creasePatternChangeExists()).thenReturn(false);
 
 					construct();
 
@@ -355,7 +355,7 @@ class MainFramePresenterTest {
 				@Test
 				void saveIniWhenSaveCPIsCanceled() {
 
-					when(paintContext.creasePatternChangeExists()).thenReturn(true);
+					when(paintContextService.creasePatternChangeExists()).thenReturn(true);
 
 					when(view.showSaveOnCloseDialog()).thenReturn(false);
 
@@ -372,7 +372,7 @@ class MainFramePresenterTest {
 				@Test
 				void saveCPAndSaveIniWhenCPChangedAndFileIsSelected() {
 
-					when(paintContext.creasePatternChangeExists()).thenReturn(true);
+					when(paintContextService.creasePatternChangeExists()).thenReturn(true);
 
 					when(view.showSaveOnCloseDialog()).thenReturn(true);
 
@@ -454,7 +454,7 @@ class MainFramePresenterTest {
 						verify(presentationLogic).saveFileToCurrentPath(fileType);
 
 						// verify after save
-						verifyAfterSave(true, path, paintContext);
+						verifyAfterSave(true, path);
 					}
 
 				}
@@ -484,7 +484,7 @@ class MainFramePresenterTest {
 						verify(presentationLogic).saveFileUsingGUI();
 
 						// verify after save
-						verifyAfterSave(false, path, null);
+						verifyAfterSave(false, path);
 					}
 
 				}
@@ -519,7 +519,7 @@ class MainFramePresenterTest {
 						verify(presentationLogic).saveFileUsingGUI();
 
 						// verify after save
-						verifyAfterSave(true, path, paintContext);
+						verifyAfterSave(true, path);
 					}
 				}
 
@@ -531,10 +531,9 @@ class MainFramePresenterTest {
 
 			void verifyAfterSave(
 					final boolean projectFileTypeMatch,
-					final String path,
-					final PaintContext paintContext) {
+					final String path) {
 				if (projectFileTypeMatch) {
-					verify(paintContext).clearCreasePatternChanged();
+					verify(paintContextService).clearCreasePatternChanged();
 					verify(project).setDataFilePath(path);
 				}
 				verify(presentationLogic).updateMenu();
@@ -589,7 +588,7 @@ class MainFramePresenterTest {
 					verify(presentationLogic).modifySavingActions();
 
 					verify(presentationLogic).saveFileUsingGUI(eq(type));
-					verifyNoCallsAfterExport(isProjectFile, path, paintContext);
+					verifyNoCallsAfterExport(isProjectFile, path);
 				}
 
 			}
@@ -653,17 +652,16 @@ class MainFramePresenterTest {
 					projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
 
 					verify(presentationLogic).exportFileUsingGUIWithModelCheck(type);
-					verifyNoCallsAfterExport(isProjectFile, path, paintContext);
+					verifyNoCallsAfterExport(isProjectFile, path);
 				}
 
 			}
 
 			void verifyNoCallsAfterExport(
 					final boolean projectFileTypeMatch,
-					final String path,
-					final PaintContext paintContext) {
+					final String path) {
 				if (projectFileTypeMatch) {
-					verify(paintContext, never()).clearCreasePatternChanged();
+					verify(paintContextService, never()).clearCreasePatternChanged();
 					verify(project, never()).setDataFilePath(path);
 				}
 				verify(presentationLogic, never()).updateMenu();
@@ -741,7 +739,7 @@ class MainFramePresenterTest {
 				dialogPresenterFactory,
 				paintMenuListenerFactory,
 				project,
-				paintContext,
+				paintContextService,
 				plugins);
 	}
 

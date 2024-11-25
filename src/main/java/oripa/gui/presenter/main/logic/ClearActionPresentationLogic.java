@@ -18,9 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
-import oripa.application.main.PaintContextModification;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.paint.PaintContext;
+import oripa.application.main.PaintContextService;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -40,34 +38,27 @@ public class ClearActionPresentationLogic {
 
 	private final ChildFrameManager childFrameManager;
 
-	private final PaintContext paintContext;
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
-
 	private final Project project;
 
-	private final PaintContextModification paintContextModification;
+	private final PaintContextService paintContextService;
 
 	public ClearActionPresentationLogic(
 			final MainFrameView view,
 			final ViewScreenUpdater screenUpdater,
 			final PainterScreenSetting screenSetting,
 			final ChildFrameManager childFrameManager,
-			final PaintContext paintContext,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final Project project,
-			final PaintContextModification paintContextModification) {
+			final PaintContextService paintContextService) {
 		this.view = view;
 		this.screenUpdater = screenUpdater;
 		this.screenSetting = screenSetting;
 		this.childFrameManager = childFrameManager;
-		this.paintContext = paintContext;
-		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.project = project;
-		this.paintContextModification = paintContextModification;
+		this.paintContextService = paintContextService;
 	}
 
 	public void clear() {
-		paintContextModification.clear(paintContext, cutModelOutlinesHolder);
+		paintContextService.clear();
 		project.clear();
 
 		screenSetting.setGridVisible(true);

@@ -24,9 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.FileAccessService;
-import oripa.application.main.PaintContextModification;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.paint.PaintContext;
+import oripa.application.main.PaintContextService;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -52,12 +50,10 @@ public class FileAccessPresentationLogic {
 
 	private final ChildFrameManager childFrameManager;
 
-	private final PaintContextModification paintContextModification;
+	private final PaintContextService paintContextService;
 
 	private final FileAccessService<Doc> dataFileAccess;
 
-	private final PaintContext paintContext;
-	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 	private final Project project;
 
 	public FileAccessPresentationLogic(
@@ -65,9 +61,7 @@ public class FileAccessPresentationLogic {
 			final ChildFrameManager childFrameManager,
 			final PainterScreenPresenter screenPresenter,
 			final PainterScreenSetting screenSetting,
-			final PaintContextModification paintContextModification,
-			final PaintContext paintContext,
-			final CutModelOutlinesHolder cutModelOutlinesHolder,
+			final PaintContextService paintContextService,
 			final Project project,
 			final FileAccessService<Doc> dataFileAccess) {
 		this.view = view;
@@ -76,10 +70,8 @@ public class FileAccessPresentationLogic {
 		this.screenPresenter = screenPresenter;
 		this.screenSetting = screenSetting;
 
-		this.paintContextModification = paintContextModification;
+		this.paintContextService = paintContextService;
 
-		this.paintContext = paintContext;
-		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
 		this.project = project;
 
 		this.dataFileAccess = dataFileAccess;
@@ -98,7 +90,7 @@ public class FileAccessPresentationLogic {
 	public String saveFile(final String path, final FileType<Doc> type)
 			throws DataAccessException, IllegalArgumentException {
 		try {
-			var doc = Doc.forSaving(paintContext.getCreasePattern(), project.getProperty());
+			var doc = Doc.forSaving(paintContextService.getCreasePattern(), project.getProperty());
 			dataFileAccess.saveFile(doc, path, type);
 
 		} catch (DataAccessException | IllegalArgumentException e) {
@@ -135,9 +127,9 @@ public class FileAccessPresentationLogic {
 								ColorUtil.convertCodeToColor(property.extractBackColorCode()));
 
 						screenSetting.setGridVisible(false);
-						paintContextModification
+						paintContextService
 								.setCreasePatternToPaintContext(
-										doc.getCreasePattern(), paintContext, cutModelOutlinesHolder);
+										doc.getCreasePattern());
 						screenPresenter.updateCameraCenter();
 						return filePath;
 					}).orElse(null);
@@ -152,7 +144,7 @@ public class FileAccessPresentationLogic {
 
 		var docOpt = dataFileAccess.loadFile(path);
 		docOpt.ifPresent(
-				doc -> paintContextModification.setToImportedLines(doc.getCreasePattern(), paintContext));
+				doc -> paintContextService.setToImportedLines(doc.getCreasePattern()));
 
 	}
 
