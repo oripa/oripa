@@ -141,4 +141,6 @@ public interface MainFrameView extends FrameView {
 	void showSaveFailureErrorMessage(Exception e);
 
 	void showSaveIniFileFailureErrorMessage(Exception e);
+
+	void initializeFrameBounds();
 }

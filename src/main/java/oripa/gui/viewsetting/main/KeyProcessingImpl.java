@@ -18,18 +18,35 @@
  */
 package oripa.gui.viewsetting.main;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.util.function.Consumer;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Qualifier;
+import jakarta.inject.Singleton;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.KeyProcessing;
 
+@Singleton
 public class KeyProcessingImpl implements KeyProcessing {
 
 	private final Consumer<Boolean> changeActionIfCopyAndPaste;
 	private final ViewScreenUpdater screenUpdater;
 
-	public KeyProcessingImpl(final Consumer<Boolean> changeAction, final ViewScreenUpdater screenUpdater) {
-		this.changeActionIfCopyAndPaste = changeAction;
+	@Qualifier
+	@Target({ FIELD, PARAMETER, METHOD })
+	@Retention(RUNTIME)
+	public @interface KeyOnOffListener {
+	}
+
+	@Inject
+	public KeyProcessingImpl(@KeyOnOffListener final Consumer<Boolean> keyOnOffListener,
+			final ViewScreenUpdater screenUpdater) {
+		this.changeActionIfCopyAndPaste = keyOnOffListener;
 		this.screenUpdater = screenUpdater;
 	}
 

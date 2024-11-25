@@ -18,11 +18,9 @@
 
 package oripa;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import com.google.inject.Guice;
 
 import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
@@ -69,13 +67,13 @@ import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
 import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
 import oripa.gui.presenter.model.logic.ModelViewFilePresentationLogic;
 import oripa.gui.presenter.model.logic.OrigamiModelFileSelectionPresenterFactory;
-import oripa.gui.view.ViewScreenUpdaterFactory;
+import oripa.gui.view.ViewScreenUpdater;
+import oripa.gui.view.main.KeyProcessing;
+import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.gui.viewsetting.main.KeyProcessingImpl;
-import oripa.gui.viewsetting.main.MainFrameSettingImpl;
-import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
-import oripa.gui.viewsetting.main.UIPanelSettingImpl;
+import oripa.inject.MainViewOripaModule;
+import oripa.inject.MainViewSwingModule;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
@@ -88,7 +86,6 @@ import oripa.swing.view.file.FileChooserSwingFactory;
 import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
 import oripa.swing.view.main.ArrayCopyDialogFactory;
 import oripa.swing.view.main.CircleCopyDialogFactory;
-import oripa.swing.view.main.MainFrame;
 import oripa.swing.view.main.MainFrameSwingDialogFactory;
 import oripa.swing.view.main.PropertyDialogFactory;
 import oripa.swing.view.main.SubSwingFrameFactory;
@@ -105,42 +102,22 @@ public class ORIPA {
 		}
 
 		SwingUtilities.invokeLater(() -> {
-			int uiPanelWidth = 0;// 150;
-
-			int mainFrameWidth = 1000;
-			int mainFrameHeight = 800;
-
-			int appTotalWidth = mainFrameWidth + uiPanelWidth;
-			int appTotalHeight = mainFrameHeight;
-
 			// Construction of the main frame
 
-			var screenUpdaterFactory = new ViewScreenUpdaterFactory();
+			var injector = Guice.createInjector(
+					new MainViewSwingModule(),
+					new MainViewOripaModule());
 
-			var mainScreenUpdater = screenUpdaterFactory.create();
-			var mouseActionHolder = new MouseActionHolder();
-			var keyProcessing = new KeyProcessingImpl(
-					new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder),
-					mainScreenUpdater);
+			// tentative variables. To be deleted.
+			var mouseActionHolder = injector.getInstance(MouseActionHolder.class);
+			var mainScreenUpdater = injector.getInstance(ViewScreenUpdater.class);
+			var keyProcessing = injector.getInstance(KeyProcessing.class);
+			var mainViewSetting = injector.getInstance(MainViewSetting.class);
 
-			var mainViewSetting = new MainViewSetting(
-					new MainFrameSettingImpl(),
-					new PainterScreenSettingImpl(),
-					new UIPanelSettingImpl());
+			var mainFrame = injector.getInstance(MainFrameView.class);
+			mainFrame.initializeFrameBounds();
 
 			var mainScreenSetting = mainViewSetting.getPainterScreenSetting();
-
-			var mainFrame = new MainFrame(mainViewSetting, mainScreenUpdater);
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			// Configure position and size of the frame
-
-			Toolkit toolkit = mainFrame.getToolkit();
-			Dimension dim = toolkit.getScreenSize();
-			int originX = (int) (dim.getWidth() / 2 - appTotalWidth / 2);
-			int originY = (int) (dim.getHeight() / 2 - appTotalHeight / 2);
-
-			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 
 			// Construct the presenter
 

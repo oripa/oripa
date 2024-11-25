@@ -3,8 +3,10 @@ package oripa.gui.viewsetting.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import jakarta.inject.Singleton;
 import oripa.gui.view.main.MainFrameSetting;
 
+@Singleton
 public class MainFrameSettingImpl implements MainFrameSetting {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);

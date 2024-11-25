@@ -21,6 +21,7 @@ package oripa.swing.view.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
@@ -42,6 +43,7 @@ import javax.swing.JScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameSetting;
@@ -165,7 +167,9 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 	private Runnable windowClosingListener;
 
+	@Inject
 	public MainFrame(final MainViewSetting viewSetting, final ViewScreenUpdater viewScreenUpdater) {
+
 		logger.info("frame construction starts.");
 
 		setting = viewSetting.getMainFrameSetting();
@@ -229,6 +233,8 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 		menuBar.add(menuEdit);
 		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private void setAccelerators() {
@@ -548,5 +554,24 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	public void showSaveIniFileFailureErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this, resourceHolder.getString(
 				ResourceKey.ERROR, StringID.Error.SAVE_INI_FAILED_ID), e);
+	}
+
+	@Override
+	public void initializeFrameBounds() {
+		// Configure position and size of the frame
+		int uiPanelWidth = 0;// 150;
+
+		int mainFrameWidth = 1000;
+		int mainFrameHeight = 800;
+
+		int appTotalWidth = mainFrameWidth + uiPanelWidth;
+		int appTotalHeight = mainFrameHeight;
+
+		Toolkit toolkit = getToolkit();
+		Dimension dim = toolkit.getScreenSize();
+		int originX = (int) (dim.getWidth() / 2 - appTotalWidth / 2);
+		int originY = (int) (dim.getHeight() / 2 - appTotalHeight / 2);
+
+		setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 	}
 }

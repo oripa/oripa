@@ -16,38 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.creasepattern;
+package oripa.inject;
 
-import java.util.Optional;
+import com.google.inject.AbstractModule;
 
-import jakarta.inject.Singleton;
+import oripa.gui.view.main.MainFrameView;
+import oripa.swing.view.main.MainFrame;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-@Singleton
-public class MouseActionHolder {
+public class MainViewSwingModule extends AbstractModule {
 
-	/**
-	 *
-	 */
-	private GraphicMouseAction action;
+	@Override
+	protected void configure() {
 
-	/**
-	 *
-	 * @param a
-	 *            mouse action behavior
-	 */
-	public void setMouseAction(final GraphicMouseAction a) {
-		action = a;
+		bind(MainFrameView.class).to(MainFrame.class);
 	}
 
-	/**
-	 *
-	 * @return current mouse action behavior
-	 */
-	public Optional<GraphicMouseAction> getMouseAction() {
-		return Optional.ofNullable(action);
-	}
 }

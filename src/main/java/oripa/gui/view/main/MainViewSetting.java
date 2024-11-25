@@ -18,15 +18,20 @@
  */
 package oripa.gui.view.main;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 /**
  * @author OUCHI Koji
  *
  */
+@Singleton
 public class MainViewSetting {
 	private final MainFrameSetting mainFrameSetting;
 	private final PainterScreenSetting painterScreenSetting;
 	private final UIPanelSetting uiPanelSetting;
 
+	@Inject
 	public MainViewSetting(final MainFrameSetting frameSetting, final PainterScreenSetting screenSetting,
 			final UIPanelSetting uiSetting) {
 		this.mainFrameSetting = frameSetting;
