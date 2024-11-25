@@ -18,7 +18,6 @@
  */
 package oripa.gui.presenter.main.logic;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Nested;
@@ -77,7 +76,7 @@ class ClearActionPresentationLogicTest {
 
 			presentationLogic.clear();
 
-			verify(paintContextModification).clear(eq(paintContext), eq(cutModelOutlinesHolder));
+			verify(paintContextModification).clear();
 			verify(project).clear();
 
 			verify(screenSetting).setGridVisible(true);

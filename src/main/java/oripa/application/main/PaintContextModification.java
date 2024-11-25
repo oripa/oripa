@@ -35,6 +35,16 @@ import oripa.value.OriLine;
  *
  */
 public class PaintContextModification {
+	private final PaintContext paintContext;
+	private final CutModelOutlinesHolder cutModelOutlinesHolder;
+
+	public PaintContextModification(
+			final PaintContext paintContext,
+			final CutModelOutlinesHolder cutModelOutlinesHolder) {
+		this.paintContext = paintContext;
+		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
+	}
+
 	/**
 	 * Clears the context, sets the given crease pattern, and clears the undo
 	 * history.
@@ -42,15 +52,14 @@ public class PaintContextModification {
 	 * @param creasePattern
 	 * @param paintContext
 	 */
-	public void setCreasePatternToPaintContext(final CreasePattern creasePattern,
-			final PaintContext paintContext, final CutModelOutlinesHolder cutModelOutlinesHolder) {
+	public void setCreasePatternToPaintContext(final CreasePattern creasePattern) {
 		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);
 		paintContext.creasePatternUndo().clear();
 		cutModelOutlinesHolder.setOutlines(List.of());
 	}
 
-	public void setToImportedLines(final Collection<OriLine> lines, final PaintContext paintContext) {
+	public void setToImportedLines(final Collection<OriLine> lines) {
 		paintContext.getPainter().resetSelectedOriLines();
 
 		lines.forEach(l -> l.setSelected(true));
@@ -58,12 +67,13 @@ public class PaintContextModification {
 
 	}
 
-	public void clear(final PaintContext paintContext, final CutModelOutlinesHolder cutModelOutlinesHolder) {
+	public void clear() {
 		setCreasePatternToPaintContext(
-				new CreasePatternFactory().createCreasePattern(Constants.DEFAULT_PAPER_SIZE),
-				paintContext,
-				cutModelOutlinesHolder);
+				new CreasePatternFactory().createCreasePattern(Constants.DEFAULT_PAPER_SIZE));
+	}
 
+	public CreasePattern getCreasePattern() {
+		return paintContext.getCreasePattern();
 	}
 
 }

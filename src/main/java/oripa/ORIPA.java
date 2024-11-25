@@ -279,7 +279,9 @@ public class ORIPA {
 
 			var project = new Project();
 
-			var paintContextModification = new PaintContextModification();
+			var paintContextModification = new PaintContextModification(
+					paintContext,
+					cutModelOutlinesHolder);
 
 			var resourceHolder = ResourceHolder.getInstance();
 
@@ -333,8 +335,6 @@ public class ORIPA {
 					screenPresenter,
 					mainScreenSetting,
 					paintContextModification,
-					paintContext,
-					cutModelOutlinesHolder,
 					project,
 					docFileAccess);
 
@@ -350,8 +350,6 @@ public class ORIPA {
 					mainScreenUpdater,
 					mainScreenSetting,
 					childFrameManager,
-					paintContext,
-					cutModelOutlinesHolder,
 					project,
 					paintContextModification);
 

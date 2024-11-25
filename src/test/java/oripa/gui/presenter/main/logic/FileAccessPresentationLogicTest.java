@@ -121,7 +121,7 @@ class FileAccessPresentationLogicTest {
 			verify(project).setDataFilePath(anyString());
 			verify(view).setEstimationResultColors(any(), any());
 			verify(screenSetting).setGridVisible(false);
-			verify(paintContextModification).setCreasePatternToPaintContext(any(), any(), eq(cutModelOutlinesHolder));
+			verify(paintContextModification).setCreasePatternToPaintContext(any());
 			verify(screenPresenter).updateCameraCenter();
 
 		}
@@ -148,7 +148,7 @@ class FileAccessPresentationLogicTest {
 			verify(view, never()).setEstimationResultColors(any(), any());
 			verify(screenSetting, never()).setGridVisible(anyBoolean());
 			verify(paintContextModification, never())
-					.setCreasePatternToPaintContext(any(), any(), eq(cutModelOutlinesHolder));
+					.setCreasePatternToPaintContext(any());
 
 		}
 
@@ -170,8 +170,7 @@ class FileAccessPresentationLogicTest {
 			verify(project, never()).setDataFilePath(anyString());
 			verify(view, never()).setEstimationResultColors(any(), any());
 			verify(screenSetting, never()).setGridVisible(false);
-			verify(paintContextModification, never()).setCreasePatternToPaintContext(any(), any(),
-					eq(cutModelOutlinesHolder));
+			verify(paintContextModification, never()).setCreasePatternToPaintContext(any());
 			verify(screenPresenter, never()).updateCameraCenter();
 
 		}
