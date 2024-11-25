@@ -5,6 +5,7 @@ log4j = "2.24.1"
 junit-jupiter = "5.11.3"
 mockito = "5.14.2"
 slf4j-api = "2.0.16"
+guice = "7.0.0"
 
 spotless = "7.0.0.BETA4"
 shadow = "8.1.1"
@@ -25,6 +26,7 @@ junit-platform-launcher = { module ="org.junit.platform:junit-platform-launcher"
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j-api" }
+guice = {module = "com.google.inject:guice", version.ref = "guice" }
 
 [bundles]
 log4j = ["log4j-core", "log4j-slf4j2-impl"]

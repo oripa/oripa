@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.bundles.log4j)
     implementation(libs.gson)
     implementation(libs.commons.cli)
+    implementation(libs.guice)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.bundles.mockito)
