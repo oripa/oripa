@@ -3,12 +3,12 @@ package oripa.gui.bind.state;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import jakarta.inject.Inject;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.presenter.creasepattern.enlarge.EnlargeLineAction;
 import oripa.gui.view.main.MainFrameSetting;
-import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewchange.main.ChangeHint;
 import oripa.gui.viewchange.main.uipanel.ChangeOnAlterTypeButtonSelected;
@@ -30,16 +30,18 @@ public class PaintBoundStateFactory {
 	/**
 	 * Constructor
 	 */
+	@Inject
 	public PaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
 			final MouseActionSetterFactory setterFactory,
-			final MainViewSetting viewSetting,
+			final MainFrameSetting mainFrameSetting,
+			final UIPanelSetting uiPanelSetting,
 			final ComplexActionFactory complexActionFactory) {
 
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
-		this.mainFrameSetting = viewSetting.getMainFrameSetting();
-		this.uiPanelSetting = viewSetting.getUiPanelSetting();
+		this.mainFrameSetting = mainFrameSetting;
+		this.uiPanelSetting = uiPanelSetting;
 		this.complexActionFactory = complexActionFactory;
 	}
 

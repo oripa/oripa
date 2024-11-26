@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import jakarta.inject.Singleton;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.linetype.TypeForChangeGettable;
 
@@ -25,6 +26,7 @@ import oripa.domain.paint.linetype.TypeForChangeGettable;
  * @author OUCHI Koji
  *
  */
+@Singleton
 public class TypeForChangeContext implements TypeForChangeGettable {
 	private TypeForChange typeFrom = TypeForChange.EMPTY;
 	private TypeForChange typeTo = TypeForChange.EMPTY;

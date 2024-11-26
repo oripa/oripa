@@ -1,5 +1,6 @@
 package oripa.gui.bind.state;
 
+import jakarta.inject.Inject;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -11,6 +12,7 @@ public class PluginPaintBoundStateFactory {
 	private final StateManager<EditMode> stateManager;
 	private final MouseActionSetterFactory setterFactory;
 
+	@Inject
 	public PluginPaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
 			final MouseActionSetterFactory setterFactory) {

@@ -16,31 +16,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.cutmodel;
+package oripa.inject;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
-import jakarta.inject.Singleton;
-import oripa.value.OriLine;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+
+import oripa.PluginLoader;
+import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
+import oripa.gui.view.main.MainFrameSetting;
+import oripa.gui.view.main.UIPanelSetting;
 
 /**
  * @author OUCHI Koji
  *
  */
-@Singleton
-public class DefaultCutModelOutlinesHolder implements CutModelOutlinesHolder {
-
-	private Collection<OriLine> outlines = new ArrayList<OriLine>();
+public class PluginModule extends AbstractModule {
 
 	@Override
-	public void setOutlines(final Collection<OriLine> outlines) {
-		this.outlines = outlines;
+	protected void configure() {
 	}
 
-	@Override
-	public Collection<OriLine> getOutlines() {
-		return outlines;
+	@Provides
+	public List<GraphicMouseActionPlugin> loadPlugin(final MainFrameSetting frameSetting,
+			final UIPanelSetting uiPanelSetting) {
+		return new PluginLoader().loadMouseActionPlugins(frameSetting, uiPanelSetting);
 	}
-
 }

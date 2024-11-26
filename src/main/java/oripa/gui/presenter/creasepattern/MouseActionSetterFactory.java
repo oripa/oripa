@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import jakarta.inject.Inject;
 import oripa.domain.paint.PaintContext;
 
 /**
@@ -32,6 +33,7 @@ public class MouseActionSetterFactory {
 	/**
 	 * Constructor
 	 */
+	@Inject
 	public MouseActionSetterFactory(
 			final MouseActionHolder actionHolder,
 			final ScreenUpdater screenUpdater,

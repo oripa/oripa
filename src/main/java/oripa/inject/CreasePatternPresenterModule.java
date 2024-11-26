@@ -16,31 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.cutmodel;
+package oripa.inject;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
 import jakarta.inject.Singleton;
-import oripa.value.OriLine;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-@Singleton
-public class DefaultCutModelOutlinesHolder implements CutModelOutlinesHolder {
-
-	private Collection<OriLine> outlines = new ArrayList<OriLine>();
+public class CreasePatternPresenterModule extends AbstractModule {
 
 	@Override
-	public void setOutlines(final Collection<OriLine> outlines) {
-		this.outlines = outlines;
+	protected void configure() {
 	}
 
-	@Override
-	public Collection<OriLine> getOutlines() {
-		return outlines;
+	@Provides
+	@Singleton
+	public CreasePatternViewContext getViewContext() {
+		return new CreasePatternViewContextFactory().createContext();
 	}
 
 }

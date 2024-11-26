@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import jakarta.inject.Inject;
 import oripa.appstate.StatePopper;
 
 /**
@@ -29,6 +30,7 @@ public class EditOutlineActionFactory {
 	private final StatePopper<EditMode> statePopper;
 	private final MouseActionHolder actionHolder;
 
+	@Inject
 	public EditOutlineActionFactory(final StatePopper<EditMode> statePopper, final MouseActionHolder actionHolder) {
 		this.statePopper = statePopper;
 		this.actionHolder = actionHolder;

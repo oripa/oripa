@@ -21,6 +21,7 @@ package oripa.persistence.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.inject.Inject;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.FileSelectionSupport;
 import oripa.persistence.dao.FileSelectionSupportFactory;
@@ -37,12 +38,17 @@ import oripa.util.file.FileFactory;
  *
  */
 public class OrigamiModelFileSelectionSupportSelectorFactory {
-	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
-	private final FileAccessSupportFactory accessSupportFactory = new FileAccessSupportFactory();
+	private final FileSelectionSupportFactory selectionSupportFactory;
+	private final FileAccessSupportFactory accessSupportFactory;
 
-	/**
-	 * Constructor
-	 */
+	@Inject
+	public OrigamiModelFileSelectionSupportSelectorFactory(
+			final FileSelectionSupportFactory selectionSupportFactory,
+			final FileAccessSupportFactory accessSupportFactory) {
+		this.selectionSupportFactory = selectionSupportFactory;
+		this.accessSupportFactory = accessSupportFactory;
+	}
+
 	public FileSelectionSupportSelector<OrigamiModel> create(final FileFactory fileFactory) {
 		var supports = new HashMap<FileType<OrigamiModel>, FileSelectionSupport<OrigamiModel>>();
 

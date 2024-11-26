@@ -1,5 +1,6 @@
 package oripa.swing.view.estimation;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
@@ -9,9 +10,7 @@ public class EstimationResultSwingFrameFactory implements EstimationResultFrameF
 
 	private final ChildFrameManager childFrameManager;
 
-	/**
-	 * Constructor
-	 */
+	@Inject
 	public EstimationResultSwingFrameFactory(final ChildFrameManager childFrameManager) {
 		this.childFrameManager = childFrameManager;
 	}

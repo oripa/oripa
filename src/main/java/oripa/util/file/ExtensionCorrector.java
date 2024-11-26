@@ -51,9 +51,10 @@ public class ExtensionCorrector {
 	}
 
 	private String replaceExtension(final String path, final String ext) {
-		// drop the old extension and
-		// append the new extension
-		return path.replaceAll("\\.\\w+$", "." + ext);
+		// drop the old extension and append the new extension.
+		// replacing with extension is not correct if given path has no
+		// extension.
+		return path.replaceAll("\\.\\w+$", "") + "." + ext;
 	}
 
 }

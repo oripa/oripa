@@ -18,6 +18,7 @@
  */
 package oripa.swing.view.main;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.ArrayCopyDialogView;
 import oripa.gui.view.main.CircleCopyDialogView;
@@ -34,6 +35,7 @@ public class MainFrameSwingDialogFactory implements MainFrameDialogFactory {
 	private final CircleCopyDialogFactory circleCopyDialogFactory;
 	private final PropertyDialogFactory propertyDialogFactory;
 
+	@Inject
 	public MainFrameSwingDialogFactory(final ArrayCopyDialogFactory arrayCopyDialogFactory,
 			final CircleCopyDialogFactory circleCopyDialogFactory,
 			final PropertyDialogFactory propertyDialogFactory) {

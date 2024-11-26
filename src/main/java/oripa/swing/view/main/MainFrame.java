@@ -48,8 +48,9 @@ import oripa.geom.RectangleDomain;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.MainViewSetting;
+import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.PainterScreenView;
+import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.view.main.UIPanelView;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
@@ -168,20 +169,24 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	private Runnable windowClosingListener;
 
 	@Inject
-	public MainFrame(final MainViewSetting viewSetting, final ViewScreenUpdater viewScreenUpdater) {
+	public MainFrame(
+			final MainFrameSetting frameSetting,
+			final PainterScreenSetting screenSetting,
+			final UIPanelSetting uiPanelSetting,
+			final ViewScreenUpdater viewScreenUpdater) {
 
 		logger.info("frame construction starts.");
 
-		setting = viewSetting.getMainFrameSetting();
+		setting = frameSetting;
 
-		mainScreen = new PainterScreen(viewSetting.getPainterScreenSetting(), viewScreenUpdater);
+		mainScreen = new PainterScreen(screenSetting, viewScreenUpdater);
 
 		// this has to be done before instantiation of UI panel.
 		addHintPropertyChangeListenersToSetting();
 
 		logger.info("start constructing UI panel.");
 		try {
-			uiPanel = new UIPanel(viewSetting, dialogService, resourceHolder);
+			uiPanel = new UIPanel(uiPanelSetting, screenSetting, dialogService, resourceHolder);
 		} catch (RuntimeException ex) {
 			logger.error("UI panel construction failed", ex);
 			Dialogs.showErrorDialog(

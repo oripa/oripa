@@ -16,39 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.creasepattern.copypaste;
+package oripa.inject;
 
-import jakarta.inject.Inject;
-import oripa.appstate.StatePopper;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+
+import jakarta.inject.Singleton;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
+import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.PaintContextFactory;
+import oripa.domain.paint.byvalue.ByValueContext;
+import oripa.domain.paint.byvalue.ByValueContextImpl;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
+import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CopyAndPasteActionFactory {
+public class PaintDomainModule extends AbstractModule {
 
-	private final StatePopper<EditMode> statePopper;
-	private final SelectionOriginHolder originHolder;
+	@Override
+	protected void configure() {
+		bind(SelectionOriginHolder.class).to(SelectionOriginHolderImpl.class);
+		bind(ByValueContext.class).to(ByValueContextImpl.class);
 
-	@Inject
-	public CopyAndPasteActionFactory(final StatePopper<EditMode> statePopper,
-			final SelectionOriginHolder originHolder) {
-		this.statePopper = statePopper;
-		this.originHolder = originHolder;
+		bind(CutModelOutlinesHolder.class).to(DefaultCutModelOutlinesHolder.class);
 	}
 
-	public GraphicMouseAction createCopyAndPaste() {
-		return new CopyAndPasteActionWrapper(statePopper, originHolder);
-	}
-
-	public GraphicMouseAction createCutAndPaste() {
-		return new CutAndPasteActionWrapper(statePopper, originHolder);
-	}
-
-	public GraphicMouseAction createImport() {
-		return new ImportActionWapper(statePopper, originHolder);
+	@Provides
+	@Singleton
+	PaintContext getPaintContext() {
+		return new PaintContextFactory().createContext();
 	}
 }

@@ -20,6 +20,7 @@ package oripa.swing.view.model;
 
 import java.beans.PropertyChangeListener;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelViewFrameFactory;
@@ -35,6 +36,7 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 	private final PainterScreenSetting mainScreenSetting;
 	private final ChildFrameManager childFrameManager;
 
+	@Inject
 	public ModelViewSwingFrameFactory(final PainterScreenSetting mainScreenSetting,
 			final ChildFrameManager childFrameManager) {
 		this.mainScreenSetting = mainScreenSetting;

@@ -34,6 +34,7 @@ public class FileAccessService<Data> {
 
 	private final FileDAO<Data> fileDAO;
 
+	// @Inject
 	public FileAccessService(final FileDAO<Data> dao) {
 		this.fileDAO = dao;
 	}

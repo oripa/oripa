@@ -57,7 +57,6 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.view.View;
 import oripa.gui.view.main.InitialVisibilities;
 import oripa.gui.view.main.KeyProcessing;
-import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.view.main.UIPanelView;
@@ -216,11 +215,12 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private Runnable showFoldedModelWindowsListener;
 
 	public UIPanel(
-			final MainViewSetting viewSetting,
+			final UIPanelSetting uiPanelSetting,
+			final PainterScreenSetting screenSetting,
 			final MainDialogService dialogService,
 			final ResourceHolder resources) {
 
-		setting = viewSetting.getUiPanelSetting();
+		setting = uiPanelSetting;
 
 		setShortcuts();
 
@@ -298,7 +298,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 				.setAnchor(GridBagConstraints.LAST_LINE_START);
 		add(generalSettingsPanel, gbBuilder.getLineField());
 
-		addPropertyChangeListenersToSetting(viewSetting.getPainterScreenSetting());
+		addPropertyChangeListenersToSetting(screenSetting);
 		buildButton.addActionListener(e -> showFoldedModelWindows());
 	}
 

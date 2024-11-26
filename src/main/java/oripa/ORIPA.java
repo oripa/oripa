@@ -21,6 +21,7 @@ package oripa;
 import javax.swing.SwingUtilities;
 
 import com.google.inject.Guice;
+import com.google.inject.Key;
 
 import oripa.application.FileAccessService;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
@@ -28,30 +29,21 @@ import oripa.application.main.DocFileAccess;
 import oripa.application.main.FileModelCheckService;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextService;
-import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
-import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.domain.paint.PaintContextFactory;
-import oripa.domain.paint.byvalue.ByValueContextImpl;
-import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
+import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.file.FileHistory;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.bind.state.EditModeStateManager;
-import oripa.gui.bind.state.PaintBoundStateFactory;
-import oripa.gui.bind.state.PluginPaintBoundStateFactory;
-import oripa.gui.presenter.creasepattern.ComplexActionFactory;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
-import oripa.gui.presenter.creasepattern.EditOutlineActionFactory;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
-import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.estimation.EstimationResultComponentPresenterFactory;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenterFactory;
 import oripa.gui.presenter.estimation.logic.EstimationResultFilePresentationLogic;
@@ -68,28 +60,26 @@ import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
 import oripa.gui.presenter.model.logic.ModelViewFilePresentationLogic;
 import oripa.gui.presenter.model.logic.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdater;
+import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.KeyProcessing;
+import oripa.gui.view.main.MainFrameDialogFactory;
+import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.MainViewSetting;
+import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.main.SubFrameFactory;
+import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.view.util.ChildFrameManager;
+import oripa.inject.BindingModule;
+import oripa.inject.CreasePatternPresenterModule;
+import oripa.inject.FileAccessServiceModule;
 import oripa.inject.MainViewOripaModule;
 import oripa.inject.MainViewSwingModule;
+import oripa.inject.PaintDomainModule;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
-import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
-import oripa.persistence.entity.OrigamiModelFileSelectionSupportSelectorFactory;
 import oripa.project.Project;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
-import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
-import oripa.swing.view.file.FileChooserSwingFactory;
-import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
-import oripa.swing.view.main.ArrayCopyDialogFactory;
-import oripa.swing.view.main.CircleCopyDialogFactory;
-import oripa.swing.view.main.MainFrameSwingDialogFactory;
-import oripa.swing.view.main.PropertyDialogFactory;
-import oripa.swing.view.main.SubSwingFrameFactory;
-import oripa.swing.view.model.ModelViewSwingFrameFactory;
 import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
@@ -105,81 +95,58 @@ public class ORIPA {
 			// Construction of the main frame
 
 			var injector = Guice.createInjector(
+//					new PluginModule(),
 					new MainViewSwingModule(),
-					new MainViewOripaModule());
+					new MainViewOripaModule(),
+					new BindingModule(),
+					new CreasePatternPresenterModule(),
+					new FileAccessServiceModule(),
+					new PaintDomainModule());
 
 			// tentative variables. To be deleted.
 			var mouseActionHolder = injector.getInstance(MouseActionHolder.class);
 			var mainScreenUpdater = injector.getInstance(ViewScreenUpdater.class);
 			var keyProcessing = injector.getInstance(KeyProcessing.class);
-			var mainViewSetting = injector.getInstance(MainViewSetting.class);
+			var mainFrameSetting = injector.getInstance(MainFrameSetting.class);
+			var uiPanelSetting = injector.getInstance(UIPanelSetting.class);
 
 			var mainFrame = injector.getInstance(MainFrameView.class);
 			mainFrame.initializeFrameBounds();
 
-			var mainScreenSetting = mainViewSetting.getPainterScreenSetting();
+			var mainScreenSetting = injector.getInstance(PainterScreenSetting.class);
 
 			// Construct the presenter
 
-			var paintContext = new PaintContextFactory().createContext();
-			var byValueContext = new ByValueContextImpl();
-			var selectionOriginHolder = new SelectionOriginHolderImpl();
+			var paintContext = injector.getInstance(PaintContext.class);
+			var byValueContext = injector.getInstance(ByValueContext.class);
 
-			var creasePatternViewContext = new CreasePatternViewContextFactory().createContext();
-			var typeForChangeContext = new TypeForChangeContext();
+			var creasePatternViewContext = injector.getInstance(CreasePatternViewContext.class);
+			var typeForChangeContext = injector.getInstance(TypeForChangeContext.class);
 
-			var dialogFactory = new MainFrameSwingDialogFactory(
-					new ArrayCopyDialogFactory(),
-					new CircleCopyDialogFactory(),
-					new PropertyDialogFactory());
+			var dialogFactory = injector.getInstance(MainFrameDialogFactory.class);
 
 			var childFrameManager = new ChildFrameManager();
 
 			var pluginLoader = new PluginLoader();
 
-			var plugins = pluginLoader.loadMouseActionPlugins(mainViewSetting.getMainFrameSetting(),
-					mainViewSetting.getUiPanelSetting());
+			// injection is configured but apply later
+			var plugins = pluginLoader.loadMouseActionPlugins(
+					mainFrameSetting,
+					uiPanelSetting);
 
-			var stateManager = new EditModeStateManager();
+			var bindingFactory = injector.getInstance(BindingObjectFactoryFacade.class);
 
-			var setterFactory = new MouseActionSetterFactory(
-					mouseActionHolder, mainScreenUpdater::updateScreen, paintContext);
+			var fileFactory = injector.getInstance(FileFactory.class);
 
-			var statePopperFactory = new StatePopperFactory<>(stateManager);
-			var stateFactory = new PaintBoundStateFactory(
-					stateManager,
-					setterFactory,
-					mainViewSetting,
-					new ComplexActionFactory(
-							new EditOutlineActionFactory(statePopperFactory.createForState(), mouseActionHolder),
-							new CopyAndPasteActionFactory(statePopperFactory.createForState(),
-									selectionOriginHolder),
-							byValueContext,
-							typeForChangeContext));
+			var subFrameFactory = injector.getInstance(SubFrameFactory.class);
+			var fileChooserFactory = injector.getInstance(FileChooserFactory.class);
 
-			var bindingFactory = new BindingObjectFactoryFacade(
-					stateFactory,
-					setterFactory,
-					statePopperFactory,
-					new PluginPaintBoundStateFactory(stateManager, setterFactory));
+			var cutModelOutlinesHolder = injector.getInstance(CutModelOutlinesHolder.class);
 
-			var fileFactory = new FileFactory();
+			var origamiModelFileAccessService = injector.getInstance(new Key<FileAccessService<OrigamiModel>>() {
+			});
 
-			var subFrameFactory = new SubSwingFrameFactory(
-					new FoldabilityCheckSwingFrameFactory(childFrameManager),
-					new ModelViewSwingFrameFactory(mainScreenSetting,
-							childFrameManager),
-					new EstimationResultSwingFrameFactory(childFrameManager));
-			var fileChooserFactory = new FileChooserSwingFactory();
-
-			var cutModelOutlinesHolder = new DefaultCutModelOutlinesHolder();
-
-			var origamiModelFileAccessService = new FileAccessService<OrigamiModel>(
-					new FileDAO<OrigamiModel>(
-							new OrigamiModelFileSelectionSupportSelectorFactory().create(fileFactory),
-							fileFactory));
-			var foldedModelFileAccessFactory = new FoldedModelFileAccessServiceFactory(
-					new FoldedModelFileSelectionSupportSelectorFactory(), fileFactory);
+			var foldedModelFileAccessFactory = injector.getInstance(FoldedModelFileAccessServiceFactory.class);
 
 			var extensionCorrector = new ExtensionCorrector();
 

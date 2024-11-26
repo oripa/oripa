@@ -20,8 +20,20 @@ package oripa.inject;
 
 import com.google.inject.AbstractModule;
 
+import oripa.gui.view.estimation.EstimationResultFrameFactory;
+import oripa.gui.view.file.FileChooserFactory;
+import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
+import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
+import oripa.gui.view.main.SubFrameFactory;
+import oripa.gui.view.model.ModelViewFrameFactory;
+import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
+import oripa.swing.view.file.FileChooserSwingFactory;
+import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
 import oripa.swing.view.main.MainFrame;
+import oripa.swing.view.main.MainFrameSwingDialogFactory;
+import oripa.swing.view.main.SubSwingFrameFactory;
+import oripa.swing.view.model.ModelViewSwingFrameFactory;
 
 /**
  * @author OUCHI Koji
@@ -33,6 +45,14 @@ public class MainViewSwingModule extends AbstractModule {
 	protected void configure() {
 
 		bind(MainFrameView.class).to(MainFrame.class);
+		bind(MainFrameDialogFactory.class).to(MainFrameSwingDialogFactory.class);
+
+		bind(FoldabilityCheckFrameFactory.class).to(FoldabilityCheckSwingFrameFactory.class);
+		bind(ModelViewFrameFactory.class).to(ModelViewSwingFrameFactory.class);
+		bind(EstimationResultFrameFactory.class).to(EstimationResultSwingFrameFactory.class);
+		bind(SubFrameFactory.class).to(SubSwingFrameFactory.class);
+
+		bind(FileChooserFactory.class).to(FileChooserSwingFactory.class);
 	}
 
 }

@@ -20,6 +20,7 @@ package oripa.gui.bind.state;
 
 import java.util.function.Supplier;
 
+import jakarta.inject.Inject;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.CommandStatePopper;
 import oripa.appstate.StatePopper;
@@ -40,6 +41,7 @@ public class BindingObjectFactoryFacade {
 	private final PluginPaintBoundStateFactory pluginFactory;
 	private final StatePopperFactory<EditMode> statePopperFactory;
 
+	@Inject
 	public BindingObjectFactoryFacade(final PaintBoundStateFactory stateFactory,
 			final MouseActionSetterFactory setterFactory,
 			final StatePopperFactory<EditMode> statePopperFactory,

@@ -16,35 +16,45 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
+package oripa.inject;
 
-import jakarta.inject.Inject;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+
 import oripa.application.FileAccessService;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.FileDAO;
-import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.entity.FoldedModelFileSelectionSupportSelectorFactory;
+import oripa.persistence.dao.FileSelectionSupportSelector;
+import oripa.persistence.entity.OrigamiModelFileSelectionSupportSelectorFactory;
 import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFileAccessServiceFactory {
-	private final FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
-	private final FileFactory fileFactory;
+public class FileAccessServiceModule extends AbstractModule {
 
-	@Inject
-	public FoldedModelFileAccessServiceFactory(
-			final FoldedModelFileSelectionSupportSelectorFactory selectorFactory,
-			final FileFactory fileFactory) {
-		this.selectorFactory = selectorFactory;
-		this.fileFactory = fileFactory;
+	@Override
+	protected void configure() {
+
 	}
 
-	public FileAccessService<FoldedModelEntity> create(final boolean isFaceOrderFlipped) {
-		return new FileAccessService<FoldedModelEntity>(
-				new FileDAO<>(
-						selectorFactory.create(isFaceOrderFlipped, fileFactory),
-						fileFactory));
+	@Provides
+	FileSelectionSupportSelector<OrigamiModel> createSelector(
+			final OrigamiModelFileSelectionSupportSelectorFactory selectorFactory,
+			final FileFactory fileFactory) {
+		return selectorFactory.create(fileFactory);
+	}
+
+	@Provides
+	FileDAO<OrigamiModel> createOrigamiModelFileDAO(
+			final FileSelectionSupportSelector<OrigamiModel> selector,
+			final FileFactory fileFactory) {
+		return new FileDAO<OrigamiModel>(selector, fileFactory);
+	}
+
+	@Provides
+	FileAccessService<OrigamiModel> createOrigamiModelService(final FileDAO<OrigamiModel> dao) {
+		return new FileAccessService<OrigamiModel>(dao);
 	}
 }

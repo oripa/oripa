@@ -1,5 +1,6 @@
 package oripa.swing.view.foldability;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
@@ -8,9 +9,7 @@ import oripa.gui.view.util.ChildFrameManager;
 public class FoldabilityCheckSwingFrameFactory implements FoldabilityCheckFrameFactory {
 	private final ChildFrameManager childFrameManager;
 
-	/**
-	 * Constructor
-	 */
+	@Inject
 	public FoldabilityCheckSwingFrameFactory(final ChildFrameManager childFrameManager) {
 		this.childFrameManager = childFrameManager;
 	}
