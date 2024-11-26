@@ -30,7 +30,9 @@ import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.MainFrameSetting;
+import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.KeyProcessingImpl.KeyOnOffListener;
@@ -63,6 +65,11 @@ public class MainViewOripaModule extends AbstractModule {
 	@KeyOnOffListener
 	Consumer<Boolean> provideKeyOnOffListener(final MouseActionHolder mouseActionHolder) {
 		return new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
+	}
+
+	@Provides
+	PainterScreenView getPainterScreenView(final MainFrameView mainFrame) {
+		return mainFrame.getPainterScreenView();
 	}
 
 }

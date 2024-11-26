@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameSetting;
@@ -60,6 +61,7 @@ import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.ImageResourceLoader;
 import oripa.swing.view.util.KeyStrokes;
 
+@Singleton
 public class MainFrame extends JFrame implements MainFrameView, ComponentListener, WindowListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);

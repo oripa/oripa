@@ -26,7 +26,6 @@ import oripa.application.main.DocFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextService;
 import oripa.cli.CommandLineInterfaceMain;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.file.FileHistory;
@@ -114,8 +113,6 @@ public class ORIPA {
 
 			var subFrameFactory = injector.getInstance(SubFrameFactory.class);
 
-			var cutModelOutlinesHolder = injector.getInstance(CutModelOutlinesHolder.class);
-
 			var subFramePresenterFactory = injector.getInstance(
 					SubFramePresenterFactory.class);
 
@@ -138,14 +135,8 @@ public class ORIPA {
 
 			var resourceHolder = injector.getInstance(ResourceHolder.class);
 
-			var screenView = mainFrame.getPainterScreenView();
-			var screenPresenter = new PainterScreenPresenter(
-					screenView,
-					mainScreenUpdater,
-					creasePatternViewContext,
-					mouseActionHolder,
-					paintContext,
-					cutModelOutlinesHolder);
+			var screenPresenter = injector.getInstance(
+					PainterScreenPresenter.class);
 
 			var uiPanelView = mainFrame.getUIPanelView();
 
