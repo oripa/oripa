@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
+import jakarta.inject.Inject;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.gui.view.main.UIPanelView;
@@ -30,6 +31,7 @@ public class ModelComputationFacadeFactory {
 	private final TestedOrigamiModelFactory modelFactory;
 	private final FolderFactory folderFactory;
 
+	@Inject
 	public ModelComputationFacadeFactory(final TestedOrigamiModelFactory modelFactory,
 			final FolderFactory folderFactory) {
 		this.modelFactory = modelFactory;

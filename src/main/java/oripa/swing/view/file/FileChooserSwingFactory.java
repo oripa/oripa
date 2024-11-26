@@ -20,10 +20,12 @@ package oripa.swing.view.file;
 
 import java.util.Collection;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
 import oripa.gui.view.file.LoadingFileChooserView;
 import oripa.gui.view.file.SavingFileChooserView;
+import oripa.resource.ResourceHolder;
 
 /**
  * @author OUCHI Koji
@@ -31,16 +33,23 @@ import oripa.gui.view.file.SavingFileChooserView;
  */
 public class FileChooserSwingFactory implements FileChooserFactory {
 
+	private final ResourceHolder resourceHolder;
+
+	@Inject
+	public FileChooserSwingFactory(final ResourceHolder resourceHolder) {
+		this.resourceHolder = resourceHolder;
+	}
+
 	@Override
 	public SavingFileChooserView createForSaving(final String path,
 			final Collection<FileFilterProperty> filterProperties) {
-		return new SavingFileChooser(path, filterProperties);
+		return new SavingFileChooser(path, filterProperties, resourceHolder);
 	}
 
 	@Override
 	public LoadingFileChooserView createForLoading(final String path,
 			final Collection<FileFilterProperty> filterProperties) {
-		return new LoadingFileChooser(path, filterProperties);
+		return new LoadingFileChooser(path, filterProperties, resourceHolder);
 	}
 
 }

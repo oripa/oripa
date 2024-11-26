@@ -4,29 +4,25 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import jakarta.inject.Singleton;
+
 /**
- * A singleton for resources. All resources are loaded at the beginning.
+ * A singleton for resources.
  *
  * @author koji
  *
  */
+@Singleton
 public class ResourceHolder {
 
 	private final HashMap<ResourceKey, ResourceBundle> resources = new HashMap<>();
 
 //----------------------------------------------------------
-	private static ResourceHolder instance = null;
 
-	private ResourceHolder() {
-	}
-
-	public synchronized static ResourceHolder getInstance() {
-		if (instance == null) {
-			instance = new ResourceHolder();
-			instance.load();
+	public ResourceHolder() {
+		synchronized ("resourceHolderInitialize") {
+			load();
 		}
-
-		return instance;
 	}
 
 //----------------------------------------------------------
@@ -34,20 +30,19 @@ public class ResourceHolder {
 	private static final String resourcePackage = "oripa.resource";
 
 	private void load() {
-		ResourceHolder holder = ResourceHolder.getInstance();
-		holder.addResource(ResourceKey.EXPLANATION,
+		addResource(ResourceKey.EXPLANATION,
 				createResource(resourcePackage + ".ExplanationStringResource_en"));
-		holder.addResource(ResourceKey.LABEL,
+		addResource(ResourceKey.LABEL,
 				createResource(resourcePackage + ".LabelStringResource_en"));
-		holder.addResource(ResourceKey.DEFAULT,
+		addResource(ResourceKey.DEFAULT,
 				createResource(resourcePackage + ".DefaultStringResource_en"));
-		holder.addResource(ResourceKey.INFO,
+		addResource(ResourceKey.INFO,
 				createResource(resourcePackage + ".InformationStringResource_en"));
-		holder.addResource(ResourceKey.WARNING,
+		addResource(ResourceKey.WARNING,
 				createResource(resourcePackage + ".WarningStringResource_en"));
-		holder.addResource(ResourceKey.ERROR,
+		addResource(ResourceKey.ERROR,
 				createResource(resourcePackage + ".ErrorStringResource_en"));
-		holder.addResource(ResourceKey.APP_INFO,
+		addResource(ResourceKey.APP_INFO,
 				createResource(resourcePackage + ".AppInfoResource"));
 	}
 

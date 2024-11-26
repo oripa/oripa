@@ -21,6 +21,7 @@ package oripa.persistence.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.inject.Inject;
 import oripa.persistence.dao.FileSelectionSupport;
 import oripa.persistence.dao.FileSelectionSupportFactory;
 import oripa.persistence.dao.FileSelectionSupportSelector;
@@ -36,8 +37,16 @@ import oripa.util.file.FileFactory;
  *
  */
 public class FoldedModelFileSelectionSupportSelectorFactory {
-	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
-	private final FileAccessSupportFactory accessSupportFactory = new FileAccessSupportFactory();
+	private final FileSelectionSupportFactory selectionSupportFactory;
+	private final FileAccessSupportFactory accessSupportFactory;
+
+	@Inject
+	public FoldedModelFileSelectionSupportSelectorFactory(
+			final FileSelectionSupportFactory selectionSupportFactory,
+			final FileAccessSupportFactory accessSupportFactory) {
+		this.selectionSupportFactory = selectionSupportFactory;
+		this.accessSupportFactory = accessSupportFactory;
+	}
 
 	public FileSelectionSupportSelector<FoldedModelEntity> create(final boolean modelFlip,
 			final FileFactory fileFactory) {

@@ -3,6 +3,7 @@ package oripa.persistence.doc;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.inject.Inject;
 import oripa.persistence.dao.FileSelectionSupport;
 import oripa.persistence.dao.FileSelectionSupportFactory;
 import oripa.persistence.dao.FileSelectionSupportSelector;
@@ -20,8 +21,18 @@ import oripa.util.file.FileFactory;
  *
  */
 public class DocFileSelectionSupportSelectorFactory {
-	private final FileSelectionSupportFactory selectionSupportFactory = new FileSelectionSupportFactory();
-	private final FileAccessSupportFactory accessSupportFactory = new FileAccessSupportFactory();
+	private final FileSelectionSupportFactory selectionSupportFactory;
+	private final FileAccessSupportFactory accessSupportFactory;
+
+	@Inject
+	public DocFileSelectionSupportSelectorFactory(
+			final FileSelectionSupportFactory selectionSupportFactory,
+			final FileAccessSupportFactory accessSupportFactory
+
+	) {
+		this.selectionSupportFactory = selectionSupportFactory;
+		this.accessSupportFactory = accessSupportFactory;
+	}
 
 	public FileSelectionSupportSelector<Doc> create(final FileFactory fileFactory) {
 		var supports = new HashMap<FileType<Doc>, FileSelectionSupport<Doc>>();

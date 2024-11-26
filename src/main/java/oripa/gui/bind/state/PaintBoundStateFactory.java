@@ -17,6 +17,7 @@ import oripa.gui.viewchange.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.gui.viewchange.main.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.gui.viewchange.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.gui.viewchange.main.uipanel.ChangeOnSelectButtonSelected;
+import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;
 
 public class PaintBoundStateFactory {
@@ -27,6 +28,8 @@ public class PaintBoundStateFactory {
 	private final UIPanelSetting uiPanelSetting;
 	private final ComplexActionFactory complexActionFactory;
 
+	private final ResourceHolder resourceHolder;
+
 	/**
 	 * Constructor
 	 */
@@ -36,13 +39,16 @@ public class PaintBoundStateFactory {
 			final MouseActionSetterFactory setterFactory,
 			final MainFrameSetting mainFrameSetting,
 			final UIPanelSetting uiPanelSetting,
-			final ComplexActionFactory complexActionFactory) {
+			final ComplexActionFactory complexActionFactory,
+			final ResourceHolder resourceHolder) {
 
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
 		this.complexActionFactory = complexActionFactory;
+
+		this.resourceHolder = resourceHolder;
 	}
 
 	/**
@@ -69,7 +75,7 @@ public class PaintBoundStateFactory {
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory, null);
 
-		var changeHint = new ChangeHint(mainFrameSetting, id);
+		var changeHint = new ChangeHint(mainFrameSetting, id, resourceHolder);
 
 		var stateOpt = switch (id) {
 		case StringID.DELETE_LINE_ID -> Optional.of(stateFactory.create(
@@ -108,7 +114,7 @@ public class PaintBoundStateFactory {
 			final Supplier<Boolean> errorDetecter,
 			final Runnable errorHandler) {
 
-		var changeHint = new ChangeHint(mainFrameSetting, id);
+		var changeHint = new ChangeHint(mainFrameSetting, id, resourceHolder);
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory,
@@ -147,7 +153,7 @@ public class PaintBoundStateFactory {
 	private Optional<ApplicationState<EditMode>> createLineInputState(
 			final String id) {
 
-		var changeHint = new ChangeHint(mainFrameSetting, id);
+		var changeHint = new ChangeHint(mainFrameSetting, id, resourceHolder);
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory,

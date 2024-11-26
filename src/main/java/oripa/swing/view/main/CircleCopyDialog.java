@@ -37,7 +37,7 @@ import oripa.resource.StringID;
 
 public class CircleCopyDialog extends JDialog implements CircleCopyDialogView {
 
-	private final ResourceHolder resources = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -57,10 +57,13 @@ public class CircleCopyDialog extends JDialog implements CircleCopyDialogView {
 	/**
 	 * @param owner
 	 */
-	public CircleCopyDialog(final JFrame owner) {
+	public CircleCopyDialog(final JFrame owner, final ResourceHolder resourceHolder) {
 		super(owner);
 
 		this.owner = owner;
+
+		this.resourceHolder = resourceHolder;
+
 		initialize();
 	}
 
@@ -71,7 +74,7 @@ public class CircleCopyDialog extends JDialog implements CircleCopyDialogView {
 	 */
 	private void initialize() {
 		this.setSize(160, 171);
-		this.setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.CIRCLE_COPY_DIALOG_TITLE_ID));
+		this.setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.CIRCLE_COPY_DIALOG_TITLE_ID));
 		this.setLocation(
 				owner.getLocation().x + 200,
 				owner.getLocation().y + 100);

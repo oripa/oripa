@@ -39,10 +39,13 @@ import oripa.swing.view.util.Dialogs;
  */
 public class SavingFileChooser extends JFileChooser implements SavingFileChooserView {
 
-	private final ResourceHolder resources = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
 
-	public SavingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties) {
+	public SavingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties,
+			final ResourceHolder resourceHolder) {
 		super(path);
+
+		this.resourceHolder = resourceHolder;
 
 		if (path != null) {
 			File file = new File(path);
@@ -74,14 +77,14 @@ public class SavingFileChooser extends JFileChooser implements SavingFileChooser
 	@Override
 	public boolean showOverwriteConfirmMessage() {
 		return Dialogs.showYesNoConfirmDialog(this,
-				resources.getString(ResourceKey.WARNING, StringID.Warning.SAVE_TITLE_ID),
-				resources.getString(ResourceKey.WARNING, StringID.Warning.SAME_FILE_EXISTS_ID));
+				resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.SAVE_TITLE_ID),
+				resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.SAME_FILE_EXISTS_ID));
 	}
 
 	@Override
 	public void showErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this,
-				resources.getString(ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+				resourceHolder.getString(ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 	}
 
 }

@@ -20,15 +20,24 @@ package oripa.swing.view.main;
 
 import javax.swing.JFrame;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.ArrayCopyDialogView;
+import oripa.resource.ResourceHolder;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class ArrayCopyDialogFactory {
+	private final ResourceHolder resourceHolder;
+
+	@Inject
+	public ArrayCopyDialogFactory(final ResourceHolder resourceHolder) {
+		this.resourceHolder = resourceHolder;
+	}
+
 	public ArrayCopyDialogView create(final FrameView owner) {
-		return new ArrayCopyDialog((JFrame) owner);
+		return new ArrayCopyDialog((JFrame) owner, resourceHolder);
 	}
 }

@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main;
 
+import jakarta.inject.Inject;
 import oripa.application.FileSelectionService;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.projectprop.PropertyHolder;
@@ -38,6 +39,7 @@ public class MainDialogPresenterFactory {
 	private final ViewScreenUpdater viewScreenUpdater;
 	private final PaintContext paintContext;
 
+	@Inject
 	public MainDialogPresenterFactory(
 			final ViewScreenUpdater viewScreenUpdater,
 			final MainFrameDialogFactory dialogFactory,

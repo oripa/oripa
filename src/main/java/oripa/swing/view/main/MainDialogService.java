@@ -22,6 +22,7 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
+import jakarta.inject.Inject;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -33,6 +34,7 @@ import oripa.resource.StringID;
 public class MainDialogService {
 	private final ResourceHolder resources;
 
+	@Inject
 	public MainDialogService(final ResourceHolder resources) {
 		this.resources = resources;
 	}

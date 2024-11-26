@@ -22,17 +22,26 @@ import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PropertyDialogView;
+import oripa.resource.ResourceHolder;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class PropertyDialogFactory {
+	private final ResourceHolder resourceHolder;
+
+	@Inject
+	public PropertyDialogFactory(final ResourceHolder resourceHolder) {
+		this.resourceHolder = resourceHolder;
+	}
+
 	public PropertyDialogView create(final FrameView parent) {
 		var frame = (JFrame) parent;
-		PropertyDialog dialog = new PropertyDialog(frame);
+		PropertyDialog dialog = new PropertyDialog(frame, resourceHolder);
 
 		Rectangle rec = frame.getBounds();
 		dialog.setLocation(

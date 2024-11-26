@@ -25,6 +25,8 @@ import oripa.application.FileAccessService;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.dao.FileSelectionSupportSelector;
+import oripa.persistence.doc.Doc;
+import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
 import oripa.persistence.entity.OrigamiModelFileSelectionSupportSelectorFactory;
 import oripa.util.file.FileFactory;
 
@@ -40,7 +42,7 @@ public class FileAccessServiceModule extends AbstractModule {
 	}
 
 	@Provides
-	FileSelectionSupportSelector<OrigamiModel> createSelector(
+	FileSelectionSupportSelector<OrigamiModel> createOrigamiModelSelector(
 			final OrigamiModelFileSelectionSupportSelectorFactory selectorFactory,
 			final FileFactory fileFactory) {
 		return selectorFactory.create(fileFactory);
@@ -57,4 +59,24 @@ public class FileAccessServiceModule extends AbstractModule {
 	FileAccessService<OrigamiModel> createOrigamiModelService(final FileDAO<OrigamiModel> dao) {
 		return new FileAccessService<OrigamiModel>(dao);
 	}
+
+	@Provides
+	FileSelectionSupportSelector<Doc> createDocSelector(
+			final DocFileSelectionSupportSelectorFactory selectorFactory,
+			final FileFactory fileFactory) {
+		return selectorFactory.create(fileFactory);
+	}
+
+	@Provides
+	FileDAO<Doc> createDocFileDAO(
+			final FileSelectionSupportSelector<Doc> selector,
+			final FileFactory fileFactory) {
+		return new FileDAO<Doc>(selector, fileFactory);
+	}
+
+	@Provides
+	FileAccessService<Doc> createDocService(final FileDAO<Doc> dao) {
+		return new FileAccessService<Doc>(dao);
+	}
+
 }

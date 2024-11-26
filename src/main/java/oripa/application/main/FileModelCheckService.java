@@ -21,6 +21,7 @@ package oripa.application.main;
 import java.io.IOException;
 import java.util.function.Supplier;
 
+import jakarta.inject.Inject;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.paint.PaintContext;
 
@@ -33,6 +34,7 @@ public class FileModelCheckService {
 	private final PaintContext paintContext;
 	private final TestedOrigamiModelFactory modelFactory;
 
+	@Inject
 	public FileModelCheckService(
 			final PaintContext paintContext,
 			final TestedOrigamiModelFactory modelFactory) {

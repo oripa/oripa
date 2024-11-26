@@ -5,14 +5,19 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.util.ChildFrameManager;
+import oripa.resource.ResourceHolder;
 
 public class EstimationResultSwingFrameFactory implements EstimationResultFrameFactory {
 
 	private final ChildFrameManager childFrameManager;
 
+	private final ResourceHolder resourceHolder;
+
 	@Inject
-	public EstimationResultSwingFrameFactory(final ChildFrameManager childFrameManager) {
+	public EstimationResultSwingFrameFactory(final ChildFrameManager childFrameManager,
+			final ResourceHolder resourceHolder) {
 		this.childFrameManager = childFrameManager;
+		this.resourceHolder = resourceHolder;
 	}
 
 	@Override
@@ -27,7 +32,7 @@ public class EstimationResultSwingFrameFactory implements EstimationResultFrameF
 			frame.dispose();
 		});
 
-		var frame = new EstimationResultFrame();
+		var frame = new EstimationResultFrame(resourceHolder);
 
 		frame.setOnCloseListener(this::removeFromChildFrameManager);
 		childFrameManager.putChild(parent, frame);

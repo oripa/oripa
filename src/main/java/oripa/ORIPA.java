@@ -23,32 +23,24 @@ import javax.swing.SwingUtilities;
 import com.google.inject.Guice;
 
 import oripa.application.main.DocFileAccess;
-import oripa.application.main.FileModelCheckService;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextService;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.FolderFactory;
-import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.file.FileHistory;
-import oripa.file.InitDataFileReader;
-import oripa.file.InitDataFileWriter;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
-import oripa.gui.presenter.main.DocFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainDialogPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.main.logic.*;
 import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.KeyProcessing;
-import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -58,15 +50,12 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.inject.BindingModule;
 import oripa.inject.CreasePatternPresenterModule;
 import oripa.inject.FileAccessServiceModule;
+import oripa.inject.FileHistoryModule;
 import oripa.inject.MainViewOripaModule;
 import oripa.inject.MainViewSwingModule;
 import oripa.inject.PaintDomainModule;
-import oripa.persistence.dao.FileDAO;
-import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
 import oripa.project.Project;
-import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
-import oripa.util.file.ExtensionCorrector;
 import oripa.util.file.FileFactory;
 
 public class ORIPA {
@@ -87,7 +76,8 @@ public class ORIPA {
 					new BindingModule(),
 					new CreasePatternPresenterModule(),
 					new FileAccessServiceModule(),
-					new PaintDomainModule());
+					new PaintDomainModule(),
+					new FileHistoryModule());
 
 			// tentative variables. To be deleted.
 			var mouseActionHolder = injector.getInstance(MouseActionHolder.class);
@@ -109,8 +99,6 @@ public class ORIPA {
 			var creasePatternViewContext = injector.getInstance(CreasePatternViewContext.class);
 			var typeForChangeContext = injector.getInstance(TypeForChangeContext.class);
 
-			var dialogFactory = injector.getInstance(MainFrameDialogFactory.class);
-
 			var childFrameManager = new ChildFrameManager();
 
 			var pluginLoader = new PluginLoader();
@@ -125,52 +113,30 @@ public class ORIPA {
 			var fileFactory = injector.getInstance(FileFactory.class);
 
 			var subFrameFactory = injector.getInstance(SubFrameFactory.class);
-			var fileChooserFactory = injector.getInstance(FileChooserFactory.class);
 
 			var cutModelOutlinesHolder = injector.getInstance(CutModelOutlinesHolder.class);
-
-			var extensionCorrector = new ExtensionCorrector();
 
 			var subFramePresenterFactory = injector.getInstance(
 					SubFramePresenterFactory.class);
 
-			var docFileAccess = new DocFileAccess(
-					new FileDAO<>(
-							new DocFileSelectionSupportSelectorFactory().create(fileFactory),
-							fileFactory),
-					paintContext);
+			var docFileAccess = injector.getInstance(DocFileAccess.class);
 
-			var testedModelFactory = new TestedOrigamiModelFactory();
-			var modelComputationFacadeFactory = new ModelComputationFacadeFactory(
-					testedModelFactory,
-					new FolderFactory());
+			var modelComputationFacadeFactory = injector.getInstance(
+					ModelComputationFacadeFactory.class);
 			var modelIndexChangeListenerPutter = new ModelIndexChangeListenerPutter();
 
-			var fileModelCheckService = new FileModelCheckService(paintContext, testedModelFactory);
+			var mainDialogPresenterFactory = injector.getInstance(
+					MainDialogPresenterFactory.class);
 
-			var docFileSelectionPresenterFactory = new DocFileSelectionPresenterFactory(
-					fileChooserFactory,
-					fileModelCheckService,
-					fileFactory,
-					extensionCorrector);
-
-			var mainDialogPresenterFactory = new MainDialogPresenterFactory(
-					mainScreenUpdater,
-					dialogFactory,
-					docFileSelectionPresenterFactory,
-					paintContext);
-
-			var fileHistory = new FileHistory(Constants.MRUFILE_NUM, fileFactory);
-			var iniFileAccess = new IniFileAccess(
-					new InitDataFileReader(), new InitDataFileWriter());
+			var fileHistory = injector.getInstance(FileHistory.class);
+			var iniFileAccess = injector.getInstance(IniFileAccess.class);
 
 			var project = new Project();
 
-			var paintContextService = new PaintContextService(
-					paintContext,
-					cutModelOutlinesHolder);
+			var paintContextService = injector.getInstance(
+					PaintContextService.class);
 
-			var resourceHolder = ResourceHolder.getInstance();
+			var resourceHolder = injector.getInstance(ResourceHolder.class);
 
 			var screenView = mainFrame.getPainterScreenView();
 			var screenPresenter = new PainterScreenPresenter(
@@ -214,7 +180,6 @@ public class ORIPA {
 					valuePanelPresentationLogic,
 					typeForChangeContext,
 					mainScreenSetting);
-			;
 
 			var fileAccessPresentationLogic = new FileAccessPresentationLogic(
 					mainFrame,

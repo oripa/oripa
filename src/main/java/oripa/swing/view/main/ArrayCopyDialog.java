@@ -38,7 +38,7 @@ import oripa.resource.StringID;
 
 public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 
-	private final ResourceHolder resources = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -60,9 +60,11 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 	/**
 	 * @param owner
 	 */
-	public ArrayCopyDialog(final JFrame owner) {
+	public ArrayCopyDialog(final JFrame owner, final ResourceHolder resourceHolder) {
 		super(owner);
 		this.owner = owner;
+
+		this.resourceHolder = resourceHolder;
 
 		initialize();
 	}
@@ -76,7 +78,7 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 		this.setSize(123, 249);
 		this.setLocation(owner.getLocation().x + 200,
 				owner.getLocation().y + 100);
-		this.setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_DIALOG_TITLE_ID));
+		this.setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_DIALOG_TITLE_ID));
 		this.setContentPane(getJContentPane());
 	}
 

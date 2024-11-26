@@ -23,7 +23,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import com.google.inject.Guice;
+
 import oripa.geom.GeomUtil;
+import oripa.inject.FileAccessServiceModule;
 
 /**
  * @author OUCHI Koji
@@ -118,6 +121,11 @@ public class CommandLineInterfaceMain {
 		options.addOption(helpOption);
 
 		try {
+			var injector = Guice.createInjector(
+					new FileAccessServiceModule()
+//					new PaintDomainModule(),
+			);
+
 			var parser = new DefaultParser();
 			var line = parser.parse(options, args);
 
@@ -141,7 +149,7 @@ public class CommandLineInterfaceMain {
 
 			if (line.hasOption(convertOption)) {
 				var outputFilePath = line.getOptionValue(convertOption);
-				var converter = new CreasePatternFileConverter();
+				var converter = injector.getInstance(CreasePatternFileConverter.class);
 				converter.convert(inputFilePath, outputFilePath, pointEps);
 
 			} else if (line.hasOption(imageOption)) {
@@ -156,7 +164,7 @@ public class CommandLineInterfaceMain {
 
 			} else if (line.hasOption(foldOption)) {
 				var outputFilePath = line.getOptionValue(foldOption);
-				var folder = new CommandLineFolder();
+				var folder = injector.getInstance(CommandLineFolder.class);
 				var split = line.hasOption(splitOption);
 				var any = line.hasOption(anyOption);
 				folder.fold(inputFilePath, any, split, outputFilePath, pointEps);

@@ -21,6 +21,7 @@ package oripa.application.main;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.inject.Inject;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
@@ -38,6 +39,7 @@ public class PaintContextService {
 	private final PaintContext paintContext;
 	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 
+	@Inject
 	public PaintContextService(
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder) {

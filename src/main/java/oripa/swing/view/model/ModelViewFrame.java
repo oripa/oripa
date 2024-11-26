@@ -56,30 +56,20 @@ import oripa.swing.view.util.ListItemSelectionPanel;
 public class ModelViewFrame extends JFrame
 		implements ModelViewFrameView, AdjustmentListener, WindowListener, ComponentListener {
 
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
 
 	private ModelViewScreen screen;
-	private final JMenu menuDisp = new JMenu(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_ID));
-	private final JMenu menuFile = new JMenu(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILE_ID));
-	private final JMenuItem menuItemExportDXF = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_DXF_ID));
-	private final JMenuItem menuItemExportOBJ = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_OBJ_ID));
-	private final JMenuItem menuItemExportSVG = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_SVG_ID));
-	private final JMenuItem menuItemFlip = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.INVERT_ID));
-	private final JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.SHOW_CROSS_LINE_ID), false);
-	private final JLabel hintLabel = new JLabel(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DIRECTION_BASIC_ID));
-	private final JMenu dispSubMenu = new JMenu(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_TYPE_ID));
-	private final JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILL_ALPHA_ID));
-	private final JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DRAW_LINES_ID));
+	private final JMenu menuDisp;
+	private final JMenu menuFile;
+	private final JMenuItem menuItemExportDXF;
+	private final JMenuItem menuItemExportOBJ;
+	private final JMenuItem menuItemExportSVG;
+	private final JMenuItem menuItemFlip;
+	private final JCheckBoxMenuItem menuItemCrossLine;
+	private final JLabel hintLabel;
+	private final JMenu dispSubMenu;
+	private final JRadioButtonMenuItem menuItemFillAlpha;
+	private final JRadioButtonMenuItem menuItemFillNone;
 	private final JScrollBar scrollBarAngle = new JScrollBar(
 			Adjustable.HORIZONTAL, 90, 5, 0, 185);
 	private final JScrollBar scrollBarPosition = new JScrollBar(
@@ -87,8 +77,7 @@ public class ModelViewFrame extends JFrame
 
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID));
+	private final ListItemSelectionPanel modelSelectionPanel;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
 
@@ -101,7 +90,34 @@ public class ModelViewFrame extends JFrame
 
 	public ModelViewFrame(
 			final int width, final int height,
-			final PainterScreenSetting mainScreenSetting) {
+			final PainterScreenSetting mainScreenSetting,
+			final ResourceHolder resourceHolder) {
+
+		this.resourceHolder = resourceHolder;
+
+		menuDisp = new JMenu(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_ID));
+		menuFile = new JMenu(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILE_ID));
+		menuItemExportDXF = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_DXF_ID));
+		menuItemExportOBJ = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_OBJ_ID));
+		menuItemExportSVG = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_SVG_ID));
+		menuItemFlip = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.INVERT_ID));
+		menuItemCrossLine = new JCheckBoxMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.SHOW_CROSS_LINE_ID), false);
+		hintLabel = new JLabel(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DIRECTION_BASIC_ID));
+		dispSubMenu = new JMenu(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_TYPE_ID));
+		menuItemFillAlpha = new JRadioButtonMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILL_ALPHA_ID));
+		menuItemFillNone = new JRadioButtonMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DRAW_LINES_ID));
+		modelSelectionPanel = new ListItemSelectionPanel(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID), resourceHolder);
 
 		this.mainScreenSetting = mainScreenSetting;
 

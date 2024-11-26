@@ -23,18 +23,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.application.FileAccessService;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelAllExporterFOLD;
 import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -43,16 +41,20 @@ import oripa.util.file.FileFactory;
 public class CommandLineFolder {
 	private static final Logger logger = LoggerFactory.getLogger(CommandLineFolder.class);
 
+	private final FileAccessService<Doc> creasePatternFileAccess;
+
+	@Inject
+	public CommandLineFolder(
+			final FileAccessService<Doc> creasePatternFileAccess) {
+		this.creasePatternFileAccess = creasePatternFileAccess;
+	}
+
 	public void fold(final String inputFilePath, final boolean any, final boolean split, final String outputFilePath,
 			final double pointEps) {
 
 		if (!outputFilePath.endsWith(".fold")) {
 			throw new IllegalArgumentException("Output format is not supported. acceptable format: fold");
 		}
-
-		var fileFactory = new FileFactory();
-		var creasePatternFileAccess = new FileAccessService<Doc>(
-				new FileDAO<>(new DocFileSelectionSupportSelectorFactory().create(fileFactory), fileFactory));
 
 		try {
 			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();

@@ -1,11 +1,18 @@
 package oripa.file;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Qualifier;
 import oripa.resource.Constants;
 import oripa.util.file.FileFactory;
 
@@ -20,13 +27,14 @@ public class FileHistory {
 
 	private final int maxSize;
 
-	/**
-	 *
-	 * Constructor
-	 *
-	 * @param maxSize
-	 */
-	public FileHistory(final int maxSize, final FileFactory fileFactory) {
+	@Qualifier
+	@Target({ FIELD, PARAMETER, METHOD })
+	@Retention(RUNTIME)
+	public @interface MaxSize {
+	}
+
+	@Inject
+	public FileHistory(@MaxSize final int maxSize, final FileFactory fileFactory) {
 		this.maxSize = maxSize;
 		this.fileFactory = fileFactory;
 	}

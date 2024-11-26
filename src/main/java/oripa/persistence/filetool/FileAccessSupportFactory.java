@@ -21,6 +21,7 @@ package oripa.persistence.filetool;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import jakarta.inject.Inject;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
@@ -29,7 +30,12 @@ import oripa.resource.ResourceKey;
  *
  */
 public class FileAccessSupportFactory {
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
+
+	@Inject
+	public FileAccessSupportFactory(final ResourceHolder resourceHolder) {
+		this.resourceHolder = resourceHolder;
+	}
 
 	/**
 	 * Creates a support object for given file type key with an explanation text
