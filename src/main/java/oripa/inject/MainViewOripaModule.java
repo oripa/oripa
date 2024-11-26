@@ -34,6 +34,7 @@ import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.view.main.UIPanelSetting;
+import oripa.gui.view.main.UIPanelView;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.KeyProcessingImpl.KeyOnOffListener;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
@@ -70,6 +71,11 @@ public class MainViewOripaModule extends AbstractModule {
 	@Provides
 	PainterScreenView getPainterScreenView(final MainFrameView mainFrame) {
 		return mainFrame.getPainterScreenView();
+	}
+
+	@Provides
+	UIPanelView getUIPanelView(final MainFrameView mainFrame) {
+		return mainFrame.getUIPanelView();
 	}
 
 }

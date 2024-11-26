@@ -140,10 +140,8 @@ public class ORIPA {
 
 			var uiPanelView = mainFrame.getUIPanelView();
 
-			var gridDivNumPresentationLogic = new GridDivNumPresentationLogic(
-					uiPanelView,
-					mainScreenUpdater,
-					paintContext);
+			var gridDivNumPresentationLogic = injector.getInstance(
+					GridDivNumPresentationLogic.class);
 
 			var paintMenuListenerRegistration = new UIPanelPaintMenuListenerRegistration(
 					uiPanelView,
