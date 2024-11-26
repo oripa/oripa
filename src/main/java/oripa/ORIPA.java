@@ -21,10 +21,7 @@ package oripa;
 import javax.swing.SwingUtilities;
 
 import com.google.inject.Guice;
-import com.google.inject.Key;
 
-import oripa.application.FileAccessService;
-import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.application.main.DocFileAccess;
 import oripa.application.main.FileModelCheckService;
 import oripa.application.main.IniFileAccess;
@@ -33,8 +30,6 @@ import oripa.cli.CommandLineInterfaceMain;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.file.FileHistory;
@@ -44,21 +39,12 @@ import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
-import oripa.gui.presenter.estimation.EstimationResultComponentPresenterFactory;
-import oripa.gui.presenter.estimation.EstimationResultFramePresenterFactory;
-import oripa.gui.presenter.estimation.logic.EstimationResultFilePresentationLogic;
-import oripa.gui.presenter.estimation.logic.FoldedModelFileSelectionPresenterFactory;
-import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenterFactory;
 import oripa.gui.presenter.main.DocFileSelectionPresenterFactory;
 import oripa.gui.presenter.main.MainDialogPresenterFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.UIPanelPresenter;
 import oripa.gui.presenter.main.logic.*;
-import oripa.gui.presenter.model.ModelViewComponentPresenterFactory;
-import oripa.gui.presenter.model.ModelViewFramePresenterFactory;
-import oripa.gui.presenter.model.logic.ModelViewFilePresentationLogic;
-import oripa.gui.presenter.model.logic.OrigamiModelFileSelectionPresenterFactory;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.KeyProcessing;
@@ -143,53 +129,10 @@ public class ORIPA {
 
 			var cutModelOutlinesHolder = injector.getInstance(CutModelOutlinesHolder.class);
 
-			var origamiModelFileAccessService = injector.getInstance(new Key<FileAccessService<OrigamiModel>>() {
-			});
-
-			var foldedModelFileAccessFactory = injector.getInstance(FoldedModelFileAccessServiceFactory.class);
-
 			var extensionCorrector = new ExtensionCorrector();
 
-			var foldedModelfileSelectionPresenterFactory = new FoldedModelFileSelectionPresenterFactory(
-					fileChooserFactory,
-					fileFactory,
-					extensionCorrector);
-
-			var origamiModelFileSelectionPresenterFactory = new OrigamiModelFileSelectionPresenterFactory(
-					fileChooserFactory,
-					fileFactory,
-					extensionCorrector);
-
-			var modelViewComponentPresenterFactory = new ModelViewComponentPresenterFactory(cutModelOutlinesHolder);
-
-			var modelViewFilePresentatinLogic = new ModelViewFilePresentationLogic(
-					origamiModelFileSelectionPresenterFactory,
-					origamiModelFileAccessService);
-
-			var modelViewFramePresenterFactory = new ModelViewFramePresenterFactory(
-					mainScreenUpdater::updateScreen,
-					mainScreenSetting,
-					modelViewComponentPresenterFactory,
-					modelViewFilePresentatinLogic);
-
-			var foldabilityCheckFramePresenterFactory = new FoldabilityCheckFramePresenterFactory(
-					creasePatternViewContext,
-					new OrigamiModelFactory());
-
-			var estimationResultFilePresenter = new EstimationResultFilePresentationLogic(
-					foldedModelfileSelectionPresenterFactory,
-					foldedModelFileAccessFactory);
-
-			var estimationResultComponentPresenterFactory = new EstimationResultComponentPresenterFactory(
-					estimationResultFilePresenter);
-
-			var estimationResultFramePresenterFactory = new EstimationResultFramePresenterFactory(
-					estimationResultComponentPresenterFactory);
-
-			var subFramePresenterFactory = new SubFramePresenterFactory(
-					foldabilityCheckFramePresenterFactory,
-					modelViewFramePresenterFactory,
-					estimationResultFramePresenterFactory);
+			var subFramePresenterFactory = injector.getInstance(
+					SubFramePresenterFactory.class);
 
 			var docFileAccess = new DocFileAccess(
 					new FileDAO<>(

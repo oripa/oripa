@@ -23,6 +23,7 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.application.estimation.FoldedModelFileAccessServiceFactory;
 import oripa.gui.presenter.file.UserAction;
 import oripa.gui.view.FrameView;
@@ -46,6 +47,7 @@ public class EstimationResultFilePresentationLogic {
 
 	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
 
+	@Inject
 	public EstimationResultFilePresentationLogic(
 			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
 			final FoldedModelFileAccessServiceFactory fileAccessFactory) {

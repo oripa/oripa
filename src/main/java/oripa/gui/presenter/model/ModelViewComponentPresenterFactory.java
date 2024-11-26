@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.model;
 
+import jakarta.inject.Inject;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.gui.view.model.ModelViewScreenView;
 import oripa.gui.view.util.CallbackOnUpdate;
@@ -30,6 +31,7 @@ public class ModelViewComponentPresenterFactory {
 
 	private final CutModelOutlinesHolder cutModelOutlineHolder;
 
+	@Inject
 	public ModelViewComponentPresenterFactory(final CutModelOutlinesHolder cutModelOutlineHolder) {
 		this.cutModelOutlineHolder = cutModelOutlineHolder;
 	}

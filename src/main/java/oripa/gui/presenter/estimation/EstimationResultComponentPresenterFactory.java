@@ -20,6 +20,7 @@ package oripa.gui.presenter.estimation;
 
 import java.util.function.Consumer;
 
+import jakarta.inject.Inject;
 import oripa.gui.presenter.estimation.logic.EstimationResultFilePresentationLogic;
 import oripa.gui.view.estimation.EstimationResultUIView;
 
@@ -31,6 +32,7 @@ public class EstimationResultComponentPresenterFactory {
 
 	private final EstimationResultFilePresentationLogic estimationResultFilePresentationLogic;
 
+	@Inject
 	public EstimationResultComponentPresenterFactory(
 			final EstimationResultFilePresentationLogic estimationResultFilePresenter) {
 

@@ -21,6 +21,7 @@ package oripa.gui.presenter.estimation;
 import java.util.List;
 import java.util.function.Consumer;
 
+import jakarta.inject.Inject;
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 
@@ -32,6 +33,7 @@ public class EstimationResultFramePresenterFactory {
 
 	private final EstimationResultComponentPresenterFactory componentPresenterFactory;
 
+	@Inject
 	public EstimationResultFramePresenterFactory(
 			final EstimationResultComponentPresenterFactory componentPresenterFactory) {
 

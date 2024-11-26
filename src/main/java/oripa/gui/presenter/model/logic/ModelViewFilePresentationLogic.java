@@ -20,6 +20,7 @@ package oripa.gui.presenter.model.logic;
 
 import java.util.List;
 
+import jakarta.inject.Inject;
 import oripa.application.FileAccessService;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.file.UserAction;
@@ -34,6 +35,7 @@ public class ModelViewFilePresentationLogic {
 	private final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
 	private final FileAccessService<OrigamiModel> fileAccessService;
 
+	@Inject
 	public ModelViewFilePresentationLogic(
 			final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
 			final FileAccessService<OrigamiModel> fileAccessService

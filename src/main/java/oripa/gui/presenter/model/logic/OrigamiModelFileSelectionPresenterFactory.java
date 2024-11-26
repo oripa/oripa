@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.model.logic;
 
+import jakarta.inject.Inject;
 import oripa.application.FileSelectionService;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.file.FileSelectionPresenter;
@@ -36,6 +37,7 @@ public class OrigamiModelFileSelectionPresenterFactory {
 	private final FileFactory fileFactory;
 	private final ExtensionCorrector extensionCorrector;
 
+	@Inject
 	public OrigamiModelFileSelectionPresenterFactory(
 			final FileChooserFactory fileChooserFactory,
 			final FileFactory fileFactory,
