@@ -3,6 +3,9 @@ package oripa.domain.paint.byvalue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import jakarta.inject.Singleton;
+
+@Singleton
 public class ByValueContextImpl implements ByValueContext {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);

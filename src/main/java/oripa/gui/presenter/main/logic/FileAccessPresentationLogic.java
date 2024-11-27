@@ -23,6 +23,7 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.application.FileAccessService;
 import oripa.application.main.PaintContextService;
 import oripa.gui.presenter.main.PainterScreenPresenter;
@@ -56,6 +57,7 @@ public class FileAccessPresentationLogic {
 
 	private final Project project;
 
+	@Inject
 	public FileAccessPresentationLogic(
 			final MainFrameView view,
 			final ChildFrameManager childFrameManager,

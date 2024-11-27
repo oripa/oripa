@@ -23,6 +23,7 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -55,6 +56,7 @@ public class SubFramePresentationLogic {
 
 	private String lastResultFilePath;
 
+	@Inject
 	public SubFramePresentationLogic(
 			final UIPanelView view,
 			final SubFrameFactory subFrameFactory,

@@ -25,6 +25,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.main.PainterScreenPresenter;
@@ -62,6 +63,7 @@ public class MainFramePresentationLogic {
 
 	private final ResourceHolder resourceHolder;
 
+	@Inject
 	public MainFramePresentationLogic(
 			final MainFrameView view,
 			final PainterScreenPresenter screenPresenter,

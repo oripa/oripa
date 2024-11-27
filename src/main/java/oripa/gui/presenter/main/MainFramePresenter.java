@@ -24,6 +24,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.application.main.PaintContextService;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
@@ -51,6 +52,7 @@ public class MainFramePresenter {
 	private final PaintContextService paintContextService;
 	private final MainFramePaintMenuListenerFactory paintMenuListenerFactory;
 
+	@Inject
 	public MainFramePresenter(
 			final MainFrameView view,
 			final MainFramePresentationLogic presentationLogic,

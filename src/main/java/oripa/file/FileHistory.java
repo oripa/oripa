@@ -13,6 +13,7 @@ import java.util.List;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Qualifier;
+import jakarta.inject.Singleton;
 import oripa.resource.Constants;
 import oripa.util.file.FileFactory;
 
@@ -20,6 +21,7 @@ import oripa.util.file.FileFactory;
  * for handling the most recently used files list
  *
  */
+@Singleton
 public class FileHistory {
 	private LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
 

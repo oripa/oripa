@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
+import jakarta.inject.Inject;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.ViewScreenUpdater;
@@ -31,6 +32,7 @@ public class UndoRedoPresentationLogic {
 	private final MouseActionHolder mouseActionHolder;
 	private final PaintContext paintContext;
 
+	@Inject
 	public UndoRedoPresentationLogic(
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder mouseActionHolder,

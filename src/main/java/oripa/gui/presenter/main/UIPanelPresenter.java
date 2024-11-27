@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.AngleStep;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
@@ -62,6 +63,7 @@ public class UIPanelPresenter {
 
 	private final PainterScreenSetting mainScreenSetting;
 
+	@Inject
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFramePresentationLogic subFramePresentationLogic,
 			final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration,

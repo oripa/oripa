@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
+import jakarta.inject.Inject;
 import oripa.application.main.PaintContextService;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameView;
@@ -42,6 +43,7 @@ public class ClearActionPresentationLogic {
 
 	private final PaintContextService paintContextService;
 
+	@Inject
 	public ClearActionPresentationLogic(
 			final MainFrameView view,
 			final ViewScreenUpdater screenUpdater,

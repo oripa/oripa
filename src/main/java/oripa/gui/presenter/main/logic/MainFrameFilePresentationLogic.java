@@ -26,6 +26,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.application.main.DocFileAccess;
 import oripa.file.FileHistory;
 import oripa.gui.presenter.file.FileSelectionResult;
@@ -55,6 +56,7 @@ public class MainFrameFilePresentationLogic {
 	private final FileHistory fileHistory;
 	private final FileFactory fileFactory;
 
+	@Inject
 	public MainFrameFilePresentationLogic(
 			final MainFrameView view,
 			final MainDialogPresenterFactory dialogPresenterFactory,
