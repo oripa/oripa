@@ -18,15 +18,17 @@
  */
 package oripa.persistence.entity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.persistence.dao.FileType;
+import oripa.persistence.dao.FileSelectionSupportFactory;
+import oripa.persistence.filetool.FileAccessSupportFactory;
 import oripa.util.file.FileFactory;
 
 /**
@@ -39,17 +41,26 @@ class OrigamiModelFileSelectionSupportSelectorFactoryTest {
 	@InjectMocks
 	OrigamiModelFileSelectionSupportSelectorFactory selectorFactory;
 
+	@Mock
+	FileSelectionSupportFactory selectionSupportFactory;
+
+	@Mock
+	FileAccessSupportFactory accessSupportFactory;
+
 	@Test
 	void selectorContainsAllTypes() {
-		FileFactory fileFactory = mock();
-
-		var selector = selectorFactory.create(fileFactory);
 
 		for (var key : OrigamiModelFileTypeKey.values()) {
-			var type = new FileType<>(key);
 
-			assertTrue(selector.getFileSelectionSupport(type).isPresent());
+			when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
+					.thenReturn(mock());
+
+			when(selectionSupportFactory.create(any())).thenReturn(mock());
 		}
+
+		FileFactory fileFactory = mock();
+
+		selectorFactory.create(fileFactory);
 	}
 
 }

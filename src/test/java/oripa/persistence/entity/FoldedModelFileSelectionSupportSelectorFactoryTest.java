@@ -18,16 +18,18 @@
  */
 package oripa.persistence.entity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.persistence.dao.FileType;
+import oripa.persistence.dao.FileSelectionSupportFactory;
+import oripa.persistence.filetool.FileAccessSupportFactory;
 import oripa.util.file.FileFactory;
 
 /**
@@ -40,15 +42,17 @@ class FoldedModelFileSelectionSupportSelectorFactoryTest {
 	@InjectMocks
 	FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
 
+	@Mock
+	FileSelectionSupportFactory selectionSupportFactory;
+
+	@Mock
+	FileAccessSupportFactory accessSupportFactory;
+
 	@ValueSource(booleans = { true, false })
 	@ParameterizedTest
 	void selectorContainsAllTypes(final boolean modelFlipped) {
-		FileFactory fileFactory = mock();
-
-		var selector = selectorFactory.create(modelFlipped, fileFactory);
 
 		for (var key : FoldedModelFileTypeKey.values()) {
-			var type = new FileType<>(key);
 
 			if (modelFlipped && key == FoldedModelFileTypeKey.SVG_FOLDED_MODEL) {
 				continue;
@@ -58,8 +62,17 @@ class FoldedModelFileSelectionSupportSelectorFactoryTest {
 				continue;
 			}
 
-			assertTrue(selector.getFileSelectionSupport(type).isPresent());
+			when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
+					.thenReturn(mock());
+
+			when(selectionSupportFactory.create(any())).thenReturn(mock());
+
 		}
+
+		FileFactory fileFactory = mock();
+
+		selectorFactory.create(modelFlipped, fileFactory);
+
 	}
 
 }
