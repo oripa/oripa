@@ -22,7 +22,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 import oripa.file.FileHistory.MaxSize;
-import oripa.resource.Constants;
+import oripa.gui.view.main.MainFrameView;
 
 /**
  * @author OUCHI Koji
@@ -32,7 +32,7 @@ public class FileHistoryModule extends AbstractModule {
 
 	@Provides
 	@MaxSize
-	int provideMaxSize() {
-		return Constants.MRUFILE_NUM;
+	int provideMaxSize(final MainFrameView view) {
+		return view.getFileMenuSize();
 	}
 }

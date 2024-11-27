@@ -143,4 +143,6 @@ public interface MainFrameView extends FrameView {
 	void showSaveIniFileFailureErrorMessage(Exception e);
 
 	void initializeFrameBounds();
+
+	int getFileMenuSize();
 }

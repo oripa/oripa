@@ -638,4 +638,9 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 		setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 	}
+
+	@Override
+	public int getFileMenuSize() {
+		return MRUFilesMenuItem.length;
+	}
 }
