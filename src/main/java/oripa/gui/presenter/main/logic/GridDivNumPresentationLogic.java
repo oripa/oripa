@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
+import jakarta.inject.Inject;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.UIPanelView;
@@ -32,6 +33,7 @@ public class GridDivNumPresentationLogic {
 
 	private final PaintContext paintContext;
 
+	@Inject
 	public GridDivNumPresentationLogic(
 			final UIPanelView view,
 			final ViewScreenUpdater screenUpdater,

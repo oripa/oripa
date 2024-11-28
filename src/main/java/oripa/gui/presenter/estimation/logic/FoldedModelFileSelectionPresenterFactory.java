@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.estimation.logic;
 
+import jakarta.inject.Inject;
 import oripa.application.FileSelectionService;
 import oripa.gui.presenter.file.FileSelectionPresenter;
 import oripa.gui.view.FrameView;
@@ -36,6 +37,7 @@ public class FoldedModelFileSelectionPresenterFactory {
 	private final FileFactory fileFactory;
 	private final ExtensionCorrector extensionCorrector;
 
+	@Inject
 	public FoldedModelFileSelectionPresenterFactory(
 			final FileChooserFactory fileChooserFactory,
 			final FileFactory fileFactory,

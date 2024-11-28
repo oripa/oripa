@@ -39,8 +39,14 @@ import oripa.swing.view.util.Dialogs;
  */
 public class LoadingFileChooser extends JFileChooser implements LoadingFileChooserView {
 
-	public LoadingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties) {
+	private final ResourceHolder resourceHolder;
+
+	public LoadingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties,
+			final ResourceHolder resourceHolder) {
 		super(path);
+
+		this.resourceHolder = resourceHolder;
+
 		if (path != null) {
 			File file = new File(path);
 			this.setSelectedFile(file);
@@ -71,7 +77,7 @@ public class LoadingFileChooser extends JFileChooser implements LoadingFileChoos
 	@Override
 	public void showErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this,
-				ResourceHolder.getInstance().getString(ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
+				resourceHolder.getString(ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
 	}
 
 }

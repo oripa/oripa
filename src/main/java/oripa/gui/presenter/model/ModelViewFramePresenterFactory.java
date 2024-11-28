@@ -20,6 +20,7 @@ package oripa.gui.presenter.model;
 
 import java.util.List;
 
+import jakarta.inject.Inject;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.presenter.model.logic.ModelViewFilePresentationLogic;
@@ -40,6 +41,7 @@ public class ModelViewFramePresenterFactory {
 
 	private final PainterScreenSetting mainScreenSetting;
 
+	@Inject
 	public ModelViewFramePresenterFactory(
 			final ScreenUpdater mainScreenUpdater,
 			final PainterScreenSetting mainScreenSetting,

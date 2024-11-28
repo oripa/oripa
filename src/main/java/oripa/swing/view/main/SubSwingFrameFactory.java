@@ -20,6 +20,7 @@ package oripa.swing.view.main;
 
 import java.beans.PropertyChangeListener;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
@@ -39,6 +40,7 @@ public class SubSwingFrameFactory implements SubFrameFactory {
 	private final ModelViewFrameFactory modelViewFrameFactory;
 	private final EstimationResultFrameFactory resultFrameFactory;
 
+	@Inject
 	public SubSwingFrameFactory(
 			final FoldabilityCheckFrameFactory foldaFrameFactory,
 			final ModelViewFrameFactory modelViewFrameFactory,

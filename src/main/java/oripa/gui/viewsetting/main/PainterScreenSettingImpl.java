@@ -6,9 +6,11 @@ import java.beans.PropertyChangeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Singleton;
 import oripa.gui.view.main.InitialVisibilities;
 import oripa.gui.view.main.PainterScreenSetting;
 
+@Singleton
 public class PainterScreenSettingImpl implements PainterScreenSetting {
 	private static final Logger logger = LoggerFactory.getLogger(PainterScreenSettingImpl.class);
 

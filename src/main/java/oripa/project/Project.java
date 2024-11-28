@@ -26,6 +26,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Singleton;
 import oripa.domain.projectprop.Property;
 import oripa.domain.projectprop.PropertyHolder;
 import oripa.persistence.dao.FileType;
@@ -38,6 +39,7 @@ import oripa.persistence.doc.DocFileTypes;
  * @author OUCHI Koji
  *
  */
+@Singleton
 public class Project implements PropertyHolder {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

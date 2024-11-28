@@ -20,11 +20,13 @@ package oripa.swing.view.model;
 
 import java.beans.PropertyChangeListener;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.ChildFrameManager;
+import oripa.resource.ResourceHolder;
 
 /**
  * @author Koji
@@ -35,10 +37,15 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 	private final PainterScreenSetting mainScreenSetting;
 	private final ChildFrameManager childFrameManager;
 
+	private final ResourceHolder resourceHolder;
+
+	@Inject
 	public ModelViewSwingFrameFactory(final PainterScreenSetting mainScreenSetting,
-			final ChildFrameManager childFrameManager) {
+			final ChildFrameManager childFrameManager,
+			final ResourceHolder resourceHolder) {
 		this.mainScreenSetting = mainScreenSetting;
 		this.childFrameManager = childFrameManager;
+		this.resourceHolder = resourceHolder;
 	}
 
 	@Override
@@ -54,7 +61,7 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 			frame.dispose();
 		});
 
-		var frame = new ModelViewFrame(400, 400, mainScreenSetting);
+		var frame = new ModelViewFrame(400, 400, mainScreenSetting, resourceHolder);
 
 		frame.putPaperDomainChangeListener(parent, onChangePaperDomain);
 

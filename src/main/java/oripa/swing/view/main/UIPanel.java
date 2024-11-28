@@ -57,7 +57,6 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.view.View;
 import oripa.gui.view.main.InitialVisibilities;
 import oripa.gui.view.main.KeyProcessing;
-import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.view.main.UIPanelView;
@@ -78,8 +77,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
-	private final ResourceHolder resources = ResourceHolder.getInstance();
-	private final MainDialogService dialogService = new MainDialogService(resources);
+	private final ResourceHolder resourceHolder;
+	private final MainDialogService dialogService;
 
 	private final UIPanelSetting setting;
 //	private final ByValueSetting valueSetting = setting.getValueSetting();
@@ -93,18 +92,12 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// Binding edit mode
 	private final ButtonGroup editModeGroup;
 
-	private final JRadioButton editModeInputLineButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.INPUT_LINE_ID));
-	private final JRadioButton editModeLineSelectionButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.SELECT_ID));
-	private final JRadioButton editModeDeleteLineButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.DELETE_LINE_ID));
-	private final JRadioButton editModeLineTypeButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.CHANGE_LINE_TYPE_ID));
-	private final JRadioButton editModeAddVertex = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.ADD_VERTEX_ID));
-	private final JRadioButton editModeDeleteVertex = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.DELETE_VERTEX_ID));
+	private final JRadioButton editModeInputLineButton;
+	private final JRadioButton editModeLineSelectionButton;
+	private final JRadioButton editModeDeleteLineButton;
+	private final JRadioButton editModeLineTypeButton;
+	private final JRadioButton editModeAddVertex;
+	private final JRadioButton editModeDeleteVertex;
 
 	// Line Selection Tools panel
 	private final JPanel lineSelectionPanel = new JPanel();
@@ -134,24 +127,18 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// lineTypePanel
 	private final JPanel lineTypePanel = new JPanel();
 
-	private final JRadioButton lineTypeAuxButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
-	private final JRadioButton lineTypeMountainButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
-	private final JRadioButton lineTypeValleyButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
-	private final JRadioButton lineTypeUnassignedButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.UNASSIGNED_ID));
+	private final JRadioButton lineTypeAuxButton;
+	private final JRadioButton lineTypeMountainButton;
+	private final JRadioButton lineTypeValleyButton;
+	private final JRadioButton lineTypeUnassignedButton;
 
 	// byValuePanel for length and angle
 	private final JPanel byValuePanel = new JPanel();
 
 	private JFormattedTextField textFieldLength;
-	private final JButton buttonLength = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
 	private JFormattedTextField textFieldAngle;
-	private final JButton buttonAngle = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
+	private final JButton buttonLength;
+	private final JButton buttonAngle;
 
 	// AlterLineTypePanel
 	private final JPanel alterLineTypePanel = new JPanel();
@@ -167,15 +154,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// gridPanel
 	private final JPanel gridPanel = new JPanel();
 
-	private final JCheckBox dispGridCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
-			InitialVisibilities.GRID);
 	private JFormattedTextField textFieldGrid;
 	private final JButton gridSmallButton = new JButton("x2");
 	private final JButton gridLargeButton = new JButton("x1/2");
-	private final JButton gridChangeButton = new JButton(
-			resources.getString(ResourceKey.LABEL,
-					StringID.UI.GRID_SIZE_CHANGE_ID));
+	private final JButton gridChangeButton;
+	private final JCheckBox dispGridCheckBox;
 
 	// plug-in
 	private final JPanel pluginPanel = new JPanel();
@@ -184,27 +167,17 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// view Panel
 	private final JPanel viewPanel = new JPanel();
 
-	private final JCheckBox dispMVULinesCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MVU_ID),
-			InitialVisibilities.MVU);
-	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
-			InitialVisibilities.AUX);
-	private final JCheckBox dispVertexCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
-			InitialVisibilities.VERTEX);
+	private final JCheckBox dispMVULinesCheckBox;
+	private final JCheckBox dispAuxLinesCheckBox;
+	private final JCheckBox dispVertexCheckBox;
+	private final JCheckBox zeroLineWidthCheckBox;
 	private final JComboBox<String> computationTypeCombo = new JComboBox<String>();
-	private final JCheckBox zeroLineWidthCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID),
-			InitialVisibilities.ZERO_LINE_WIDTH);
 
 	// ActionButtons Panel
 	private final JPanel buttonsPanel = new JPanel();
 
-	private final JButton buildButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
-	private final JButton checkWindowButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
+	private final JButton buildButton;
+	private final JButton checkWindowButton;
 
 	private Color estimationResultFrontColor;
 	private Color estimationResultBackColor;
@@ -216,11 +189,63 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private Runnable showFoldedModelWindowsListener;
 
 	public UIPanel(
-			final MainViewSetting viewSetting,
+			final UIPanelSetting uiPanelSetting,
+			final PainterScreenSetting screenSetting,
 			final MainDialogService dialogService,
 			final ResourceHolder resources) {
 
-		setting = viewSetting.getUiPanelSetting();
+		this.resourceHolder = resources;
+
+		this.dialogService = dialogService;
+
+		editModeInputLineButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.INPUT_LINE_ID));
+		editModeLineSelectionButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.SELECT_ID));
+		editModeDeleteLineButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.DELETE_LINE_ID));
+		editModeLineTypeButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.CHANGE_LINE_TYPE_ID));
+		editModeAddVertex = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ADD_VERTEX_ID));
+		editModeDeleteVertex = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.DELETE_VERTEX_ID));
+		lineTypeAuxButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
+		lineTypeMountainButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
+		lineTypeValleyButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
+		lineTypeUnassignedButton = new JRadioButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.UNASSIGNED_ID));
+		buttonLength = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
+		buttonAngle = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
+		gridChangeButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.UI.GRID_SIZE_CHANGE_ID));
+		dispGridCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
+				InitialVisibilities.GRID);
+		dispMVULinesCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHOW_MVU_ID),
+				InitialVisibilities.MVU);
+		dispAuxLinesCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
+				InitialVisibilities.AUX);
+		dispVertexCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
+				InitialVisibilities.VERTEX);
+		zeroLineWidthCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID),
+				InitialVisibilities.ZERO_LINE_WIDTH);
+		buildButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
+		checkWindowButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
+
+		setting = uiPanelSetting;
 
 		setShortcuts();
 
@@ -298,7 +323,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 				.setAnchor(GridBagConstraints.LAST_LINE_START);
 		add(generalSettingsPanel, gbBuilder.getLineField());
 
-		addPropertyChangeListenersToSetting(viewSetting.getPainterScreenSetting());
+		addPropertyChangeListenersToSetting(screenSetting);
 		buildButton.addActionListener(e -> showFoldedModelWindows());
 	}
 
@@ -366,7 +391,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		lineSelectionPanel.setLayout(new GridBagLayout());
 		lineSelectionPanel.setBorder(createTitledBorder(
-				resources.getString(ResourceKey.LABEL, StringID.UI.SELECT_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SELECT_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(4) // 4 columns used
 				.setAnchor(GridBagConstraints.CENTER) // anchor items in the
@@ -429,7 +454,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		// put layout together
 		lineInputPanel.setLayout(new GridBagLayout());
 		lineInputPanel.setBorder(createTitledBorder(
-				resources.getString(ResourceKey.LABEL, StringID.UI.LINE_INPUT_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.LINE_INPUT_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(4) // 4 columns used
 				.setAnchor(GridBagConstraints.CENTER) // anchor items in the
@@ -484,7 +509,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private void buildAngleStepPanel() {
 		angleStepComboPanel.setLayout(new GridBagLayout());
 		angleStepComboPanel.setBorder(createTitledBorder(
-				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_STEP_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.ANGLE_STEP_ID)));
 
 		angleStepComboPanel.add(angleStepCombo, new GridBagConstraintsBuilder(1)
 				.setAnchor(GridBagConstraints.CENTER)
@@ -499,16 +524,16 @@ public class UIPanel extends JPanel implements UIPanelView {
 	 */
 	private void buildAlterLineTypePanel() {
 		var fromLabel = new JLabel(
-				resources.getString(ResourceKey.LABEL,
+				resourceHolder.getString(ResourceKey.LABEL,
 						StringID.UI.CHANGE_LINE_TYPE_FROM_ID));
 
 		var toLabel = new JLabel(
-				resources.getString(ResourceKey.LABEL,
+				resourceHolder.getString(ResourceKey.LABEL,
 						StringID.UI.CHANGE_LINE_TYPE_TO_ID));
 
 		alterLineTypePanel.setLayout(new GridBagLayout());
 		alterLineTypePanel.setBorder(createTitledBorder(
-				resources.getString(ResourceKey.LABEL, StringID.UI.ALTER_LINE_TYPE_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.ALTER_LINE_TYPE_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2);
 
@@ -525,10 +550,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 	 */
 	private void buildEditByValuePanel() {
 		var lengthLabel = new JLabel(
-				resources.getString(ResourceKey.LABEL, StringID.UI.LENGTH_ID));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.LENGTH_ID));
 
 		var angleLabel = new JLabel(
-				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_ID));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.ANGLE_ID));
 
 		textFieldLength = new JFormattedTextField();
 		textFieldAngle = new JFormattedTextField();
@@ -543,7 +568,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		byValuePanel.setLayout(new GridBagLayout());
 		byValuePanel.setBorder(createTitledBorder(
-				resources.getString(ResourceKey.LABEL, StringID.UI.INSERT_BY_VALUE_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.INSERT_BY_VALUE_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(3)
 				.setAnchor(GridBagConstraints.CENTER)
@@ -566,7 +591,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	 */
 	private void buildGridPanel() {
 		var gridDivideLabel = new JLabel(
-				resources.getString(ResourceKey.LABEL,
+				resourceHolder.getString(ResourceKey.LABEL,
 						StringID.UI.GRID_DIVIDE_NUM_ID));
 
 		textFieldGrid = new JFormattedTextField(new DecimalFormat("#"));
@@ -576,7 +601,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		gridPanel.setLayout(new GridBagLayout());
 		gridPanel.setBorder(createTitledBorder(
-				resources.getString(ResourceKey.LABEL, StringID.UI.GRID_SETTINGS_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.GRID_SETTINGS_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(3);
 
@@ -598,7 +623,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		viewPanel.setLayout(new GridBagLayout());
 
 		viewPanel.setBorder(createTitledBorder(
-				resources.getString(ResourceKey.LABEL, StringID.UI.VIEW_SETTINGS_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.VIEW_SETTINGS_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(3);
 
@@ -736,7 +761,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 				button.doClick();
 			}
 		});
-		button.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID));
+		button.setToolTipText(resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID));
 	}
 
 	private void setLineSelectionGlobalShortcut(final AbstractButton button, final KeyStroke keyStroke,
@@ -786,7 +811,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 				settingButton.doClick();
 			}
 		});
-		settingButton.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID)
+		settingButton.setToolTipText(resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID)
 				+ String.join("-", keyStroke.toString().replaceFirst("pressed ", "").split(" ")));
 	}
 
@@ -1359,7 +1384,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
 		// modal dialog while folding
-		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
+		var dialogWhileFolding = new DialogWhileFolding(frame, resourceHolder);
 
 		var worker = new SimpleModalWorker(dialogWhileFolding, () -> modelComputationListener.run(),
 				(e) -> {
@@ -1391,6 +1416,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void showErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this,
-				resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+				resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
 	}
 }

@@ -25,6 +25,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.file.FileHistory;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.main.PainterScreenPresenter;
@@ -62,6 +63,7 @@ public class MainFramePresentationLogic {
 
 	private final ResourceHolder resourceHolder;
 
+	@Inject
 	public MainFramePresentationLogic(
 			final MainFrameView view,
 			final PainterScreenPresenter screenPresenter,
@@ -156,10 +158,9 @@ public class MainFramePresentationLogic {
 	}
 
 	/**
-	 * Update file menu. Do nothing if the given {@code filePath} is null or
-	 * wrong.
+	 * Update file menu. Do nothing if the previously loaded file is not of
+	 * project.
 	 *
-	 * @param filePath
 	 */
 	public void updateMenu() {
 		var filePath = project.getDataFilePath();

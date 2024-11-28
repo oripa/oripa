@@ -21,33 +21,23 @@ package oripa.domain.cutmodel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import jakarta.inject.Singleton;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
+@Singleton
 public class DefaultCutModelOutlinesHolder implements CutModelOutlinesHolder {
 
 	private Collection<OriLine> outlines = new ArrayList<OriLine>();
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.cutmodel.SheetCutOutlinesHolder#setSheetCutOutlines(oripa.
-	 * value.OriLine)
-	 */
 	@Override
 	public void setOutlines(final Collection<OriLine> outlines) {
 		this.outlines = outlines;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.cutmodel.SheetCutOutlinesHolder#getSheetCutOutlines()
-	 */
 	@Override
 	public Collection<OriLine> getOutlines() {
 		return outlines;

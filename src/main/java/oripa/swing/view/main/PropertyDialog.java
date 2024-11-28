@@ -50,7 +50,7 @@ public class PropertyDialog extends JDialog implements
 
 	private static final long serialVersionUID = -5864700666603644379L;
 
-	private final ResourceHolder resources = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
 
 	private final JTextField titleTextField = new JTextField();
 	private final JTextField editorNameTextField = new JTextField();
@@ -60,11 +60,14 @@ public class PropertyDialog extends JDialog implements
 
 	private final List<Runnable> okListeners = new ArrayList<>();
 
-	private final JButton okButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_OK_ID));
+	private final JButton okButton;
 
-	public PropertyDialog(final JFrame parent) {
+	public PropertyDialog(final JFrame parent, final ResourceHolder resourceHolder) {
 		super(parent);
+
+		this.resourceHolder = resourceHolder;
+		okButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_OK_ID));
 
 		build();
 
@@ -75,7 +78,7 @@ public class PropertyDialog extends JDialog implements
 	}
 
 	private void build() {
-		setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_TITLE_ID));
+		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_TITLE_ID));
 		setSize(420, 278);
 		addComponentListener(this);
 
@@ -98,31 +101,32 @@ public class PropertyDialog extends JDialog implements
 		var gbcBuilder = new GridBagConstraintsBuilder(2).setInsets(2, 5, 2, 5).setWeight(leftWeight, 0.0)
 				.setAnchor(GridBagConstraints.CENTER);
 
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MODEL_TITLE_ID)),
+		contentPane.add(
+				new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MODEL_TITLE_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(titleTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_AUTHOR_ID)),
+		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_AUTHOR_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(editorNameTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_CREATOR_ID)),
+		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_CREATOR_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(originalAuthorTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_SOURCE_ID)),
+		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_SOURCE_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(referenceTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MEMO_ID)),
+		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MEMO_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 1.0).setFill(GridBagConstraints.BOTH);
 		contentPane.add(memoScrollPane, gbcBuilder.getNextField());

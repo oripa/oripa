@@ -21,6 +21,7 @@ package oripa.gui.presenter.main.logic;
 import java.util.List;
 import java.util.function.Consumer;
 
+import jakarta.inject.Inject;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.FoldedModel;
@@ -45,6 +46,7 @@ public class SubFramePresenterFactory {
 
 	private final EstimationResultFramePresenterFactory estimationResultFramePresenterFactory;
 
+	@Inject
 	public SubFramePresenterFactory(
 			final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory,
 			final ModelViewFramePresenterFactory modelViewFramePresenterFactory,

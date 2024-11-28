@@ -20,8 +20,10 @@ package oripa.swing.view.main;
 
 import javax.swing.JFrame;
 
+import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.CircleCopyDialogView;
+import oripa.resource.ResourceHolder;
 
 /**
  * @author OUCHI Koji
@@ -29,7 +31,14 @@ import oripa.gui.view.main.CircleCopyDialogView;
  */
 public class CircleCopyDialogFactory {
 
+	private final ResourceHolder resourceHolder;
+
+	@Inject
+	public CircleCopyDialogFactory(final ResourceHolder resourceHolder) {
+		this.resourceHolder = resourceHolder;
+	}
+
 	public CircleCopyDialogView create(final FrameView owner) {
-		return new CircleCopyDialog((JFrame) owner);
+		return new CircleCopyDialog((JFrame) owner, resourceHolder);
 	}
 }

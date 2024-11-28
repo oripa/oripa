@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main;
 
+import jakarta.inject.Inject;
 import oripa.application.FileSelectionService;
 import oripa.application.main.FileModelCheckService;
 import oripa.gui.view.FrameView;
@@ -37,6 +38,7 @@ public class DocFileSelectionPresenterFactory {
 	private final FileFactory fileFactory;
 	private final ExtensionCorrector extensionCorrector;
 
+	@Inject
 	public DocFileSelectionPresenterFactory(
 			final FileChooserFactory fileChooserFactory,
 			final FileModelCheckService fileModelCheckService,

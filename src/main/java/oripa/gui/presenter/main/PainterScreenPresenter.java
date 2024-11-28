@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main;
 
+import jakarta.inject.Inject;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
@@ -51,6 +52,7 @@ public class PainterScreenPresenter {
 
 	private RectangleDomain paperDomainOfModel;
 
+	@Inject
 	public PainterScreenPresenter(final PainterScreenView view,
 			final ViewScreenUpdater screenUpdater,
 			final CreasePatternViewContext viewContext,

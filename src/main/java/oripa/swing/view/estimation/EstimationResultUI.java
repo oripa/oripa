@@ -59,31 +59,24 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private static final long serialVersionUID = 1L;
 
-	private final ResourceHolder resources = ResourceHolder.getInstance();
+	private final ResourceHolder resourceHolder;
 
 	// JPanel drawing the model estimation
 	private FoldedModelScreen screen;
 
 	// setup components used
-	private final ListItemSelectionPanel answerSelectionPanel = new ListItemSelectionPanel("");
+	private final ListItemSelectionPanel answerSelectionPanel;
 
-	private final JCheckBox filterEnabledCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_FILTER_ID));
-	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SHOW_SUBFACE_ID));
-	private final JComboBox<Integer> subfaceIndexCombo = new JComboBox<>();
-	private final JComboBox<String> suborderIndexCombo = new JComboBox<>();
+	private final JCheckBox filterEnabledCheckBox;
+	private final JCheckBox subfaceVisibleCheckBox;
+	private final JComboBox<Integer> subfaceIndexCombo;
+	private final JComboBox<String> suborderIndexCombo;
 
-	private final JCheckBox orderCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
-	private final JCheckBox shadowCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SHADOW_ID));
-	private final JCheckBox useColorCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_COLOR_ID));
-	private final JCheckBox edgeCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EDGE_ID));
-	private final JCheckBox fillFaceCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FILL_FACE_ID));
+	private final JCheckBox orderCheckBox;
+	private final JCheckBox shadowCheckBox;
+	private final JCheckBox useColorCheckBox;
+	private final JCheckBox edgeCheckBox;
+	private final JCheckBox fillFaceCheckBox;
 
 	private final int DISTORTION_MAX = 10;
 	private final int DISTORTION_MIN = -10;
@@ -100,25 +93,18 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JSlider yDistortionSlider = new JSlider(JSlider.HORIZONTAL, DISTORTION_MIN, DISTORTION_MAX,
 			DISTORTION_MIN);
 
-	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT,
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_FRONT_ID));
-	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK,
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_BACK_ID));
+	private final ColorRGBPanel frontColorRGBPanel;
+	private final ColorRGBPanel backColorRGBPanel;
 
-	private final JButton saveColorsButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_COLORS_ID));
+	private final JButton saveColorsButton;
 
-	private final JButton saveSVGConfigButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_SVG_CONFIG_ID));
+	private final JButton saveSVGConfigButton;
 
-	private final JButton exportButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
+	private final JButton exportButton;
 
-	private final JLabel svgFaceStrokeWidthLabel = new JLabel(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_FACE_STROKEWIDTH_ID));
+	private final JLabel svgFaceStrokeWidthLabel;
 	private final JTextField svgFaceStrokeWidthField = new JTextField();
-	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CREASE_STROKEWIDTH_ID));
+	private final JLabel svgPrecreaseStrokeWidthLabel;
 	private final JTextField svgPrecreaseStrokeWidthField = new JTextField();
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
@@ -145,13 +131,50 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	/**
 	 * This is the default constructor
 	 */
-	public EstimationResultUI() {
+	public EstimationResultUI(final ResourceHolder resourceHolder) {
 		super();
+
+		this.resourceHolder = resourceHolder;
+
+		// setup components used
+		answerSelectionPanel = new ListItemSelectionPanel("", resourceHolder);
+		filterEnabledCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_FILTER_ID));
+		subfaceVisibleCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SHOW_SUBFACE_ID));
+		subfaceIndexCombo = new JComboBox<>();
+		suborderIndexCombo = new JComboBox<>();
+		orderCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
+		shadowCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SHADOW_ID));
+		useColorCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_COLOR_ID));
+		edgeCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EDGE_ID));
+		fillFaceCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FILL_FACE_ID));
+
+		frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT,
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_FRONT_ID));
+		backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK,
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_BACK_ID));
+		saveColorsButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_COLORS_ID));
+		saveSVGConfigButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_SVG_CONFIG_ID));
+		exportButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
+		svgFaceStrokeWidthLabel = new JLabel(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_FACE_STROKEWIDTH_ID));
+		svgPrecreaseStrokeWidthLabel = new JLabel(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CREASE_STROKEWIDTH_ID));
+
 		try {
 			initialize();
 		} catch (Exception e) {
 			Dialogs.showErrorDialog(this,
-					resources.getString(ResourceKey.ERROR, StringID.Error.ER_UI_INIT_FAILED_ID), e);
+					resourceHolder.getString(ResourceKey.ERROR, StringID.Error.ER_UI_INIT_FAILED_ID), e);
 		}
 	}
 
@@ -184,7 +207,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void initializeFilterComponents() {
 		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-		var dialog = new DialogWhileComputing(frame, resources);
+		var dialog = new DialogWhileComputing(frame, resourceHolder);
 
 		filterSelectionMap = new HashMap<>();
 
@@ -449,7 +472,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		answerShiftPanel.setLayout(new GridBagLayout());
 		answerShiftPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
-				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ANSWERS_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ANSWERS_PANEL_ID)));
 
 		answerShiftPanel.add(answerSelectionPanel, gbBuilder.getNextField());
 
@@ -471,7 +494,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		distortionPanel.setLayout(new GridBagLayout());
 
 		distortionPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
-				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.DISTORTION_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.DISTORTION_ID)));
 
 		distortionPanel.add(distortionMethodCombo, gbBuilder.getNextField());
 		distortionPanel.add(xDistortionSlider, gbBuilder.getNextField());
@@ -492,7 +515,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		configPanel.setLayout(new GridBagLayout());
 		configPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
-				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.DRAWING_CONFIG_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.DRAWING_CONFIG_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(0.5, 0.5);
@@ -511,7 +534,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		colorPanel.setLayout(new GridBagLayout());
 		colorPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
-				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(1.0, 0.0);
@@ -529,7 +552,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		svgPanel.setLayout(new GridBagLayout());
 		svgPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
-				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CONFIG_PANEL_ID)));
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CONFIG_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(1.0, 0.0);
@@ -671,13 +694,13 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	@Override
 	public void showExportErrorMessage(final Exception e) {
-		Dialogs.showErrorDialog(this, resources.getString(
+		Dialogs.showErrorDialog(this, resourceHolder.getString(
 				ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 	}
 
 	@Override
 	public void showErrorMessage(final Exception e) {
-		Dialogs.showErrorDialog(this, resources.getString(
+		Dialogs.showErrorDialog(this, resourceHolder.getString(
 				ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
 	}
 

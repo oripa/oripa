@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.util.file.FileFactory;
@@ -43,6 +44,7 @@ public class FileDAO<Data> implements DataAccessObject<Data> {
 
 	private final FileFactory fileFactory;
 
+	@Inject
 	public FileDAO(final FileSelectionSupportSelector<Data> selector, final FileFactory fileFactory) {
 		this.fileSelectionSupportSelector = selector;
 		this.fileFactory = fileFactory;

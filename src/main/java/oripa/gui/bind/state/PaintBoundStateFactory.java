@@ -3,12 +3,12 @@ package oripa.gui.bind.state;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import jakarta.inject.Inject;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.presenter.creasepattern.enlarge.EnlargeLineAction;
 import oripa.gui.view.main.MainFrameSetting;
-import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewchange.main.ChangeHint;
 import oripa.gui.viewchange.main.uipanel.ChangeOnAlterTypeButtonSelected;
@@ -17,6 +17,7 @@ import oripa.gui.viewchange.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.gui.viewchange.main.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.gui.viewchange.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.gui.viewchange.main.uipanel.ChangeOnSelectButtonSelected;
+import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;
 
 public class PaintBoundStateFactory {
@@ -27,20 +28,27 @@ public class PaintBoundStateFactory {
 	private final UIPanelSetting uiPanelSetting;
 	private final ComplexActionFactory complexActionFactory;
 
+	private final ResourceHolder resourceHolder;
+
 	/**
 	 * Constructor
 	 */
+	@Inject
 	public PaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
 			final MouseActionSetterFactory setterFactory,
-			final MainViewSetting viewSetting,
-			final ComplexActionFactory complexActionFactory) {
+			final MainFrameSetting mainFrameSetting,
+			final UIPanelSetting uiPanelSetting,
+			final ComplexActionFactory complexActionFactory,
+			final ResourceHolder resourceHolder) {
 
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
-		this.mainFrameSetting = viewSetting.getMainFrameSetting();
-		this.uiPanelSetting = viewSetting.getUiPanelSetting();
+		this.mainFrameSetting = mainFrameSetting;
+		this.uiPanelSetting = uiPanelSetting;
 		this.complexActionFactory = complexActionFactory;
+
+		this.resourceHolder = resourceHolder;
 	}
 
 	/**
@@ -67,7 +75,7 @@ public class PaintBoundStateFactory {
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory, null);
 
-		var changeHint = new ChangeHint(mainFrameSetting, id);
+		var changeHint = new ChangeHint(mainFrameSetting, id, resourceHolder);
 
 		var stateOpt = switch (id) {
 		case StringID.DELETE_LINE_ID -> Optional.of(stateFactory.create(
@@ -106,7 +114,7 @@ public class PaintBoundStateFactory {
 			final Supplier<Boolean> errorDetecter,
 			final Runnable errorHandler) {
 
-		var changeHint = new ChangeHint(mainFrameSetting, id);
+		var changeHint = new ChangeHint(mainFrameSetting, id, resourceHolder);
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory,
@@ -145,7 +153,7 @@ public class PaintBoundStateFactory {
 	private Optional<ApplicationState<EditMode>> createLineInputState(
 			final String id) {
 
-		var changeHint = new ChangeHint(mainFrameSetting, id);
+		var changeHint = new ChangeHint(mainFrameSetting, id, resourceHolder);
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory,

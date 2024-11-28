@@ -21,13 +21,11 @@ package oripa.cli;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.application.FileAccessService;
-import oripa.persistence.dao.FileDAO;
 import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileSelectionSupportSelectorFactory;
 import oripa.persistence.doc.DocFileTypes;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
-import oripa.util.file.FileFactory;
 
 /**
  * @author OUCHI Koji
@@ -36,11 +34,14 @@ import oripa.util.file.FileFactory;
 public class CreasePatternFileConverter {
 	private static final Logger logger = LoggerFactory.getLogger(CreasePatternFileConverter.class);
 
-	public void convert(final String inputFilePath, final String outputFilePath, final double eps) {
-		var fileFactory = new FileFactory();
+	private final FileAccessService<Doc> creasePatternFileAccess;
 
-		var creasePatternFileAccess = new FileAccessService<Doc>(
-				new FileDAO<>(new DocFileSelectionSupportSelectorFactory().create(fileFactory), fileFactory));
+	@Inject
+	public CreasePatternFileConverter(final FileAccessService<Doc> creasePatternFileAccess) {
+		this.creasePatternFileAccess = creasePatternFileAccess;
+	}
+
+	public void convert(final String inputFilePath, final String outputFilePath, final double eps) {
 
 		try {
 			creasePatternFileAccess.setConfigToSavingAction(DocFileTypes.fold(),

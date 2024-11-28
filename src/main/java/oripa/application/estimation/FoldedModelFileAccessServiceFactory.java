@@ -18,6 +18,7 @@
  */
 package oripa.application.estimation;
 
+import jakarta.inject.Inject;
 import oripa.application.FileAccessService;
 import oripa.persistence.dao.FileDAO;
 import oripa.persistence.entity.FoldedModelEntity;
@@ -32,6 +33,7 @@ public class FoldedModelFileAccessServiceFactory {
 	private final FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
 	private final FileFactory fileFactory;
 
+	@Inject
 	public FoldedModelFileAccessServiceFactory(
 			final FoldedModelFileSelectionSupportSelectorFactory selectorFactory,
 			final FileFactory fileFactory) {

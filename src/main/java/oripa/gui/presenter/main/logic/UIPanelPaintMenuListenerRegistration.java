@@ -20,6 +20,7 @@ package oripa.gui.presenter.main.logic;
 
 import java.util.List;
 
+import jakarta.inject.Inject;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
@@ -49,6 +50,7 @@ public class UIPanelPaintMenuListenerRegistration {
 	private final TypeForChangeContext typeForChangeContext;
 	private final ByValueContext byValueContext;
 
+	@Inject
 	public UIPanelPaintMenuListenerRegistration(
 			final UIPanelView view,
 			final BindingObjectFactoryFacade bindingFactory,

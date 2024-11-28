@@ -16,39 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.main;
+package oripa.inject;
 
-import jakarta.inject.Inject;
-import oripa.application.FileAccessService;
-import oripa.domain.paint.PaintContext;
-import oripa.persistence.dao.FileDAO;
-import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+
+import oripa.file.FileHistory.MaxSize;
+import oripa.gui.view.main.MainFrameView;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DocFileAccess extends FileAccessService<Doc> {
-	private final PaintContext paintContext;
+public class FileHistoryModule extends AbstractModule {
 
-	@Inject
-	public DocFileAccess(final FileDAO<Doc> dao, final PaintContext paintContext) {
-		super(dao);
-		this.paintContext = paintContext;
+	@Provides
+	@MaxSize
+	int provideMaxSize(final MainFrameView view) {
+		return view.getFileMenuSize();
 	}
-
-	public void setupFOLDConfigForSaving() {
-
-		setConfigToSavingAction(DocFileTypes.fold(), () -> createFOLDConfig());
-	}
-
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = new CreasePatternFOLDConfig();
-		config.setEps(paintContext.getPointEps());
-
-		return config;
-	}
-
 }

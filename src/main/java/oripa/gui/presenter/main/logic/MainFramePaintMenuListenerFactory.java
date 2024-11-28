@@ -21,6 +21,7 @@ package oripa.gui.presenter.main.logic;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import jakarta.inject.Inject;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
@@ -40,6 +41,7 @@ public class MainFramePaintMenuListenerFactory {
 	final MouseActionHolder mouseActionHolder;
 	final BindingObjectFactoryFacade bindingFactory;
 
+	@Inject
 	public MainFramePaintMenuListenerFactory(
 			final PaintContext paintContext,
 			final MouseActionHolder mouseActionHolder,

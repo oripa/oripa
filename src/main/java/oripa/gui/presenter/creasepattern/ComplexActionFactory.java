@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import jakarta.inject.Inject;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.presenter.creasepattern.byvalue.LineByValueAction;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
@@ -32,6 +33,7 @@ public class ComplexActionFactory {
 	private final ByValueContext byValueContext;
 	private final TypeForChangeContext typeForChangeContext;
 
+	@Inject
 	public ComplexActionFactory(final EditOutlineActionFactory outlineFactory,
 			final CopyAndPasteActionFactory copyPasteFactory,
 			final ByValueContext byValueContext,

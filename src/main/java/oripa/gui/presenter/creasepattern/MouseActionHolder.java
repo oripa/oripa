@@ -20,10 +20,13 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Optional;
 
+import jakarta.inject.Singleton;
+
 /**
  * @author Koji
  *
  */
+@Singleton
 public class MouseActionHolder {
 
 	/**

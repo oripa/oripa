@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main.logic;
 
+import jakarta.inject.Inject;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.main.UIPanelView;
 import oripa.util.MathUtil;
@@ -31,6 +32,7 @@ public class ValuePanelPresentationLogic {
 	private final UIPanelView view;
 	private final PaintContext paintContext;
 
+	@Inject
 	public ValuePanelPresentationLogic(
 			final UIPanelView view,
 			final PaintContext paintContext) {

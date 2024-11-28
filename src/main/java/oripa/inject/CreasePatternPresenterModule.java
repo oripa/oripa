@@ -16,39 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.main;
+package oripa.inject;
 
-import jakarta.inject.Inject;
-import oripa.application.FileAccessService;
-import oripa.domain.paint.PaintContext;
-import oripa.persistence.dao.FileDAO;
-import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.DocFileTypes;
-import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+
+import jakarta.inject.Singleton;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DocFileAccess extends FileAccessService<Doc> {
-	private final PaintContext paintContext;
+public class CreasePatternPresenterModule extends AbstractModule {
 
-	@Inject
-	public DocFileAccess(final FileDAO<Doc> dao, final PaintContext paintContext) {
-		super(dao);
-		this.paintContext = paintContext;
+	@Override
+	protected void configure() {
 	}
 
-	public void setupFOLDConfigForSaving() {
-
-		setConfigToSavingAction(DocFileTypes.fold(), () -> createFOLDConfig());
-	}
-
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = new CreasePatternFOLDConfig();
-		config.setEps(paintContext.getPointEps());
-
-		return config;
+	@Provides
+	@Singleton
+	public CreasePatternViewContext getViewContext() {
+		return new CreasePatternViewContextFactory().createContext();
 	}
 
 }

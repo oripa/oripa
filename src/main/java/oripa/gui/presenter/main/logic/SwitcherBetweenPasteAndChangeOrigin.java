@@ -20,6 +20,7 @@ package oripa.gui.presenter.main.logic;
 
 import java.util.function.Consumer;
 
+import jakarta.inject.Inject;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
@@ -31,6 +32,7 @@ import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
 public class SwitcherBetweenPasteAndChangeOrigin implements Consumer<Boolean> {
 	private final MouseActionHolder mouseActionHolder;
 
+	@Inject
 	public SwitcherBetweenPasteAndChangeOrigin(final MouseActionHolder mouseActionHolder) {
 		this.mouseActionHolder = mouseActionHolder;
 	}

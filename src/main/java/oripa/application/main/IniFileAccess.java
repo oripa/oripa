@@ -18,6 +18,7 @@
  */
 package oripa.application.main;
 
+import jakarta.inject.Inject;
 import oripa.file.FileHistory;
 import oripa.file.InitData;
 import oripa.file.InitDataBuilder;
@@ -38,13 +39,12 @@ public class IniFileAccess {
 
 	/**
 	 *
-	 * Constructor
-	 *
 	 * @param r
 	 *            reader instance
 	 * @param w
 	 *            writer instance
 	 */
+	@Inject
 	public IniFileAccess(final InitDataFileReader r, final InitDataFileWriter w) {
 		reader = r;
 		writer = w;

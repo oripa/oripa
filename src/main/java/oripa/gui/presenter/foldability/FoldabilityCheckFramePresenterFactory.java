@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.foldability;
 
+import jakarta.inject.Inject;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -34,6 +35,7 @@ public class FoldabilityCheckFramePresenterFactory {
 	private final CreasePatternViewContext creasePatternViewContext;
 	private final OrigamiModelFactory modelFactory;
 
+	@Inject
 	public FoldabilityCheckFramePresenterFactory(
 			final CreasePatternViewContext creasePatternViewContext,
 			final OrigamiModelFactory modelFactory

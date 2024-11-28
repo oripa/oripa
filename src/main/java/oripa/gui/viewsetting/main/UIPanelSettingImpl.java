@@ -6,9 +6,11 @@ import java.beans.PropertyChangeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Singleton;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.view.main.UIPanelSetting;
 
+@Singleton
 public class UIPanelSettingImpl implements UIPanelSetting {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelSettingImpl.class);
 

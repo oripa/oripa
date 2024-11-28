@@ -47,23 +47,29 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 
 	private static final long serialVersionUID = 1L;
 
-	private final ResourceHolder resources = ResourceHolder.getInstance();
-
-	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID));
-	private final FoldedModelScreen screen = new FoldedModelScreen();
-	private final EstimationResultUI ui = new EstimationResultUI();
-	private final JLabel hintLabel = new JLabel(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.HINT_LABEL_ID));;
+	private final ListItemSelectionPanel modelSelectionPanel;
+	private final FoldedModelScreen screen;
+	private final EstimationResultUI ui;
+	private final JLabel hintLabel;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
 
 	private Consumer<FrameView> onCloseListener;
 
-	public EstimationResultFrame() {
-		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
+	public EstimationResultFrame(final ResourceHolder resourceHolder) {
 		setBounds(0, 0, 850, 750);
 		setLayout(new BorderLayout());
+
+		screen = new FoldedModelScreen();
+		ui = new EstimationResultUI(resourceHolder);
+
+		modelSelectionPanel = new ListItemSelectionPanel(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID), resourceHolder);
+		hintLabel = new JLabel(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.HINT_LABEL_ID));
+		;
+
+		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
 
 		ui.setScreen(screen);
 

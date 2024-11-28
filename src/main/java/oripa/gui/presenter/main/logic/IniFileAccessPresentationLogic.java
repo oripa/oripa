@@ -23,6 +23,7 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import oripa.application.main.IniFileAccess;
 import oripa.file.FileHistory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
@@ -45,9 +46,7 @@ public class IniFileAccessPresentationLogic {
 
 	private final FileHistory fileHistory;
 
-	/**
-	 * Constructor
-	 */
+	@Inject
 	public IniFileAccessPresentationLogic(
 			final MainFrameView view,
 			final PainterScreenSetting screenSetting,

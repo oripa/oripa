@@ -35,14 +35,11 @@ import oripa.resource.StringID;
  *
  */
 public class ListItemSelectionPanel extends JPanel {
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private final JLabel titleLabel = new JLabel();
 
-	private final JButton nextButton = new JButton(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.NEXT_MODEL_ID));
-	private final JButton prevButton = new JButton(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.PREV_MODEL_ID));
+	private final JButton nextButton;
+	private final JButton prevButton;
 	private final JLabel selectedItemIndexLabel = new JLabel();
 
 	private int itemCount = 0;
@@ -51,7 +48,13 @@ public class ListItemSelectionPanel extends JPanel {
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 	public final static String INDEX = "INDEX";
 
-	public ListItemSelectionPanel(final String title) {
+	public ListItemSelectionPanel(final String title, final ResourceHolder resourceHolder) {
+
+		nextButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.NEXT_MODEL_ID));
+		prevButton = new JButton(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.PREV_MODEL_ID));
+
 		titleLabel.setText(title);
 		build();
 	}

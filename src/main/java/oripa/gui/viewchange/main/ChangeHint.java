@@ -8,21 +8,23 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
 public class ChangeHint implements ChangeViewSetting {
+	private final ResourceHolder resourceHolder;
 
 	private final MainFrameSetting frameSetting;
 
 	private final String id;
 
-	public ChangeHint(final MainFrameSetting mainFrameSetting, final String resourceID) {
+	public ChangeHint(final MainFrameSetting mainFrameSetting, final String resourceID,
+			final ResourceHolder resourceHolder) {
 		frameSetting = mainFrameSetting;
 		this.id = resourceID;
+		this.resourceHolder = resourceHolder;
 	}
 
 	@Override
 	public void changeViewSetting() {
-		ResourceHolder holder = ResourceHolder.getInstance();
 
-		ResourceBundle resource = holder.getResource(ResourceKey.EXPLANATION);
+		ResourceBundle resource = resourceHolder.getResource(ResourceKey.EXPLANATION);
 
 		String hint = null;
 		try {
