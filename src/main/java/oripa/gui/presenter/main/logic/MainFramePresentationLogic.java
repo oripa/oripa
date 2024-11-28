@@ -158,10 +158,9 @@ public class MainFramePresentationLogic {
 	}
 
 	/**
-	 * Update file menu. Do nothing if the given {@code filePath} is null or
-	 * wrong.
+	 * Update file menu. Do nothing if the previously loaded file is not of
+	 * project.
 	 *
-	 * @param filePath
 	 */
 	public void updateMenu() {
 		var filePath = project.getDataFilePath();
