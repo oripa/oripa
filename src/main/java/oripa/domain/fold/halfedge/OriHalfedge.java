@@ -206,4 +206,10 @@ public class OriHalfedge {
 	public Vector2d getPositionBeforeFolding() {
 		return vertex.getPositionBeforeFolding();
 	}
+
+	@Override
+	public String toString() {
+		return "(from:" + getPositionBeforeFolding() + ", to:"
+				+ getNext().getPositionBeforeFolding() + ")";
+	}
 }

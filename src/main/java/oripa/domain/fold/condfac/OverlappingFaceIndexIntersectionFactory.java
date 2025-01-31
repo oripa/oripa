@@ -18,9 +18,13 @@
  */
 package oripa.domain.fold.condfac;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelation;
@@ -30,6 +34,7 @@ import oripa.domain.fold.origeom.OverlapRelation;
  *
  */
 public class OverlappingFaceIndexIntersectionFactory {
+	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@SuppressWarnings("unchecked")
 	public List<Integer>[][] create(
@@ -69,6 +74,20 @@ public class OverlappingFaceIndexIntersectionFactory {
 						.toList();
 			}
 		});
+
+		int count = 0;
+		for (var intersectionLists : indexIntersections) {
+			if (intersectionLists == null) {
+				continue;
+			}
+			for (var intersections : intersectionLists) {
+				if (intersections == null) {
+					continue;
+				}
+				count += intersections.size();
+			}
+		}
+		logger.debug("#overlappingIntersection = {}", count);
 
 		return indexIntersections;
 	}

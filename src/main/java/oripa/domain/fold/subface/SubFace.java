@@ -34,11 +34,16 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
+import oripa.geom.Polygon;
+import oripa.geom.TwoEarTriangulation;
 import oripa.vecmath.Vector2d;
 
 public class SubFace {
 
 	private final OriFace outline;
+
+	private final List<Polygon> outlineTriangulation;
+
 	/**
 	 * faces containing this subface.
 	 */
@@ -64,8 +69,9 @@ public class SubFace {
 	 * @param outline
 	 *            A face object describing the shape of this subface.
 	 */
-	public SubFace(final OriFace outline) {
+	public SubFace(final OriFace outline, final double eps) {
 		this.outline = outline;
+		this.outlineTriangulation = new TwoEarTriangulation().triangulate(outline.toPolygon(), eps);
 	}
 
 	/**
@@ -247,10 +253,10 @@ public class SubFace {
 
 	/**
 	 *
-	 * @return geometric center of this subface
+	 * @return inner points of subface
 	 */
-	public Vector2d getInnerPoint() {
-		return outline.getCentroid();
+	public List<Vector2d> getInnerPoints(final double eps) {
+		return outline.getInnerPoints(eps);
 	}
 
 	public OriFace getOutline() {
@@ -294,6 +300,13 @@ public class SubFace {
 		return parentFaces.size();
 	}
 
+	/**
+	 * Wrong assumption that different subfaces have different parent faces.
+	 *
+	 * @param sub
+	 * @return
+	 */
+	@Deprecated
 	public boolean isSame(final SubFace sub) {
 		if (parentFaces.size() != sub.parentFaces.size()) {
 			return false;

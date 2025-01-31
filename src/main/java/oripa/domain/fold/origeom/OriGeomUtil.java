@@ -58,9 +58,9 @@ public class OriGeomUtil {
 			return true;
 		}
 
-		// If the gravity center of face0 is on face1, true
-		Vector2d center0 = face0.getCentroid();
-		if (face1.includesExclusively(center0, eps)) {
+		// If a inner point of face0 is on face1, true
+		var innerPoints0 = face0.getInnerPoints(eps);
+		if (innerPoints0.stream().anyMatch(p -> face1.includesExclusively(p, eps))) {
 			return true;
 		}
 

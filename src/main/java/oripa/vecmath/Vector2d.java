@@ -155,6 +155,10 @@ public class Vector2d {
 		return angle < MathUtil.angleRadianEps() || angle > PI - MathUtil.angleRadianEps();
 	}
 
+	public double crossProductZ(final Vector2d v) {
+		return x * v.y - y * v.x;
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof Vector2d v) {

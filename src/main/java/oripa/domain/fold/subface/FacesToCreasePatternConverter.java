@@ -76,7 +76,7 @@ public class FacesToCreasePatternConverter {
 		// remove duplication.
 		// creasePattern.cleanDuplicatedLines(pointEps);
 
-		logger.debug("toCreasePattern(): end");
+		logger.debug("toCreasePattern(): {} segments", lines.size());
 
 		return creasePattern;
 	}

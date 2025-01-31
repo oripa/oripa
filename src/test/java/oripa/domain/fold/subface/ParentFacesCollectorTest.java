@@ -42,8 +42,6 @@ class ParentFacesCollectorTest {
 	private ParentFacesCollector collector;
 
 	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.subface.ParentFacesCollector#collect(java.util.List, oripa.domain.fold.subface.SubFace, double)}.
 	 */
 	@Test
 	void testCollect() {
@@ -56,7 +54,7 @@ class ParentFacesCollectorTest {
 
 		var subface = mock(SubFace.class);
 		var innerPoint = new Vector2d(8, 8);
-		when(subface.getInnerPoint()).thenReturn(innerPoint);
+		when(subface.getInnerPoints(1e-6)).thenReturn(List.of(innerPoint));
 
 		when(face1.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
 		when(face2.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(false);

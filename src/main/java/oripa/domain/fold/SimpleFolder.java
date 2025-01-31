@@ -89,6 +89,10 @@ class SimpleFolder {
 					.ifPresent(position -> ev.setPosition(position));
 		}
 
+		for (var face : faces) {
+			face.refreshPositions();
+		}
+
 	}
 
 	/**

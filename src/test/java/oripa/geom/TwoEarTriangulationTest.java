@@ -16,44 +16,59 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.subface;
+package oripa.geom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
  *
  */
-@ExtendWith(MockitoExtension.class)
-class SplitFacesToSubFacesConverterTest {
-	@InjectMocks
-	private SplitFacesToSubFacesConverter converter;
+class TwoEarTriangulationTest {
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.subface.SplitFacesToSubFacesConverter#convertToSubFaces(java.util.List)}.
-	 */
 	@Test
-	void testConvertToSubFaces() {
-		var splitFace1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
-		var splitFace2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
+	void testNonConvex() {
+		var polygon = new Polygon(List.of(
+				new Vector2d(0, 0),
+				new Vector2d(2, 0),
+				new Vector2d(2, 2),
+				new Vector2d(1, 2),
+				new Vector2d(1, 1),
+				new Vector2d(0, 1)));
 
-		var splitFaces = List.of(splitFace1, splitFace2);
+		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
 
-		var subFaces = converter.convertToSubFaces(splitFaces, 1e-6);
-
-		for (int i = 0; i < subFaces.size(); i++) {
-			assertSame(splitFaces.get(i), subFaces.get(i).getOutline());
+		assertEquals(4, triangles.size());
+		for (var t : triangles) {
+			assertEquals(3, t.verticesCount());
 		}
+	}
+
+	@Test
+	void testPointsOnOneEdge() {
+		var polygon = new Polygon(List.of(
+				new Vector2d(0, 0),
+				new Vector2d(0, 1),
+				new Vector2d(0, 2),
+				new Vector2d(0, 3),
+				new Vector2d(0, 4),
+				new Vector2d(0, 5),
+				new Vector2d(-1, 5),
+				new Vector2d(-1, 4)));
+
+		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
+
+		assertEquals(6, triangles.size());
+		for (var t : triangles) {
+			assertEquals(3, t.verticesCount());
+		}
+
 	}
 
 }

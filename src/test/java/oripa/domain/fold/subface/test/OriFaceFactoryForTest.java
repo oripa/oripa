@@ -25,6 +25,7 @@ import java.util.List;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
+import oripa.geom.Polygon;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -73,6 +74,11 @@ public class OriFaceFactoryForTest {
 		var list = List.of(he1, he2, he3, he4);
 		lenient().when(face.halfedgeIterable()).thenReturn(list);
 		lenient().when(face.halfedgeStream()).thenAnswer(invocation -> list.stream());
+
+		lenient().when(face.toPolygon()).thenReturn(
+				new Polygon(List.of(new Vector2d(left, top), new Vector2d(right, top), new Vector2d(right, bottom),
+						new Vector2d(left, bottom))));
+
 		return face;
 	}
 

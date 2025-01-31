@@ -22,11 +22,11 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import oripa.geom.GeomUtil;
+import oripa.geom.Polygon;
 import oripa.geom.Segment;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
@@ -65,6 +65,9 @@ public class OriFace {
 	 * ID of this face.
 	 */
 	private int faceID = -1;
+
+	private Polygon polygon;
+	private Polygon polygonBeforeFolding;
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
@@ -200,6 +203,9 @@ public class OriFace {
 			he.setNext(nxt_he);
 			he.setPrevious(pre_he);
 		}
+
+		polygon = toPolygon();
+		polygonBeforeFolding = toPolygonBeforeFolding();
 	}
 
 	public List<Vector2d> createOutlineVerticesAfterFolding() {
@@ -239,6 +245,26 @@ public class OriFace {
 				.toList());
 	}
 
+	public Polygon toPolygon() {
+		return new Polygon(halfedges.stream().map(OriHalfedge::getPosition).toList());
+	}
+
+	public Polygon toPolygonBeforeFolding() {
+		return new Polygon(halfedges.stream().map(OriHalfedge::getPositionBeforeFolding).toList());
+
+	}
+
+	public void refreshPositions() {
+		polygon = toPolygon();
+	}
+
+	public List<Vector2d> getInnerPoints(final double eps) {
+		if (polygon == null) {
+			refreshPositions();
+		}
+		return polygon.getInnerPoints(eps);
+	}
+
 	/**
 	 * Whether v is inclusively on this face (inside or on the edges). The test
 	 * is done with current position {@link OriVertex#getPosition()} of
@@ -249,12 +275,7 @@ public class OriFace {
 	 * @return true if v is inside or on the edges of this face.
 	 */
 	public boolean includesInclusively(final Vector2d v, final double eps) {
-		// If it's on the face's edge, return true
-		if (isOnEdge(v, eps, OriHalfedge::getPosition)) {
-			return true;
-		}
-
-		return isInside(v, OriHalfedge::getPosition);
+		return polygon.includesInclusively(v, eps);
 	}
 
 	/**
@@ -266,76 +287,11 @@ public class OriFace {
 	 * @return true if v is strictly inside of this face.
 	 */
 	public boolean includesExclusively(final Vector2d v, final double eps) {
-		// If it's on the face's edge, return false
-		if (isOnEdge(v, eps, OriHalfedge::getPosition)) {
-			return false;
-		}
-
-		return isInside(v, OriHalfedge::getPosition);
+		return polygon.includesExclusively(v, eps);
 	}
 
 	public boolean includesExclusivelyBeforeFolding(final Vector2d v, final double eps) {
-		// If it's on the face's edge, return false
-		if (isOnEdge(v, eps, OriHalfedge::getPositionBeforeFolding)) {
-			return false;
-		}
-
-		return isInside(v, OriHalfedge::getPositionBeforeFolding);
-	}
-
-	/**
-	 * Whether v is on edge of face.
-	 *
-	 * @param v
-	 *            point to be tested.
-	 * @param eps
-	 * @param getPosition
-	 *            a function to get the position of face's vertex from
-	 *            half-edge. That is, you can designate using position before
-	 *            fold or the one after fold.
-	 * @return
-	 */
-	private boolean isOnEdge(final Vector2d v, final double eps,
-			final Function<OriHalfedge, Vector2d> getPosition) {
-
-		// If it's on the face's edge, return true
-		for (OriHalfedge he : halfedges) {
-			if (GeomUtil.distancePointToSegment(v, getPosition.apply(he),
-					getPosition.apply(he.getNext())) < eps) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Whether v is inside of this face. This method is very sensitive to the
-	 * case that v is very close to the edge of this face.
-	 *
-	 * @param v
-	 *            point to be tested.
-	 * @param getPosition
-	 *            a function to get the position of face's vertex from
-	 *            half-edge. That is, you can designate using position before
-	 *            fold or the one after fold.
-	 * @return true if v inside of this face.
-	 */
-	private boolean isInside(final Vector2d v, final Function<OriHalfedge, Vector2d> getPosition) {
-		int heNum = halfedges.size();
-
-		OriHalfedge baseHe = halfedges.get(0);
-		boolean baseFlg = GeomUtil.isCCW(getPosition.apply(baseHe),
-				getPosition.apply(baseHe.getNext()), v);
-
-		for (int i = 1; i < heNum; i++) {
-			OriHalfedge he = halfedges.get(i);
-			if (GeomUtil.isCCW(getPosition.apply(he), getPosition.apply(he.getNext()),
-					v) != baseFlg) {
-				return false;
-			}
-		}
-
-		return true;
+		return polygonBeforeFolding.includesExclusively(v, eps);
 	}
 
 	/**
@@ -346,8 +302,7 @@ public class OriFace {
 	 * @return {@code true} if {@code face} includes {@code line} entirely.
 	 */
 	public boolean includesInclusively(final Segment segment, final double eps) {
-		return includesInclusively(segment.getP0(), eps)
-				&& includesInclusively(segment.getP1(), eps);
+		return polygon.includesInclusively(segment, eps);
 	}
 
 	/* (non Javadoc)

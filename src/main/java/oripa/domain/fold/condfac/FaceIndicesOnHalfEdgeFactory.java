@@ -18,12 +18,16 @@
  */
 package oripa.domain.fold.condfac;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -34,6 +38,7 @@ import oripa.domain.fold.origeom.OriGeomUtil;
  *
  */
 public class FaceIndicesOnHalfEdgeFactory {
+	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public Map<OriHalfedge, Set<Integer>> create(
 			final List<OriFace> faces,
@@ -59,6 +64,13 @@ public class FaceIndicesOnHalfEdgeFactory {
 				}
 			}
 		});
+
+		int count = 0;
+		for (var indexSet : indices.values()) {
+			count += indexSet.size();
+		}
+
+		logger.debug("#faceOnHalfEdge = {}", count);
 
 		return indices;
 	}

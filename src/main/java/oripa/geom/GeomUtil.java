@@ -528,8 +528,12 @@ public class GeomUtil {
 	 * @return true if vector p0 -> q ends in left side of p0 -> p1 (q is at
 	 *         counterclockwise position) otherwise false.
 	 */
-	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+	public static boolean isStrictlyCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		return CCWcheck(p0, p1, q, 0) == 1;
+	}
+
+	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+		return CCWcheck(p0, p1, q, 0) >= 0;
 	}
 
 	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
@@ -556,18 +560,12 @@ public class GeomUtil {
 	}
 
 	private static double computeCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
-		double dx1, dx2, dy1, dy2;
 
 		var d1 = p1.subtract(p0).normalize();
 
 		var d2 = q.subtract(p0).normalize();
 
-		dx1 = d1.getX();
-		dy1 = d1.getY();
-		dx2 = d2.getX();
-		dy2 = d2.getY();
-
-		return dx1 * dy2 - dy1 * dx2;
+		return d1.crossProductZ(d2);
 	}
 
 	public static Vector2d computeCentroid(final Collection<Vector2d> points) {

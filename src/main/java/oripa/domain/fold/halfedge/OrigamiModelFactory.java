@@ -86,6 +86,13 @@ public class OrigamiModelFactory {
 			return origamiModel;
 		}
 
+		// remove outer face
+		logger.debug("try to remove outer face");
+		logger.debug("before: {} faces", faces.size());
+		faces.removeIf(face -> vertices.stream()
+				.allMatch(v -> face.includesInclusively(v.getPosition(), pointEps)));
+		logger.debug("after: {} faces", faces.size());
+
 		buildEdges(edges, faces);
 
 		origamiModel.setHasModel(true);

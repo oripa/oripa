@@ -92,7 +92,7 @@ class SubFacesFactoryTest {
 		lenient().when(sub3.isSame(sub2)).thenReturn(false);
 
 		var subFacesWithDuplication = List.of(sub1, sub2, sub3);
-		when(facesToSubFacesConverter.convertToSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
+		when(facesToSubFacesConverter.convertToSubFaces(splitFaces, EPS)).thenReturn(subFacesWithDuplication);
 
 		when(parentCollector.collect(inputFaces, sub1, EPS))
 				.thenReturn(List.of(face1, face2));
@@ -105,7 +105,7 @@ class SubFacesFactoryTest {
 
 		verify(facesToCPConverter).convertToCreasePattern(inputFaces, EPS);
 		verify(modelFactory).buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS);
-		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces);
+		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces, EPS);
 		verify(parentCollector).collect(inputFaces, sub1, EPS);
 		verify(parentCollector).collect(inputFaces, sub2, EPS);
 		verify(parentCollector).collect(inputFaces, sub3, EPS);
