@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.geom.Segment;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -43,7 +44,15 @@ public class OriVerticesFactory {
 
 		int edgeCount = 0;
 
+		var shortestSegment = new Segment(0, 0, 1e20, 0);
+
 		for (OriLine l : creasePatternWithoutAux) {
+			if (l.length() < pointEps) {
+				continue;
+			}
+
+			shortestSegment = shortestSegment.length() < l.length() ? shortestSegment : l;
+
 			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.getOriPoint0(), pointEps);
 			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.getOriPoint1(), pointEps);
 			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
@@ -55,6 +64,7 @@ public class OriVerticesFactory {
 
 		logger.debug("#vertex = " + vertices.size());
 		logger.debug("#edge = " + edgeCount);
+		logger.debug("shortest edge ({}) = {}", shortestSegment.length(), shortestSegment);
 
 		return vertices;
 	}

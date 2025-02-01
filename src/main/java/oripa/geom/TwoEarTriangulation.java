@@ -81,7 +81,7 @@ public class TwoEarTriangulation {
 		}
 
 		if (p.verticesCount() != 3) {
-			logger.trace("failed: fewer cuts " + polygon.verticesCount()
+			logger.debug("failed: fewer cuts " + polygon.verticesCount()
 					+ "->" + p.verticesCount() + System.lineSeparator()
 					+ " polygon:" + polygon + System.lineSeparator()
 					+ " remain:" + p + System.lineSeparator()

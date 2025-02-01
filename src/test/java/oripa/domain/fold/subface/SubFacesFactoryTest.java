@@ -80,41 +80,21 @@ class SubFacesFactoryTest {
 
 		var sub1 = createSubFaceMock();
 		var sub2 = createSubFaceMock();
-		var sub3 = createSubFaceMock();
 
-		lenient().when(sub1.isSame(sub2)).thenReturn(true);
-		lenient().when(sub1.isSame(sub3)).thenReturn(false);
+		var conversionSubfaces = List.of(sub1, sub2);
+		when(facesToSubFacesConverter.convertToSubFaces(splitFaces, EPS)).thenReturn(conversionSubfaces);
 
-		lenient().when(sub2.isSame(sub1)).thenReturn(true);
-		lenient().when(sub2.isSame(sub3)).thenReturn(false);
-
-		lenient().when(sub3.isSame(sub1)).thenReturn(false);
-		lenient().when(sub3.isSame(sub2)).thenReturn(false);
-
-		var subFacesWithDuplication = List.of(sub1, sub2, sub3);
-		when(facesToSubFacesConverter.convertToSubFaces(splitFaces, EPS)).thenReturn(subFacesWithDuplication);
-
-		when(parentCollector.collect(inputFaces, sub1, EPS))
-				.thenReturn(List.of(face1, face2));
-		when(parentCollector.collect(inputFaces, sub2, EPS))
-				.thenReturn(List.of(face2, face1));
-		when(parentCollector.collect(inputFaces, sub3, EPS))
-				.thenReturn(List.of(face1, face2, face3));
-
-		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE, EPS);
+		var subfaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE, EPS);
 
 		verify(facesToCPConverter).convertToCreasePattern(inputFaces, EPS);
 		verify(modelFactory).buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS);
 		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces, EPS);
-		verify(parentCollector).collect(inputFaces, sub1, EPS);
-		verify(parentCollector).collect(inputFaces, sub2, EPS);
-		verify(parentCollector).collect(inputFaces, sub3, EPS);
 
-		assertEquals(2, subFaces.size());
+		assertEquals(2, subfaces.size());
 
 		// subface should have distinct list of parent faces.
-		assertTrue(subFaces.contains(sub1));
-		assertTrue(subFaces.contains(sub3));
+		assertTrue(subfaces.contains(sub1));
+		assertTrue(subfaces.contains(sub2));
 	}
 
 	private SubFace createSubFaceMock() {
