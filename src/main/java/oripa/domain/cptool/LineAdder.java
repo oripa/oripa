@@ -43,7 +43,7 @@ public class LineAdder {
 		var crossMap = new ConcurrentHashMap<OriPoint, OriLine>();
 
 		// could be parallelized.
-		currentLines.stream()
+		currentLines.parallelStream()
 				.forEach(line -> {
 					logger.trace("current line: {}", line);
 
@@ -184,7 +184,7 @@ public class LineAdder {
 		logger.trace("addAll() createInputLinePoints() start: {}[ms]", watch.getMilliSec());
 
 		// could be parallelized.
-		var pointLists = nonExistingNewLines.stream()
+		var pointLists = nonExistingNewLines.parallelStream()
 				.map(inputLine -> createInputLinePoints(inputLine, crossMaps.get(inputLine), pointEps))
 				.toList();
 

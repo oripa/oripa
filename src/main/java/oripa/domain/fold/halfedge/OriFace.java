@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -277,10 +278,15 @@ public class OriFace {
 	}
 
 	public List<Vector2d> createOutlineVerticesBeforeFolding() {
-		Vector2d centerP = getCentroidBeforeFolding();
+		var centroidOpt = getCentroidBeforeFolding();
+
+		if (centroidOpt.isEmpty()) {
+			return List.of();
+		}
+
 		double rate = 0.5;
 		return halfedgeStream()
-				.map(he -> GeomUtil.computeDividingPoint(rate, he.getPositionBeforeFolding(), centerP))
+				.map(he -> GeomUtil.computeDividingPoint(rate, he.getPositionBeforeFolding(), centroidOpt.get()))
 				.toList();
 	}
 
@@ -289,7 +295,7 @@ public class OriFace {
 	 *
 	 * @return centroid of this face before folding
 	 */
-	public Vector2d getCentroidBeforeFolding() {
+	public Optional<Vector2d> getCentroidBeforeFolding() {
 		return GeomUtil.computeCentroid(halfedges.stream()
 				.map(OriHalfedge::getPositionBeforeFolding)
 				.toList());
@@ -301,7 +307,7 @@ public class OriFace {
 	 * @return centroid of this face with current position
 	 *         {@link OriVertex#getPosition()} of half-edges.
 	 */
-	public Vector2d getCentroid() {
+	public Optional<Vector2d> getCentroid() {
 		return GeomUtil.computeCentroid(halfedges.stream()
 				.map(OriHalfedge::getPosition)
 				.toList());

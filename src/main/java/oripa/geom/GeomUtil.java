@@ -568,11 +568,15 @@ public class GeomUtil {
 		return d1.crossProductZ(d2);
 	}
 
-	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
+	public static Optional<Vector2d> computeCentroid(final Collection<Vector2d> points) {
 
-		var sum = points.stream()
-				.reduce((result, x) -> result.add(x))
-				.get();
-		return sum.multiply(1.0 / points.size());
+		if (points.isEmpty()) {
+			return Optional.empty();
+		}
+
+		var sumOpt = points.stream()
+				.reduce((result, x) -> result.add(x));
+
+		return sumOpt.map(sum -> sum.multiply(1.0 / points.size()));
 	}
 }

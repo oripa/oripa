@@ -51,6 +51,7 @@ public class SplitFacesToSubFacesConverter {
 				splitFaces.stream()
 						.map(face -> face.remove180degreeVertices())
 						.map(face -> face.removeDuplicatedVertices(eps))
+						.filter(face -> face.halfedgeCount() >= 3)
 						.toList());
 
 		removeOuterFace(faces, vertices, eps);
@@ -69,7 +70,7 @@ public class SplitFacesToSubFacesConverter {
 
 		var outerFaceOpt = faces.stream()
 				.filter(face -> vertices.stream()
-						.allMatch(v -> face.includesInclusively(v.getPosition(), eps)))
+						.allMatch(v -> face.includesInclusively(v.getPosition(), eps * 5)))
 				.findFirst();
 		if (outerFaceOpt.isPresent()) {
 			var outerFace = outerFaceOpt.get();

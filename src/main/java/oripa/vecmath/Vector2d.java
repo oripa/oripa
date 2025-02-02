@@ -20,8 +20,10 @@ package oripa.vecmath;
 
 import static java.lang.Math.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import oripa.util.MathUtil;
 
@@ -51,6 +53,21 @@ public class Vector2d {
 	public Vector2d(final double x, final double y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public static <T extends Vector2d> Optional<T> findNearest(final T target, final Collection<T> vertices) {
+		T nearest = null;
+		for (var v : vertices) {
+			if (nearest == null) {
+				nearest = v;
+				continue;
+			}
+			if (nearest.distance(target) > v.distance(target)) {
+				nearest = v;
+			}
+		}
+
+		return Optional.ofNullable(nearest);
 	}
 
 	public double[] toArray() {

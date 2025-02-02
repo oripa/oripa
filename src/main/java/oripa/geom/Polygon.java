@@ -35,7 +35,7 @@ public class Polygon {
 	public Polygon(final List<Vector2d> vertices) {
 		this.vertices = List.copyOf(vertices);
 
-		centroid = GeomUtil.computeCentroid(vertices);
+		centroid = GeomUtil.computeCentroid(vertices).orElse(null);
 	}
 
 	public Polygon(final Polygon polygon) {
@@ -61,7 +61,7 @@ public class Polygon {
 
 	/**
 	 *
-	 * @return centroid of this polygon.
+	 * @return centroid of this polygon. can be null.
 	 */
 	public Vector2d getCentroid() {
 		return centroid;
@@ -72,6 +72,9 @@ public class Polygon {
 	 * @return inner points of subface
 	 */
 	public List<Vector2d> getInnerPoints(final double eps) {
+		if (verticesCount() < 3) {
+			return List.of();
+		}
 		buildTriangles(eps);
 		return triangles.stream().map(Polygon::getCentroid).toList();
 	}
@@ -137,7 +140,7 @@ public class Polygon {
 	private boolean isInside(final Vector2d v, final double eps) {
 		buildTriangles(eps);
 
-		return triangles.stream().anyMatch(triangle -> triangle.isInsideConvex(v));
+		return triangles.stream().anyMatch(triangle -> triangle.isOnEdge(v, eps) || triangle.isInsideConvex(v));
 	}
 
 	private void buildTriangles(final double eps) {

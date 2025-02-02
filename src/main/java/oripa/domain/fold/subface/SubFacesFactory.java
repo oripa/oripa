@@ -94,7 +94,7 @@ public class SubFacesFactory {
 		int i = 0;
 		for (SubFace sub : subfaces) {
 			sub.addParentFaces(parentCollector.collect(faces, sub, eps));
-			logger.debug("{} {} #parentFace={}", i++, sub.getOutline(), sub.getParentFaceCount());
+			logger.trace("{} {} #parentFace={}", i++, sub.getOutline(), sub.getParentFaceCount());
 		}
 
 		// extract distinct subfaces by comparing face list's items.

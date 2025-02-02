@@ -79,12 +79,12 @@ class SimpleFolder {
 
 		if (faces.size() > 0) {
 			var jobs = new LinkedList<OriFace>();
-			var paperCenter = GeomUtil.computeCentroid(
+			var paperCenterOpt = GeomUtil.computeCentroid(
 					origamiModel.getVertices().stream()
 							.map(OriVertex::getPosition)
 							.toList());
 			jobs.add(faces.stream()
-					.filter(face -> face.includesInclusively(paperCenter, eps))
+					.filter(face -> face.includesInclusively(paperCenterOpt.get(), eps))
 					.findFirst()
 					.orElse(faces.get(0)));
 			jobs.get(0).setMovedByFold(true);

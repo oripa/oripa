@@ -109,7 +109,7 @@ class LayerOrderEnumerator {
 
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
-		var subfaces = subfacesFactory.createSubFaces(faces, paperSize, paperSize * eps * 10);
+		var subfaces = subfacesFactory.createSubFaces(faces, paperSize, eps);
 
 		logger.debug("#subface={}", subfaces.size());
 		// addKeyValue() seems not to work... See:
