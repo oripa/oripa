@@ -191,7 +191,7 @@ public class ModelComputationFacade {
 		var foldResults = origamiModels.stream()
 				.map(model -> folderFactory
 						.create(model.getModelType())
-						.fold(model, model.getPaperSize() * eps * 10,
+						.fold(model, model.getPaperSize() * eps,
 								type.toEstimationType()))
 				.toList();
 

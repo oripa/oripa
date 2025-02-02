@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Does triangulation according to two-ear theorem.
+ *
  * @author OUCHI Koji
  *
  */
@@ -84,7 +86,7 @@ public class TwoEarTriangulation {
 		}
 
 		if (p.verticesCount() != 3) {
-			logger.debug("failed: fewer cuts " + polygon.verticesCount()
+			logger.trace("failed: fewer cuts " + polygon.verticesCount()
 					+ "->" + p.verticesCount() + System.lineSeparator()
 					+ " polygon:" + polygon + System.lineSeparator()
 					+ " remain:" + p + System.lineSeparator()
@@ -95,7 +97,7 @@ public class TwoEarTriangulation {
 		triangles.add(p);
 
 		if (triangles.size() != polygon.verticesCount() - 2) {
-			logger.debug("faild: fewer triangles, #triangle should be " + (polygon.verticesCount() - 2)
+			logger.trace("failed: fewer triangles, #triangle should be " + (polygon.verticesCount() - 2)
 					+ " but is " + triangles.size() + System.lineSeparator()
 					+ " polygon:" + polygon + System.lineSeparator()
 					+ " remain:" + p + System.lineSeparator()
