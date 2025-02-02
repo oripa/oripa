@@ -19,6 +19,7 @@
 package oripa.domain.fold.subface;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Collection;
@@ -51,7 +52,12 @@ class SplitFacesToSubFacesConverterTest {
 		var splitFace2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
 
 		when(splitFace1.remove180degreeVertices()).thenReturn(splitFace1);
+		when(splitFace1.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace1);
+		when(splitFace1.halfedgeCount()).thenReturn(4);
+
 		when(splitFace2.remove180degreeVertices()).thenReturn(splitFace2);
+		when(splitFace2.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace2);
+		when(splitFace2.halfedgeCount()).thenReturn(4);
 
 		OriVertex vertex = mock();
 		Collection<OriVertex> vertices = List.of(vertex);

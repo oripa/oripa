@@ -18,7 +18,9 @@
  */
 package oripa.vecmath;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,7 +49,7 @@ class Vector2dTest {
 			"1, 0,   0, 1,   0",
 			"1, 2,   2, 1,   4"
 	})
-	void testDotProduct(double x1, double y1, double x2, double y2, double expected) {
+	void testDotProduct(final double x1, final double y1, final double x2, final double y2, final double expected) {
 		var v0 = new Vector2d(x1, y1);
 		var v1 = new Vector2d(x2, y2);
 
@@ -61,7 +63,8 @@ class Vector2dTest {
 			"0.70710678, 0.70710678,   45,  0, 1",
 			"0, 1,   45, -0.70710678, 0.70710678",
 	})
-	void testRotate(double x, double y, double angleDegrees, double expectedX, double expectedY) {
+	void testRotate(final double x, final double y, final double angleDegrees, final double expectedX,
+			final double expectedY) {
 		var v = new Vector2d(x, y).rotate(Math.toRadians(angleDegrees));
 
 		assertEquals(expectedX, v.getX(), 1e-8);
@@ -76,7 +79,8 @@ class Vector2dTest {
 			"1, 0,   0.70710678, 0.70710678,   45",
 			"0.8660254038, 0.5,   0.5, 0.8660254038,   30",
 	})
-	void testAngle(double x1, double y1, double x2, double y2, double expectedAngleDegrees) {
+	void testAngle(final double x1, final double y1, final double x2, final double y2,
+			final double expectedAngleDegrees) {
 		var angle1 = new Vector2d(x1, y1).angle(new Vector2d(x2, y2));
 		var angle2 = new Vector2d(x2, y2).angle(new Vector2d(x1, y1));
 
@@ -91,10 +95,25 @@ class Vector2dTest {
 			"0.70710678, 0.70710678,   45",
 			"0.8660254038, 0.5,   30",
 	})
-	void testOwnAngle(double x, double y, double expectedAngleDegrees) {
+	void testOwnAngle(final double x, final double y, final double expectedAngleDegrees) {
 		var angle = new Vector2d(x, y).ownAngle();
 
 		assertEquals(expectedAngleDegrees, Math.toDegrees(angle), 1e-8);
+	}
+
+	@Test
+	void testFindNearest() {
+		var p = new Vector2d(1, 1);
+
+		var neighbors = List.of(
+				new Vector2d(1, 0),
+				new Vector2d(0, 1),
+				new Vector2d(1, 0.5),
+				new Vector2d(0.5, 0.5));
+
+		var nearest = Vector2d.findNearest(p, neighbors);
+
+		assertEquals(neighbors.get(2), nearest.get());
 	}
 
 }
