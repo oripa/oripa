@@ -110,6 +110,15 @@ public class OriVertex implements Comparable<OriVertex> {
 		edgeMap.put(edge.oppositeVertex(this), edge);
 	}
 
+//	public boolean canAddEdge(final OriEdge edge) {
+//		for (var e : edges) {
+//			if (MathUtil.areRadianEqual(edge.getAngle(this), e.getAngle(this))) {
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
+
 	/**
 	 * Inserts the given edge as the angle list keeps in increasing order.
 	 *

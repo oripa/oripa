@@ -66,15 +66,6 @@ public class OriFacesFactory {
 
 		createdFaces = createdFaces.stream().filter(face -> face.halfedgeCount() >= 3).toList();
 
-		// remove outer face
-		var outerFaceOpt = faces.stream().filter(face -> vertices.stream()
-				.allMatch(v -> face.includesInclusively(v.getPosition(), eps)))
-				.findFirst();
-
-		if (outerFaceOpt.isPresent()) {
-			createdFaces = createdFaces.stream().filter(face -> face == outerFaceOpt.get()).toList();
-		}
-
 		var boundaryFaces = createBoundaryFaces(vertices);
 
 		// find boundary face with no internal vertex

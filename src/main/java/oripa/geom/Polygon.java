@@ -34,6 +34,7 @@ public class Polygon {
 
 	public Polygon(final List<Vector2d> vertices) {
 		this.vertices = List.copyOf(vertices);
+
 		centroid = GeomUtil.computeCentroid(vertices);
 	}
 

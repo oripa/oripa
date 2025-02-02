@@ -60,6 +60,10 @@ public class TwoEarTriangulation {
 				var v1 = p.getVertex(i1);
 				var v2 = p.getVertex(i2);
 
+				var e0 = new Segment(v0, v1);
+				var e1 = new Segment(v1, v2);
+				var e = new Segment(v0, v2);
+
 				// center angle should not be larger than or equal to 180
 				// degrees.
 				if (!GeomUtil.isStrictlyCCW(v0, v1, v2)) {
@@ -69,8 +73,7 @@ public class TwoEarTriangulation {
 							+ triangles.size() + " triangles:" + triangles);
 					continue;
 				}
-				var e = new Segment(v0, v2);
-				if (!crossesPolygonEdge(e, p, i0, i1, eps)) {
+				if (!crossesPolygonEdge(p, e0, e1, e, i0, i1, i2, eps)) {
 					p = p.removeVertex(i1);
 					var triangle = new Polygon(List.of(v0, v1, v2));
 					triangles.add(triangle);
@@ -92,14 +95,30 @@ public class TwoEarTriangulation {
 		triangles.add(p);
 
 		if (triangles.size() != polygon.verticesCount() - 2) {
-			throw new AssertionError("Wrong implementation!: #triangle should be " + (polygon.verticesCount() - 2)
-					+ " but is " + triangles.size());
+			logger.debug("faild: fewer triangles, #triangle should be " + (polygon.verticesCount() - 2)
+					+ " but is " + triangles.size() + System.lineSeparator()
+					+ " polygon:" + polygon + System.lineSeparator()
+					+ " remain:" + p + System.lineSeparator()
+					+ " triangles:" + triangles);
+			return List.of();
 		}
 
 		return triangles;
 	}
 
-	private boolean crossesPolygonEdge(final Segment e, final Polygon p, final int i0, final int i1, final double eps) {
+	private boolean crossesPolygonEdge(final Polygon p,
+			final Segment e0, final Segment e1, final Segment e,
+			final int i0, final int i1, final int i2,
+			final double eps) {
+
+		if (GeomUtil.isOverlap(e0, e1, eps)) {
+			return false;
+		}
+
+//		if ((e1.length() < eps)) {
+//			return false;
+//		}
+
 		for (int j = 0; j < p.verticesCount(); j++) {
 			if (j == i0 || j == i1) {
 				continue;

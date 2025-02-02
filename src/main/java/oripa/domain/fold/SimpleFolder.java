@@ -18,7 +18,9 @@
  */
 package oripa.domain.fold;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
@@ -47,8 +50,8 @@ class SimpleFolder {
 	 *            method.
 	 */
 	void simpleFoldWithoutZorder(
-			final OrigamiModel origamiModel) {
-		foldImpl(origamiModel, false);
+			final OrigamiModel origamiModel, final double eps) {
+		foldImpl(origamiModel, eps, false);
 	}
 
 	/**
@@ -60,11 +63,11 @@ class SimpleFolder {
 	 *            method.
 	 */
 	public void foldWithoutLineType(
-			final OrigamiModel model) {
-		foldImpl(model, true);
+			final OrigamiModel model, final double eps) {
+		foldImpl(model, eps, true);
 	}
 
-	private void foldImpl(final OrigamiModel origamiModel, final boolean limitUsed) {
+	private void foldImpl(final OrigamiModel origamiModel, final double eps, final boolean limitUsed) {
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriFace> faces = origamiModel.getFaces();
 
@@ -75,7 +78,20 @@ class SimpleFolder {
 		}
 
 		if (faces.size() > 0) {
-			walkFace(faces.get(0), limitUsed ? 0 : -1);
+			var jobs = new LinkedList<OriFace>();
+			var paperCenter = GeomUtil.computeCentroid(
+					origamiModel.getVertices().stream()
+							.map(OriVertex::getPosition)
+							.toList());
+			jobs.add(faces.stream()
+					.filter(face -> face.includesInclusively(paperCenter, eps))
+					.findFirst()
+					.orElse(faces.get(0)));
+			jobs.get(0).setMovedByFold(true);
+
+			transformFaces(jobs, limitUsed ? 0 : -1);
+
+//			walkFace(faces.get(0), limitUsed ? 0 : -1);
 		}
 
 		for (OriEdge e : edges) {
@@ -91,6 +107,37 @@ class SimpleFolder {
 
 		for (var face : faces) {
 			face.refreshPositions();
+		}
+
+	}
+
+	/**
+	 * Breath first search to narrow the number of transformation for each face.
+	 *
+	 * @param faces
+	 * @param depthCount
+	 */
+	private void transformFaces(final Queue<OriFace> faces, final int depthCount) {
+		while (!faces.isEmpty()) {
+			var face = faces.remove();
+
+			face.halfedgeStream().forEach(he -> {
+				var pairOpt = he.getPair();
+				if (pairOpt.isEmpty()) {
+					return;
+				}
+
+				var pairFace = pairOpt.get().getFace();
+				if (pairFace.isMovedByFold()) {
+					return;
+				}
+
+				pairFace.setMovedByFold(true);
+				flipFace(pairFace, he);
+
+				faces.add(pairFace);
+			});
+
 		}
 
 	}

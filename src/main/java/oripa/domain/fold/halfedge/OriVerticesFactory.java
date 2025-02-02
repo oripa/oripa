@@ -57,8 +57,10 @@ public class OriVerticesFactory {
 			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.getOriPoint1(), pointEps);
 			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
 			edgeCount++;
+
 			sv.addEdge(eg);
 			ev.addEdge(eg);
+
 		}
 		vertices.addAll(verticesMap.values());
 

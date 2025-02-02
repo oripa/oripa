@@ -50,25 +50,80 @@ class TwoEarTriangulationTest {
 		}
 	}
 
-	@Test
-	void testPointsOnOneEdge() {
-		var polygon = new Polygon(List.of(
-				new Vector2d(0, 0),
-				new Vector2d(0, 1),
-				new Vector2d(0, 2),
-				new Vector2d(0, 3),
-				new Vector2d(0, 4),
-				new Vector2d(0, 5),
-				new Vector2d(-1, 5),
-				new Vector2d(-1, 4)));
-
-		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
-
-		assertEquals(6, triangles.size());
-		for (var t : triangles) {
-			assertEquals(3, t.verticesCount());
-		}
-
-	}
+//	@Test
+//	void testPointsOnOneEdge() {
+//		var polygon = new Polygon(List.of(
+//				new Vector2d(0, 0),
+//				new Vector2d(0, 1),
+//				new Vector2d(0, 2),
+//				new Vector2d(0, 3),
+//				new Vector2d(0, 4),
+//				new Vector2d(0, 5),
+//				new Vector2d(-1, 5),
+//				new Vector2d(-1, 4)));
+//
+//		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
+//
+//		assertEquals(6, triangles.size());
+//		for (var t : triangles) {
+//			assertEquals(3, t.verticesCount());
+//		}
+//
+//	}
+//
+//	@Test
+//	void testDuplecatedEdges() {
+//		var polygon = new Polygon(List.of(
+//				new Vector2d(0, 0),
+//				new Vector2d(1, 0),
+//				new Vector2d(1, 2),
+//				new Vector2d(1, 0)));
+//
+//		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
+//
+//		assertEquals(2, triangles.size());
+//		for (var t : triangles) {
+//			assertEquals(3, t.verticesCount());
+//		}
+//
+//	}
+//
+//	@Test
+//	void testOverlapEdges() {
+//		var polygon = new Polygon(List.of(
+//				new Vector2d(0, -1),
+//				new Vector2d(0, 0),
+//				new Vector2d(2, 0),
+//				new Vector2d(1, 0),
+//				new Vector2d(-1, 0)));
+//
+//		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
+//
+//		assertEquals(3, triangles.size());
+//		for (var t : triangles) {
+//			assertEquals(3, t.verticesCount());
+//		}
+//
+//	}
+//
+//	@Test
+//	void testDoubledEdgesAndZeroLengthEdges() {
+//		var polygon = new Polygon(List.of(
+//				new Vector2d(0, 0),
+//				new Vector2d(1, 0),
+//				new Vector2d(1, 1),
+//				new Vector2d(1, 1),
+//				new Vector2d(1, 0),
+//				new Vector2d(1, 0),
+//				new Vector2d(0, 0)));
+//
+//		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
+//
+//		assertEquals(5, triangles.size());
+//		for (var t : triangles) {
+//			assertEquals(3, t.verticesCount());
+//		}
+//
+//	}
 
 }

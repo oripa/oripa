@@ -32,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 
@@ -76,19 +77,24 @@ class SubFacesFactoryTest {
 		when(modelFactory.buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS)).thenReturn(model);
 
 		var splitFaces = new ArrayList<OriFace>();
-		when(model.getFaces()).thenReturn(splitFaces);
 
 		var sub1 = createSubFaceMock();
 		var sub2 = createSubFaceMock();
 
+		OriVertex vertex1 = mock();
+		List<OriVertex> vertices = List.of(vertex1);
+
+		when(model.getFaces()).thenReturn(splitFaces);
+		when(model.getVertices()).thenReturn(vertices);
+
 		var conversionSubfaces = List.of(sub1, sub2);
-		when(facesToSubFacesConverter.convertToSubFaces(splitFaces, EPS)).thenReturn(conversionSubfaces);
+		when(facesToSubFacesConverter.convertToSubFaces(splitFaces, vertices, EPS)).thenReturn(conversionSubfaces);
 
 		var subfaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE, EPS);
 
 		verify(facesToCPConverter).convertToCreasePattern(inputFaces, EPS);
 		verify(modelFactory).buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS);
-		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces, EPS);
+		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces, vertices, EPS);
 
 		assertEquals(2, subfaces.size());
 

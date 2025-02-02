@@ -19,7 +19,9 @@
 package oripa.domain.fold.subface;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
 
 /**
@@ -47,9 +50,15 @@ class SplitFacesToSubFacesConverterTest {
 		var splitFace1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
 		var splitFace2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
 
+		when(splitFace1.remove180degreeVertices()).thenReturn(splitFace1);
+		when(splitFace2.remove180degreeVertices()).thenReturn(splitFace2);
+
+		OriVertex vertex = mock();
+		Collection<OriVertex> vertices = List.of(vertex);
+
 		var splitFaces = List.of(splitFace1, splitFace2);
 
-		var subFaces = converter.convertToSubFaces(splitFaces, 1e-6);
+		var subFaces = converter.convertToSubFaces(splitFaces, vertices, 1e-6);
 
 		for (int i = 0; i < subFaces.size(); i++) {
 			assertSame(splitFaces.get(i), subFaces.get(i).getOutline());

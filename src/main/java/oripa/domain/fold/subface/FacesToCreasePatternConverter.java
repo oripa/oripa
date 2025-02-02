@@ -19,12 +19,15 @@
 package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.LineAdder;
+import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
@@ -40,14 +43,18 @@ public class FacesToCreasePatternConverter {
 
 	private final CreasePatternFactory cpFactory;
 	private final LineAdder lineAdder;
+	private final ElementRemover elementRemover;
+	private final PointsMerger pointMerger;
 
 	/**
 	 * Constructor
 	 */
 	public FacesToCreasePatternConverter(final CreasePatternFactory cpFactory,
-			final LineAdder lineAdder) {
+			final LineAdder lineAdder, final ElementRemover elementRemover, final PointsMerger pointsMerger) {
 		this.cpFactory = cpFactory;
 		this.lineAdder = lineAdder;
+		this.elementRemover = elementRemover;
+		this.pointMerger = pointsMerger;
 	}
 
 	/**
@@ -61,7 +68,7 @@ public class FacesToCreasePatternConverter {
 	public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double pointEps) {
 		logger.debug("toCreasePattern(): construct edge structure after folding");
 
-		var lines = new ArrayList<OriLine>();
+		Collection<OriLine> lines = new ArrayList<OriLine>();
 		for (OriFace face : faces) {
 			var faceLines = face.halfedgeStream()
 					.map(he -> new OriLine(he.getPosition(), he.getNext().getPosition(),
@@ -70,13 +77,22 @@ public class FacesToCreasePatternConverter {
 			// make cross every time to divide the faces.
 			lineAdder.addAll(faceLines, lines, pointEps);
 		}
+
+		lines = pointMerger.mergeClosePoints(lines, pointEps);
+		elementRemover.removeMeaninglessVertices(lines, pointEps);
+
 		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);
 
-		// The lineAdder overwrites lines, which eliminates the necessity to
-		// remove duplication.
+//		try {
+//			logger.debug("cp size={}", creasePattern.getPaperSize());
+//			creasePattern.forEach(line -> logger.debug("{}", line));
+//			new CreasePatternExporterSVG().export(creasePattern, "debug.svg", null);
+//		} catch (IllegalArgumentException | IOException e) {
+//		}
+
 		// creasePattern.cleanDuplicatedLines(pointEps);
 
-		logger.debug("toCreasePattern(): {} segments", lines.size());
+		logger.debug("toCreasePattern(): {} segments", creasePattern.size());
 
 		return creasePattern;
 	}

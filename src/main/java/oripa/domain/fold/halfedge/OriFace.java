@@ -21,6 +21,7 @@ package oripa.domain.fold.halfedge;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 import oripa.geom.GeomUtil;
 import oripa.geom.Polygon;
 import oripa.geom.Segment;
+import oripa.util.MathUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -191,6 +193,66 @@ public class OriFace {
 	}
 
 	/**
+	 * this method breaks the edge informations in each vertex.
+	 *
+	 * @return
+	 */
+	public OriFace remove180degreeVertices() {
+		int count = halfedgeCount();
+		var toDelete = new ArrayList<Integer>();
+
+		for (int i = 0; i < count; i++) {
+			int j = (i + 1) % count;
+			var he0 = halfedges.get(i);
+			var he1 = halfedges.get(j);
+
+			if (GeomUtil.CCWcheck(he0.getPosition(), he1.getPosition(), he1.getNext().getPosition()) == 0) {
+				toDelete.add(j);
+			}
+		}
+
+		// remove from back to front
+		toDelete.sort(Comparator.reverseOrder());
+		for (int i : toDelete) {
+			halfedges.remove(i);
+		}
+
+		makeHalfedgeLoop();
+
+		return this;
+	}
+
+	/**
+	 * this method breaks the edge informations in each vertex.
+	 *
+	 * @return
+	 */
+	public OriFace removeDuplicatedVertices(final double eps) {
+		int count = halfedgeCount();
+		var toDelete = new ArrayList<Integer>();
+
+		for (int i = 0; i < count; i++) {
+			int j = (i + 1) % count;
+			var he0 = halfedges.get(i);
+			var he1 = halfedges.get(j);
+
+			if (he0.getPosition().equals(he1.getPosition(), eps)) {
+				toDelete.add(j);
+			}
+		}
+
+		// remove from back to front
+		toDelete.sort(Comparator.reverseOrder());
+		for (int i : toDelete) {
+			halfedges.remove(i);
+		}
+
+		makeHalfedgeLoop();
+
+		return this;
+	}
+
+	/**
 	 * Link each half-edge to previous one and next one in the
 	 * {@link #halfedges}.
 	 */
@@ -245,13 +307,30 @@ public class OriFace {
 				.toList());
 	}
 
+	/**
+	 * Creates a polygon of this face with vertex duplication reduction.
+	 *
+	 * @return
+	 */
 	public Polygon toPolygon() {
-		return new Polygon(halfedges.stream().map(OriHalfedge::getPosition).toList());
+		var vertices = halfedges.stream()
+				.map(OriHalfedge::getPosition).toList();
+
+		return new Polygon(removeDuplications(vertices));
 	}
 
 	public Polygon toPolygonBeforeFolding() {
-		return new Polygon(halfedges.stream().map(OriHalfedge::getPositionBeforeFolding).toList());
+		var vertices = halfedges.stream()
+				.map(OriHalfedge::getPositionBeforeFolding).toList();
 
+		return new Polygon(removeDuplications(vertices));
+	}
+
+	private List<Vector2d> removeDuplications(final List<Vector2d> vertices) {
+		return vertices.stream()
+				.filter(v -> vertices.stream()
+						.noneMatch(u -> v != u && v.equals(u, MathUtil.normalizedValueEps())))
+				.toList();
 	}
 
 	public void refreshPositions() {
