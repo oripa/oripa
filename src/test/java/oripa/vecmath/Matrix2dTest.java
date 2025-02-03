@@ -18,8 +18,8 @@ class Matrix2dTest {
 		Vector2d result = m.product(v);
 
 		// then
-		assertEquals(17, result.getX());
-		assertEquals(39, result.getY());
+		assertEquals(17.0, result.getX(), 1e-8);
+		assertEquals(39, result.getY(), 1e-8);
 	}
 
 	@Test

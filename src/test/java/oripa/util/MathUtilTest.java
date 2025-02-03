@@ -20,6 +20,7 @@ package oripa.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,17 @@ class MathUtilTest {
 		var xAnswer = MathUtil.newtonMethod(f, 2, 1e-4, 1e-6);
 
 		assertEquals(Math.pow(2, 1.0 / 3), xAnswer, 1e-6);
+	}
+
+	@Test
+	void testPreciseSum() {
+		var values = new ArrayList<Double>();
+		for (int i = 0; i < 10; i++) {
+			values.add(0.1);
+		}
+
+		var sum = MathUtil.preciseSum(values);
+		assertEquals(1, sum);
 	}
 
 }

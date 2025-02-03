@@ -88,8 +88,6 @@ public class OrigamiModelFactory {
 
 		buildEdges(edges, faces);
 
-		// removeOuterFace(faces, vertices, pointEps);
-
 		origamiModel.setHasModel(true);
 
 		return origamiModel;

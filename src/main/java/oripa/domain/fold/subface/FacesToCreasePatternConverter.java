@@ -90,8 +90,6 @@ public class FacesToCreasePatternConverter {
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
 
-		// creasePattern.cleanDuplicatedLines(pointEps);
-
 		logger.debug("toCreasePattern(): {} segments", creasePattern.size());
 
 		return creasePattern;
