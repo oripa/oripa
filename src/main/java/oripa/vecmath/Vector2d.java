@@ -35,6 +35,8 @@ import oripa.util.MathUtil;
  */
 public class Vector2d {
 
+	private final double r;
+
 	private final double x;
 	private final double y;
 
@@ -47,12 +49,20 @@ public class Vector2d {
 	}
 
 	public static Vector2d unitVector(final double angle) {
-		return new Vector2d(cos(angle), sin(angle));
+		return new Vector2d(1, cos(angle), sin(angle));
 	}
 
 	public Vector2d(final double x, final double y) {
-		this.x = x;
-		this.y = y;
+		var v = normalize(x, y);
+		this.r = v[0];
+		this.x = v[1];
+		this.y = v[2];
+	}
+
+	private Vector2d(final double r, final double xNormal, final double yNormal) {
+		this.r = r;
+		this.x = xNormal;
+		this.y = yNormal;
 	}
 
 	public static <T extends Vector2d> Optional<T> findNearest(final T target, final Collection<T> vertices) {
@@ -71,15 +81,15 @@ public class Vector2d {
 	}
 
 	public double[] toArray() {
-		return new double[] { x, y };
+		return new double[] { r * x, r * y };
 	}
 
 	public double getX() {
-		return x;
+		return r * x;
 	}
 
 	public double getY() {
-		return y;
+		return r * y;
 	}
 
 	public double getSlope() {
@@ -92,15 +102,22 @@ public class Vector2d {
 	 * @return this + v
 	 */
 	public Vector2d add(final Vector2d v) {
-		return new Vector2d(x + v.x, y + v.y);
+		double x_ = preciseAddWithFactor(r, x, v.r, v.x);
+		double y_ = preciseAddWithFactor(r, y, v.r, v.y);
+
+		return new Vector2d(x_, y_);
+	}
+
+	private double preciseAddWithFactor(final double ra, final double a, final double rb, final double b) {
+		return MathUtil.preciseAddWithFactor(ra, a, rb, b);
 	}
 
 	public Vector2d subtract(final Vector2d v) {
-		return new Vector2d(x - v.x, y - v.y);
+		return add(v.multiply(-1.0));
 	}
 
 	public Vector2d multiply(final double a) {
-		return new Vector2d(a * x, a * y);
+		return new Vector2d(r * a, x, y);
 	}
 
 	/**
@@ -110,27 +127,52 @@ public class Vector2d {
 	 * @return (y, -x)
 	 */
 	public Vector2d getRightSidePerpendicular() {
-		return new Vector2d(y, -x);
+		return new Vector2d(r, y, -x);
 	}
 
 	public double length() {
-		return sqrt(x * x + y * y);
+		return r;
 	}
 
 	public double lengthSquared() {
-		return x * x + y * y;
+		return r * r;
+	}
+
+	private double[] normalize(final double x, final double y) {
+		// simple robust computation
+		var ax = Math.abs(x);
+		var ay = Math.abs(y);
+
+		if (ax > ay) {
+			var y_ = y / x;
+			var h = Math.sqrt(1 + y_ * y_);
+			var x_normal = Math.signum(x) / h;
+			var r = ax * h;
+			return new double[] { r, x_normal, y_ * x_normal };
+		} else {
+			if (ay == 0) {
+				return new double[] { 0, 0, 0 };
+			}
+			var x_ = x / y;
+			var h = Math.sqrt(x_ * x_ + 1);
+			var y_normal = Math.signum(y) / h;
+			var r = ay * h;
+			return new double[] { r, x_ * y_normal, y_normal };
+
+		}
 	}
 
 	public Vector2d normalize() {
-		return multiply(1.0 / length());
+		return new Vector2d(1, x, y);
 	}
 
 	public double dot(final Vector2d v) {
-		return x * v.x + y * v.y;
+
+		return r * v.r * preciseAddWithFactor(x, v.x, y, v.y);
 	}
 
 	public double angle(final Vector2d v) {
-		var cos = dot(v) / (length() * v.length());
+		var cos = preciseAddWithFactor(x, v.x, y, v.y);
 
 		if (cos < -1.0) {
 			cos = -1.0;
@@ -147,7 +189,9 @@ public class Vector2d {
 		double cos = cos(theta);
 		double sin = sin(theta);
 
-		return new Vector2d(cos * x - sin * y, sin * x + cos * y);
+		return new Vector2d(r,
+				preciseAddWithFactor(cos, x, -sin, y),
+				preciseAddWithFactor(sin, x, cos, y));
 	}
 
 	/**
@@ -164,7 +208,10 @@ public class Vector2d {
 	 * @return Euclidean distance between the given vector and this vector.
 	 */
 	public double distance(final Vector2d v) {
-		return sqrt((x - v.x) * (x - v.x) + (y - v.y) * (y - v.y));
+		var dx = preciseAddWithFactor(r, x, -v.r, v.x);
+		var dy = preciseAddWithFactor(r, y, -v.r, v.y);
+
+		return sqrt(dx * dx + dy * dy);
 	}
 
 	public boolean isParallel(final Vector2d v) {
@@ -173,13 +220,14 @@ public class Vector2d {
 	}
 
 	public double crossProductZ(final Vector2d v) {
-		return x * v.y - y * v.x;
+		return r * v.r * preciseAddWithFactor(x, v.y, -y, v.x);
+
 	}
 
 	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof Vector2d v) {
-			return x == v.x && y == v.y;
+			return r == v.r && x == v.x && y == v.y;
 		}
 		return false;
 
@@ -199,11 +247,11 @@ public class Vector2d {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(x, y);
+		return Objects.hash(r, x, y);
 	}
 
 	@Override
 	public String toString() {
-		return "(" + x + ", " + y + ")";
+		return "(" + r * x + ", " + r * y + ")";
 	}
 }

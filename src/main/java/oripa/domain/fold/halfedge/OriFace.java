@@ -322,6 +322,10 @@ public class OriFace {
 		var vertices = halfedges.stream()
 				.map(OriHalfedge::getPosition).toList();
 
+		if (!isFaceFront()) {
+			vertices = vertices.reversed();
+		}
+
 		return new Polygon(removeDuplications(vertices));
 	}
 
