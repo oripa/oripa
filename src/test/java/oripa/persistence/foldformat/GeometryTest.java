@@ -18,7 +18,7 @@
  */
 package oripa.persistence.foldformat;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 

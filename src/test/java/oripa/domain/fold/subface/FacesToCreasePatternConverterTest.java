@@ -30,7 +30,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.LineAdder;
+import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
@@ -47,28 +49,33 @@ class FacesToCreasePatternConverterTest {
 	private CreasePatternFactory cpFactory;
 	@Mock
 	private LineAdder adder;
+	@Mock
+	private ElementRemover remover;
+	@Mock
+	private PointsMerger pointMerger;
 
 	@Mock
 	private CreasePattern creasePattern;
 
 	private static final double POINT_EPS = 1e-7;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.subface.FacesToCreasePatternConverter#convertToCreasePattern(java.util.List)}.
-	 */
 	@Test
 	void testConvertToCreasePattern() {
 		var face1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
 		var face2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
+
 		var faces = List.of(face1, face2);
 
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
+
+		when(pointMerger.mergeClosePoints(anyCollection(), anyDouble())).thenReturn(creasePattern);
 
 		var converted = converter.convertToCreasePattern(faces, POINT_EPS);
 		assertSame(creasePattern, converted);
 
 		// tried to convert all faces?
 		verify(adder, times(faces.size())).addAll(any(), anyCollection(), anyDouble());
+
+		verify(remover).removeMeaninglessVertices(creasePattern, POINT_EPS);
 	}
 }

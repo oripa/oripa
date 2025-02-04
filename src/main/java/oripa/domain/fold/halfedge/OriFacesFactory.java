@@ -27,6 +27,8 @@ import java.util.function.BiFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.vecmath.Vector2d;
+
 /**
  * @author OUCHI Koji
  *
@@ -62,6 +64,8 @@ public class OriFacesFactory {
 			valid = false;
 		}
 
+		createdFaces = createdFaces.stream().filter(face -> face.halfedgeCount() >= 3).toList();
+
 		var boundaryFaces = createBoundaryFaces(vertices);
 
 		// find boundary face with no internal vertex
@@ -71,6 +75,8 @@ public class OriFacesFactory {
 
 		faces.addAll(createdFaces);
 		faces.addAll(boundaryFaces);
+
+		logger.debug("#face = {}", faces.size());
 
 		return valid;
 	}
@@ -185,7 +191,11 @@ public class OriFacesFactory {
 		int debugCount = 0;
 		do {
 			if (debugCount++ > maxCount) {
-				logger.error("invalid input for making faces.");
+				var badPositions = new ArrayList<Vector2d>();
+				for (int i = 0; i < (10 > maxCount ? maxCount : 10); i++) {
+					badPositions.add(face.getHalfedge(i).getPosition());
+				}
+				logger.error("invalid input for making faces. {}", badPositions);
 //						throw new UnfoldableModelException("algorithmic error");
 				return null;
 			}

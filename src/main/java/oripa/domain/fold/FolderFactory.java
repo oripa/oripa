@@ -18,7 +18,9 @@
  */
 package oripa.domain.fold;
 
+import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.LineAdder;
+import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.ModelType;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -60,7 +62,9 @@ public class FolderFactory {
 		var subfacesFactory = new SubFacesFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						new LineAdder()),
+						new LineAdder(),
+						new ElementRemover(),
+						new PointsMerger()),
 				new OrigamiModelFactory(),
 				new SplitFacesToSubFacesConverter(),
 				new ParentFacesCollector());
@@ -74,7 +78,9 @@ public class FolderFactory {
 		var subfacesFactory = new SubfacesOneTimeFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						new LineAdder()),
+						new LineAdder(),
+						new ElementRemover(),
+						new PointsMerger()),
 				new OrigamiModelFactory(),
 				new SplitFacesToSubFacesConverter(),
 				new ParentFacesCollector());

@@ -61,7 +61,7 @@ public class StackConditionFactoryFacade {
 
 		var watch = new StopWatch(true);
 		subFacesOfEachFace = new FaceToSubfacesFactory().create(faces, subfaces);
-		logger.debug("create subfacesOfEeachFace {}[ms]", watch.getMilliSec());
+		logger.debug("create subfacesOfEachFace {}[ms]", watch.getMilliSec());
 
 		watch.start();
 		overlappingFaceIndexIntersections = new OverlappingFaceIndexIntersectionFactory().create(

@@ -93,6 +93,10 @@ class OverlapRelationFactory {
 				if (result == EstimationResult.UNFOLDABLE) {
 					var ret = new Result(null);
 					ret.addViolation(List.of(face, pairFace));
+					logger.debug("Overlap relation error: face{} is front={}, face{} is front={}, isM={}," +
+							" relation={}",
+							faceID, face.isFaceFront(), pairFaceID, pairFace.isFaceFront(), edge.isMountain(),
+							overlapRelation.get(faceID, pairFaceID));
 					return ret;
 				}
 			}

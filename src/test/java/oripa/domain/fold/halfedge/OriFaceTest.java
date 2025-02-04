@@ -50,6 +50,8 @@ class OriFaceTest {
 		face.addHalfedge(he1);
 		face.addHalfedge(he2);
 		face.addHalfedge(he3);
+
+		face.makeHalfedgeLoop();
 	}
 
 	private OriHalfedge createHalfEdgeSpy(final double x, final double y, final OriFace face) {

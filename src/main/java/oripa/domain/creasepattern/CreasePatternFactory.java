@@ -72,6 +72,10 @@ public class CreasePatternFactory {
 						.filter(OriLine::isBoundary)
 						.toList());
 
+		if (domain.isVoid()) {
+			domain = RectangleDomain.createFromSegments(lines);
+		}
+
 		// Construct CP
 		CreasePattern creasePattern = new CreasePatternImpl(domain);
 		creasePattern.addAll(lines);

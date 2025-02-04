@@ -22,6 +22,8 @@ package oripa.geom;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import oripa.vecmath.Vector2d;
 
@@ -55,5 +57,19 @@ class GeomUtilTest {
 
 		assertEquals(Math.sqrt(2) / 2, direction.getX(), 1e-8);
 		assertEquals(Math.sqrt(2) / 2, direction.getY(), 1e-8);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"1,1, 0,0, 2,0, 1,0",
+	})
+	void testGetNearestPointToSegment(final double px, final double py, final double sx, final double sy,
+			final double ex, final double ey, final double nx, final double ny) {
+		var p = new Vector2d(px, py);
+		var segment = new Segment(sx, sy, ex, ey);
+		var nearest = GeomUtil.getNearestPointToSegment(p, segment);
+
+		assertEquals(nx, nearest.getX(), 1e-8);
+		assertEquals(ny, nearest.getY(), 1e-8);
 	}
 }

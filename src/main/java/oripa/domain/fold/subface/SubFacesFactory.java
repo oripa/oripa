@@ -18,7 +18,6 @@
  */
 package oripa.domain.fold.subface;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -87,25 +86,29 @@ public class SubFacesFactory {
 		// We call such face a subface hereafter.
 		var splitFaceOrigamiModel = modelFactory.buildOrigamiForSubfaces(creasePattern, paperSize, eps);
 
-		var subFaces = facesToSubFacesConverter.convertToSubFaces(splitFaceOrigamiModel.getFaces());
+		var subfaces = facesToSubFacesConverter.convertToSubFaces(
+				splitFaceOrigamiModel.getFaces(), splitFaceOrigamiModel.getVertices(), eps);
 
 		// Stores the face reference of given crease pattern into the subface
 		// that is contained in the face.
-		for (SubFace sub : subFaces) {
+		int i = 0;
+		for (SubFace sub : subfaces) {
 			sub.addParentFaces(parentCollector.collect(faces, sub, eps));
+			logger.trace("{} {} #parentFace={}", i++, sub.getOutline(), sub.getParentFaceCount());
 		}
 
 		// extract distinct subfaces by comparing face list's items.
-		ArrayList<SubFace> distinctSubFaces = new ArrayList<>();
-		for (SubFace sub : subFaces) {
-			if (distinctSubFaces.stream()
-					.noneMatch(sub::isSame)) {
-				distinctSubFaces.add(sub);
-			}
-		}
+		// -> this logic is not necessary because subface is maximal.
+//		ArrayList<SubFace> distinctSubFaces = new ArrayList<>();
+//		for (SubFace sub : subFaces) {
+//			if (distinctSubFaces.stream()
+//					.noneMatch(sub::isSame)) {
+//				distinctSubFaces.add(sub);
+//			}
+//		}
 
-		logger.debug("createSubFaces() end");
+		logger.debug("createSubFaces() end: {} subfaces", subfaces.size());
 
-		return distinctSubFaces;
+		return subfaces;
 	}
 }

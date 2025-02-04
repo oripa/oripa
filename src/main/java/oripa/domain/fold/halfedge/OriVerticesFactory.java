@@ -26,9 +26,11 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.geom.Segment;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -43,18 +45,29 @@ public class OriVerticesFactory {
 
 		int edgeCount = 0;
 
+		var shortestSegment = new Segment(0, 0, 1e20, 0);
+
 		for (OriLine l : creasePatternWithoutAux) {
+			if (l.length() < pointEps) {
+				continue;
+			}
+
+			shortestSegment = shortestSegment.length() < l.length() ? shortestSegment : l;
+
 			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.getOriPoint0(), pointEps);
 			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.getOriPoint1(), pointEps);
 			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
 			edgeCount++;
+
 			sv.addEdge(eg);
 			ev.addEdge(eg);
+
 		}
 		vertices.addAll(verticesMap.values());
 
 		logger.debug("#vertex = " + vertices.size());
 		logger.debug("#edge = " + edgeCount);
+		logger.debug("shortest edge ({}) = {}", shortestSegment.length(), shortestSegment);
 
 		return vertices;
 	}
@@ -75,7 +88,10 @@ public class OriVerticesFactory {
 			return vtx;
 		}
 
-		return boundMap.get(neighbors.get(0));
+		// suppress position drift by using nearest
+		var neighbor = Vector2d.findNearest(p, neighbors);
+
+		return boundMap.get(neighbor.get());
 	}
 
 }

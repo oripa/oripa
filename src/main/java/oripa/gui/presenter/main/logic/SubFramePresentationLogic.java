@@ -108,9 +108,14 @@ public class SubFramePresentationLogic {
 
 		var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
 
-		computationResult = modelComputation.computeModels(
-				origamiModels,
-				getComputationType());
+		try {
+			computationResult = modelComputation.computeModels(
+					origamiModels,
+					getComputationType());
+		} catch (Exception e) {
+			computationResult = null;
+			throw e;
+		}
 	}
 
 	private ComputationType getComputationType() {

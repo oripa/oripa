@@ -69,6 +69,11 @@ class FaceFactory {
 			convertedFace.addHalfedge(he);
 		}
 
+		if (!face.isFaceFront()) {
+			convertedFace.invertFaceFront();
+		}
+		convertedFace.makeHalfedgeLoop();
+
 		return convertedFace;
 	}
 

@@ -18,7 +18,9 @@
  */
 package oripa.domain.fold;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +28,11 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -47,8 +51,8 @@ class SimpleFolder {
 	 *            method.
 	 */
 	void simpleFoldWithoutZorder(
-			final OrigamiModel origamiModel) {
-		foldImpl(origamiModel, false);
+			final OrigamiModel origamiModel, final double eps) {
+		foldImpl(origamiModel, eps, false);
 	}
 
 	/**
@@ -60,11 +64,11 @@ class SimpleFolder {
 	 *            method.
 	 */
 	public void foldWithoutLineType(
-			final OrigamiModel model) {
-		foldImpl(model, true);
+			final OrigamiModel model, final double eps) {
+		foldImpl(model, eps, true);
 	}
 
-	private void foldImpl(final OrigamiModel origamiModel, final boolean limitUsed) {
+	private void foldImpl(final OrigamiModel origamiModel, final double eps, final boolean limitUsed) {
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriFace> faces = origamiModel.getFaces();
 
@@ -75,7 +79,18 @@ class SimpleFolder {
 		}
 
 		if (faces.size() > 0) {
-			walkFace(faces.get(0), limitUsed ? 0 : -1);
+			var jobs = new LinkedList<OriFace>();
+			var paperCenterOpt = GeomUtil.computeCentroid(
+					origamiModel.getVertices().stream()
+							.map(OriVertex::getPosition)
+							.toList());
+			jobs.add(faces.stream()
+					.filter(face -> face.includesInclusively(paperCenterOpt.get(), eps))
+					.findFirst()
+					.orElse(faces.get(0)));
+			jobs.get(0).setMovedByFold(true);
+
+			transformFaces(jobs, limitUsed ? 1000 : Integer.MAX_VALUE, eps);
 		}
 
 		for (OriEdge e : edges) {
@@ -89,37 +104,44 @@ class SimpleFolder {
 					.ifPresent(position -> ev.setPosition(position));
 		}
 
+		for (var face : faces) {
+			face.refreshPositions();
+		}
+
 	}
 
 	/**
-	 * Recursive method that flips the faces, making the folds
+	 * Breath first search to move faces to the position after folding with the
+	 * narrow number of transformations for each face. This approach reduces the
+	 * numerical error.
 	 *
-	 * @param face
-	 * @param walkFaceCount
+	 * @param faces
+	 * @param callLimit
 	 */
-	private void walkFace(final OriFace face, final int walkFaceCount) {
-		face.setMovedByFold(true);
+	private void transformFaces(final Queue<OriFace> faces, final int callLimit, final double eps) {
+		int callCount = 0;
+		while (!faces.isEmpty() && callCount < callLimit) {
+			callCount++;
 
-		if (walkFaceCount > 1000) {
-			logger.error("walkFace too deep");
-			return;
+			var face = faces.remove();
+
+			face.halfedgeStream().forEach(he -> {
+				var pairOpt = he.getPair();
+				if (pairOpt.isEmpty()) {
+					return;
+				}
+
+				var pairFace = pairOpt.get().getFace();
+				if (pairFace.isMovedByFold()) {
+					return;
+				}
+
+				pairFace.setMovedByFold(true);
+				flipFace(pairFace, he);
+
+				faces.add(pairFace);
+			});
 		}
-
-		face.halfedgeStream().forEach(he -> {
-			var pairOpt = he.getPair();
-			if (pairOpt.isEmpty()) {
-				return;
-			}
-
-			var pairFace = pairOpt.get().getFace();
-			if (pairFace.isMovedByFold()) {
-				return;
-			}
-
-			flipFace(pairFace, he);
-			pairFace.setMovedByFold(true);
-			walkFace(pairFace, walkFaceCount >= 0 ? walkFaceCount + 1 : -1);
-		});
 	}
 
 	/**
@@ -143,18 +165,23 @@ class SimpleFolder {
 		// vertex to preLine
 		double d1 = param[0];
 
-		// compute foot cross point from vertex to moved mirror axis line (or
-		// the crease)
-		Vector2d footV = afterOrigin.add(afterDir.multiply(d1));
+		var originToFootDir = afterDir.multiply(d1);
 
 		// compute a direction vector perpendicular to the crease.
 		// the vector directs the right side of the crease halfedge
 		// since all vertices of the face are on the right side of the crease
 		// halfedge.
-		Vector2d afterDirFromFoot = afterDir.getRightSidePerpendicular();
+		var afterDirFromFoot = afterDir.getRightSidePerpendicular().multiply(d0);
 
 		// compute moved vertex coordinates
-		return footV.add(afterDirFromFoot.multiply(d0));
+		// = afterOrigin + originToFootDir + afterDirFromFoot
+		// trying to reduce digit loss.
+		// note: afterOrigin + originToFootDir is a foot cross point from vertex
+		// to moved mirror axis line (or the crease)
+		var terms = List.of(afterOrigin, originToFootDir, afterDirFromFoot);
+		double x = MathUtil.preciseSum(terms.stream().map(Vector2d::getX).toList());
+		double y = MathUtil.preciseSum(terms.stream().map(Vector2d::getY).toList());
+		return new Vector2d(x, y);
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
@@ -179,7 +206,8 @@ class SimpleFolder {
 		// move the vertices of the face to keep the face connection
 		// on baseHe
 		face.halfedgeStream().forEach(he -> {
-			he.setPositionWhileFolding(transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir));
+			he.setPositionWhileFolding(transformVertex(
+					he.getPositionWhileFolding(), preLine, afterOrigin, afterDir));
 		});
 
 		face.setPrecreases(face.precreaseStream().map(precrease -> new OriLine(

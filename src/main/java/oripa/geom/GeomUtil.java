@@ -137,14 +137,19 @@ public class GeomUtil {
 	 */
 	public static Segment getVerticalSegment(final Vector2d v, final Segment segment) {
 
-		var p0 = segment.getP0();
-		var p1 = segment.getP1();
+		var sp = segment.getP0();
+		var ep = segment.getP1();
 
-		var sub = p1.subtract(p0);
+		var ds = v.distance(sp);
+		var de = v.distance(ep);
+		var sp_ = ds > de ? sp : ep;
+		var ep_ = ds > de ? ep : sp;
 
-		double t = computeParameterForNearestPointToLine(v, p0, p1);
+		var dir = ep_.subtract(sp_).normalize();
 
-		var cp = p0.add(sub.multiply(t));
+		double t = computeParameterForNearestPointToLine(v, sp_, dir);
+
+		var cp = sp_.add(dir.multiply(t));
 
 		return new Segment(cp, v);
 	}
@@ -213,7 +218,12 @@ public class GeomUtil {
 	 */
 	public static Vector2d getSymmetricPoint(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
-		Vector2d cp = getNearestPointToLine(p, sp, ep);
+		var ds = p.distance(sp);
+		var de = p.distance(ep);
+		var sp_ = ds > de ? sp : ep;
+		var ep_ = ds > de ? ep : sp;
+
+		Vector2d cp = getNearestPointToLine(p, sp_, ep_);
 		return cp.multiply(2).subtract(p);
 	}
 
@@ -317,37 +327,44 @@ public class GeomUtil {
 	}
 
 	/**
+	 * p and sp should be far enough because they will be used in subtraction.
 	 *
 	 * @param p
 	 *            point
 	 * @param sp
 	 *            start point of line vector
-	 * @param ep
-	 *            end point of line vector
-	 * @return t = |p - sp| * cos(\theta) / |ep - sp| where theta is the angle
-	 *         between p - sp and ep - sp
+	 * @param unitLineDir
+	 *            unit line vector = (ep - sp).normalize()
+	 * @return t = |p - sp| * cos(\theta) where theta is the angle between p -
+	 *         sp and unitLineVector
 	 */
 	private static double computeParameterForNearestPointToLine(
-			final Vector2d p, final Vector2d sp, final Vector2d ep) {
+			final Vector2d p, final Vector2d sp, final Vector2d unitLineDir) {
 
 		var sub0 = p.subtract(sp);
 
-		// direction of the line
-		var dir = ep.subtract(sp);
+		// forcing to use normalize() is good becouse it does no arithmetics,
+		// which should be robust.
 
-		// t = |sub0| * cos(\theta) / |dir|
-		return dir.dot(sub0) / dir.lengthSquared();
+		// direction of the line
+		// t = |sub0| * cos(\theta) / |dir| = |sub0|*cos(\theta)
+		return unitLineDir.dot(sub0);
 	}
 
 	private static Vector2d getNearestPointToLine(
 			final Vector2d p, final Vector2d sp, final Vector2d ep) {
 
+		var ds = p.distance(sp);
+		var de = p.distance(ep);
+		var sp_ = ds > de ? sp : ep;
+		var ep_ = ds > de ? ep : sp;
+
 		// direction of the line
-		var dir = ep.subtract(sp);
+		var dir = ep_.subtract(sp_).normalize();
 
-		double t = computeParameterForNearestPointToLine(p, sp, ep);
+		double t = computeParameterForNearestPointToLine(p, sp_, dir);
 
-		return sp.add(dir.multiply(t));
+		return sp_.add(dir.multiply(t));
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Segment segment) {
@@ -373,17 +390,24 @@ public class GeomUtil {
 
 		var sp = segment.getP0();
 		var ep = segment.getP1();
+		var length = segment.length();
 
-		double t = computeParameterForNearestPointToLine(p, sp, ep);
+		var ds = p.distance(sp);
+		var de = p.distance(ep);
+		var sp_ = ds > de ? sp : ep;
+		var ep_ = ds > de ? ep : sp;
+
+		// direction of the line
+		var dir = ep_.subtract(sp_).normalize();
+
+		double t = computeParameterForNearestPointToLine(p, sp_, dir);
 
 		if (t <= 0.0) {
-			return sp;
-		} else if (t >= 1.0) {
-			return ep;
+			return sp_;
+		} else if (t >= length) {
+			return ep_;
 		} else {
-			// direction of the line
-			var dir = ep.subtract(sp);
-			return sp.add(dir.multiply(t));
+			return sp_.add(dir.multiply(t));
 		}
 	}
 
@@ -391,7 +415,12 @@ public class GeomUtil {
 		var sp = line.getPoint();
 		var ep = sp.add(line.getDirection());
 
-		return p.distance(getNearestPointToLine(p, sp, ep));
+		var ds = p.distance(sp);
+		var de = p.distance(ep);
+		var sp_ = ds > de ? sp : ep;
+		var ep_ = ds > de ? ep : sp;
+
+		return p.distance(getNearestPointToLine(p, sp_, ep_));
 	}
 
 	public static double distancePointToRay(final Vector2d p, final Ray ray) {
@@ -401,9 +430,8 @@ public class GeomUtil {
 	public static Vector2d getNearestPointToRay(final Vector2d p, final Ray ray) {
 		var sp = ray.getEndPoint();
 		var dir = ray.getDirection();
-		var ep = sp.add(dir);
 
-		double t = computeParameterForNearestPointToLine(p, sp, ep);
+		double t = computeParameterForNearestPointToLine(p, sp, dir);
 
 		if (t <= 0.0) {
 			return sp;
@@ -518,9 +546,8 @@ public class GeomUtil {
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
 
 		var sp = line.getPoint();
-		var ep = sp.add(line.getDirection());
 
-		param[0] = computeParameterForNearestPointToLine(p, sp, ep);
+		param[0] = computeParameterForNearestPointToLine(p, sp, line.getDirection());
 		return distancePointToLine(p, line);
 	}
 
@@ -528,8 +555,12 @@ public class GeomUtil {
 	 * @return true if vector p0 -> q ends in left side of p0 -> p1 (q is at
 	 *         counterclockwise position) otherwise false.
 	 */
-	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+	public static boolean isStrictlyCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		return CCWcheck(p0, p1, q, 0) == 1;
+	}
+
+	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+		return CCWcheck(p0, p1, q, 0) >= 0;
 	}
 
 	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
@@ -556,25 +587,23 @@ public class GeomUtil {
 	}
 
 	private static double computeCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
-		double dx1, dx2, dy1, dy2;
 
 		var d1 = p1.subtract(p0).normalize();
 
 		var d2 = q.subtract(p0).normalize();
 
-		dx1 = d1.getX();
-		dy1 = d1.getY();
-		dx2 = d2.getX();
-		dy2 = d2.getY();
-
-		return dx1 * dy2 - dy1 * dx2;
+		return d1.crossProductZ(d2);
 	}
 
-	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
+	public static Optional<Vector2d> computeCentroid(final Collection<Vector2d> points) {
 
-		var sum = points.stream()
-				.reduce((result, x) -> result.add(x))
-				.get();
-		return sum.multiply(1.0 / points.size());
+		if (points.isEmpty()) {
+			return Optional.empty();
+		}
+
+		var sumOpt = points.stream()
+				.reduce((result, x) -> result.add(x));
+
+		return sumOpt.map(sum -> sum.multiply(1.0 / points.size()));
 	}
 }

@@ -51,11 +51,11 @@ class LineMirrorTest {
 
 		assertEquals(2, mirroredLines.size());
 
-		var mirroredLine = new OriLine(100, 0, 90, 0, Type.MOUNTAIN);
-		assertTrue(mirroredLines.contains(mirroredLine));
+		var mirroredLine1 = new OriLine(100, 0, 90, 0, Type.MOUNTAIN);
+		assertTrue(mirroredLines.stream().anyMatch(l -> l.equals(mirroredLine1, 1e-8)));
 
-		mirroredLine = new OriLine(80, 20, 80, 0, Type.VALLEY);
-		assertTrue(mirroredLines.contains(mirroredLine));
+		var mirroredLine2 = new OriLine(80, 20, 80, 0, Type.VALLEY);
+		assertTrue(mirroredLines.stream().anyMatch(l -> l.equals(mirroredLine2, 1e-8)));
 	}
 
 }

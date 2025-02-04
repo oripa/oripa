@@ -194,7 +194,7 @@ public class FoldedModelElementConverter {
 				face.getHalfedge(j).setEdge(edges.get(edgeIndex));
 			}
 
-			if (!GeomUtil.isCCW(
+			if (!GeomUtil.isStrictlyCCW(
 					face.getHalfedge(0).getPosition(),
 					face.getHalfedge(1).getPosition(),
 					face.getHalfedge(2).getPosition())) {

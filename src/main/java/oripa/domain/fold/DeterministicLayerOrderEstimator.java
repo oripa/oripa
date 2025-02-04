@@ -112,6 +112,7 @@ class DeterministicLayerOrderEstimator {
 			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
 
 			if (changed.isUnfoldable()) {
+				logger.info("unfoldable:" + System.lineSeparator() + overlapRelation.toString());
 				return changed;
 			}
 
