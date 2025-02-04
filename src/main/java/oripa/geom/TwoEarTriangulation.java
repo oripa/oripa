@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import oripa.vecmath.Vector2d;
 
 /**
- * Does triangulation according to two-ear theorem.
+ * Does triangulation according to two-ear theorem (ear clipping).
  *
  * @author OUCHI Koji
  *
@@ -57,22 +57,31 @@ public class TwoEarTriangulation {
 		}
 	}
 
+	/**
+	 * returns list of triangles. empty if failed. O(n^2) time algorithm.
+	 *
+	 * @param polygon
+	 * @param eps
+	 * @return
+	 */
 	public List<Polygon> triangulate(final Polygon polygon, final double eps) {
 		int n = polygon.verticesCount();
 
 		var triangles = new ArrayList<Polygon>();
-		var pIndices = new ArrayList<Integer>();
 		var p = new ArrayList<Vertex>();
 
+		// convex angle can be a part of triangle.
 		var isConvex = new Boolean[n];
 		var convexes = new LinkedList<Vertex>();
 		Arrays.fill(isConvex, false);
 
+		// shortcut
 		if (n == 3) {
 			triangles.add(polygon);
 			return triangles;
 		}
 
+		// initialization
 		for (int i = 0; i < n; i++) {
 			int i0 = (i - 1 + n) % n;
 			int i1 = i;
@@ -85,17 +94,20 @@ public class TwoEarTriangulation {
 			var vertex = new Vertex(v1, i1, i0, i2);
 			p.add(vertex);
 
-			// center angle should not be larger than or equal to 180
+			// center angle v1 should not be larger than or equal to 180
 			// degrees.
 			if (GeomUtil.isStrictlyCCW(v0, v1, v2)) {
 				isConvex[i1] = true;
 				convexes.add(vertex);
 			}
-			pIndices.add(i0);
 		}
 
+		// the loop count up to n might be enough but couldn't prove it...
+		// but it is true that a polygon always has some convex angle. Otherwise
+		// it cannot be closed.
+		// the 2*n is a value I assume to be OK.
 		int count = 0;
-		while (!convexes.isEmpty() && count < n) {
+		while (!convexes.isEmpty() && count < 2 * n) {
 			count++;
 			logger.trace("p: " + p);
 			logger.trace("convexes: " + convexes);
@@ -113,7 +125,8 @@ public class TwoEarTriangulation {
 			var e1 = new Segment(vertex1.v, vertex2.v);
 			var e = new Segment(vertex0.v, vertex2.v);
 
-			if (!crossesPolygonEdge(p, e0, e1, e, vertex1.prevIndexOnP, eps)) {
+			// if e crosses no other edges then (v0,v1,v2) is a valid triangle
+			if (!crossesPolygonEdges(p, e0, e1, e, vertex1.prevIndexOnP, eps)) {
 
 				var triangle = new Polygon(List.of(vertex0.v, vertex1.v, vertex2.v));
 				triangles.add(triangle);
@@ -139,6 +152,7 @@ public class TwoEarTriangulation {
 				}
 
 			} else {
+				// check it later again after processing other vertices.
 				convexes.addLast(vertex1);
 			}
 
@@ -155,7 +169,21 @@ public class TwoEarTriangulation {
 		return triangles;
 	}
 
-	private boolean crossesPolygonEdge(final List<Vertex> p,
+	/**
+	 * Walks along given polygon p and test whether e crosses the edges we are
+	 * on.
+	 *
+	 * @param p
+	 * @param e0
+	 * @param e1
+	 * @param e
+	 *            edge to be tested
+	 * @param i0
+	 *            the start point index on p for e
+	 * @param eps
+	 * @return
+	 */
+	private boolean crossesPolygonEdges(final List<Vertex> p,
 			final Segment e0, final Segment e1, final Segment e,
 			final int i0,
 			final double eps) {
@@ -178,6 +206,7 @@ public class TwoEarTriangulation {
 
 		while (j != i0) {
 
+			// edge of i0->i1 and i1->2 should not be tested
 			if (vertex0.nextIndexOnP == i1 || vertex0.nextIndexOnP == i2) {
 				j = vertex0.nextIndexOnP;
 				vertex0 = vertex1;
@@ -209,120 +238,6 @@ public class TwoEarTriangulation {
 			j = vertex0.nextIndexOnP;
 			vertex0 = vertex1;
 			vertex1 = p.get(vertex1.nextIndexOnP);
-		}
-		return false;
-	}
-
-	/**
-	 * returns list of triangles. empty if failed.
-	 *
-	 * @param polygon
-	 * @param eps
-	 * @return
-	 */
-	public List<Polygon> triangulateNaive(final Polygon polygon, final double eps) {
-
-		var triangles = new ArrayList<Polygon>();
-
-		var p = polygon;
-		for (int k = 0; k < polygon.verticesCount() - 2; k++) {
-			if (p.verticesCount() == 3) {
-				break;
-			}
-
-			for (int i = 0; i < p.verticesCount(); i++) {
-				int i0 = i;
-				int i1 = (i + 1) % p.verticesCount();
-				int i2 = (i + 2) % p.verticesCount();
-
-				logger.trace("try {},{},{}", i0, i1, i2);
-
-				var v0 = p.getVertex(i0);
-				var v1 = p.getVertex(i1);
-				var v2 = p.getVertex(i2);
-
-				var e0 = new Segment(v0, v1);
-				var e1 = new Segment(v1, v2);
-				var e = new Segment(v0, v2);
-
-				// center angle should not be larger than or equal to 180
-				// degrees.
-				if (!GeomUtil.isStrictlyCCW(v0, v1, v2)) {
-					logger.trace("reflex vertex: {}", v1);
-					logger.trace(System.lineSeparator()
-							+ " remain:" + p + System.lineSeparator()
-							+ triangles.size() + " triangles:" + triangles);
-					continue;
-				}
-				if (!crossesPolygonEdgeNaive(p, e0, e1, e, i0, i1, i2, eps)) {
-					p = p.removeVertex(i1);
-					var triangle = new Polygon(List.of(v0, v1, v2));
-					triangles.add(triangle);
-					break;
-				}
-
-			}
-		}
-
-		if (p.verticesCount() != 3) {
-			logger.trace("failed: fewer cuts " + polygon.verticesCount()
-					+ "->" + p.verticesCount() + System.lineSeparator()
-					+ " polygon:" + polygon + System.lineSeparator()
-					+ " remain:" + p + System.lineSeparator()
-					+ " triangles:" + triangles);
-			return List.of();
-		}
-
-		triangles.add(p);
-
-		if (triangles.size() != polygon.verticesCount() - 2) {
-			logger.trace("failed: fewer triangles, #triangle should be " + (polygon.verticesCount() - 2)
-					+ " but is " + triangles.size() + System.lineSeparator()
-					+ " polygon:" + polygon + System.lineSeparator()
-					+ " remain:" + p + System.lineSeparator()
-					+ " triangles:" + triangles);
-			return List.of();
-		}
-
-		return triangles;
-	}
-
-	private boolean crossesPolygonEdgeNaive(final Polygon p,
-			final Segment e0, final Segment e1, final Segment e,
-			final int i0, final int i1, final int i2,
-			final double eps) {
-
-		if (GeomUtil.isOverlap(e0, e1, eps)) {
-			return false;
-		}
-
-//		if ((e1.length() < eps)) {
-//			return false;
-//		}
-
-		for (int j = 0; j < p.verticesCount(); j++) {
-			if (j == i0 || j == i1) {
-				continue;
-			}
-
-			var e_j = p.getEdge(j);
-
-			if (e.equals(e_j, eps)) {
-				return true;
-			}
-
-			var crossOpt = GeomUtil.getCrossPoint(e, e_j);
-			// crosses
-			if (crossOpt.isPresent()) {
-				// cross point is the endpoint of e
-				if (crossOpt.filter(cross -> e.pointStream().anyMatch(v -> v.equals(cross, eps))).isPresent()) {
-					// cross point is the angle of the triangle
-					continue;
-				}
-				return true;
-			} else if (GeomUtil.isOverlap(e, e_j, eps)) {
-				return true;
-			}
 		}
 		return false;
 	}
