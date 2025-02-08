@@ -148,7 +148,7 @@ public class Polygon {
 				.anyMatch(triangle -> triangle.isOnEdge(v, eps) || triangle.isInsideConvex(v));
 	}
 
-	private void buildTriangles(final double eps) {
+	public void buildTriangles(final double eps) {
 		if (triangles == null) {
 			var triangulator = new TwoEarTriangulation();
 

@@ -19,6 +19,8 @@
 package oripa.renderer.estimation;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
@@ -31,16 +33,20 @@ class OverlapRelationInterpolater {
 	public OverlapRelation interpolate(final OverlapRelation overlapRelation, final List<Face> faces,
 			final double eps) {
 		var interpolatedOverlapRelation = overlapRelation.clone();
-		boolean changed = false;
+		var changed = new AtomicBoolean(false);
+
+		for (var face : faces) {
+			face.getConvertedFace().buildTriangles(eps);
+		}
 
 		do {
-			changed = false;
-			for (int i = 0; i < faces.size(); i++) {
-				for (int j = 0; j < faces.size(); j++) {
-					changed |= interpolate(interpolatedOverlapRelation, faces, i, j, eps);
-				}
-			}
-		} while (changed);
+			changed.set(false);
+			IntStream.range(0, faces.size()).parallel().forEach(i -> {
+				changed.set(IntStream.range(0, faces.size())
+						.parallel()
+						.anyMatch(j -> interpolate(interpolatedOverlapRelation, faces, i, j, eps)));
+			});
+		} while (changed.get());
 
 		return interpolatedOverlapRelation;
 	}

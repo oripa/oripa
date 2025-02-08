@@ -347,6 +347,10 @@ public class OriFace {
 		polygon = toPolygon();
 	}
 
+	public void buildTriangles(final double eps) {
+		polygon.buildTriangles(eps);
+	}
+
 	public List<Vector2d> getInnerPoints(final double eps) {
 		if (polygon == null) {
 			refreshPositions();
