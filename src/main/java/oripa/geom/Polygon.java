@@ -56,11 +56,6 @@ public class Polygon {
 		return new Segment(vertices.get(i), vertices.get((i + 1) % verticesCount()));
 	}
 
-	public Polygon removeVertex(final int i) {
-		var vertex = vertices.get(i);
-		return new Polygon(vertices.stream().filter(v -> v != vertex).toList());
-	}
-
 	/**
 	 *
 	 * @return centroid of this polygon. can be null.
