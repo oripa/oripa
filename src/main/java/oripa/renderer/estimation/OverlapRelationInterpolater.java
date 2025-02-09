@@ -18,12 +18,12 @@
  */
 package oripa.renderer.estimation;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.IntStream;
 
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.util.IntPair;
 
 /**
  * @author OUCHI Koji
@@ -33,20 +33,30 @@ class OverlapRelationInterpolater {
 	public OverlapRelation interpolate(final OverlapRelation overlapRelation, final List<Face> faces,
 			final double eps) {
 		var interpolatedOverlapRelation = overlapRelation.clone();
-		var changed = new AtomicBoolean(false);
+		var changed = false;
 
+		var noOverlapPairs = new ArrayList<IntPair>();
+
+		// prepare for inclusion tests
 		for (var face : faces) {
 			face.getConvertedFace().buildTriangles(eps);
 		}
 
+		// extract indices of faces to be interpolated
+		for (int i = 0; i < faces.size(); i++) {
+			var face_i = faces.get(i);
+			for (int j = 0; j < faces.size(); j++) {
+				var face_j = faces.get(j);
+				if (!interpolatedOverlapRelation.isNoOverlap(face_i.getFaceID(), face_j.getFaceID())) {
+					noOverlapPairs.add(new IntPair(i, j));
+				}
+			}
+		}
+
 		do {
-			changed.set(false);
-			IntStream.range(0, faces.size()).parallel().forEach(i -> {
-				changed.set(IntStream.range(0, faces.size())
-						.parallel()
-						.anyMatch(j -> interpolate(interpolatedOverlapRelation, faces, i, j, eps)));
-			});
-		} while (changed.get());
+			changed = noOverlapPairs.parallelStream()
+					.anyMatch(pair -> interpolate(interpolatedOverlapRelation, faces, pair.v1(), pair.v2(), eps));
+		} while (changed);
 
 		return interpolatedOverlapRelation;
 	}
