@@ -40,6 +40,7 @@ import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.foldformat.FoldedModelElementConverter;
 import oripa.persistence.foldformat.FoldedModelFOLDFormat;
 import oripa.persistence.foldformat.FrameClass;
+import oripa.value.CalculationResource;
 
 /**
  * Does not restore all of data but enough for exporting SVG.
@@ -83,20 +84,22 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 		var converter = new FoldedModelElementConverter();
 
 		var vertices = converter.fromVerticesCoords(foldFormat.getVerticesCoords());
+		var positions = vertices.stream().map(OriVertex::getPosition).toList();
+
+		var domain = RectangleDomain.createFromPoints(positions);
+		var modelSize = domain.maxWidthHeight();
+
 		var edges = converter.fromEdges(foldFormat.getEdgesVertices(), foldFormat.getEdgesAssignment(), vertices);
 		var faces = converter.fromFacesVertices(foldFormat.getFacesVertices(), foldFormat.getEdgesVertices(),
-				vertices, edges);
+				vertices, edges, modelSize * CalculationResource.POINT_EPS);
 
 		var precreases = foldFormat.getFacesPrecreases();
 		if (precreases != null) {
 			converter.restorePrecreases(precreases, edges, faces);
 		}
 
-		var positions = vertices.stream().map(OriVertex::getPosition).toList();
-		var domain = RectangleDomain.createFromPoints(positions);
-
 		// tentative value
-		var origamiModel = new OrigamiModel(domain.maxWidthHeight() * 1.1);
+		var origamiModel = new OrigamiModel(modelSize * 1.1);
 
 		origamiModel.setVertices(vertices);
 		converter.setVertexIDs(origamiModel);

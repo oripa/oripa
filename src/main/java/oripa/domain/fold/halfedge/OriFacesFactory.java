@@ -53,7 +53,7 @@ public class OriFacesFactory {
 
 		boolean valid = true;
 
-		var createdFaces = createFaces(vertices);
+		var createdFaces = createFaces(vertices, eps);
 
 		logger.trace("created faces: {}", createdFaces);
 
@@ -66,7 +66,7 @@ public class OriFacesFactory {
 
 		createdFaces = createdFaces.stream().filter(face -> face.halfedgeCount() >= 3).toList();
 
-		var boundaryFaces = createBoundaryFaces(vertices);
+		var boundaryFaces = createBoundaryFaces(vertices, eps);
 
 		// find boundary face with no internal vertex
 		boundaryFaces.removeIf(
@@ -81,14 +81,14 @@ public class OriFacesFactory {
 		return valid;
 	}
 
-	private Collection<OriFace> createFaces(final Collection<OriVertex> vertices) {
+	private Collection<OriFace> createFaces(final Collection<OriVertex> vertices, final double eps) {
 		var faces = new ArrayList<OriFace>();
 
 		// Construct the faces
 		for (OriVertex v : vertices) {
 			var createdFaces = v.edgeStream()
 					.filter(e -> isTarget(v, e))
-					.map(e -> makeFace(v, e))
+					.map(e -> makeFace(v, e, eps))
 					.toList();
 
 			faces.addAll(createdFaces);
@@ -122,7 +122,7 @@ public class OriFacesFactory {
 		return true;
 	}
 
-	List<OriFace> createBoundaryFaces(final Collection<OriVertex> vertices) {
+	List<OriFace> createBoundaryFaces(final Collection<OriVertex> vertices, final double eps) {
 
 		var boundaryFaces = new ArrayList<OriFace>();
 
@@ -130,7 +130,7 @@ public class OriFacesFactory {
 
 			var createdFaces = v.edgeStream()
 					.filter(e -> isTargetBoundary(v, e))
-					.map(e -> makeBoundaryFace(v, e))
+					.map(e -> makeBoundaryFace(v, e, eps))
 					.toList();
 
 			boundaryFaces.addAll(createdFaces.stream()
@@ -155,15 +155,17 @@ public class OriFacesFactory {
 		return true;
 	}
 
-	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
+	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge, final double eps) {
 		return makeFace(startingVertex, startingEdge, 500,
+				eps,
 				// to make a loop in counterclockwise in mathematical
 				// coordinates.
 				(walkV, walkE) -> walkV.getPrevEdge(walkE));
 	}
 
-	private OriFace makeBoundaryFace(final OriVertex startingVertex, final OriEdge startingEdge) {
+	private OriFace makeBoundaryFace(final OriVertex startingVertex, final OriEdge startingEdge, final double eps) {
 		return makeFace(startingVertex, startingEdge, 10000,
+				eps,
 				(walkV, walkE) -> {
 					var nextEdge = walkE;
 					do {
@@ -184,6 +186,7 @@ public class OriFacesFactory {
 	 * @return
 	 */
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge, final int maxCount,
+			final double eps,
 			final BiFunction<OriVertex, OriEdge, OriEdge> getNextEdge) {
 		OriFace face = new OriFace();
 		OriVertex walkV = startingVertex;
@@ -205,7 +208,7 @@ public class OriFacesFactory {
 			walkV = walkE.oppositeVertex(walkV);
 			walkE = getNextEdge.apply(walkV, walkE);
 		} while (walkV != startingVertex);
-		face.makeHalfedgeLoop();
+		face.makeHalfedgeLoop(eps);
 		return face;
 	}
 

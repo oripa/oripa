@@ -96,9 +96,9 @@ public class Distortion {
 			final CoordinateConverter converter,
 			final Map<OriVertex, Integer> vertexDepths, final double eps) {
 
-		var factory = new FaceFactory(converter, vertexDepths);
+		var factory = new FaceFactory(converter, vertexDepths, eps);
 		var faces = origamiModel.getFaces().stream()
-				.map(factory::create)
+				.map(face -> factory.create(face, eps))
 				.toList();
 
 		var interpolated = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);

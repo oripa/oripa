@@ -105,7 +105,7 @@ class SimpleFolder {
 		}
 
 		for (var face : faces) {
-			face.refreshPositions();
+			face.refreshPositions(eps);
 		}
 
 	}

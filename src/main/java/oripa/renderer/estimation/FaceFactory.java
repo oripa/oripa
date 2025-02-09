@@ -40,16 +40,17 @@ class FaceFactory {
 	 * @param vertexDepths
 	 *            can be empty map if converter does not use.
 	 */
-	public FaceFactory(final CoordinateConverter converter, final Map<OriVertex, Integer> vertexDepths) {
+	public FaceFactory(final CoordinateConverter converter, final Map<OriVertex, Integer> vertexDepths,
+			final double eps) {
 		this.converter = converter;
 		this.vertexDepths = vertexDepths;
 	}
 
-	public Face create(final OriFace face) {
-		return new Face(face, convertCoordinate(face));
+	public Face create(final OriFace face, final double eps) {
+		return new Face(face, convertCoordinate(face, eps));
 	}
 
-	private OriFace convertCoordinate(final OriFace face) {
+	private OriFace convertCoordinate(final OriFace face, final double eps) {
 		var convertedFace = new OriFace();
 		convertedFace.setFaceID(face.getFaceID());
 
@@ -72,7 +73,7 @@ class FaceFactory {
 		if (!face.isFaceFront()) {
 			convertedFace.invertFaceFront();
 		}
-		convertedFace.makeHalfedgeLoop();
+		convertedFace.makeHalfedgeLoop(eps);
 
 		return convertedFace;
 	}

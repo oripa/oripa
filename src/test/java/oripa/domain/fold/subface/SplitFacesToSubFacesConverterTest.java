@@ -51,11 +51,11 @@ class SplitFacesToSubFacesConverterTest {
 		var splitFace1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
 		var splitFace2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
 
-		when(splitFace1.remove180degreeVertices()).thenReturn(splitFace1);
+		when(splitFace1.remove180degreeVertices(anyDouble())).thenReturn(splitFace1);
 		when(splitFace1.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace1);
 		when(splitFace1.halfedgeCount()).thenReturn(4);
 
-		when(splitFace2.remove180degreeVertices()).thenReturn(splitFace2);
+		when(splitFace2.remove180degreeVertices(anyDouble())).thenReturn(splitFace2);
 		when(splitFace2.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace2);
 		when(splitFace2.halfedgeCount()).thenReturn(4);
 

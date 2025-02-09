@@ -71,7 +71,7 @@ public class SubFace {
 	 */
 	public SubFace(final OriFace outline, final double eps) {
 		this.outline = outline;
-		this.outlineTriangulation = new TwoEarTriangulation().triangulate(outline.toPolygon(), eps);
+		this.outlineTriangulation = new TwoEarTriangulation().triangulate(outline.toPolygon(eps), eps);
 	}
 
 	/**
