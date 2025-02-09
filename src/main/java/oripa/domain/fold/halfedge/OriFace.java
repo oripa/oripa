@@ -320,7 +320,8 @@ public class OriFace {
 	 */
 	public Polygon toPolygon() {
 		var vertices = halfedges.stream()
-				.map(OriHalfedge::getPosition).toList();
+				.map(OriHalfedge::getPosition)
+				.toList();
 
 		if (!isFaceFront()) {
 			vertices = vertices.reversed();
@@ -331,7 +332,8 @@ public class OriFace {
 
 	public Polygon toPolygonBeforeFolding() {
 		var vertices = halfedges.stream()
-				.map(OriHalfedge::getPositionBeforeFolding).toList();
+				.map(OriHalfedge::getPositionBeforeFolding)
+				.toList();
 
 		return new Polygon(removeDuplications(vertices));
 	}
@@ -343,10 +345,19 @@ public class OriFace {
 				.toList();
 	}
 
+	/**
+	 * Updates the polygon of this face.
+	 */
 	public void refreshPositions() {
 		polygon = toPolygon();
 	}
 
+	/**
+	 * Triangulates the polygon of this face for inclusion tests and inner
+	 * points.
+	 *
+	 * @param eps
+	 */
 	public void buildTriangles(final double eps) {
 		polygon.buildTriangles(eps);
 	}
