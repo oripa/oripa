@@ -43,6 +43,7 @@ class OverlapRelationInterpolater {
 			face.getConvertedFace().buildTriangles(eps);
 		}
 
+		// preparation
 		IntStream.range(0, faces.size())
 				.parallel()
 				.forEach(i -> IntStream.range(0, faces.size())
@@ -54,6 +55,8 @@ class OverlapRelationInterpolater {
 							var face_j = faces.get(j);
 							var index_j = face_j.getFaceID();
 
+							// converted faces (= distorted faces) can overlap
+							// even if original faces don't overlap.
 							if (overlapRelation.isNoOverlap(index_i, index_j)) {
 								if (OriGeomUtil.isFaceOverlap(
 										face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
@@ -63,6 +66,7 @@ class OverlapRelationInterpolater {
 						}));
 
 		do {
+			// update overlap relation
 			changed = newOverlaps.stream()
 					.anyMatch(pair -> interpolate(interpolatedOverlapRelation, faces,
 							pair.v1(), pair.v2(), eps));
