@@ -167,7 +167,8 @@ public class FoldedModelElementConverter {
 	}
 
 	public List<OriFace> fromFacesVertices(final List<List<Integer>> facesVertices,
-			final List<List<Integer>> edgesVertices, final List<OriVertex> vertices, final List<OriEdge> edges) {
+			final List<List<Integer>> edgesVertices, final List<OriVertex> vertices, final List<OriEdge> edges,
+			final double eps) {
 		var faces = new ArrayList<OriFace>();
 
 		for (int i = 0; i < facesVertices.size(); i++) {
@@ -179,7 +180,7 @@ public class FoldedModelElementConverter {
 				var halfedge = new OriHalfedge(vertices.get(v), face);
 				face.addHalfedge(halfedge);
 			});
-			face.makeHalfedgeLoop();
+			face.makeHalfedgeLoop(eps);
 
 			final int vertexCount = faceVertices.size();
 			for (int j = 0; j < vertexCount; j++) {

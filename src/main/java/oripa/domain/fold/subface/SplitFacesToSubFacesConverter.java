@@ -49,7 +49,7 @@ public class SplitFacesToSubFacesConverter {
 			final double eps) {
 		Collection<OriFace> faces = new ArrayList<>(
 				splitFaces.stream()
-						.map(face -> face.remove180degreeVertices())
+						.map(face -> face.remove180degreeVertices(eps))
 						.map(face -> face.removeDuplicatedVertices(eps))
 						.filter(face -> face.halfedgeCount() >= 3)
 						.toList());

@@ -168,7 +168,7 @@ public class OrigamiModelFactory {
 		var boundaryVertices = new ArrayList<OriVertex>();
 		buildVertices(boundaryCreasePattern, boundaryVertices, pointEps);
 
-		var boundaryFaces = facesFactory.createBoundaryFaces(boundaryVertices);
+		var boundaryFaces = facesFactory.createBoundaryFaces(boundaryVertices, pointEps);
 
 		var origamiModels = new ArrayList<OrigamiModel>();
 

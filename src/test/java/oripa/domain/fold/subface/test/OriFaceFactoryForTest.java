@@ -18,6 +18,7 @@
  */
 package oripa.domain.fold.subface.test;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class OriFaceFactoryForTest {
 		lenient().when(face.halfedgeIterable()).thenReturn(list);
 		lenient().when(face.halfedgeStream()).thenAnswer(invocation -> list.stream());
 
-		lenient().when(face.toPolygon()).thenReturn(
+		lenient().when(face.toPolygon(anyDouble())).thenReturn(
 				new Polygon(List.of(new Vector2d(left, top), new Vector2d(right, top), new Vector2d(right, bottom),
 						new Vector2d(left, bottom))));
 

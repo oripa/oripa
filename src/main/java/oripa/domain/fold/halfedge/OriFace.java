@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import oripa.geom.GeomUtil;
 import oripa.geom.Polygon;
 import oripa.geom.Segment;
-import oripa.util.MathUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -198,7 +197,7 @@ public class OriFace {
 	 *
 	 * @return
 	 */
-	public OriFace remove180degreeVertices() {
+	public OriFace remove180degreeVertices(final double eps) {
 		int count = halfedgeCount();
 		var toDelete = new ArrayList<Integer>();
 
@@ -218,7 +217,7 @@ public class OriFace {
 			halfedges.remove(i);
 		}
 
-		makeHalfedgeLoop();
+		makeHalfedgeLoop(eps);
 
 		return this;
 	}
@@ -248,16 +247,16 @@ public class OriFace {
 			halfedges.remove(i);
 		}
 
-		makeHalfedgeLoop();
+		makeHalfedgeLoop(eps);
 
 		return this;
 	}
 
 	/**
 	 * Link each half-edge to previous one and next one in the
-	 * {@link #halfedges}.
+	 * {@link #halfedges}. Then builds the polygon of this face.
 	 */
-	public void makeHalfedgeLoop() {
+	public void makeHalfedgeLoop(final double eps) {
 		for (int i = 0; i < halfedges.size(); i++) {
 			OriHalfedge pre_he = CollectionUtil.getCircular(halfedges, i - 1);
 			OriHalfedge he = halfedges.get(i);
@@ -267,8 +266,8 @@ public class OriFace {
 			he.setPrevious(pre_he);
 		}
 
-		polygon = toPolygon();
-		polygonBeforeFolding = toPolygonBeforeFolding();
+		polygon = toPolygon(eps);
+		polygonBeforeFolding = toPolygonBeforeFolding(eps);
 	}
 
 	public List<Vector2d> createOutlineVerticesAfterFolding() {
@@ -318,46 +317,62 @@ public class OriFace {
 	 *
 	 * @return
 	 */
-	public Polygon toPolygon() {
+	public Polygon toPolygon(final double eps) {
 		var vertices = halfedges.stream()
-				.map(OriHalfedge::getPosition).toList();
+				.map(OriHalfedge::getPosition)
+				.toList();
 
 		if (!isFaceFront()) {
 			vertices = vertices.reversed();
 		}
 
-		return new Polygon(removeDuplications(vertices));
+		return new Polygon(removeDuplications(vertices, eps));
 	}
 
-	public Polygon toPolygonBeforeFolding() {
+	public Polygon toPolygonBeforeFolding(final double eps) {
 		var vertices = halfedges.stream()
-				.map(OriHalfedge::getPositionBeforeFolding).toList();
+				.map(OriHalfedge::getPositionBeforeFolding)
+				.toList();
 
-		return new Polygon(removeDuplications(vertices));
+		return new Polygon(removeDuplications(vertices, eps));
 	}
 
-	private List<Vector2d> removeDuplications(final List<Vector2d> vertices) {
+	private List<Vector2d> removeDuplications(final List<Vector2d> vertices, final double eps) {
 		return vertices.stream()
 				.filter(v -> vertices.stream()
-						.noneMatch(u -> v != u && v.equals(u, MathUtil.normalizedValueEps())))
+						.noneMatch(u -> v != u && v.equals(u, eps)))
 				.toList();
 	}
 
-	public void refreshPositions() {
-		polygon = toPolygon();
+	/**
+	 * Updates the polygon of this face.
+	 */
+	public void refreshPositions(final double eps) {
+		polygon = toPolygon(eps);
+	}
+
+	/**
+	 * Triangulates the polygon of this face if necessary for inclusion tests
+	 * and inner points. If positions of vertices changed, call
+	 * {@link #refreshPositions(double)} and then call this method.
+	 *
+	 * @param eps
+	 */
+	public void buildTriangles(final double eps) {
+		polygon.buildTriangles(eps);
 	}
 
 	public List<Vector2d> getInnerPoints(final double eps) {
 		if (polygon == null) {
-			refreshPositions();
+			refreshPositions(eps);
 		}
 		return polygon.getInnerPoints(eps);
 	}
 
 	/**
 	 * Whether v is inclusively on this face (inside or on the edges). The test
-	 * is done with current position {@link OriVertex#getPosition()} of
-	 * half-edges.
+	 * is done with current position {@link OriVertex#getPosition()} of the
+	 * polygon of this face.
 	 *
 	 * @param v
 	 *            point to be tested.

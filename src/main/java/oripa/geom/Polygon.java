@@ -19,6 +19,7 @@
 package oripa.geom;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import oripa.vecmath.Vector2d;
 
@@ -31,6 +32,7 @@ public class Polygon {
 	private final Vector2d centroid;
 
 	private List<Polygon> triangles;
+	private List<RectangleDomain> triangleBounds;
 
 	public Polygon(final List<Vector2d> vertices) {
 		this.vertices = List.copyOf(vertices);
@@ -52,11 +54,6 @@ public class Polygon {
 
 	public Segment getEdge(final int i) {
 		return new Segment(vertices.get(i), vertices.get((i + 1) % verticesCount()));
-	}
-
-	public Polygon removeVertex(final int i) {
-		var vertex = vertices.get(i);
-		return new Polygon(vertices.stream().filter(v -> v != vertex).toList());
 	}
 
 	/**
@@ -140,10 +137,18 @@ public class Polygon {
 	private boolean isInside(final Vector2d v, final double eps) {
 		buildTriangles(eps);
 
-		return triangles.stream().anyMatch(triangle -> triangle.isOnEdge(v, eps) || triangle.isInsideConvex(v));
+		return IntStream.range(0, triangles.size())
+				.filter(i -> triangleBounds.get(i).contains(v))
+				.mapToObj(triangles::get)
+				.anyMatch(triangle -> triangle.isOnEdge(v, eps) || triangle.isInsideConvex(v));
 	}
 
-	private void buildTriangles(final double eps) {
+	/**
+	 * Triangulates this polygon if it has not been done.
+	 *
+	 * @param eps
+	 */
+	public void buildTriangles(final double eps) {
 		if (triangles == null) {
 			var triangulator = new TwoEarTriangulation();
 
@@ -156,6 +161,11 @@ public class Polygon {
 			if (triangles.isEmpty()) {
 				throw new IllegalStateException("Failed to triangulate a polygon.");
 			}
+
+			triangleBounds = triangles.stream()
+					.map(t -> RectangleDomain.createFromPoints(t.vertices))
+					.toList();
+
 		}
 
 	}
