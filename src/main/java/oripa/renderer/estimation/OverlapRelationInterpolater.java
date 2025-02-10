@@ -18,12 +18,14 @@
  */
 package oripa.renderer.estimation;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.util.IntPair;
+import oripa.util.collection.CollectionUtil;
 
 /**
  * @author OUCHI Koji
@@ -35,34 +37,42 @@ class OverlapRelationInterpolater {
 		var interpolatedOverlapRelation = overlapRelation.clone();
 		var changed = false;
 
-		var noOverlapPairs = new ArrayList<IntPair>();
+		Set<IntPair> newOverlaps = CollectionUtil.newConcurrentHashSet();
 
-		// prepare for inclusion tests
 		for (var face : faces) {
 			face.getConvertedFace().buildTriangles(eps);
 		}
 
-		// extract indices of faces to be interpolated
-		for (int i = 0; i < faces.size(); i++) {
-			var face_i = faces.get(i);
-			for (int j = 0; j < faces.size(); j++) {
-				var face_j = faces.get(j);
-				if (!interpolatedOverlapRelation.isNoOverlap(face_i.getFaceID(), face_j.getFaceID())) {
-					noOverlapPairs.add(new IntPair(i, j));
-				}
-			}
-		}
+		IntStream.range(0, faces.size())
+				.parallel()
+				.forEach(i -> IntStream.range(0, faces.size())
+						.parallel()
+						.forEach(j -> {
+							var face_i = faces.get(i);
+							var index_i = face_i.getFaceID();
+
+							var face_j = faces.get(j);
+							var index_j = face_j.getFaceID();
+
+							if (overlapRelation.isNoOverlap(index_i, index_j)) {
+								if (OriGeomUtil.isFaceOverlap(
+										face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
+									newOverlaps.add(new IntPair(i, j));
+								}
+							}
+						}));
 
 		do {
-			changed = noOverlapPairs.parallelStream()
-					.anyMatch(pair -> interpolate(interpolatedOverlapRelation, faces, pair.v1(), pair.v2(), eps));
+			changed = newOverlaps.stream()
+					.anyMatch(pair -> interpolate(interpolatedOverlapRelation, faces,
+							pair.v1(), pair.v2(), eps));
 		} while (changed);
 
 		return interpolatedOverlapRelation;
 	}
 
-	private boolean interpolate(final OverlapRelation interpolatedOverlapRelation, final List<Face> faces, final int i,
-			final int j, final double eps) {
+	private boolean interpolate(final OverlapRelation interpolatedOverlapRelation, final List<Face> faces,
+			final int i, final int j, final double eps) {
 		var face_i = faces.get(i);
 		var index_i = face_i.getFaceID();
 
@@ -77,21 +87,18 @@ class OverlapRelationInterpolater {
 			return false;
 		}
 
-		if (OriGeomUtil.isFaceOverlap(face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
+		for (var midFace : faces) {
+			var index_mid = midFace.getFaceID();
 
-			for (var midFace : faces) {
-				var index_mid = midFace.getFaceID();
+			if (index_i == index_mid || index_j == index_mid) {
+				continue;
+			}
 
-				if (index_i == index_mid || index_j == index_mid) {
-					continue;
-				}
+			if (interpolatedOverlapRelation.isUpper(index_i, index_mid)
+					&& interpolatedOverlapRelation.isUpper(index_mid, index_j)) {
 
-				if (interpolatedOverlapRelation.isUpper(index_i, index_mid)
-						&& interpolatedOverlapRelation.isUpper(index_mid, index_j)) {
-
-					interpolatedOverlapRelation.setUpper(index_i, index_j);
-					return true;
-				}
+				interpolatedOverlapRelation.setUpper(index_i, index_j);
+				return true;
 			}
 		}
 		return false;

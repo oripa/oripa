@@ -352,8 +352,9 @@ public class OriFace {
 	}
 
 	/**
-	 * Triangulates the polygon of this face for inclusion tests and inner
-	 * points.
+	 * Triangulates the polygon of this face if necessary for inclusion tests
+	 * and inner points. If positions of vertices changed, call
+	 * {@link #refreshPositions(double)} and then call this method.
 	 *
 	 * @param eps
 	 */

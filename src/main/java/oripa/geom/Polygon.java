@@ -143,6 +143,11 @@ public class Polygon {
 				.anyMatch(triangle -> triangle.isOnEdge(v, eps) || triangle.isInsideConvex(v));
 	}
 
+	/**
+	 * Triangulates this polygon if it has not been done.
+	 *
+	 * @param eps
+	 */
 	public void buildTriangles(final double eps) {
 		if (triangles == null) {
 			var triangulator = new TwoEarTriangulation();
