@@ -313,9 +313,9 @@ public class OriFace {
 	}
 
 	/**
-	 * Creates a polygon of this face with vertex duplication reduction.
+	 * Creates a polygon of this face with vertex reduction.
 	 *
-	 * @return
+	 * @return null if this face is invalid.
 	 */
 	public Polygon toPolygon(final double eps) {
 		var vertices = halfedges.stream()
@@ -326,7 +326,11 @@ public class OriFace {
 			vertices = vertices.reversed();
 		}
 
-		return new Polygon(removeDuplications(vertices, eps));
+		if (halfedges.size() < 3) {
+			return null;
+		}
+
+		return new Polygon(vertices).simplify(eps);
 	}
 
 	public Polygon toPolygonBeforeFolding(final double eps) {
@@ -334,14 +338,15 @@ public class OriFace {
 				.map(OriHalfedge::getPositionBeforeFolding)
 				.toList();
 
-		return new Polygon(removeDuplications(vertices, eps));
+		if (halfedges.size() < 3) {
+			return null;
+		}
+
+		return new Polygon(vertices).simplify(eps);
 	}
 
-	private List<Vector2d> removeDuplications(final List<Vector2d> vertices, final double eps) {
-		return vertices.stream()
-				.filter(v -> vertices.stream()
-						.noneMatch(u -> v != u && v.equals(u, eps)))
-				.toList();
+	public boolean isValid() {
+		return polygon != null;
 	}
 
 	/**

@@ -165,6 +165,10 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		return false;
 	}
 
+	public boolean equals(final OriLine l, final double pointEps) {
+		return equals((Segment) l, pointEps) && type == l.type;
+	}
+
 	@Override
 	public Vector2d getP0() {
 		return p0;

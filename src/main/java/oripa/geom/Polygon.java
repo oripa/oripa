@@ -18,7 +18,9 @@
  */
 package oripa.geom;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import oripa.vecmath.Vector2d;
@@ -35,6 +37,10 @@ public class Polygon {
 	private List<RectangleDomain> triangleBounds;
 
 	public Polygon(final List<Vector2d> vertices) {
+//		if (vertices.size() < 3) {
+//			throw new IllegalArgumentException("#vertices should be 3 or larger.");
+//		}
+
 		this.vertices = List.copyOf(vertices);
 
 		centroid = GeomUtil.computeCentroid(vertices).orElse(null);
@@ -42,6 +48,55 @@ public class Polygon {
 
 	public Polygon(final Polygon polygon) {
 		this(polygon.vertices);
+	}
+
+	/**
+	 * returns a new polygon with no vertex duplication and no 180 degree angle
+	 * vertex. null if the result is not polygon.
+	 *
+	 * @param eps
+	 * @return
+	 */
+	public Polygon simplify(final double eps) {
+		var vertices = removeDuplications(this.vertices, eps);
+		vertices = remove180degreeVertices(vertices, eps);
+
+		if (vertices.size() < 3) {
+			return null;
+		}
+
+		return new Polygon(vertices);
+	}
+
+	private List<Vector2d> removeDuplications(final List<Vector2d> vertices, final double eps) {
+		return vertices.stream()
+				.filter(v -> vertices.stream()
+						.noneMatch(u -> v != u && v.equals(u, eps)))
+				.toList();
+	}
+
+	/**
+	 * this method breaks the edge informations in each vertex.
+	 *
+	 * @return
+	 */
+	private List<Vector2d> remove180degreeVertices(final List<Vector2d> vertices, final double eps) {
+		int count = vertices.size();
+		var toDelete = new ArrayList<Vector2d>();
+
+		for (int i = 0; i < count; i++) {
+			var v0 = vertices.get(i);
+			var v1 = vertices.get((i + 1) % count);
+			var v2 = vertices.get((i + 2) % count);
+
+			if (GeomUtil.CCWcheck(v0, v1, v2) == 0) {
+				toDelete.add(v1);
+			}
+		}
+
+		return vertices.stream()
+				.filter(Predicate.not(toDelete::contains))
+				.toList();
 	}
 
 	public Vector2d getVertex(final int i) {

@@ -85,8 +85,13 @@ public class ElementRemover {
 		// Merge possibility found
 		OriLine line = merge(connectionPoint, l0, l1, pointEps);
 
-		creasePattern.remove(l0);
-		creasePattern.remove(l1);
+		// consider eps since consecutive merges might produce a point drift.
+		if (creasePattern.removeIf(l -> l0.equals(l, pointEps))) {
+			logger.trace("remove {}", l0);
+		}
+		if (creasePattern.removeIf(l -> l1.equals(l, pointEps))) {
+			logger.trace("remove {}", l1);
+		}
 		creasePattern.add(line);
 
 		return Optional.of(line);

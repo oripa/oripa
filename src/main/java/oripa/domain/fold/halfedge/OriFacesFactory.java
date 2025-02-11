@@ -64,14 +64,16 @@ public class OriFacesFactory {
 			valid = false;
 		}
 
-		createdFaces = createdFaces.stream().filter(face -> face.halfedgeCount() >= 3).toList();
+		createdFaces = createdFaces.stream()
+				.filter(face -> face.halfedgeCount() >= 3)
+				.toList();
 
 		var boundaryFaces = createBoundaryFaces(vertices, eps);
 
 		// find boundary face with no internal vertex
 		boundaryFaces.removeIf(
-				face -> vertices.stream().anyMatch(
-						vertex -> face.includesExclusively(vertex.getPosition(), eps)));
+				face -> vertices.stream()
+						.anyMatch(vertex -> face.includesExclusively(vertex.getPosition(), eps)));
 
 		faces.addAll(createdFaces);
 		faces.addAll(boundaryFaces);

@@ -205,10 +205,13 @@ public class OrigamiModelFactory {
 
 		// attach precrease lines to faces
 		for (OriFace face : faces) {
-			face.setPrecreases(modelPrecreases.stream()
-					.filter(precrease -> face.includesInclusively(precrease, pointEps))
-					.toList());
+			if (face.isValid()) {
+				face.setPrecreases(modelPrecreases.stream()
+						.filter(precrease -> face.includesInclusively(precrease, pointEps))
+						.toList());
+			}
 		}
+
 		origamiModel.setHasModel(true);
 
 		return origamiModel;
