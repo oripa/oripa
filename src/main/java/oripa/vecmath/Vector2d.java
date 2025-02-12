@@ -67,11 +67,11 @@ public class Vector2d {
 		this.yNormal = v[2];
 	}
 
-	private Vector2d(final double x, final double y, final double r, final double xNormal, final double yNormal) {
+	private Vector2d(final double x, final double y, final double length, final double xNormal, final double yNormal) {
 		this.x = x;
 		this.y = y;
 
-		this.length = r;
+		this.length = length;
 		this.xNormal = xNormal;
 		this.yNormal = yNormal;
 
@@ -127,7 +127,8 @@ public class Vector2d {
 	}
 
 	public Vector2d multiply(final double a) {
-		return new Vector2d(a * x, a * y, length * a, xNormal, yNormal);
+		double sign = Math.signum(a);
+		return new Vector2d(a * x, a * y, length * Math.abs(a), sign * xNormal, sign * yNormal);
 	}
 
 	/**
