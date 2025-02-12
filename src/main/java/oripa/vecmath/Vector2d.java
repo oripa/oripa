@@ -34,11 +34,14 @@ import oripa.util.MathUtil;
  *
  */
 public class Vector2d {
-
-	private final double r;
-
+	// true values
 	private final double x;
 	private final double y;
+
+	// for robust normalization which also extracts length.
+	private final double length;
+	private final double xNormal;
+	private final double yNormal;
 
 	public static Vector2d fromArray(final double[] xy) {
 		return new Vector2d(xy[0], xy[1]);
@@ -49,20 +52,29 @@ public class Vector2d {
 	}
 
 	public static Vector2d unitVector(final double angle) {
-		return new Vector2d(1, cos(angle), sin(angle));
+		var x = cos(angle);
+		var y = sin(angle);
+		return new Vector2d(x, y, 1, x, y);
 	}
 
 	public Vector2d(final double x, final double y) {
+		this.x = x;
+		this.y = y;
+
 		var v = normalize(x, y);
-		this.r = v[0];
-		this.x = v[1];
-		this.y = v[2];
+		this.length = v[0];
+		this.xNormal = v[1];
+		this.yNormal = v[2];
 	}
 
-	private Vector2d(final double r, final double xNormal, final double yNormal) {
-		this.r = r;
-		this.x = xNormal;
-		this.y = yNormal;
+	private Vector2d(final double x, final double y, final double r, final double xNormal, final double yNormal) {
+		this.x = x;
+		this.y = y;
+
+		this.length = r;
+		this.xNormal = xNormal;
+		this.yNormal = yNormal;
+
 	}
 
 	public <T extends Vector2d> Optional<T> findNearest(final Collection<T> vertices) {
@@ -83,19 +95,19 @@ public class Vector2d {
 	}
 
 	public double[] toArray() {
-		return new double[] { r * x, r * y };
+		return new double[] { length * xNormal, length * yNormal };
 	}
 
 	public double getX() {
-		return r * x;
+		return x;
 	}
 
 	public double getY() {
-		return r * y;
+		return y;
 	}
 
 	public double getSlope() {
-		return y / x;
+		return yNormal / xNormal;
 	}
 
 	/**
@@ -104,14 +116,10 @@ public class Vector2d {
 	 * @return this + v
 	 */
 	public Vector2d add(final Vector2d v) {
-		double x_ = preciseAddWithFactor(r, x, v.r, v.x);
-		double y_ = preciseAddWithFactor(r, y, v.r, v.y);
+		double x_ = x + v.x;
+		double y_ = y + v.y;
 
 		return new Vector2d(x_, y_);
-	}
-
-	private double preciseAddWithFactor(final double ra, final double a, final double rb, final double b) {
-		return MathUtil.preciseAddWithFactor(ra, a, rb, b);
 	}
 
 	public Vector2d subtract(final Vector2d v) {
@@ -119,7 +127,7 @@ public class Vector2d {
 	}
 
 	public Vector2d multiply(final double a) {
-		return new Vector2d(r * a, x, y);
+		return new Vector2d(a * x, a * y, length * a, xNormal, yNormal);
 	}
 
 	/**
@@ -129,19 +137,20 @@ public class Vector2d {
 	 * @return (y, -x)
 	 */
 	public Vector2d getRightSidePerpendicular() {
-		return new Vector2d(r, y, -x);
+		return new Vector2d(y, -x, length, yNormal, -xNormal);
 	}
 
 	public double length() {
-		return r;
+		return length;
 	}
 
 	public double lengthSquared() {
-		return r * r;
+		return length * length;
 	}
 
 	private double[] normalize(final double x, final double y) {
-		// simple robust computation https://arxiv.org/abs/1606.06508
+		// simple robust computation, algorithm 2 of
+		// https://arxiv.org/abs/1606.06508
 		var ax = Math.abs(x);
 		var ay = Math.abs(y);
 
@@ -165,16 +174,17 @@ public class Vector2d {
 	}
 
 	public Vector2d normalize() {
-		return new Vector2d(1, x, y);
+		return new Vector2d(xNormal, yNormal, 1, xNormal, yNormal);
 	}
 
 	public double dot(final Vector2d v) {
 
-		return r * v.r * preciseAddWithFactor(x, v.x, y, v.y);
+		return length * v.length * (xNormal * v.xNormal + yNormal * v.yNormal);
 	}
 
 	public double angle(final Vector2d v) {
-		var cos = preciseAddWithFactor(x, v.x, y, v.y);
+		// normalized dot product
+		var cos = xNormal * v.xNormal + yNormal * v.yNormal;
 
 		if (cos < -1.0) {
 			cos = -1.0;
@@ -191,9 +201,15 @@ public class Vector2d {
 		double cos = cos(theta);
 		double sin = sin(theta);
 
-		return new Vector2d(r,
-				preciseAddWithFactor(cos, x, -sin, y),
-				preciseAddWithFactor(sin, x, cos, y));
+		double xNormal_ = cos * xNormal - sin * yNormal;
+		double yNormal_ = sin * xNormal + cos * yNormal;
+
+		return new Vector2d(
+				length * xNormal_,
+				length * yNormal_,
+				length,
+				xNormal_,
+				yNormal_);
 	}
 
 	/**
@@ -201,7 +217,7 @@ public class Vector2d {
 	 * @return arc tangent of this vector between 0 and 2 * PI
 	 */
 	public double ownAngle() {
-		return MathUtil.normalizeAngle(atan2(y, x));
+		return MathUtil.normalizeAngle(atan2(yNormal, xNormal));
 	}
 
 	/**
@@ -210,8 +226,8 @@ public class Vector2d {
 	 * @return Euclidean distance between the given vector and this vector.
 	 */
 	public double distance(final Vector2d v) {
-		var dx = preciseAddWithFactor(r, x, -v.r, v.x);
-		var dy = preciseAddWithFactor(r, y, -v.r, v.y);
+		var dx = x - v.x;
+		var dy = y - v.y;
 
 		return sqrt(dx * dx + dy * dy);
 	}
@@ -222,14 +238,14 @@ public class Vector2d {
 	}
 
 	public double crossProductZ(final Vector2d v) {
-		return r * v.r * preciseAddWithFactor(x, v.y, -y, v.x);
+		return length * v.length * (xNormal * v.yNormal - yNormal * v.xNormal);
 
 	}
 
 	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof Vector2d v) {
-			return r == v.r && x == v.x && y == v.y;
+			return x == v.x && y == v.y;
 		}
 		return false;
 
@@ -249,11 +265,11 @@ public class Vector2d {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(r, x, y);
+		return Objects.hash(x, y);
 	}
 
 	@Override
 	public String toString() {
-		return "(" + r * x + ", " + r * y + ")";
+		return "(" + x + ", " + y + ")";
 	}
 }
