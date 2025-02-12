@@ -30,7 +30,6 @@ import oripa.geom.Segment;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
-import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -89,7 +88,7 @@ public class OriVerticesFactory {
 		}
 
 		// suppress position drift by using nearest
-		var neighbor = Vector2d.findNearest(p, neighbors);
+		var neighbor = p.findNearest(neighbors);
 
 		return boundMap.get(neighbor.get());
 	}

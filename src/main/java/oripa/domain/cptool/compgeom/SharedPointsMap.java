@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
-import oripa.vecmath.Vector2d;
 
 /**
  * Create this instance via {@link SharedPointsMapFactory}.
@@ -86,7 +85,7 @@ public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint
 		if (boundMap.containsKey(p)) {
 			return p;
 		}
-		var pointOpt = Vector2d.findNearest(p, boundMap.keySet());
+		var pointOpt = p.findNearest(boundMap.keySet());
 
 //		if (pointOpt.isEmpty()) {
 //			logger.debug("no key point in close area. trying nearest search and the result might be wrong.");
