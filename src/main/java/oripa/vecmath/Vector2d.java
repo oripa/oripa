@@ -141,7 +141,7 @@ public class Vector2d {
 	}
 
 	private double[] normalize(final double x, final double y) {
-		// simple robust computation
+		// simple robust computation https://arxiv.org/abs/1606.06508
 		var ax = Math.abs(x);
 		var ay = Math.abs(y);
 

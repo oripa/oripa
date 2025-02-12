@@ -21,6 +21,7 @@ package oripa.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,12 @@ class MathUtilTest {
 
 		var sum = MathUtil.preciseSum(values);
 		assertEquals(1, sum);
+	}
+
+	@Test
+	void testPreciseSum_BigMagnitudeDifference() {
+		var sum = MathUtil.preciseSum(List.of(1.0, 1e100, 1.0, -1e100));
+		assertEquals(2.0, sum);
 	}
 
 }

@@ -131,53 +131,29 @@ public class MathUtil {
 		throw new IllegalStateException("approximation failed.");
 	}
 
-	public static boolean canCauseDigitLoss(final double a, final double b, final boolean isAddition,
-			final double eps) {
-
-		var m = Math.abs(Math.max(a, b));
-		if (Math.abs(Math.abs(a) / m - Math.abs(b) / m) > eps) {
-			return false;
-		}
-
-		if (a == 0 || b == 0) {
-			return false;
-		}
-
-		if (isAddition) {
-			return Math.signum(a) != Math.signum(b);
-		} else {
-			return Math.signum(a) == Math.signum(b);
-		}
-	}
-
 	/**
-	 * from https://en.wikipedia.org/wiki/Kahan_summation_algorithm
+	 * Neumaier Sum from https://en.wikipedia.org/wiki/Kahan_summation_algorithm
 	 *
 	 * @param values
 	 * @return
 	 */
 	public static double preciseSum(final List<Double> values) {
-		// Prepare the accumulator.
 		double sum = 0.0;
 		// A running compensation for lost low-order bits.
 		double c = 0.0;
-		// The array input has elements indexed input[1] to input[input.length].
+
 		for (double v : values) {
-			// c is zero the first time around.
-			double y = v - c;
-			// Alas, sum is big, y small, so low-order digits of y are lost.
-			double t = sum + y;
-			// (t - sum) cancels the high-order part of y;
-			// subtracting y recovers negative (low part of y)
-			double b = t - sum;
-			c = b - y;
-			// Algebraically, c should always be zero. Beware
-			// overly-aggressive optimizing compilers!
+			double t = sum + v;
+			if (Math.abs(sum) >= Math.abs(v)) {
+				c += (sum - t) + v; // If sum is bigger, low-order digits of
+									// input[i] are lost.
+			} else {
+				c += (v - t) + sum; // Else low-order digits of sum are lost.
+			}
 			sum = t;
-			// Next time around, the lost low part will be added to y in a fresh
-			// attempt.
 		}
-		return sum;
+
+		return sum + c;
 	}
 
 	public static double preciseSum(final double a, final double b) {
