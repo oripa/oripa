@@ -95,7 +95,7 @@ public class Vector2d {
 	}
 
 	public double[] toArray() {
-		return new double[] { length * xNormal, length * yNormal };
+		return new double[] { x, y };
 	}
 
 	public double getX() {
