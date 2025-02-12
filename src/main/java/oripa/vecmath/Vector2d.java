@@ -65,15 +65,17 @@ public class Vector2d {
 		this.y = yNormal;
 	}
 
-	public static <T extends Vector2d> Optional<T> findNearest(final T target, final Collection<T> vertices) {
+	public <T extends Vector2d> Optional<T> findNearest(final Collection<T> vertices) {
 		T nearest = null;
+		double distance = Double.MAX_VALUE;
 		for (var v : vertices) {
-			if (nearest == null) {
-				nearest = v;
-				continue;
+			if (this.equals(v)) {
+				return Optional.of(v);
 			}
-			if (nearest.distance(target) > v.distance(target)) {
+			var d = v.distance(this);
+			if (distance > d) {
 				nearest = v;
+				distance = d;
 			}
 		}
 

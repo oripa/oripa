@@ -111,7 +111,7 @@ class Vector2dTest {
 				new Vector2d(1, 0.5),
 				new Vector2d(0.5, 0.5));
 
-		var nearest = Vector2d.findNearest(p, neighbors);
+		var nearest = p.findNearest(neighbors);
 
 		assertEquals(neighbors.get(2), nearest.get());
 	}
