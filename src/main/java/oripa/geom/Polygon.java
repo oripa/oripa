@@ -18,6 +18,8 @@
  */
 package oripa.geom;
 
+import static oripa.util.collection.CollectionUtil.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -86,8 +88,8 @@ public class Polygon {
 
 		for (int i = 0; i < count; i++) {
 			var v0 = vertices.get(i);
-			var v1 = vertices.get((i + 1) % count);
-			var v2 = vertices.get((i + 2) % count);
+			var v1 = getCircular(vertices, i + 1);
+			var v2 = getCircular(vertices, i + 2);
 
 			if (GeomUtil.CCWcheck(v0, v1, v2) == 0) {
 				toDelete.add(v1);
@@ -97,6 +99,23 @@ public class Polygon {
 		return vertices.stream()
 				.filter(Predicate.not(toDelete::contains))
 				.toList();
+	}
+
+	/**
+	 * Area by The shoelace formula
+	 *
+	 * @return Positive value if vertices' loop is in counterclockwise
+	 *         direction. Negative value if vertices' loop is in clockwise
+	 *         direction.
+	 */
+	public double area() {
+		double a = 0;
+		for (int i = 0; i < verticesCount(); i++) {
+			var v0 = vertices.get(i);
+			var v1 = getCircular(vertices, i + 1);
+			a += (v1.getY() + v0.getY()) * (v0.getX() - v1.getX());
+		}
+		return a / 2;
 	}
 
 	public Vector2d getVertex(final int i) {
@@ -207,10 +226,10 @@ public class Polygon {
 		if (triangles == null) {
 			var triangulator = new TwoEarTriangulation();
 
-			triangles = triangulator.triangulate(this, eps);
-
-			if (triangles.isEmpty()) {
+			if (area() < 0) {
 				triangles = triangulator.triangulate(new Polygon(vertices.reversed()), eps);
+			} else {
+				triangles = triangulator.triangulate(this, eps);
 			}
 
 			if (triangles.isEmpty()) {
