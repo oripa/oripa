@@ -20,7 +20,6 @@ package oripa.gui.presenter.estimation;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
@@ -32,6 +31,7 @@ import oripa.gui.presenter.estimation.logic.EstimationResultFilePresentationLogi
 import oripa.gui.presenter.estimation.logic.SubfaceToOverlapRelationIndicesFactory;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
+import oripa.util.BitSet;
 
 /**
  * @author OUCHI Koji
@@ -110,7 +110,7 @@ public class EstimationResultUIPresenter {
 		}
 	}
 
-	private Map<Integer, List<Set<Integer>>> createSubfaceToOverlapRelationIndices(
+	private Map<Integer, List<BitSet>> createSubfaceToOverlapRelationIndices(
 			final FoldedModel foldedModel) {
 		return new SubfaceToOverlapRelationIndicesFactory().create(foldedModel);
 	}

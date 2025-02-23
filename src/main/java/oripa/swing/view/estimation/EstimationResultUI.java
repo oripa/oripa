@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -52,6 +51,7 @@ import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
 import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
+import oripa.util.BitSet;
 import oripa.vecmath.Vector2d;
 
 public class EstimationResultUI extends JPanel implements EstimationResultUIView {
@@ -122,11 +122,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	/**
 	 * < index of subface, list< overlap relation indices > >
 	 */
-	private Map<Integer, List<Set<Integer>>> subfaceToOverlapRelationIndices;
+	private Map<Integer, List<BitSet>> subfaceToOverlapRelationIndices;
 
 	private BiConsumer<Color, Color> saveColorsListener;
 
-	private Function<FoldedModel, Map<Integer, List<Set<Integer>>>> filterInitializationListener;
+	private Function<FoldedModel, Map<Integer, List<BitSet>>> filterInitializationListener;
 
 	/**
 	 * This is the default constructor
@@ -678,7 +678,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	@Override
 	public void setFilterInitializationListener(
-			final Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener) {
+			final Function<FoldedModel, Map<Integer, List<BitSet>>> listener) {
 		filterInitializationListener = listener;
 	}
 

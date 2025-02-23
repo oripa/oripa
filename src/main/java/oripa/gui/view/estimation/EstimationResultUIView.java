@@ -21,7 +21,6 @@ package oripa.gui.view.estimation;
 import java.awt.Color;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 import oripa.domain.fold.FoldedModel;
@@ -29,6 +28,7 @@ import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.gui.view.View;
 import oripa.renderer.estimation.DistortionMethod;
+import oripa.util.BitSet;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -92,7 +92,8 @@ public interface EstimationResultUIView extends View {
 	 *            Output type: < index of subface, list< overlap relation
 	 *            indices > >
 	 */
-	void setFilterInitializationListener(Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener);
+	void setFilterInitializationListener(
+			Function<FoldedModel, Map<Integer, List<BitSet>>> listener);
 
 	void showExportErrorMessage(Exception e);
 
