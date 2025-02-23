@@ -20,10 +20,8 @@ package oripa.gui.presenter.estimation.logic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
@@ -33,8 +31,8 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.subface.SubFace;
+import oripa.util.BitSet;
 import oripa.util.StopWatch;
-import oripa.util.collection.CollectionUtil;
 
 /**
  * @author OUCHI Koji
@@ -53,13 +51,13 @@ public class SubfaceToOverlapRelationIndicesFactory {
 	 *         list. the first set of each list contains all indices as a "no
 	 *         filtering" option.
 	 */
-	public Map<Integer, List<Set<Integer>>> create(final FoldedModel foldedModel) {
+	public Map<Integer, List<BitSet>> create(final FoldedModel foldedModel) {
 
 		var watch = new StopWatch(true);
 		logger.debug("start");
 
-		var map = new HashMap<Integer, List<Set<Integer>>>();
-		var orders = new ConcurrentHashMap<Integer, Map<OrderKey, Set<Integer>>>();
+		var map = new HashMap<Integer, List<BitSet>>();
+		var orders = new ConcurrentHashMap<Integer, Map<OrderKey, BitSet>>();
 
 		var subfaces = foldedModel.subfaces();
 		var overlapRelations = foldedModel.overlapRelations();
@@ -67,13 +65,13 @@ public class SubfaceToOverlapRelationIndicesFactory {
 		// initialize
 		for (int s = 0; s < subfaces.size(); s++) {
 			orders.put(s, new ConcurrentHashMap<>());
-			map.put(s, new ArrayList<Set<Integer>>());
+			map.put(s, new ArrayList<BitSet>());
 		}
 
 		// set "no filtering" option
 		IntStream.range(0, subfaces.size()).forEach(s -> {
 			var list = map.get(s);
-			var indices = new HashSet<Integer>();
+			var indices = new BitSet(overlapRelations.size());
 			for (int k = 0; k < overlapRelations.size(); k++) {
 				indices.add(k);
 			}
@@ -98,7 +96,7 @@ public class SubfaceToOverlapRelationIndicesFactory {
 				var orderKey = createOrderKey(subfaces.get(s), overlapRelation);
 
 				var order = orders.get(s);
-				order.putIfAbsent(orderKey, CollectionUtil.newConcurrentHashSet());
+				order.putIfAbsent(orderKey, new BitSet(overlapRelations.size()));
 				var indices = order.get(orderKey);
 
 				indices.add(k);

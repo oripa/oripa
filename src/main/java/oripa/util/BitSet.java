@@ -1,0 +1,202 @@
+/**
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package oripa.util;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
+/**
+ * Fixed length bit set. Thread-safe if only add() operations are done.
+ *
+ * @author OUCHI Koji
+ *
+ */
+public class BitSet implements Set<Integer> {
+	private final BitArray bits;
+
+	private class BitSetIterator implements Iterator<Integer> {
+		private int index = 0;
+
+		private final int count;
+		private int usedCount;
+
+		public BitSetIterator() {
+			index = 0;
+			count = size();
+			usedCount = 0;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return usedCount < count;
+		}
+
+		@Override
+		public Integer next() {
+			while (!bits.get(index)) {
+				index++;
+			}
+			usedCount++;
+			return index;
+		}
+
+	}
+
+	public BitSet(final int size) {
+		bits = new BitArray(size);
+	}
+
+	@Override
+	public int size() {
+		return bits.countOnes();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return bits.allZero();
+	}
+
+	@Override
+	public boolean contains(final Object o) {
+		if (o instanceof Integer i) {
+			return bits.get(i);
+		}
+		return false;
+	}
+
+	@Override
+	public Iterator<Integer> iterator() {
+		return new BitSetIterator();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return null;
+	}
+
+	@Override
+	public <T> T[] toArray(final T[] a) {
+		return null;
+	}
+
+	@Override
+	public boolean add(final Integer e) {
+		if (bits.get(e)) {
+			return false;
+		}
+		bits.setOne(e);
+		return true;
+	}
+
+	@Override
+	public boolean remove(final Object o) {
+		if (o instanceof Integer i) {
+			if (!bits.get(i)) {
+				return false;
+			}
+			bits.setZero(i);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(final Collection<?> c) {
+		if (c instanceof BitSet other) {
+			return bits.and(other.bits).equals(other.bits);
+		}
+
+		boolean result = true;
+		for (var obj : c) {
+			var index = (Integer) obj;
+			result &= bits.get(index);
+		}
+
+		return result;
+	}
+
+	@Override
+	public boolean addAll(final Collection<? extends Integer> c) {
+		if (c instanceof BitSet other) {
+			var newBits = bits.or(other.bits);
+			return updateBits(newBits);
+		}
+
+		boolean changed = false;
+
+		for (var obj : c) {
+			var index = obj;
+			changed |= !bits.get(index);
+			bits.setOne(index);
+		}
+
+		return changed;
+	}
+
+	@Override
+	public boolean retainAll(final Collection<?> c) {
+		if (c instanceof BitSet other) {
+			var newBits = bits.and(other.bits);
+			return updateBits(newBits);
+		}
+
+		boolean changed = false;
+
+		for (int i = 0; i < bits.bitLength; i++) {
+			if (bits.get(i)) {
+				changed |= !c.contains(i);
+				bits.setZero(i);
+			}
+		}
+
+		return changed;
+	}
+
+	@Override
+	public boolean removeAll(final Collection<?> c) {
+		if (c instanceof BitSet other) {
+			var newBits = bits.and(other.bits.not());
+			return updateBits(newBits);
+		}
+
+		boolean changed = false;
+		for (var obj : c) {
+			var index = (Integer) obj;
+			changed |= bits.get(index);
+			bits.setZero(index);
+		}
+
+		return changed;
+	}
+
+	private boolean updateBits(final BitArray newBits) {
+		if (newBits.equals(bits)) {
+			return false;
+		}
+		bits.setAll(newBits);
+		return true;
+	}
+
+	@Override
+	public void clear() {
+		bits.clear();
+	}
+
+}
