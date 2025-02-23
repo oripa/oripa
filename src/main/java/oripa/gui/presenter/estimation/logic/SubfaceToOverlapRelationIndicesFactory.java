@@ -43,11 +43,7 @@ import oripa.util.collection.CollectionUtil;
 public class SubfaceToOverlapRelationIndicesFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SubfaceToOverlapRelationIndicesFactory.class);
 
-	private record OrderValue(List<Integer> v1, Byte v2) {
-
-		public static OrderValue create(final int i, final int j, final byte value) {
-			return new OrderValue(List.of(i, j), value);
-		}
+	private record OrderKey(List<Integer> faceIDs) {
 	}
 
 	/**
@@ -63,7 +59,7 @@ public class SubfaceToOverlapRelationIndicesFactory {
 		logger.debug("start");
 
 		var map = new HashMap<Integer, List<Set<Integer>>>();
-		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
+		var orders = new ConcurrentHashMap<Integer, Map<OrderKey, Set<Integer>>>();
 
 		var subfaces = foldedModel.subfaces();
 		var overlapRelations = foldedModel.overlapRelations();
@@ -90,6 +86,8 @@ public class SubfaceToOverlapRelationIndicesFactory {
 			return map;
 		}
 
+		// O(n^3 log n S) time and O(n^3 S) space to store the result
+		// n: #face, S #overlapRelation
 		IntStream.range(0, overlapRelations.size()).parallel().forEach(k -> {
 			var overlapRelation = overlapRelations.get(k);
 
@@ -117,22 +115,33 @@ public class SubfaceToOverlapRelationIndicesFactory {
 		return map;
 	}
 
-	private Set<OrderValue> createOrderKey(final SubFace subface, final OverlapRelation overlapRelation) {
-		var orderKey = new HashSet<OrderValue>();
+	/**
+	 * If we focus on a subface, the order of its parent faces is totally given
+	 * by the overlap relation matrix. Therefore we can sort the parent faces.
+	 *
+	 * @param subface
+	 * @param overlapRelation
+	 * @return
+	 */
+	private OrderKey createOrderKey(final SubFace subface, final OverlapRelation overlapRelation) {
 
+		var parentFaceIDs = new ArrayList<Integer>(subface.getParentFaceCount());
 		for (int i = 0; i < subface.getParentFaceCount(); i++) {
-			var faceID_i = subface.getParentFace(i).getFaceID();
-			for (int j = i + 1; j < subface.getParentFaceCount(); j++) {
-				var faceID_j = subface.getParentFace(j).getFaceID();
-
-				var smallerIndex = Math.min(faceID_i, faceID_j);
-				var largerIndex = Math.max(faceID_i, faceID_j);
-				var relation = overlapRelation.get(smallerIndex, largerIndex);
-
-				orderKey.add(OrderValue.create(smallerIndex, largerIndex, relation));
-			}
+			var faceID = subface.getParentFace(i).getFaceID();
+			parentFaceIDs.add(faceID);
 		}
 
-		return orderKey;
+		parentFaceIDs.sort((faceID_i, faceID_j) -> {
+			if (faceID_i == faceID_j) {
+				return 0;
+			}
+			if (overlapRelation.isUpper(faceID_i, faceID_j)) {
+				return 1;
+			}
+
+			return -1;
+		});
+
+		return new OrderKey(parentFaceIDs);
 	}
 }
