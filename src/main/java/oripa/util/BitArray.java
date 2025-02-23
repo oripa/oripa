@@ -77,6 +77,20 @@ public class BitArray {
 		blocks[blockIndex] |= one << bitIndex;
 	}
 
+	public boolean setOneAndGetChange(final int index) {
+		if (index >= bitLength) {
+			throw new IllegalArgumentException("index should be less than " + bitLength);
+		}
+
+		var blockIndex = index / oneBlockBitLength;
+		var bitIndex = index % oneBlockBitLength;
+
+		var b = blocks[blockIndex];
+		blocks[blockIndex] |= one << bitIndex;
+
+		return b != blocks[blockIndex];
+	}
+
 	public void setZero(final int index) {
 		if (index >= bitLength) {
 			throw new IllegalArgumentException("index should be less than " + bitLength);
@@ -86,6 +100,20 @@ public class BitArray {
 		var bitIndex = index % oneBlockBitLength;
 
 		blocks[blockIndex] &= ~(one << bitIndex);
+	}
+
+	public boolean setZeroAndGetChange(final int index) {
+		if (index >= bitLength) {
+			throw new IllegalArgumentException("index should be less than " + bitLength);
+		}
+
+		var blockIndex = index / oneBlockBitLength;
+		var bitIndex = index % oneBlockBitLength;
+
+		var b = blocks[blockIndex];
+		blocks[blockIndex] &= ~(one << bitIndex);
+
+		return b != blocks[blockIndex];
 	}
 
 	public BitArray or(final BitArray other) {

@@ -99,7 +99,7 @@ public class SubfaceToOverlapRelationIndicesFactory {
 				order.putIfAbsent(orderKey, new BitSet(overlapRelations.size()));
 				var indices = order.get(orderKey);
 
-				indices.add(k);
+				indices.addSync(k);
 			});
 		});
 

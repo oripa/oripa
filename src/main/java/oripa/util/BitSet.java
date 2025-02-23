@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Fixed length bit set. Thread-safe if only add() operations are done.
+ * Fixed length bit set.
  *
  * @author OUCHI Koji
  *
@@ -98,21 +98,17 @@ public class BitSet implements Set<Integer> {
 
 	@Override
 	public boolean add(final Integer e) {
-		if (bits.get(e)) {
-			return false;
-		}
-		bits.setOne(e);
-		return true;
+		return bits.setOneAndGetChange(e);
+	}
+
+	public synchronized boolean addSync(final Integer e) {
+		return bits.setOneAndGetChange(e);
 	}
 
 	@Override
 	public boolean remove(final Object o) {
 		if (o instanceof Integer i) {
-			if (!bits.get(i)) {
-				return false;
-			}
-			bits.setZero(i);
-			return true;
+			return bits.setZeroAndGetChange(i);
 		}
 		return false;
 	}
