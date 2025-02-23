@@ -19,6 +19,7 @@
 package oripa.util;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Fixed length bit array.
@@ -87,15 +88,6 @@ public class BitArray {
 		blocks[blockIndex] &= ~(one << bitIndex);
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof BitArray other) {
-			return bitLength == other.bitLength && Arrays.equals(blocks, other.blocks);
-		}
-
-		return false;
-	}
-
 	public BitArray or(final BitArray other) {
 		if (bitLength != other.bitLength) {
 			throw new IllegalArgumentException("bit length should be equal.");
@@ -160,7 +152,16 @@ public class BitArray {
 	}
 
 	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof BitArray other) {
+			return bitLength == other.bitLength && Arrays.equals(blocks, other.blocks);
+		}
+
+		return false;
+	}
+
+	@Override
 	public int hashCode() {
-		return Arrays.hashCode(blocks);
+		return Objects.hash(bitLength, blocks);
 	}
 }
