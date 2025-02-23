@@ -88,12 +88,37 @@ public class BitSet implements Set<Integer> {
 
 	@Override
 	public Object[] toArray() {
-		return null;
+		var array = new Object[size()];
+
+		int i = 0;
+		for (int index = 0; index < bits.bitLength; index++) {
+			if (bits.get(index)) {
+				array[i] = index;
+				i++;
+			}
+		}
+
+		return array;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T[] toArray(final T[] a) {
-		return null;
+		var size_ = size();
+		var array = a.length >= size_ ? a : new Object[size_];
+
+		int i = 0;
+		for (int index = 0; index < bits.bitLength; index++) {
+			if (bits.get(index)) {
+				array[i] = index;
+				i++;
+			}
+		}
+		for (int j = size_; j < array.length; j++) {
+			array[j] = null;
+		}
+
+		return (T[]) array;
 	}
 
 	@Override
