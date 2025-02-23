@@ -59,8 +59,8 @@ public class BitSet implements Set<Integer> {
 
 	}
 
-	public BitSet(final int size) {
-		bits = new BitArray(size);
+	public BitSet(final int bitLength) {
+		bits = new BitArray(bitLength);
 	}
 
 	@Override
