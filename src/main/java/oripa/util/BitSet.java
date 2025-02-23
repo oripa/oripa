@@ -199,4 +199,33 @@ public class BitSet implements Set<Integer> {
 		bits.clear();
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof BitSet bitSet) {
+			return bits.equals(bitSet.bits);
+		}
+
+		if (obj instanceof Collection collection) {
+			if (size() != collection.size()) {
+				return false;
+			}
+			for (var v : collection) {
+				if (v instanceof Integer index) {
+					if (!contains(index)) {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return bits.hashCode();
+	}
 }

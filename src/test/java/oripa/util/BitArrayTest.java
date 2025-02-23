@@ -51,4 +51,20 @@ class BitArrayTest {
 		assertTrue(bits.get(31));
 	}
 
+	@Test
+	void test33BitsNot() {
+		var bits = new BitArray(33);
+
+		bits.setOne(32);
+		var not = bits.not();
+		assertFalse(not.get(32));
+
+		var expected = new BitArray(33);
+		for (int i = 0; i < 32; i++) {
+			expected.setOne(i);
+		}
+
+		assertTrue(expected.equals(not));
+	}
+
 }
