@@ -148,7 +148,7 @@ public class Segment {
 
 	@Override
 	public String toString() {
-		return "(" + p0 + ", " + p1 + ")";
+		return "(" + p0 + ", " + p1 + ") len:" + length();
 	}
 
 }

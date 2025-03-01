@@ -230,7 +230,7 @@ public class Vector2d {
 		var dx = x - v.x;
 		var dy = y - v.y;
 
-		return sqrt(dx * dx + dy * dy);
+		return normalize(dx, dy)[0];
 	}
 
 	public boolean isParallel(final Vector2d v) {

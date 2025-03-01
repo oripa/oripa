@@ -18,6 +18,7 @@
  */
 package oripa.domain.fold.subface;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,6 +32,8 @@ import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
+import oripa.persistence.doc.Doc;
+import oripa.persistence.doc.exporter.ExporterCP;
 import oripa.value.OriLine;
 
 /**
@@ -69,7 +72,14 @@ public class FacesToCreasePatternConverter {
 		logger.debug("toCreasePattern(): construct edge structure after folding");
 
 		Collection<OriLine> lines = new ArrayList<OriLine>();
-		for (OriFace face : faces) {
+
+		var filteredFaces = faces.stream()
+				.map(face -> face.remove180degreeVertices(pointEps))
+				.map(face -> face.removeDuplicatedVertices(pointEps))
+				.filter(face -> face.halfedgeCount() >= 3)
+				.toList();
+
+		for (OriFace face : filteredFaces) {
 			var faceLines = face.halfedgeStream()
 					.map(he -> new OriLine(he.getPosition(), he.getNext().getPosition(),
 							OriLine.Type.MOUNTAIN))
@@ -79,16 +89,17 @@ public class FacesToCreasePatternConverter {
 		}
 
 		lines = pointMerger.mergeClosePoints(lines, pointEps);
+
 		elementRemover.removeMeaninglessVertices(lines, pointEps);
 
 		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);
 
-//		try {
-//			logger.debug("cp size={}", creasePattern.getPaperSize());
-//			creasePattern.forEach(line -> logger.debug("{}", line));
-//			new CreasePatternExporterSVG().export(creasePattern, "debug.svg", null);
-//		} catch (IllegalArgumentException | IOException e) {
-//		}
+		try {
+			logger.debug("cp size={}", creasePattern.getPaperSize());
+			// creasePattern.forEach(line -> logger.debug("{}", line));
+			new ExporterCP().export(Doc.forSaving(creasePattern, null), "debug.cp", null);
+		} catch (IllegalArgumentException | IOException e) {
+		}
 
 		logger.debug("toCreasePattern(): {} segments", creasePattern.size());
 

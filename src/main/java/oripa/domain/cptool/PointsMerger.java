@@ -18,9 +18,14 @@
  */
 package oripa.domain.cptool;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.TreeSet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
@@ -31,6 +36,7 @@ import oripa.value.OriPoint;
  *
  */
 public class PointsMerger {
+	Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 *
@@ -39,21 +45,35 @@ public class PointsMerger {
 	 *         the result.
 	 */
 	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
-		var cleaned = lines.stream()
-				.filter(line -> line.length() >= pointEps)
-				.toList();
+		boolean changed;
+		int count = 0;
+		var sourceLines = lines;
+		List<OriLine> merged;
 
-		var pointSet = new TreeSet<OriPoint>(cleaned.stream()
-				.flatMap(OriLine::oriPointStream)
-				.toList());
+		do {
+			changed = false;
+			var cleaned = sourceLines.stream()
+					.filter(line -> line.length() >= pointEps)
+					.toList();
 
-		final var merged = new ArrayList<OriLine>();
+			var pointSet = new TreeSet<OriPoint>(cleaned.stream()
+					.flatMap(OriLine::oriPointStream)
+					.toList());
 
-		for (var line : cleaned) {
-			var p0 = find(pointSet, line.getOriPoint0(), pointEps);
-			var p1 = find(pointSet, line.getOriPoint1(), pointEps);
+			merged = new ArrayList<OriLine>();
+			for (var line : cleaned) {
+				var p0 = find(pointSet, line.getOriPoint0(), pointEps);
+				var p1 = find(pointSet, line.getOriPoint1(), pointEps);
 
-			merged.add(new OriLine(p0, p1, line.getType()));
+				changed |= !p0.equals(line.getP0()) || !p1.equals(line.getP1());
+				merged.add(new OriLine(p0, p1, line.getType()));
+			}
+			sourceLines = merged;
+			count++;
+		} while (changed && count < 10);
+
+		if (count >= 10) {
+			logger.debug("merge count reached the limit.");
 		}
 
 		return merged;
