@@ -18,14 +18,15 @@
  */
 package oripa.domain.fold;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.fold.condfac.RelationPathEnumerator;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.origeom.EstimationResult;
@@ -39,7 +40,7 @@ import oripa.util.StopWatch;
  *
  */
 class DeterministicLayerOrderEstimator {
-	private static final Logger logger = LoggerFactory.getLogger(DeterministicLayerOrderEstimator.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final List<OriFace> faces;
 	private final List<SubFace> subfaces;
@@ -85,21 +86,21 @@ class DeterministicLayerOrderEstimator {
 
 		var watch = new StopWatch(true);
 
-		logger.trace("initial state" + System.lineSeparator() + overlapRelation.toString());
+		logger.debug("initial state" + System.lineSeparator() + overlapRelation.toString());
 
 		EstimationResultRules changed;
 		do {
 			changed = new EstimationResultRules();
 
-			var result = estimateBy3FaceCover(overlapRelation);
-			changed = result.or(changed);
-
-			logger.trace("3 face cover" + System.lineSeparator() + overlapRelation.toString());
-
-			result = estimateBy3FaceTransitiveRelation(overlapRelation);
+			var result = estimateBy3FaceTransitiveRelation(overlapRelation);
 			changed = result.or(changed);
 
 			logger.trace("transitivity" + System.lineSeparator() + overlapRelation.toString());
+
+			result = estimateBy3FaceCover(overlapRelation);
+			changed = result.or(changed);
+
+			logger.trace("3 face cover" + System.lineSeparator() + overlapRelation.toString());
 
 			result = estimateBy4FaceStackCondition(overlapRelation);
 			changed = result.or(changed);
@@ -107,9 +108,9 @@ class DeterministicLayerOrderEstimator {
 			logger.trace("4 face condition" + System.lineSeparator() + overlapRelation.toString());
 
 //			result = estimateBy4FaceCover(overlapRelation);
-			changed = result.or(changed);
-
-			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
+//			changed = result.or(changed);
+//
+//			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
 
 			if (changed.isUnfoldable()) {
 				logger.info("unfoldable:" + System.lineSeparator() + overlapRelation.toString());
@@ -119,6 +120,7 @@ class DeterministicLayerOrderEstimator {
 			result = checkCorrectness(overlapRelation);
 			changed = result.or(changed);
 			if (changed.isUnfoldable()) {
+				logger.debug("correctness check" + System.lineSeparator() + overlapRelation.toString());
 				return changed;
 			}
 
@@ -134,31 +136,180 @@ class DeterministicLayerOrderEstimator {
 	private EstimationResultRules checkCorrectness(final OverlapRelation overlapRelation) {
 		var result = new EstimationResultRules();
 
-		// check transitivity
-		IntStream.range(0, faces.size()).parallel().forEach(i -> {
-			for (int j = 0; j < faces.size(); j++) {
-				if (i == j) {
-					continue;
-				}
+//		 checkTransitivity(overlapRelation, result);
+//
+//		if (result.isUnfoldable()) {
+//			return result;
+//		}
 
-				var overlaps = overlappingFaceIndexIntersections[i][j];
-
-				for (int k : overlaps) {
-					if (overlapRelation.isUpper(i, k) && overlapRelation.isUpper(k, j)) {
-						if (overlapRelation.isLower(i, j)) {
-							result.setEstimationResult(EstimationResult.UNFOLDABLE);
-							result.addTransitivityViolation(toFaces(List.of(i, k, j)));
-							return;
-						}
-					}
-				}
-			}
-		});
+		checkSubfaceTransitivity(overlapRelation, result);
 
 		if (result.isUnfoldable()) {
 			return result;
 		}
 
+		check4faceCondition(overlapRelation, result);
+
+		if (result.isUnfoldable()) {
+			return result;
+		}
+
+		checkPenetration(overlapRelation, result);
+
+		// and others as well?
+
+		return result;
+	}
+
+	private void checkTransitivity(final OverlapRelation overlapRelation, final EstimationResultRules result) {
+		var relationPaths = new RelationPathEnumerator();
+
+		relationPaths.findPaths(overlapRelation);
+
+		var faceCount = overlapRelation.getSize();
+
+		for (int i = 0; i < faceCount; i++) {
+			for (int j = 0; j < faceCount; j++) {
+				var path = relationPaths.getPath(i, j);
+				if (path.isEmpty()) {
+					continue;
+				}
+
+				var isCycle = relationPaths.isOnCycle(i, j);
+				if (isCycle) {
+					path = relationPaths.getCycle(i, j);
+					logger.trace("onCycle: ({},{}) {}", i, j, path);
+					continue;
+				}
+
+				logger.trace("path: {}", path);
+
+				checkTransitivity(overlapRelation, path, result);
+				if (result.isUnfoldable()) {
+					logger.debug("invalid transitivity {}", path);
+					return;
+				}
+			}
+		}
+	}
+
+	private void checkTransitivity(final OverlapRelation overlapRelation, final List<Integer> order,
+			final EstimationResultRules result) {
+		var length = order.size();
+		for (int a = 0; a < length - 1; a++) {
+			int f1 = order.get(a);
+			for (int b = a + 1; b < length; b++) {
+				int f2 = order.get(b);
+
+				if (overlapRelation.isLower(f1, f2)) {
+					logger.trace("wrong: ({},{})", f1, f2);
+					result.setEstimationResult(EstimationResult.UNFOLDABLE);
+					result.addTransitivityViolation(toFaces(order));
+					return;
+				}
+			}
+
+		}
+
+	}
+
+	private void checkSubfaceTransitivity(final OverlapRelation overlapRelation, final EstimationResultRules result) {
+
+		for (var subface : subfaces) {
+			var parentFaceIndices = subface.getParentFaceIndices();
+
+			var undefined = false;
+			for (var i : parentFaceIndices) {
+				for (var j : parentFaceIndices) {
+					if (i == j) {
+						continue;
+					}
+					if (overlapRelation.isUndefined(i, j)) {
+						undefined = true;
+						break;
+					}
+				}
+				if (undefined) {
+					break;
+				}
+			}
+			if (undefined) {
+				logger.trace("skip: {}", parentFaceIndices);
+				continue;
+			}
+
+			var sortedParentFaceIDs = parentFaceIndices.stream()
+					.sorted((a, b) -> {
+						if (a == b) {
+							return 0;
+						}
+						return overlapRelation.isLower(a, b) ? 1 : -1;
+					}).toList();
+
+			checkTransitivity(overlapRelation, sortedParentFaceIDs, result);
+
+			if (result.isUnfoldable()) {
+				logger.debug("invalid parent face order {}", sortedParentFaceIDs);
+				return;
+			}
+		}
+
+	}
+
+	private void check4faceCondition(final OverlapRelation overlapRelation, final EstimationResultRules result) {
+
+//		var conds = new HashMap<BitSet, List<Integer>>();
+
+		for (StackConditionOf4Faces cond : condition4s) {
+			var u1LowerU2 = overlapRelation.isLower(cond.upper1(), cond.upper2());
+			var u1LowerL2 = overlapRelation.isLower(cond.upper1(), cond.lower2());
+			var l1LowerU2 = overlapRelation.isLower(cond.lower1(), cond.upper2());
+			var l1LowerL2 = overlapRelation.isLower(cond.lower1(), cond.lower2());
+
+			var u1UpperU2 = overlapRelation.isUpper(cond.upper1(), cond.upper2());
+			var u1UpperL2 = overlapRelation.isUpper(cond.upper1(), cond.lower2());
+			var l1UpperU2 = overlapRelation.isUpper(cond.lower1(), cond.upper2());
+			var l1UpperL2 = overlapRelation.isUpper(cond.lower1(), cond.lower2());
+
+			int hitCount = 0;
+
+			// var set = toBitSet(cond);
+			if (u1UpperU2 && u1UpperL2 && l1UpperU2 && l1UpperL2) {
+				// conds.put(set, List.of(cond.lower1(), cond.upper1(),
+				// cond.lower2(), cond.upper2()));
+
+				hitCount++;
+			}
+			if (u1LowerU2 && u1LowerL2 && l1LowerU2 && l1LowerL2) {
+				// conds.put(set, List.of(cond.lower2(), cond.upper2(),
+				// cond.lower1(), cond.upper1()));
+
+				hitCount++;
+			}
+			if (u1LowerU2 && u1LowerL2 && l1UpperU2 && l1UpperL2) {
+				// conds.put(set, List.of(cond.lower1(), cond.lower2(),
+				// cond.upper2(), cond.upper1()));
+
+				hitCount++;
+			}
+			if (u1UpperU2 && u1LowerL2 && l1UpperU2 && l1LowerL2) {
+				// conds.put(set, List.of(cond.lower2(), cond.lower1(),
+				// cond.upper1(), cond.upper2()));
+
+				hitCount++;
+			}
+
+			if (hitCount > 1) {
+				logger.debug("conflict on 4 faces.");
+				result.setEstimationResult(EstimationResult.UNFOLDABLE);
+				result.addStackCondition4FacesViolation(
+						toFaces(List.of(cond.upper1(), cond.lower1(), cond.upper2(), cond.lower2())));
+				return;
+			}
+		}
+	}
+
+	private void checkPenetration(final OverlapRelation overlapRelation, final EstimationResultRules result) {
 		// penetration
 		faces.parallelStream().forEach(f_i -> {
 			int i = f_i.getFaceID();
@@ -195,9 +346,6 @@ class DeterministicLayerOrderEstimator {
 			}
 		});
 
-		// and others as well?
-
-		return result;
 	}
 
 	/**
@@ -228,7 +376,7 @@ class DeterministicLayerOrderEstimator {
 			}
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
-			else if (overlapRelation.isLower(cond.lower2(), cond.upper1())) {
+			if (overlapRelation.isLower(cond.lower2(), cond.upper1())) {
 				var result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.upper1());
 				changed = result.or(changed);
 
@@ -240,7 +388,7 @@ class DeterministicLayerOrderEstimator {
 			}
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
-			else if (overlapRelation.isLower(cond.upper1(), cond.upper2())
+			if (overlapRelation.isLower(cond.upper1(), cond.upper2())
 					&& overlapRelation.isLower(cond.upper2(), cond.lower1())) {
 				var result = overlapRelation.setLowerIfPossible(cond.upper1(), cond.lower2());
 				changed = result.or(changed);
@@ -250,7 +398,7 @@ class DeterministicLayerOrderEstimator {
 			}
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
-			else if (overlapRelation.isLower(cond.upper1(), cond.lower2())
+			if (overlapRelation.isLower(cond.upper1(), cond.lower2())
 					&& overlapRelation.isLower(cond.lower2(), cond.lower1())) {
 				var result = overlapRelation.setLowerIfPossible(cond.upper1(), cond.upper2());
 				changed = result.or(changed);
@@ -260,7 +408,7 @@ class DeterministicLayerOrderEstimator {
 			}
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
-			else if (overlapRelation.isLower(cond.upper2(), cond.upper1())
+			if (overlapRelation.isLower(cond.upper2(), cond.upper1())
 					&& overlapRelation.isLower(cond.upper1(), cond.lower2())) {
 				var result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.lower1());
 				changed = result.or(changed);
@@ -270,7 +418,7 @@ class DeterministicLayerOrderEstimator {
 			}
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
-			else if (overlapRelation.isLower(cond.upper2(), cond.lower1())
+			if (overlapRelation.isLower(cond.upper2(), cond.lower1())
 					&& overlapRelation.isLower(cond.lower1(), cond.lower2())) {
 				var result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.upper1());
 				changed = result.or(changed);
@@ -415,19 +563,20 @@ class DeterministicLayerOrderEstimator {
 				if (!faceIndicesOnHalfedge.get(he).contains(index_k)) {
 					continue;
 				}
+				var result = EstimationResult.NOT_CHANGED;
 				if (!overlapRelation.isUndefined(index_i, index_k)) {
-					var result = overlapRelation.setIfPossible(index_j, index_k, overlapRelation.get(index_i, index_k));
+					result = overlapRelation.setIfPossible(index_j, index_k, overlapRelation.get(index_i, index_k));
 					changed = result.or(changed);
 				}
 				if (!overlapRelation.isUndefined(index_j, index_k)) {
-					var result = overlapRelation.setIfPossible(index_i, index_k, overlapRelation.get(index_j, index_k));
+					result = overlapRelation.setIfPossible(index_i, index_k, overlapRelation.get(index_j, index_k));
 					changed = result.or(changed);
 				}
 
 				if (changed == EstimationResult.UNFOLDABLE) {
-					var result = new EstimationResultRules(EstimationResult.UNFOLDABLE);
-					result.addCover3FacesViolation(toFaces(List.of(index_i, index_j, index_k)));
-					return result;
+					var rules = new EstimationResultRules(EstimationResult.UNFOLDABLE);
+					rules.addCover3FacesViolation(toFaces(List.of(index_i, index_j, index_k)));
+					return rules;
 				}
 
 			}

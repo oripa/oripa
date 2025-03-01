@@ -45,6 +45,11 @@ public class BitArray {
 		Arrays.fill(blocks, 0);
 	}
 
+	public BitArray(final BitArray other) {
+		this(other.bitLength);
+		setAll(other);
+	}
+
 	public void setAll(final BitArray other) {
 		if (bitLength != other.bitLength) {
 			throw new IllegalArgumentException("bit length should be equal.");
@@ -191,5 +196,14 @@ public class BitArray {
 	@Override
 	public int hashCode() {
 		return Objects.hash(bitLength, blocks);
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.stream(blocks)
+				.mapToObj(block -> "%8s".formatted(Integer.toHexString(block)).replace(' ', '0'))
+				.toList()
+				.reversed().stream()
+				.reduce("", String::concat);
 	}
 }

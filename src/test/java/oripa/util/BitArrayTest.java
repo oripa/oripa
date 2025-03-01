@@ -33,10 +33,25 @@ class BitArrayTest {
 		var bits = new BitArray(32);
 
 		bits.setOne(31);
+		assertEquals("80000000", bits.toString());
 		assertTrue(bits.get(31));
+		bits.setZero(31);
+		assertEquals("00000000", bits.toString());
 
 		bits.setOne(0);
 		assertTrue(bits.get(0));
+		assertEquals("00000001", bits.toString());
+
+	}
+
+	@Test
+	void test23BitsGetSet() {
+		var bits = new BitArray(23);
+
+		bits.setOne(22);
+		assertTrue(bits.get(22));
+		assertEquals("00400000", bits.toString());
+
 	}
 
 	@Test
