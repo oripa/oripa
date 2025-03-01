@@ -34,15 +34,11 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
-import oripa.geom.Polygon;
-import oripa.geom.TwoEarTriangulation;
 import oripa.vecmath.Vector2d;
 
 public class SubFace {
 
 	private final OriFace outline;
-
-	private final List<Polygon> outlineTriangulation;
 
 	/**
 	 * faces containing this subface.
@@ -71,7 +67,6 @@ public class SubFace {
 	 */
 	public SubFace(final OriFace outline, final double eps) {
 		this.outline = outline;
-		this.outlineTriangulation = new TwoEarTriangulation().triangulate(outline.toPolygon(eps), eps);
 	}
 
 	/**
@@ -290,6 +285,10 @@ public class SubFace {
 
 	public OriFace getParentFace(final int index) {
 		return parentFaces.get(index);
+	}
+
+	public Set<Integer> getParentFaceIndices() {
+		return Collections.unmodifiableSet(parentFaceIndices);
 	}
 
 	public boolean isParentFace(final OriFace face) {

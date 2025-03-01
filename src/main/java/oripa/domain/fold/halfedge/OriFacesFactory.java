@@ -80,6 +80,11 @@ public class OriFacesFactory {
 
 		logger.debug("#face = {}", faces.size());
 
+		int id = 0;
+		for (var face : faces) {
+			face.setFaceID(id++);
+		}
+
 		return valid;
 	}
 

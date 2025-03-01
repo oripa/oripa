@@ -18,8 +18,10 @@
  */
 package oripa.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -54,13 +56,20 @@ public class BitSet implements Set<Integer> {
 				index++;
 			}
 			usedCount++;
-			return index;
+
+			var result = index;
+			index++;
+			return result;
 		}
 
 	}
 
 	public BitSet(final int bitLength) {
 		bits = new BitArray(bitLength);
+	}
+
+	public BitSet(final BitSet other) {
+		bits = new BitArray(other.bits);
 	}
 
 	@Override
@@ -243,6 +252,15 @@ public class BitSet implements Set<Integer> {
 		}
 
 		return false;
+	}
+
+	public List<Integer> toList() {
+		var list = new ArrayList<Integer>();
+
+		for (var i : this) {
+			list.add(i);
+		}
+		return list;
 	}
 
 	@Override
