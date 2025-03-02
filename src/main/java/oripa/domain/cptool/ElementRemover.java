@@ -148,6 +148,7 @@ public class ElementRemover {
 
 	private void removeMeaninglessVertices(final Collection<OriLine> creasePattern,
 			final TreeSet<OriPoint> removedLinePoints, final double pointEps) {
+
 		// Sweep-line approach
 		// (sweep along x axis)
 

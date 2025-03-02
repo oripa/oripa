@@ -77,7 +77,7 @@ public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint
 	}
 
 	public OriPoint findKeyPoint(final OriPoint p, final double eps) {
-		var boundMap = CollectionUtil.rangeMap(
+		var boundMap = CollectionUtil.rangeMapInclusive(
 				this,
 				new OriPoint(p.getX() - eps, p.getY() - eps),
 				new OriPoint(p.getX() + eps, p.getY() + eps));
@@ -85,12 +85,14 @@ public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint
 		if (boundMap.containsKey(p)) {
 			return p;
 		}
+
 		var pointOpt = p.findNearest(boundMap.keySet());
 
-//		if (pointOpt.isEmpty()) {
-//			logger.debug("no key point in close area. trying nearest search and the result might be wrong.");
-//			return Vector2d.findNearest(p, keySet());
-//		}
+		var distance = pointOpt.get().distance(p);
+		if (distance > eps) {
+			logger.error("nearest of {} is {} (distance {}) from boundMapKeys {}", p, pointOpt.get(), distance,
+					boundMap.keySet());
+		}
 
 		return pointOpt.get();
 	}
@@ -103,7 +105,7 @@ public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint
 			return oppositeKeyPointOpt;
 		}
 
-		return keySet().parallelStream()
+		var fromKeySet = keySet().stream()
 				.filter(opposite -> validateKeyPoints(keyPoint, opposite, point.getLine(), eps))
 				.findFirst()
 				.map(opposite -> {
@@ -111,6 +113,12 @@ public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint
 							+ " oppositeKeyPoint: " + opposite);
 					return opposite;
 				});
+
+		if (fromKeySet.isPresent()) {
+			return fromKeySet;
+		}
+
+		return Optional.empty();
 	}
 
 	/**

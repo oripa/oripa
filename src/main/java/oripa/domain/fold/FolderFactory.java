@@ -59,12 +59,13 @@ public class FolderFactory {
 	}
 
 	private Folder createAssigned() {
+		var lineAdder = new LineAdder();
 		var subfacesFactory = new SubFacesFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						new LineAdder(),
+						lineAdder,
 						new ElementRemover(),
-						new PointsMerger()),
+						new PointsMerger(lineAdder)),
 				new OrigamiModelFactory(),
 				new SplitFacesToSubFacesConverter(),
 				new ParentFacesCollector());
@@ -75,12 +76,13 @@ public class FolderFactory {
 	}
 
 	private Folder createUnassigned() {
+		var lineAdder = new LineAdder();
 		var subfacesFactory = new SubfacesOneTimeFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						new LineAdder(),
+						lineAdder,
 						new ElementRemover(),
-						new PointsMerger()),
+						new PointsMerger(lineAdder)),
 				new OrigamiModelFactory(),
 				new SplitFacesToSubFacesConverter(),
 				new ParentFacesCollector());

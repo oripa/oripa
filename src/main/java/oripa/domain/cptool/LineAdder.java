@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.util.StopWatch;
@@ -145,15 +146,90 @@ public class LineAdder {
 	 *            collection as a destination.
 	 */
 	public void addAll(final Collection<OriLine> inputLines,
-			final Collection<OriLine> currentLines, final double pointEps) {
+			final CreasePattern currentLines, final double pointEps) {
 
 		StopWatch watch = new StopWatch(true);
 
 		List<OriLine> nonExistingNewLines = new ArrayList<OriLine>(inputLines);
 
+		var inputDomain = RectangleDomain.createFromSegments(nonExistingNewLines);
+
+		// use a hash set for avoiding worst case of computation time. (list
+		// takes O(n) time for deletion while hash set takes O(1) time.)
+		var crossingCurrentLines = new HashSet<>(currentLines.clip(inputDomain, pointEps));
+		currentLines.removeAll(crossingCurrentLines);
+
+		Collection<OriLine> insideLines = new HashSet<OriLine>();
+
+		logger.trace("addAll() divideCurrentLines() start: {}[ms]", watch.getMilliSec());
+
+		// a map from an input line to a map from a cross point to a line
+		// crossing with the input line.
+		Map<OriLine, Map<OriPoint, OriLine>> crossMaps = new ConcurrentHashMap<>();
+
+		// build crossMaps and crossingCurrentLines. Cannot be in parallel since
+		// a line might be divided by multiple input lines.
+		nonExistingNewLines
+				.forEach(inputLine -> crossMaps.put(inputLine,
+						divideCurrentLines(inputLine, crossingCurrentLines, pointEps)));
+
+		var dividedCrossingCurrentLines = divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines, pointEps);
+
+		// feed back the result of line divisions
+		insideLines.addAll(dividedCrossingCurrentLines);
+
+		logger.trace("addAll() createInputLinePoints() start: {}[ms]", watch.getMilliSec());
+
+		// could be parallelized.
+		var pointLists = nonExistingNewLines.parallelStream()
+				.map(inputLine -> createInputLinePoints(inputLine, crossMaps.get(inputLine), pointEps))
+				.toList();
+
+		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
+
+		var splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists, pointEps);
+		var dividedSplitNewLines = divider.divideIfOverlap(crossingCurrentLines, splitNewLines, pointEps);
+
+		// feed back the result of line divisions allowing overlaps
+		insideLines.addAll(dividedSplitNewLines);
+
+		// reduce overlaps by overwriting types
+		var insideOverwrittens = new LineTypeOverwriter().overwriteLineTypes(
+				dividedSplitNewLines, insideLines, pointEps);
+
+		currentLines.addAll(insideOverwrittens);
+
+		logger.trace("addAll(): {}[ms]", watch.getMilliSec());
+	}
+
+	/**
+	 * Adds all of {@code inputLines} to {@code currentLines}. The lines will be
+	 * split at the intersections of the lines.
+	 *
+	 * TODO: test two other algorithms (OUCHI Koji, and scan line intersections)
+	 *
+	 * @param inputLines
+	 *            lines to be added
+	 * @param currentLines
+	 *            collection as a destination.
+	 */
+	public void addAll(final Collection<OriLine> inputLines,
+			final Collection<OriLine> currentLines, final double pointEps) {
+
+		if (currentLines instanceof CreasePattern cp) {
+			addAll(inputLines, cp, pointEps);
+			return;
+		}
+
+		StopWatch watch = new StopWatch(true);
+
+		List<OriLine> nonExistingNewLines = new ArrayList<OriLine>(inputLines);
+
+		var inputDomain = RectangleDomain.createFromSegments(nonExistingNewLines);
+
 		// input domain can limit the current lines to be divided.
 		RectangleClipper inputDomainClipper = new RectangleClipper(
-				RectangleDomain.createFromSegments(nonExistingNewLines),
+				inputDomain,
 				pointEps);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)

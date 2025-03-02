@@ -35,7 +35,7 @@ import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
+import oripa.domain.fold.halfedge.OriFace;
 
 /**
  * @author OUCHI Koji
@@ -61,20 +61,29 @@ class FacesToCreasePatternConverterTest {
 
 	@Test
 	void testConvertToCreasePattern() {
-		var face1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
-		var face2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
+		OriFace face1 = mock();
+		OriFace face2 = mock();
+
+		when(face1.remove180degreeVertices(anyDouble())).thenReturn(face1);
+		when(face1.removeDuplicatedVertices(anyDouble())).thenReturn(face1);
+		when(face1.halfedgeCount()).thenReturn(3);
+
+		when(face2.remove180degreeVertices(anyDouble())).thenReturn(face2);
+		when(face2.removeDuplicatedVertices(anyDouble())).thenReturn(face2);
+		when(face2.halfedgeCount()).thenReturn(3);
 
 		var faces = List.of(face1, face2);
 
+		when(cpFactory.createCreasePattern(anyDouble())).thenReturn(creasePattern);
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
 
 		when(pointMerger.mergeClosePoints(anyCollection(), anyDouble())).thenReturn(creasePattern);
 
-		var converted = converter.convertToCreasePattern(faces, POINT_EPS);
+		var converted = converter.convertToCreasePattern(faces, 100, POINT_EPS);
 		assertSame(creasePattern, converted);
 
 		// tried to convert all faces?
-		verify(adder, times(faces.size())).addAll(any(), anyCollection(), anyDouble());
+		verify(adder, times(faces.size())).addAll(any(), any(), anyDouble());
 
 		verify(remover).removeMeaninglessVertices(creasePattern, POINT_EPS);
 	}

@@ -18,9 +18,6 @@
  */
 package oripa.domain.fold.subface;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -32,8 +29,8 @@ import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.persistence.doc.Doc;
-import oripa.persistence.doc.exporter.ExporterCP;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -68,10 +65,17 @@ public class FacesToCreasePatternConverter {
 	 *            faces after fold without layer ordering.
 	 * @return
 	 */
-	public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double pointEps) {
+	public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double paperSize,
+			final double pointEps) {
 		logger.debug("toCreasePattern(): construct edge structure after folding");
 
-		Collection<OriLine> lines = new ArrayList<OriLine>();
+		var lines = cpFactory.createCreasePattern(
+				RectangleDomain.createFromPoints(
+						faces.stream()
+								.flatMap(OriFace::halfedgeStream)
+								.map(OriHalfedge::getPosition)
+								.toList()));
+//		Collection<OriLine> lines = new ArrayList<OriLine>();
 
 		var filteredFaces = faces.stream()
 				.map(face -> face.remove180degreeVertices(pointEps))
@@ -90,16 +94,16 @@ public class FacesToCreasePatternConverter {
 
 		lines = pointMerger.mergeClosePoints(lines, pointEps);
 
+//		try {
+//			var creasePattern = cpFactory.createCreasePattern(lines);
+//			creasePattern.forEach(line -> logger.debug("{}", line));
+//			new ExporterCP().export(Doc.forSaving(creasePattern, null), "debug.cp", null);
+//		} catch (IllegalArgumentException | IOException e) {
+//		}
+
 		elementRemover.removeMeaninglessVertices(lines, pointEps);
 
 		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);
-
-		try {
-			logger.debug("cp size={}", creasePattern.getPaperSize());
-			// creasePattern.forEach(line -> logger.debug("{}", line));
-			new ExporterCP().export(Doc.forSaving(creasePattern, null), "debug.cp", null);
-		} catch (IllegalArgumentException | IOException e) {
-		}
 
 		logger.debug("toCreasePattern(): {} segments", creasePattern.size());
 

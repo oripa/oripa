@@ -73,7 +73,7 @@ class SubFacesFactoryTest {
 		var face3 = mock(OriFace.class);
 		var inputFaces = List.of(face1, face2, face3);
 
-		when(facesToCPConverter.convertToCreasePattern(inputFaces, EPS)).thenReturn(cp);
+		when(facesToCPConverter.convertToCreasePattern(inputFaces, PAPER_SIZE, EPS)).thenReturn(cp);
 		when(modelFactory.buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS)).thenReturn(model);
 
 		var splitFaces = new ArrayList<OriFace>();
@@ -92,7 +92,7 @@ class SubFacesFactoryTest {
 
 		var subfaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE, EPS);
 
-		verify(facesToCPConverter).convertToCreasePattern(inputFaces, EPS);
+		verify(facesToCPConverter).convertToCreasePattern(inputFaces, PAPER_SIZE, EPS);
 		verify(modelFactory).buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS);
 		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces, vertices, EPS);
 

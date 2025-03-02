@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import oripa.geom.Segment;
+import oripa.value.OriLine.Type;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -54,4 +55,27 @@ class OriLineTest {
 		assertEquals(1, segment.getAffineYValueAt(0.5), 1e-8);
 		assertEquals(0.5, segment.getAffineXValueAt(1), 1e-8);
 	}
+
+	@Test
+	void testCreateCanonical_noChange() {
+		var line = new OriLine(1, 2, 3, 4, Type.AUX);
+		var canonical = line.createCanonical();
+
+		assertEquals(canonical.getP0().getX(), 1);
+		assertEquals(canonical.getP0().getY(), 2);
+		assertEquals(canonical.getP1().getX(), 3);
+		assertEquals(canonical.getP1().getY(), 4);
+	}
+
+	@Test
+	void testCreateCanonical_reversed() {
+		var line = new OriLine(4, 3, 2, 1, Type.AUX);
+		var canonical = line.createCanonical();
+
+		assertEquals(canonical.getP0().getX(), 2);
+		assertEquals(canonical.getP0().getY(), 1);
+		assertEquals(canonical.getP1().getX(), 4);
+		assertEquals(canonical.getP1().getY(), 3);
+	}
+
 }

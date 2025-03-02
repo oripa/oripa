@@ -141,6 +141,11 @@ public class RectangleDomain {
 		points.forEach(this::enlarge);
 	}
 
+	public void enlarge(final double diff) {
+		enlarge(new Vector2d(left - diff, top - diff));
+		enlarge(new Vector2d(right + diff, bottom + diff));
+	}
+
 	/**
 	 * Checks if this domain contains given {@code point}. The test is
 	 * inclusive.

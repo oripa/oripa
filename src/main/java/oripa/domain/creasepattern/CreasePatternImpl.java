@@ -53,6 +53,7 @@ class CreasePatternImpl implements CreasePattern {
 			lineIter.remove();
 			vertices.remove(current.getP0());
 			vertices.remove(current.getP1());
+			clip.remove(current);
 		}
 
 	}
@@ -65,6 +66,7 @@ class CreasePatternImpl implements CreasePattern {
 
 	private final LineManager lines;
 	private VerticesManager vertices;
+	private OriLineClip clip;
 
 	/**
 	 * @param paperDomain
@@ -73,6 +75,7 @@ class CreasePatternImpl implements CreasePattern {
 	public CreasePatternImpl(final RectangleDomain paperDomain) {
 		lines = new LineManager();
 		vertices = new VerticesManager(paperDomain);
+		clip = new OriLineClip(paperDomain);
 	}
 
 	@Override
@@ -100,6 +103,12 @@ class CreasePatternImpl implements CreasePattern {
 		if (lines.add(e)) {
 			vertices.add(e.getP0());
 			vertices.add(e.getP1());
+
+			if (!getPaperDomain().contains(e)) {
+				clip = OriLineClip.create(this);
+			}
+
+			clip.add(e);
 			return true;
 		}
 		return false;
@@ -112,6 +121,7 @@ class CreasePatternImpl implements CreasePattern {
 		if (lines.remove(o)) {
 			vertices.remove(l.getP0());
 			vertices.remove(l.getP1());
+			clip.remove(l);
 			return true;
 		}
 
@@ -122,6 +132,7 @@ class CreasePatternImpl implements CreasePattern {
 	public void clear() {
 		lines.clear();
 		vertices.clear();
+		clip.clear();
 	}
 
 	@Override
@@ -194,6 +205,7 @@ class CreasePatternImpl implements CreasePattern {
 			if (!collection.contains(line)) {
 				vertices.remove(line.getP0());
 				vertices.remove(line.getP1());
+				clip.remove(line);
 			}
 		}
 
@@ -210,6 +222,11 @@ class CreasePatternImpl implements CreasePattern {
 			final double x, final double y, final double distance) {
 
 		return vertices.getVerticesInArea(x, y, distance);
+	}
+
+	@Override
+	public Collection<OriLine> clip(final RectangleDomain domain, final double pointEps) {
+		return clip.clip(domain, pointEps);
 	}
 
 	@Deprecated
@@ -233,6 +250,7 @@ class CreasePatternImpl implements CreasePattern {
 			clear();
 
 			vertices = new VerticesManager(currentDomain);
+			clip = new OriLineClip(currentDomain);
 			addAll(lines);
 		}
 	}

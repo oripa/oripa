@@ -82,4 +82,12 @@ public class CreasePatternFactory {
 
 		return creasePattern;
 	}
+
+	public CreasePattern createCreasePattern(final RectangleDomain domain) {
+		// Construct CP
+		CreasePattern creasePattern = new CreasePatternImpl(domain);
+
+		return creasePattern;
+	}
+
 }

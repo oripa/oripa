@@ -191,7 +191,7 @@ public class ModelComputationFacade {
 		var foldResults = origamiModels.stream()
 				.map(model -> folderFactory
 						.create(model.getModelType())
-						.fold(model, model.getPaperSize() * eps,
+						.fold(model, determineEps(model, eps),
 								type.toEstimationType()))
 				.toList();
 
@@ -199,6 +199,13 @@ public class ModelComputationFacade {
 		var estimationRules = foldResults.stream().map(Folder.Result::estimationRules).toList();
 
 		return new ComputationResult(origamiModels, foldedModels, estimationRules);
+	}
+
+	private double determineEps(final OrigamiModel model, final double eps) {
+		return model.getPaperSize() * eps;
+//		var minLength = model.getEdges().stream().mapToDouble(e -> e.toSegment().length()).min().getAsDouble();
+//
+//		return minLength * eps;
 	}
 
 	/**

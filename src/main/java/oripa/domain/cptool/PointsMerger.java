@@ -19,14 +19,14 @@
 package oripa.domain.cptool;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -38,43 +38,50 @@ import oripa.value.OriPoint;
 public class PointsMerger {
 	Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	private final LineAdder lineAdder;
+
+	public PointsMerger(final LineAdder lineAdder) {
+		this.lineAdder = lineAdder;
+	}
+
 	/**
 	 *
 	 * @param lines
 	 * @return new lines with merged vertices. very short lines are removed from
 	 *         the result.
 	 */
-	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
+	public CreasePattern mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
 		boolean changed;
 		int count = 0;
-		var sourceLines = lines;
-		List<OriLine> merged;
+		var merged = new CreasePatternFactory()
+				.createCreasePattern(lines);
 
 		do {
 			changed = false;
-			var cleaned = sourceLines.stream()
-					.filter(line -> line.length() >= pointEps)
-					.toList();
+			merged.removeIf(line -> line.length() < pointEps);
 
-			var pointSet = new TreeSet<OriPoint>(cleaned.stream()
+			var pointSet = new TreeSet<OriPoint>(merged.stream()
 					.flatMap(OriLine::oriPointStream)
 					.toList());
 
-			merged = new ArrayList<OriLine>();
+			var cleaned = merged.stream().toList();
 			for (var line : cleaned) {
 				var p0 = find(pointSet, line.getOriPoint0(), pointEps);
 				var p1 = find(pointSet, line.getOriPoint1(), pointEps);
 
-				changed |= !p0.equals(line.getP0()) || !p1.equals(line.getP1());
-				merged.add(new OriLine(p0, p1, line.getType()));
-			}
-			sourceLines = merged;
-			count++;
-		} while (changed && count < 10);
+				var needsUpdate = !p0.equals(line.getP0()) || !p1.equals(line.getP1());
 
-		if (count >= 10) {
-			logger.debug("merge count reached the limit.");
-		}
+				changed |= needsUpdate;
+
+				if (needsUpdate) {
+					merged.remove(line);
+					lineAdder.addLine(new OriLine(p0, p1, line.getType()), merged, pointEps);
+				}
+			}
+			count++;
+		} while (changed && count < 20);
+
+		logger.debug("merge count: {}", count);
 
 		return merged;
 	}
