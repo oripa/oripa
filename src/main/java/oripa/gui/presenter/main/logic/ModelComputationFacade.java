@@ -202,8 +202,13 @@ public class ModelComputationFacade {
 	}
 
 	private double determineEps(final OrigamiModel model, final double eps) {
-		return model.getPaperSize() * eps;
-//		var minLength = model.getEdges().stream().mapToDouble(e -> e.toSegment().length()).min().getAsDouble();
+		var minLength = model.getEdges().stream().mapToDouble(e -> e.toSegment().length()).min().getAsDouble();
+		var value = minLength / 300;
+		// var value = model.getPaperSize() * eps;
+
+		logger.info("eps for folding: {}", value);
+
+		return value;
 //
 //		return minLength * eps;
 	}

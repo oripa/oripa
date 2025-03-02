@@ -88,8 +88,13 @@ public class FacesToCreasePatternConverter {
 					.map(he -> new OriLine(he.getPosition(), he.getNext().getPosition(),
 							OriLine.Type.MOUNTAIN))
 					.toList();
+
 			// make cross every time to divide the faces.
-			lineAdder.addAll(faceLines, lines, pointEps);
+			for (var line : faceLines) {
+				lineAdder.addLine(line, lines, pointEps);
+			}
+//
+//			lineAdder.addAll(faceLines, lines, pointEps);
 		}
 
 		lines = pointMerger.mergeClosePoints(lines, pointEps);
@@ -97,7 +102,7 @@ public class FacesToCreasePatternConverter {
 //		try {
 //			var creasePattern = cpFactory.createCreasePattern(lines);
 //			creasePattern.forEach(line -> logger.debug("{}", line));
-//			new ExporterCP().export(Doc.forSaving(creasePattern, null), "debug.cp", null);
+//			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug.cp", null);
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
 

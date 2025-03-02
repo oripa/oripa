@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.geom.RectangleDomain;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
 /**
@@ -108,7 +109,7 @@ public class OriLineClip implements Clippable<OriLine> {
 		areas = new Set[divNum][divNum];
 		for (int i = 0; i < divNum; i++) {
 			for (int j = 0; j < divNum; j++) {
-				areas[i][j] = new HashSet<OriLine>();
+				areas[i][j] = CollectionUtil.newConcurrentHashSet();
 			}
 		}
 	}
@@ -180,7 +181,7 @@ public class OriLineClip implements Clippable<OriLine> {
 	}
 
 	/**
-	 * O(k^2 n) for n lines in the domain.
+	 * O(k^2 n) for n lines in the domain and k * k areas.
 	 *
 	 * @param domain
 	 * @return
@@ -192,8 +193,8 @@ public class OriLineClip implements Clippable<OriLine> {
 
 		var lines = new HashSet<OriLine>();
 
-		for (var xDiv = p0Div.x; xDiv < p1Div.x; xDiv++) {
-			for (var yDiv = p0Div.y; yDiv < p1Div.y; yDiv++) {
+		for (var xDiv = p0Div.x; xDiv <= p1Div.x; xDiv++) {
+			for (var yDiv = p0Div.y; yDiv <= p1Div.y; yDiv++) {
 				logger.trace("get div:{},{}", xDiv, yDiv);
 				lines.addAll(areas[xDiv][yDiv]);
 			}
