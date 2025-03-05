@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold.subface;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.LineAdder;
+import oripa.domain.cptool.OverlappingLineMerger;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
@@ -44,17 +47,20 @@ public class FacesToCreasePatternConverter {
 	private final CreasePatternFactory cpFactory;
 	private final LineAdder lineAdder;
 	private final ElementRemover elementRemover;
-	private final PointsMerger pointMerger;
+	private final PointsMerger pointsMerger;
+	private final OverlappingLineMerger overlapMerger;
 
 	/**
 	 * Constructor
 	 */
 	public FacesToCreasePatternConverter(final CreasePatternFactory cpFactory,
-			final LineAdder lineAdder, final ElementRemover elementRemover, final PointsMerger pointsMerger) {
+			final LineAdder lineAdder, final ElementRemover elementRemover, final PointsMerger pointsMerger,
+			final OverlappingLineMerger overlapMerger) {
 		this.cpFactory = cpFactory;
 		this.lineAdder = lineAdder;
 		this.elementRemover = elementRemover;
-		this.pointMerger = pointsMerger;
+		this.pointsMerger = pointsMerger;
+		this.overlapMerger = overlapMerger;
 	}
 
 	/**
@@ -67,7 +73,7 @@ public class FacesToCreasePatternConverter {
 	 */
 	public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double paperSize,
 			final double pointEps) {
-		logger.debug("toCreasePattern(): construct edge structure after folding");
+		logger.info("toCreasePattern(): construct edge structure after folding");
 
 		var lines = cpFactory.createCreasePattern(
 				RectangleDomain.createFromPoints(
@@ -75,7 +81,6 @@ public class FacesToCreasePatternConverter {
 								.flatMap(OriFace::halfedgeStream)
 								.map(OriHalfedge::getPosition)
 								.toList()));
-//		Collection<OriLine> lines = new ArrayList<OriLine>();
 
 		var filteredFaces = faces.stream()
 				.map(face -> face.remove180degreeVertices(pointEps))
@@ -83,28 +88,35 @@ public class FacesToCreasePatternConverter {
 				.filter(face -> face.halfedgeCount() >= 3)
 				.toList();
 
+		Collection<OriLine> faceLines = new HashSet<OriLine>();
 		for (OriFace face : filteredFaces) {
-			var faceLines = face.halfedgeStream()
+			faceLines.addAll(face.halfedgeStream()
 					.map(he -> new OriLine(he.getPosition(), he.getNext().getPosition(),
-							OriLine.Type.MOUNTAIN))
-					.toList();
-
-			// make cross every time to divide the faces.
-			for (var line : faceLines) {
-				lineAdder.addLine(line, lines, pointEps);
-			}
-//
-//			lineAdder.addAll(faceLines, lines, pointEps);
+							OriLine.Type.MOUNTAIN).createCanonical())
+					.toList());
 		}
 
-		lines = pointMerger.mergeClosePoints(lines, pointEps);
+		logger.info("merge ignoring type");
+		// put segments in a collection, remove overlaps in almost O(n log n)
+		faceLines = overlapMerger.mergeIgnoringType(faceLines, pointEps);
 
 //		try {
-//			var creasePattern = cpFactory.createCreasePattern(lines);
-//			creasePattern.forEach(line -> logger.debug("{}", line));
+//			var creasePattern = cpFactory.createCreasePattern(faceLines);
+		////			creasePattern.forEach(line -> logger.debug("{}", line));
 //			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug.cp", null);
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
+
+		// TODO: make cross in O(n log n) time
+		// make cross every time to divide the faces.
+		logger.info("add lines");
+		for (var line : faceLines) {
+			lineAdder.addLineAssumingNoOverlap(line, lines, pointEps);
+		}
+//
+//			lineAdder.addAll(faceLines, lines, pointEps);
+		logger.info("merge close points");
+		lines = pointsMerger.mergeClosePoints(lines, pointEps);
 
 		elementRemover.removeMeaninglessVertices(lines, pointEps);
 

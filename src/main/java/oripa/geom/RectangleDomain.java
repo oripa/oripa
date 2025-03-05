@@ -101,6 +101,10 @@ public class RectangleDomain {
 		this(Collections.emptyList());
 	}
 
+	public RectangleDomain(final RectangleDomain domain) {
+		this(domain.left, domain.top, domain.right, domain.bottom);
+	}
+
 	/**
 	 * Construct domain for {@code Segment} between P1(x0, y0) and P2(x1, y1)
 	 *

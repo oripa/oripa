@@ -54,7 +54,7 @@ public class PointsMerger {
 		boolean changed;
 		int count = 0;
 		var merged = new CreasePatternFactory()
-				.createCreasePattern(lines);
+				.createCreasePattern(lines, pointEps);
 
 		do {
 			changed = false;

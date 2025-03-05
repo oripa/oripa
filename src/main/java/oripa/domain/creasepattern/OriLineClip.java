@@ -167,16 +167,12 @@ public class OriLineClip implements Clippable<OriLine> {
 	private void applyForYDivs(final int xDiv, final int prevYDiv, final int yDiv,
 			final OriLine line,
 			final BiConsumer<AreaPosition, OriLine> action) {
-		if (prevYDiv < yDiv) {
-			for (int yDiv_ = prevYDiv; yDiv_ <= yDiv; yDiv_++) {
-				logger.trace("accept div:{},{}", xDiv, yDiv_);
-				action.accept(new AreaPosition(xDiv, yDiv_), line);
-			}
-		} else {
-			for (int yDiv_ = prevYDiv; yDiv_ >= yDiv; yDiv_--) {
-				logger.trace("accept div:{},{}", xDiv, yDiv_);
-				action.accept(new AreaPosition(xDiv, yDiv_), line);
-			}
+		var minYDiv = Math.min(prevYDiv, yDiv);
+		var maxYDiv = Math.max(prevYDiv, yDiv);
+
+		for (int yDiv_ = minYDiv; yDiv_ <= maxYDiv; yDiv_++) {
+			logger.trace("accept div:{},{}", xDiv, yDiv_);
+			action.accept(new AreaPosition(xDiv, yDiv_), line);
 		}
 	}
 
@@ -198,6 +194,36 @@ public class OriLineClip implements Clippable<OriLine> {
 				logger.trace("get div:{},{}", xDiv, yDiv);
 				lines.addAll(areas[xDiv][yDiv]);
 			}
+		}
+
+		return lines;
+	}
+
+	@Override
+	public Collection<OriLine> clipAlong(final OriLine line, final double eps) {
+
+		var lines = new HashSet<OriLine>();
+
+		var canonical = line.createCanonical();
+
+		var p0Div = new AreaPosition(canonical.getP0().getX(), canonical.getP0().getY());
+		var p1Div = new AreaPosition(canonical.getP1().getX(), canonical.getP1().getY());
+
+		if (p0Div.x < p1Div.x) {
+			for (var xDiv = p0Div.x; xDiv <= p1Div.x; xDiv++) {
+				var x = minX + xDiv * interval;
+				var y = canonical.getAffineYValueAt(x);
+				lines.addAll(clip(new RectangleDomain(x, y, x + interval, y + interval), eps));
+			}
+		} else {
+			var minYDiv = Math.min(p0Div.y, p1Div.y);
+			var maxYDiv = Math.max(p0Div.y, p1Div.y);
+			for (var yDiv = minYDiv; yDiv <= maxYDiv; yDiv++) {
+				var y = minY + yDiv * interval;
+				var x = canonical.getAffineXValueAt(y);
+				lines.addAll(clip(new RectangleDomain(x, y, x + interval, y + interval), eps));
+			}
+
 		}
 
 		return lines;

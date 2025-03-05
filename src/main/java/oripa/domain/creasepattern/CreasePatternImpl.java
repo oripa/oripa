@@ -1,8 +1,12 @@
 package oripa.domain.creasepattern;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -18,6 +22,7 @@ import oripa.vecmath.Vector2d;
  *
  */
 class CreasePatternImpl implements CreasePattern {
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * Wrapper to treat vertices and line at the same time
@@ -106,6 +111,7 @@ class CreasePatternImpl implements CreasePattern {
 
 			if (!getPaperDomain().contains(e)) {
 				clip = OriLineClip.create(this);
+				logger.info("recreate clip");
 			}
 
 			clip.add(e);
@@ -227,6 +233,11 @@ class CreasePatternImpl implements CreasePattern {
 	@Override
 	public Collection<OriLine> clip(final RectangleDomain domain, final double pointEps) {
 		return clip.clip(domain, pointEps);
+	}
+
+	@Override
+	public Collection<OriLine> clipAlong(final OriLine line, final double eps) {
+		return clip.clipAlong(line, eps);
 	}
 
 	@Deprecated

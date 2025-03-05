@@ -21,11 +21,16 @@ package oripa.domain.creasepattern;
 import java.util.Collection;
 
 import oripa.geom.RectangleDomain;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
 public interface Clippable<T> {
+
 	Collection<T> clip(RectangleDomain domain, double pointEps);
+
+	Collection<OriLine> clipAlong(final OriLine line, final double eps);
+
 }

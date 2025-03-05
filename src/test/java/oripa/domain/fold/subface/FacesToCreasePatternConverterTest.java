@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,10 +33,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.LineAdder;
+import oripa.domain.cptool.OverlappingLineMerger;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
+import oripa.geom.RectangleDomain;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -53,6 +57,8 @@ class FacesToCreasePatternConverterTest {
 	private ElementRemover remover;
 	@Mock
 	private PointsMerger pointMerger;
+	@Mock
+	private OverlappingLineMerger overlapMerger;
 
 	@Mock
 	private CreasePattern creasePattern;
@@ -66,24 +72,29 @@ class FacesToCreasePatternConverterTest {
 
 		when(face1.remove180degreeVertices(anyDouble())).thenReturn(face1);
 		when(face1.removeDuplicatedVertices(anyDouble())).thenReturn(face1);
+		when(face1.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
 		when(face1.halfedgeCount()).thenReturn(3);
 
 		when(face2.remove180degreeVertices(anyDouble())).thenReturn(face2);
 		when(face2.removeDuplicatedVertices(anyDouble())).thenReturn(face2);
+		when(face2.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
 		when(face2.halfedgeCount()).thenReturn(3);
 
 		var faces = List.of(face1, face2);
 
-		when(cpFactory.createCreasePattern(anyDouble())).thenReturn(creasePattern);
+		when(cpFactory.createCreasePattern(any(RectangleDomain.class))).thenReturn(creasePattern);
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
 
 		when(pointMerger.mergeClosePoints(anyCollection(), anyDouble())).thenReturn(creasePattern);
+
+		OriLine line = mock();
+		when(overlapMerger.mergeIgnoringType(anyCollection(), anyDouble())).thenReturn(List.of(line));
 
 		var converted = converter.convertToCreasePattern(faces, 100, POINT_EPS);
 		assertSame(creasePattern, converted);
 
 		// tried to convert all faces?
-		verify(adder, times(faces.size())).addAll(any(), any(), anyDouble());
+		verify(adder).addLineAssumingNoOverlap(any(), any(), anyDouble());
 
 		verify(remover).removeMeaninglessVertices(creasePattern, POINT_EPS);
 	}
