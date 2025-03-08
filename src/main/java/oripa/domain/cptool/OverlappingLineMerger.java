@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -240,32 +241,35 @@ public class OverlappingLineMerger {
 
 		var events = new PriorityQueue<MyPointAndOriLine>(points);
 
-		var mergings = new TreeMap<MergingKey, MyPointAndOriLine>();
+		var onSweepLine = new TreeMap<MergingKey, Set<MyPointAndOriLine>>();
 
 		var p = events.peek();
 		var key = keyTable.get(p);
-		mergings.put(key, p);
+		add(key, p, onSweepLine);
 
 		var eventPoint = p;
 		while (!events.isEmpty()) {
 			eventPoint = events.poll();
 			key = keyTable.get(eventPoint);
-			var merging = mergings.get(key);
+			var merging = get(key, eventPoint, onSweepLine);
 
-			logger.trace("event : {}, remain: {}", eventPoint, events);
+			logger.debug("event : {}, remain: {}", eventPoint, events);
 
 			if (!eventPoint.isLeft) {
-				var merged = mergings.remove(key);
-				if (merged != null) {
-					result.add(merged.getLine());
+				var longer = getLonger(key, eventPoint, onSweepLine);
+				if (longer == null) {
+					var merged = remove(key, eventPoint, onSweepLine);
+					if (merged != null) {
+						result.add(merged.getLine());
+					}
 				}
 				continue;
 			}
 
-			logger.trace("merging key:{} merging value: {}", key, merging);
+			logger.debug("merging key:{} merging value: {}", key, merging);
 
 			if (merging == null) {
-				mergings.put(key, eventPoint);
+				add(key, eventPoint, onSweepLine);
 				merging = eventPoint;
 			}
 
@@ -278,10 +282,13 @@ public class OverlappingLineMerger {
 
 				// remove points to be old.
 				events.remove(eventPoint.opposite);
-				keyTable.remove(eventPoint.opposite);
+				if (get(key, eventPoint.opposite, onSweepLine) == null) {
+					keyTable.remove(eventPoint.opposite);
+				}
 				events.remove(merging);
+				remove(keyTable.get(eventPoint.opposite), eventPoint.opposite, onSweepLine);
 
-				logger.trace("after remove, remain: {}", events);
+				logger.debug("after remove, remain: {}", events);
 
 				// merge
 				OriPoint right;
@@ -301,9 +308,10 @@ public class OverlappingLineMerger {
 
 				events.add(merged.get(1));
 				keyTable.put(merged.get(1), key);
-				mergings.put(key, merged.get(1));
 
-				logger.trace("after add, remain: {}", events);
+				add(key, merged.get(1), onSweepLine);
+
+				logger.debug("after add, remain: {}", events);
 				break;
 			case 0, 1:
 				// not overlap
@@ -312,6 +320,57 @@ public class OverlappingLineMerger {
 
 		}
 
+		logger.debug("result: {}", result);
+
 		return result;
+	}
+
+	private MyPointAndOriLine getLonger(final MergingKey key, final MyPointAndOriLine p,
+			final TreeMap<MergingKey, Set<MyPointAndOriLine>> onSweepLine) {
+
+		var set = onSweepLine.get(key);
+		if (set == null || set.isEmpty()) {
+			return null;
+		}
+
+		var longerOpt = set.stream()
+				.filter(p_ -> p_.getLine().length() > p.getLine().length()).findFirst();
+
+		return longerOpt.orElse(null);
+	}
+
+	private MyPointAndOriLine get(final MergingKey key, final MyPointAndOriLine p,
+			final TreeMap<MergingKey, Set<MyPointAndOriLine>> onSweepLine) {
+
+		var set = onSweepLine.get(key);
+		if (set == null || set.isEmpty()) {
+			return null;
+		}
+
+		if (set.contains(p)) {
+			return p;
+		}
+
+		return onSweepLine.get(key).iterator().next();
+	}
+
+	private void add(final MergingKey key, final MyPointAndOriLine p,
+			final TreeMap<MergingKey, Set<MyPointAndOriLine>> onSweepLine) {
+		onSweepLine.putIfAbsent(key, new TreeSet<>());
+
+		onSweepLine.get(key).add(p);
+	}
+
+	private MyPointAndOriLine remove(final MergingKey key, final MyPointAndOriLine p,
+			final TreeMap<MergingKey, Set<MyPointAndOriLine>> onSweepLine) {
+		var set = onSweepLine.get(key);
+
+		if (set.isEmpty()) {
+			return null;
+		}
+
+		set.remove(get(key, p, onSweepLine));
+
+		return p;
 	}
 }
