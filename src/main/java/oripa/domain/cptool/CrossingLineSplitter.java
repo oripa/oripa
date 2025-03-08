@@ -240,7 +240,9 @@ public class CrossingLineSplitter {
 
 		var events = new PriorityQueue<CrossPointAndOriLine>(points);
 
-		while (!events.isEmpty()) {
+		var count = 0;
+
+		while (!events.isEmpty() && count++ <= 2 * inputLines.size() * inputLines.size()) {
 			var event = events.poll();
 
 			logger.debug("event : {}, remain: {}", event, events);
@@ -274,9 +276,15 @@ public class CrossingLineSplitter {
 						if (sames.isEmpty()) {
 							add(event, onSweepLine);
 						} else {
+							lower = sames.getFirst();
 						}
 					}
 				}
+				if (higher != null && lower != null && higher.getLine() == lower.getLine()) {
+					// use left only for the same line
+					higher = null;
+				}
+
 				logger.debug("higher : {}", higher);
 				addLeftFutureEvents(events, onSweepLine, event, higher, foundPoints, eps);
 
@@ -312,6 +320,7 @@ public class CrossingLineSplitter {
 					if (!onSweepLine.isEmpty()) {
 						var sames = onSweepLine.get(event.getY()).stream().filter(s -> !s.equals(event)).toList();
 						if (!sames.isEmpty()) {
+							lower = sames.getFirst();
 						}
 					}
 				}
@@ -398,11 +407,14 @@ public class CrossingLineSplitter {
 			final CrossPointAndOriLine p,
 			final double eps) {
 
+		var pLeft = p.isLeft() ? p : p.opposite;
+		var pRight = p.isRight() ? p : p.opposite;
+
 		// left side of split
-		var cross = create(p.getPoint(), crossPoint);
+		var splitLeft = create(pLeft.getPoint(), crossPoint);
 
 		// the new event is right
-		var crossRight = cross.get(1);
+		var crossRight = splitLeft.get(1);
 
 		if (crossRight.getLine().length() > eps) {
 			events.add(crossRight);
@@ -410,10 +422,10 @@ public class CrossingLineSplitter {
 		}
 
 		// right side of split
-		cross = create(crossPoint, p.opposite.getPoint());
+		var splitRight = create(crossPoint, pRight.getPoint());
 
-		var crossLeft = cross.get(0);
-		crossRight = cross.get(1);
+		var crossLeft = splitRight.get(0);
+		crossRight = splitRight.get(1);
 
 		if (crossRight.getLine().length() > eps) {
 			// the new event is left and right
@@ -423,8 +435,9 @@ public class CrossingLineSplitter {
 			events.add(crossRight);
 			add(crossRight, onSweepLine);
 		}
-		// to replace with new lefts
-		remove(p, onSweepLine);
+		// to replace with new points
+		remove(pLeft, onSweepLine);
+		remove(pRight, onSweepLine);
 
 	}
 
@@ -483,24 +496,25 @@ public class CrossingLineSplitter {
 			final double eps) {
 
 		if (p.isLeft()) {
+			remove(p, onSweepLine);
 			return create(p.getPoint(), crossPoint).get(1);
 		}
 
 		// right side of split
-		var cross = create(crossPoint, p.opposite.getPoint());
+		var splitRight = create(crossPoint, p.opposite.getPoint());
 
-		var crossLeft = cross.get(0);
-		var crossRight = cross.get(1);
+		var crossLeft = splitRight.get(0);
+		var crossRight = splitRight.get(1);
 
 		if (crossRight.getLine().length() > eps) {
 			// the new event is left and right
-			events.add(crossLeft);
+			// events.add(crossLeft);
 			add(crossLeft, onSweepLine);
 
 			events.add(crossRight);
 			add(crossRight, onSweepLine);
 		}
-		// to replace with new left
+		// to replace with new Right
 		remove(p, onSweepLine);
 
 		return null;
