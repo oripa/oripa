@@ -98,6 +98,17 @@ public class OriLineClip implements Clippable<OriLine> {
 		return clip;
 	}
 
+	public static OriLineClip createWithMargin(final Collection<OriLine> lines) {
+		var domain = RectangleDomain.createFromSegments(lines);
+		domain.enlarge(0.1 * domain.maxWidthHeight() / divNum);
+		var clip = new OriLineClip(domain);
+
+		lines.forEach(line -> clip.add(line));
+
+		return clip;
+
+	}
+
 	@SuppressWarnings("unchecked")
 	public OriLineClip(final RectangleDomain domain) {
 		this.domainSize = domain.maxWidthHeight();

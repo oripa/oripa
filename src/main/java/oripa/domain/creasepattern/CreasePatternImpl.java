@@ -110,7 +110,7 @@ class CreasePatternImpl implements CreasePattern {
 			vertices.add(e.getP1());
 
 			if (!getPaperDomain().contains(e)) {
-				clip = OriLineClip.create(this);
+				clip = OriLineClip.createWithMargin(this);
 				logger.info("recreate clip");
 			}
 

@@ -18,6 +18,7 @@
  */
 package oripa.domain.fold.subface;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -25,8 +26,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cptool.CrossingLineSplitter;
 import oripa.domain.cptool.ElementRemover;
-import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.OverlappingLineMerger;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
@@ -34,6 +35,7 @@ import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
+import oripa.persistence.doc.exporter.ExporterCP;
 import oripa.value.OriLine;
 
 /**
@@ -45,7 +47,7 @@ public class FacesToCreasePatternConverter {
 			.getLogger(FacesToCreasePatternConverter.class);
 
 	private final CreasePatternFactory cpFactory;
-	private final LineAdder lineAdder;
+	private final CrossingLineSplitter lineSplitter;
 	private final ElementRemover elementRemover;
 	private final PointsMerger pointsMerger;
 	private final OverlappingLineMerger overlapMerger;
@@ -54,10 +56,11 @@ public class FacesToCreasePatternConverter {
 	 * Constructor
 	 */
 	public FacesToCreasePatternConverter(final CreasePatternFactory cpFactory,
-			final LineAdder lineAdder, final ElementRemover elementRemover, final PointsMerger pointsMerger,
+			final CrossingLineSplitter lineSplitter, final ElementRemover elementRemover,
+			final PointsMerger pointsMerger,
 			final OverlappingLineMerger overlapMerger) {
 		this.cpFactory = cpFactory;
-		this.lineAdder = lineAdder;
+		this.lineSplitter = lineSplitter;
 		this.elementRemover = elementRemover;
 		this.pointsMerger = pointsMerger;
 		this.overlapMerger = overlapMerger;
@@ -100,23 +103,21 @@ public class FacesToCreasePatternConverter {
 		// put segments in a collection, remove overlaps in almost O(n log n)
 		faceLines = overlapMerger.mergeIgnoringType(faceLines, pointEps);
 
-//		try {
-//			var creasePattern = cpFactory.createCreasePattern(faceLines);
-		////			creasePattern.forEach(line -> logger.debug("{}", line));
-//			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug.cp", null);
-//		} catch (IllegalArgumentException | IOException e) {
-//		}
-
-		// TODO: make cross in O(n log n) time
-		// make cross every time to divide the faces.
-		logger.info("add lines");
-		for (var line : faceLines) {
-			lineAdder.addLineAssumingNoOverlap(line, lines, pointEps);
-		}
+		// make cross in O(n log n) time
+		logger.info("split lines");
+		faceLines = lineSplitter.splitIgnoringType(faceLines, pointEps);
 //
 //			lineAdder.addAll(faceLines, lines, pointEps);
+
+		try {
+			var creasePattern = cpFactory.createCreasePattern(faceLines);
+			// creasePattern.forEach(line -> logger.debug("{}", line));
+			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug.cp", null);
+		} catch (IllegalArgumentException | IOException e) {
+		}
+
 		logger.info("merge close points");
-		lines = pointsMerger.mergeClosePoints(lines, pointEps);
+		lines = pointsMerger.mergeClosePoints(faceLines, pointEps);
 
 		elementRemover.removeMeaninglessVertices(lines, pointEps);
 

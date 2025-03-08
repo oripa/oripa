@@ -75,11 +75,11 @@ public class PointsMerger {
 
 				if (needsUpdate) {
 					merged.remove(line);
-					lineAdder.addLine(new OriLine(p0, p1, line.getType()), merged, pointEps);
+					lineAdder.addLineAssumingNoOverlap(new OriLine(p0, p1, line.getType()), merged, pointEps);
 				}
 			}
 			count++;
-		} while (changed && count < 20);
+		} while (changed && count <= 3);
 
 		logger.debug("merge count: {}", count);
 

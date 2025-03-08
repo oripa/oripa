@@ -144,15 +144,16 @@ public class LineAdder {
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		HashSet<OriLine> crossingCurrentLines;
 
+		// input domain can limit the current lines to be divided.
+		RectangleClipper inputDomainClipper = new RectangleClipper(
+				inputDomain,
+				pointEps);
+
 		if (currentLines instanceof CreasePattern cp) {
-			crossingCurrentLines = new HashSet<>(cp.clip(inputDomain, pointEps));
+			crossingCurrentLines = new HashSet<>(inputDomainClipper.selectByArea(cp.clip(inputDomain, pointEps)));
 			logger.trace("clipped {}", crossingCurrentLines);
 			currentLines.removeAll(crossingCurrentLines);
 		} else {
-			// input domain can limit the current lines to be divided.
-			RectangleClipper inputDomainClipper = new RectangleClipper(
-					inputDomain,
-					pointEps);
 			crossingCurrentLines = new HashSet<>(inputDomainClipper.selectByArea(currentLines));
 		}
 
@@ -220,13 +221,16 @@ public class LineAdder {
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		HashSet<OriLine> crossingCurrentLines;
 
+		// input domain can limit the current lines to be divided.
+		RectangleClipper inputDomainClipper = new RectangleClipper(
+				inputDomain,
+				pointEps);
+
 		if (currentLines instanceof CreasePattern cp) {
-			crossingCurrentLines = new HashSet<>(cp.clipAlong(inputLine, pointEps));
+			crossingCurrentLines = new HashSet<>(inputDomainClipper.selectByArea(cp.clip(inputDomain, pointEps)));
+			logger.trace("clipped {}", crossingCurrentLines);
+			currentLines.removeAll(crossingCurrentLines);
 		} else {
-			// input domain can limit the current lines to be divided.
-			RectangleClipper inputDomainClipper = new RectangleClipper(
-					inputDomain,
-					pointEps);
 			crossingCurrentLines = new HashSet<>(inputDomainClipper.selectByArea(currentLines));
 		}
 

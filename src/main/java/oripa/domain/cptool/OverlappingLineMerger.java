@@ -111,14 +111,7 @@ public class OverlappingLineMerger {
 			return MathUtil.areRadianEqual(Math.PI / 2, angle);
 		}
 
-		/**
-		 * @return point
-		 */
-		public OriPoint getPoint() {
-			return point;
-		}
-
-		private OriPoint getOppsitePoint() {
+		private OriPoint getOppositePoint() {
 			return point == line.getOriPoint0() ? line.getOriPoint1() : line.getOriPoint0();
 		}
 
@@ -146,7 +139,7 @@ public class OverlappingLineMerger {
 			var comp = point.compareTo(o.point);
 
 			if (comp == 0) {
-				return getOppsitePoint().compareTo(o.getOppsitePoint());
+				return getOppositePoint().compareTo(o.getOppositePoint());
 			}
 
 			return comp;

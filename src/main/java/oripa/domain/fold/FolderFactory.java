@@ -18,6 +18,7 @@
  */
 package oripa.domain.fold;
 
+import oripa.domain.cptool.CrossingLineSplitter;
 import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.OverlappingLineMerger;
@@ -64,7 +65,7 @@ public class FolderFactory {
 		var subfacesFactory = new SubFacesFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						lineAdder,
+						new CrossingLineSplitter(),
 						new ElementRemover(),
 						new PointsMerger(lineAdder),
 						new OverlappingLineMerger()),
@@ -82,7 +83,7 @@ public class FolderFactory {
 		var subfacesFactory = new SubfacesOneTimeFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						lineAdder,
+						new CrossingLineSplitter(),
 						new ElementRemover(),
 						new PointsMerger(lineAdder),
 						new OverlappingLineMerger()),

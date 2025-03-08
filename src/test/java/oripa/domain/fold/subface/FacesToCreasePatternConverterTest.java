@@ -31,8 +31,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import oripa.domain.cptool.CrossingLineSplitter;
 import oripa.domain.cptool.ElementRemover;
-import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.OverlappingLineMerger;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
@@ -52,7 +52,7 @@ class FacesToCreasePatternConverterTest {
 	@Mock
 	private CreasePatternFactory cpFactory;
 	@Mock
-	private LineAdder adder;
+	private CrossingLineSplitter lineSplitter;
 	@Mock
 	private ElementRemover remover;
 	@Mock
@@ -85,16 +85,14 @@ class FacesToCreasePatternConverterTest {
 		when(cpFactory.createCreasePattern(any(RectangleDomain.class))).thenReturn(creasePattern);
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
 
-		when(pointMerger.mergeClosePoints(anyCollection(), anyDouble())).thenReturn(creasePattern);
-
 		OriLine line = mock();
 		when(overlapMerger.mergeIgnoringType(anyCollection(), anyDouble())).thenReturn(List.of(line));
+		when(lineSplitter.splitIgnoringType(anyCollection(), anyDouble())).thenReturn(creasePattern);
+
+		when(pointMerger.mergeClosePoints(anyCollection(), anyDouble())).thenReturn(creasePattern);
 
 		var converted = converter.convertToCreasePattern(faces, 100, POINT_EPS);
 		assertSame(creasePattern, converted);
-
-		// tried to convert all faces?
-		verify(adder).addLineAssumingNoOverlap(any(), any(), anyDouble());
 
 		verify(remover).removeMeaninglessVertices(creasePattern, POINT_EPS);
 	}
