@@ -276,7 +276,7 @@ public class OverlappingLineMerger {
 
 		var eventPoint = p;
 		var count = 0;
-		while (!events.isEmpty() && count++ <= 3 * inputLines.size()) {
+		while (!events.isEmpty() && count++ <= 2 * inputLines.size() * inputLines.size()) {
 //		while (!events.isEmpty() && count++ <= 100) {
 			eventPoint = events.poll();
 			logger.trace("event : {}", eventPoint);
@@ -291,7 +291,6 @@ public class OverlappingLineMerger {
 			var mergingRight = merging == null ? null : merging.getRight();
 			var mergingLeftKey = merging == null ? null : toSweepKey(mergingLeft, keys, eps);
 			var mergingRightKey = merging == null ? null : toSweepKey(mergingRight, keys, eps);
-			var mergingKey = merging == null ? null : toSweepKey(merging, keys, eps);
 
 			logger.trace("sweep key:{} merging value: {}", eventLeftKey, merging);
 
@@ -312,6 +311,7 @@ public class OverlappingLineMerger {
 				}
 
 				var merged = merge(merging, eventPoint, eps);
+				logger.trace("merge result: {}", merged);
 
 				events.remove(mergingLeft);
 				events.remove(mergingRight);
@@ -340,7 +340,6 @@ public class OverlappingLineMerger {
 				mergingRight = eventPoint.getRight();
 				mergingLeftKey = eventLeftKey;
 				mergingRightKey = eventRightKey;
-				mergingKey = toSweepKey(eventPoint, keys, eps);
 			}
 
 			// event is left side
@@ -424,13 +423,18 @@ public class OverlappingLineMerger {
 	private MyPointAndOriLine getMerging(final SweepKey key, final MyPointAndOriLine p,
 			final TreeMap<SweepKey, Set<MyPointAndOriLine>> onSweepLine, final double eps) {
 
+		// note that intercept can be in [-inf, inf].
 		var group = CollectionUtil.rangeMapInclusive(onSweepLine,
 				new SweepKey(key.angle - eps, key.intercept - eps, Double.MIN_VALUE),
 				new SweepKey(key.angle + eps, key.intercept + eps, Double.MAX_VALUE));
 
 		var candidates = new TreeSet<MyPointAndOriLine>(getComparator(p));
 
-		group.forEach((key_, points) -> candidates.addAll(points));
+		group.forEach((key_, points) -> {
+			if (MathUtil.areEqual(key.intercept, key_.intercept, eps)) {
+				candidates.addAll(points);
+			}
+		});
 
 		logger.trace("merging's candidates {}", candidates);
 
@@ -440,9 +444,6 @@ public class OverlappingLineMerger {
 		var merging = lower == null ? higher : lower;
 
 		if (merging == null) {
-//			if (!candidates.isEmpty()) {
-//				return candidates.getFirst();
-//			}
 			return null;
 		}
 

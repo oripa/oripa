@@ -85,6 +85,37 @@ class OverlappingLineMergerTest {
 	}
 
 	@Test
+	void test_VariousOverlap_45Degrees() {
+		var lines = List.of(
+				new OriLine(2, 2, 5, 5, Type.MOUNTAIN),
+				new OriLine(2, 2, 5, 5, Type.MOUNTAIN),
+				new OriLine(2, 2, 5, 5, Type.MOUNTAIN),
+				new OriLine(2, 2, 4, 4, Type.MOUNTAIN),
+				new OriLine(2, 2, 4, 4, Type.MOUNTAIN),
+				new OriLine(2, 2, 4, 4, Type.MOUNTAIN),
+				new OriLine(2, 2, 3, 3, Type.MOUNTAIN),
+				new OriLine(2, 2, 3, 3, Type.MOUNTAIN),
+				new OriLine(1, 1, 3, 3, Type.MOUNTAIN),
+				new OriLine(2, 2, 3, 3, Type.MOUNTAIN),
+				new OriLine(1, 1, 3, 3, Type.MOUNTAIN),
+				new OriLine(1, 1, 3, 3, Type.MOUNTAIN),
+				new OriLine(0, 0, 3, 3, Type.MOUNTAIN),
+				new OriLine(0, 0, 3, 3, Type.MOUNTAIN),
+				new OriLine(0, 0, 1, 1, Type.MOUNTAIN));
+
+		var merger = new OverlappingLineMerger();
+
+		var result = merger.mergeIgnoringType(lines, 1e-8);
+
+		assertEquals(1, result.size());
+
+		AssertionUtil.assertSegmentEquals(
+				new OriLine(0, 0, 5, 5, Type.MOUNTAIN),
+				result.stream().findFirst().get(),
+				(a, b) -> a.equals(b, 1e-8));
+	}
+
+	@Test
 	void test_2_HorizontalLines_PartialOverlap() {
 		var lines = List.of(new OriLine(0, 0, 0, 1, Type.MOUNTAIN), new OriLine(0, 0.5, 0, 2, Type.MOUNTAIN));
 
