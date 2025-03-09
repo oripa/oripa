@@ -98,13 +98,25 @@ public class FacesToCreasePatternConverter {
 							OriLine.Type.MOUNTAIN).createCanonical())
 					.toList());
 		}
+		try {
+			var creasePattern = cpFactory.createCreasePattern(faceLines);
+			// creasePattern.forEach(line -> logger.debug("{}", line));
+			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug_convert.cp", null);
+		} catch (IllegalArgumentException | IOException e) {
+		}
 
 		logger.info("merge ignoring type");
 		// put segments in a collection, remove overlaps in almost O(n log n)
 		faceLines = overlapMerger.mergeIgnoringType(faceLines, pointEps);
+		try {
+			var creasePattern = cpFactory.createCreasePattern(faceLines);
+			// creasePattern.forEach(line -> logger.debug("{}", line));
+			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug_merge.cp", null);
+		} catch (IllegalArgumentException | IOException e) {
+		}
 
 		// make cross in O(n log n) time
-		logger.info("split lines");
+		logger.info("split {} lines", faceLines.size());
 		faceLines = lineSplitter.splitIgnoringType(faceLines, pointEps);
 //
 //			lineAdder.addAll(faceLines, lines, pointEps);
@@ -112,7 +124,7 @@ public class FacesToCreasePatternConverter {
 		try {
 			var creasePattern = cpFactory.createCreasePattern(faceLines);
 			// creasePattern.forEach(line -> logger.debug("{}", line));
-			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug.cp", null);
+			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug_split.cp", null);
 		} catch (IllegalArgumentException | IOException e) {
 		}
 

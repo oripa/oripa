@@ -65,6 +65,24 @@ public class Segment {
 		return dp.length();
 	}
 
+	public double getAngle() {
+		var angle = Math.atan2(p1.getY() - p0.getY(), p1.getX() - p0.getX());
+		// limit the angle 0 to PI.
+		if (angle < 0) {
+			angle += Math.PI;
+		}
+		// a line with angle PI is the same as one with angle 0.
+		if (Math.PI - angle < MathUtil.angleRadianEps()) {
+			angle = 0;
+		}
+
+		return angle;
+	}
+
+	public boolean isVertical() {
+		return MathUtil.areRadianEqual(Math.PI / 2, getAngle());
+	}
+
 	/**
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression

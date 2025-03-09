@@ -33,7 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.cptool.CrossingLineSplitter;
 import oripa.domain.cptool.ElementRemover;
-import oripa.domain.cptool.OverlappingLineMerger;
+import oripa.domain.cptool.OverlappingLineMergerOld;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
@@ -58,7 +58,7 @@ class FacesToCreasePatternConverterTest {
 	@Mock
 	private PointsMerger pointMerger;
 	@Mock
-	private OverlappingLineMerger overlapMerger;
+	private OverlappingLineMergerOld overlapMerger;
 
 	@Mock
 	private CreasePattern creasePattern;

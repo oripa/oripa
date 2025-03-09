@@ -40,7 +40,7 @@ class OverlappingLineMergerTest {
 	void test_2_Lines_Inclusion() {
 		var lines = List.of(new OriLine(0, 0, 1, 0, Type.MOUNTAIN), new OriLine(0.5, 0, 0.7, 0, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -56,7 +56,7 @@ class OverlappingLineMergerTest {
 	void test_2_Lines_Equal() {
 		var lines = List.of(new OriLine(0, 0, 1, 0, Type.MOUNTAIN), new OriLine(0, 0, 1, 0, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -72,7 +72,7 @@ class OverlappingLineMergerTest {
 	void test_2_Lines_PartialOverlap() {
 		var lines = List.of(new OriLine(0, 0, 1, 0, Type.MOUNTAIN), new OriLine(0.5, 0, 2, 0, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -103,7 +103,7 @@ class OverlappingLineMergerTest {
 				new OriLine(0, 0, 3, 3, Type.MOUNTAIN),
 				new OriLine(0, 0, 1, 1, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -119,7 +119,7 @@ class OverlappingLineMergerTest {
 	void test_2_HorizontalLines_PartialOverlap() {
 		var lines = List.of(new OriLine(0, 0, 0, 1, Type.MOUNTAIN), new OriLine(0, 0.5, 0, 2, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -147,7 +147,7 @@ class OverlappingLineMergerTest {
 				new OriLine(l1X0, 0, l1X1, 0, Type.MOUNTAIN),
 				new OriLine(l2X0, 0, l2X1, 0, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -166,7 +166,7 @@ class OverlappingLineMergerTest {
 				new OriLine(0.5, 0, 1.5, 0, Type.MOUNTAIN),
 				new OriLine(2, 0, 3, 0, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -184,7 +184,7 @@ class OverlappingLineMergerTest {
 				new OriLine(0, 0, 1, 1, Type.MOUNTAIN),
 				new OriLine(0.3, 0.3, 1.7, 1.7, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -205,7 +205,7 @@ class OverlappingLineMergerTest {
 				new OriLine(0, 0, 1, -1, Type.MOUNTAIN),
 				new OriLine(-0.5, 0.5, 1, -1, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -226,7 +226,7 @@ class OverlappingLineMergerTest {
 //				new OriLine(0, 0, 1, 1, Type.MOUNTAIN),
 				new OriLine(-0.5, -0.5, 1, 1, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -253,7 +253,7 @@ class OverlappingLineMergerTest {
 
 		);
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -282,7 +282,7 @@ class OverlappingLineMergerTest {
 
 		);
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -300,7 +300,7 @@ class OverlappingLineMergerTest {
 				new OriLine(18, 18, 21, 21, Type.MOUNTAIN),
 				new OriLine(18, 18, 31, 31, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-1);
 
@@ -319,7 +319,7 @@ class OverlappingLineMergerTest {
 				new OriLine(3, 4, 5, 6, Type.MOUNTAIN),
 				new OriLine(2, 3, 4, 5, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -338,7 +338,7 @@ class OverlappingLineMergerTest {
 				new OriLine(2, 3, 6, 7, Type.MOUNTAIN),
 				new OriLine(3, 4, 5, 6, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
@@ -353,39 +353,19 @@ class OverlappingLineMergerTest {
 	@Test
 	void test_verticalTripleEqual() {
 		var lines = List.of(
-//				new OriLine(0, 0, 1, 1, Type.MOUNTAIN),
-//				new OriLine(0, 0, 1, 1 + 1e-9, Type.MOUNTAIN),
-//				new OriLine(1, 0, 1, 1, Type.MOUNTAIN),
 				new OriLine(1 - 1e-9, 0, 1, 1 - 1e-9, Type.MOUNTAIN),
 				new OriLine(1 + 1e-9, 0, 1, 1 + 1e-9, Type.MOUNTAIN),
-				new OriLine(1 + 1e-9, 0, 1, 1 - 1e-9, Type.MOUNTAIN)
-//				new OriLine(-1, 0, 1, 1, Type.MOUNTAIN),
-//				new OriLine(-1, 0, 1 + 1e-9, 1, Type.MOUNTAIN),
-//				new OriLine(1 - 2e-9, 0, 2, 1, Type.MOUNTAIN),
-//				new OriLine(1, +1e-9, 2, 1, Type.MOUNTAIN)
-		);
+				new OriLine(1 + 1e-9, 0, 1, 1 - 1e-9, Type.MOUNTAIN));
 
-		var merger = new OverlappingLineMerger();
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
 
 		var result = merger.mergeIgnoringType(lines, 1e-8);
 
 		assertEquals(1, result.size());
 
-//		AssertionUtil.assertAnyMatch(
-//				new OriLine(0, 0, 1, 1, Type.MOUNTAIN),
-//				result,
-//				(a, b) -> a.equals(b, 1e-8));
 		AssertionUtil.assertAnyMatch(
 				new OriLine(1, 0, 1, 1, Type.MOUNTAIN),
 				result,
 				(a, b) -> a.equals(b, 1e-8));
-//		AssertionUtil.assertAnyMatch(
-//				new OriLine(-1, 0, 1, 1, Type.MOUNTAIN),
-//				result,
-//				(a, b) -> a.equals(b, 1e-8));
-//		AssertionUtil.assertAnyMatch(
-//				new OriLine(1, 0, 2, 1, Type.MOUNTAIN),
-//				result,
-//				(a, b) -> a.equals(b, 1e-8));
 	}
 }
