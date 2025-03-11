@@ -31,9 +31,12 @@ public class OriPoint extends Vector2d implements Comparable<Vector2d> {
 		var ox = o.getX();
 		var oy = o.getY();
 
-		if (x == ox) {
-			return (int) Math.signum(y - oy);
+		var comp = Double.compare(x, ox);
+
+		if (comp == 0) {
+			comp = Double.compare(y, oy);
 		}
-		return (int) Math.signum(x - ox);
+
+		return comp;
 	}
 }
