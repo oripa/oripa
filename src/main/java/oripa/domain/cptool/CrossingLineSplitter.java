@@ -47,7 +47,7 @@ public class CrossingLineSplitter {
 
 		private CrossPointAndOriLine opposite;
 
-		public static List<CrossPointAndOriLine> createWithCanonicalization(final OriLine line) {
+		public static List<CrossPointAndOriLine> createForInitialization(final OriLine line) {
 			var canonical = new OriLine(line.getP0(), line.getP1(), Type.MOUNTAIN).createCanonical();
 			return create(canonical);
 		}
@@ -146,10 +146,15 @@ public class CrossingLineSplitter {
 
 		public static Comparator<CrossPointAndOriLine> getTieBreakComparator() {
 			return (a, b) -> {
-				var comp = a.point.compareTo(b.point);
+				// only far right can make cross.
+				var comp = switch (a.getRight().point.compareTo(b.getRight().point)) {
+				case -1 -> 1;
+				case 1 -> -1;
+				default -> 0;
+				};
 
 				if (comp == 0) {
-					comp = a.opposite.point.compareTo(b.opposite.point);
+					comp = a.getLeft().point.compareTo(b.getLeft().point);
 				}
 
 				if (comp == 0) {
@@ -212,7 +217,7 @@ public class CrossingLineSplitter {
 		foundPoints.add(point.getPoint());
 	}
 
-	private OriPoint get(
+	private OriPoint getAndAdd(
 			final OriPoint point,
 			final TreeSet<OriPoint> foundPoints, final double eps) {
 
@@ -222,7 +227,13 @@ public class CrossingLineSplitter {
 
 		var filtered = range.stream().filter(p -> point.equals(p, eps));
 
-		return filtered.findFirst().get();
+		var firstOpt = filtered.findFirst();
+		if (firstOpt.isEmpty()) {
+			foundPoints.add(point);
+			return point;
+		}
+
+		return firstOpt.get();
 	}
 
 	/**
@@ -239,10 +250,14 @@ public class CrossingLineSplitter {
 		var splits = new HashSet<OriLine>();
 
 		var points = new ArrayList<CrossPointAndOriLine>();
-		for (var line : inputLines) {
-			points.addAll(CrossPointAndOriLine.createWithCanonicalization(line));
-		}
 		var foundPoints = createFoundPoints(points);
+
+		for (var line : inputLines) {
+			var fixedLine = new OriLine(getAndAdd(line.getOriPoint0(), foundPoints, eps),
+					getAndAdd(line.getOriPoint1(), foundPoints, eps),
+					Type.MOUNTAIN);
+			points.addAll(CrossPointAndOriLine.createForInitialization(fixedLine));
+		}
 
 		var onSweepLine = new TreeMap<Double, TreeSet<CrossPointAndOriLine>>();
 
@@ -258,6 +273,9 @@ public class CrossingLineSplitter {
 			var lowerOpt = getLower(event, onSweepLine, eps);
 			var higherOpt = getHigher(event, onSweepLine, eps);
 
+			logger.debug("lower:{}", lowerOpt);
+			logger.debug("higher:{}", higherOpt);
+
 			if (event.isLeft()) {
 
 				if (lowerOpt.isEmpty() && higherOpt.isEmpty()) {
@@ -266,10 +284,10 @@ public class CrossingLineSplitter {
 						add(event.opposite, onSweepLine);
 					}
 				} else {
+
 					var lower = lowerOpt.orElse(null);
 					var split = addLeftFutureEvents(
 							events, onSweepLine, event, lower, foundPoints, eps);
-
 					if (!split) {
 						var higher = higherOpt.orElse(null);
 						split = addLeftFutureEvents(
@@ -279,6 +297,7 @@ public class CrossingLineSplitter {
 					if (!split) {
 						add(event, onSweepLine);
 					}
+
 				}
 			}
 			// is right: collect split line
@@ -305,7 +324,7 @@ public class CrossingLineSplitter {
 						split = addRightFutureEvents(events, onSweepLine, event, higherOpt.orElse(null), foundPoints,
 								eps);
 						if (split) {
-							var higher = lowerOpt.orElse(null);
+							var higher = higherOpt.orElse(null);
 							events.remove(higher);
 							events.remove(higher.opposite);
 						}
@@ -361,9 +380,14 @@ public class CrossingLineSplitter {
 			return false;
 		}
 
-		var crossPoint = new OriPoint(touchPoint == null ? crossPointOpt.orElse(null) : touchPoint);
+		var crossPoint = getAndAdd(
+				new OriPoint(touchPoint == null ? crossPointOpt.orElse(null) : touchPoint),
+				foundPoints,
+				eps);
 
-		foundPoints.add(crossPoint);
+		if (crossPoint == null) {
+			return false;
+		}
 
 		boolean splitDone = false;
 		// if left of swept line is crossing then
@@ -371,14 +395,14 @@ public class CrossingLineSplitter {
 		if (onSweepLeft.getPoint().equals(crossPoint, eps)) {
 			add(onSweepLeft, onSweepLine);
 		} else {
-			addLeftFutureEvents(events, onSweepLine, get(crossPoint, foundPoints, eps), onSweep, eps);
+			addLeftFutureEvents(events, onSweepLine, crossPoint, onSweep, foundPoints, eps);
 			splitDone = true;
 		}
 
 		if (eventLeft.getPoint().equals(crossPoint, eps)) {
 			add(eventLeft, onSweepLine);
 		} else {
-			addLeftFutureEvents(events, onSweepLine, get(crossPoint, foundPoints, eps), event, eps);
+			addLeftFutureEvents(events, onSweepLine, crossPoint, event, foundPoints, eps);
 			splitDone = true;
 		}
 
@@ -390,13 +414,14 @@ public class CrossingLineSplitter {
 			final TreeMap<Double, TreeSet<CrossPointAndOriLine>> onSweepLine,
 			final Vector2d crossPoint,
 			final CrossPointAndOriLine p,
+			final TreeSet<OriPoint> foundPoints,
 			final double eps) {
 
 		var pLeft = p.getLeft();
 		var pRight = p.getRight();
 
 		// left side of split
-		var splitLeft = create(pLeft.getPoint(), crossPoint);
+		var splitLeft = create(getAndAdd(pLeft.getPoint(), foundPoints, eps), crossPoint);
 
 		// the new event is right
 		var crossLeft = splitLeft.get(0);
@@ -414,7 +439,7 @@ public class CrossingLineSplitter {
 		}
 
 		// right side of split
-		var splitRight = create(crossPoint, pRight.getPoint());
+		var splitRight = create(crossPoint, getAndAdd(pRight.getPoint(), foundPoints, eps));
 
 		crossLeft = splitRight.get(0);
 		crossRight = splitRight.get(1);
@@ -463,7 +488,14 @@ public class CrossingLineSplitter {
 			return false;
 		}
 
-		var crossPoint = new OriPoint(touchPoint == null ? crossPointOpt.orElse(null) : touchPoint);
+		var crossPoint = getAndAdd(
+				new OriPoint(touchPoint == null ? crossPointOpt.orElse(null) : touchPoint),
+				foundPoints,
+				eps);
+
+		if (crossPoint == null) {
+			return false;
+		}
 
 		if (onSweepLeft.getPoint().equals(crossPoint, eps)) {
 			add(onSweepRight, onSweepLine);
@@ -474,10 +506,8 @@ public class CrossingLineSplitter {
 			return false;
 		}
 
-		foundPoints.add(crossPoint);
-
-		addRightFutureEvents(events, onSweepLine, crossPoint, event, eps);
-		addRightFutureEvents(events, onSweepLine, crossPoint, onSweep, eps);
+		addRightFutureEvents(events, onSweepLine, crossPoint, event, foundPoints, eps);
+		addRightFutureEvents(events, onSweepLine, crossPoint, onSweep, foundPoints, eps);
 
 		// event is popped from events and checked that it is right side so
 		// there is no remain.
@@ -495,13 +525,14 @@ public class CrossingLineSplitter {
 			final TreeMap<Double, TreeSet<CrossPointAndOriLine>> onSweepLine,
 			final OriPoint crossPoint,
 			final CrossPointAndOriLine p,
+			final TreeSet<OriPoint> foundPoints,
 			final double eps) {
 
 		var pLeft = p.getLeft();
 		var pRight = p.getRight();
 
 		// left side of split
-		var splitLeft = create(pLeft.getPoint(), crossPoint);
+		var splitLeft = create(getAndAdd(pLeft.getPoint(), foundPoints, eps), crossPoint);
 
 		// the new event is right
 		var crossLeft = splitLeft.get(0);
@@ -518,7 +549,7 @@ public class CrossingLineSplitter {
 		}
 
 		// right side of split
-		var splitRight = create(crossPoint, pRight.getPoint());
+		var splitRight = create(crossPoint, getAndAdd(pRight.getPoint(), foundPoints, eps));
 
 		crossLeft = splitRight.get(0);
 		crossRight = splitRight.get(1);
@@ -538,50 +569,6 @@ public class CrossingLineSplitter {
 		}
 	}
 
-//	private CrossPointAndOriLine[] getNeighbors(
-//			final CrossPointAndOriLine event,
-//			final TreeMap<Double, TreeSet<CrossPointAndOriLine>> onSweepLine) {
-//		var highers = onSweepLine.higherEntry(event.getY());
-//		var lowers = onSweepLine.lowerEntry(event.getY());
-//		var higher = highers == null ? null : highers.getValue().iterator().next();
-//		var lower = lowers == null ? null : lowers.getValue().iterator().next();
-//
-//		if (higher == null) {
-//			var sames = onSweepLine.get(event.getY());
-//			if (sames != null && !sames.isEmpty()) {
-//				logger.debug("same y {}", sames);
-//				higher = sames.higher(event);
-//			}
-//		}
-//		if (lower == null) {
-//			var sames = onSweepLine.get(event.getY());
-//			if (sames != null && !sames.isEmpty()) {
-//				logger.debug("same y {}", sames);
-//				lower = sames.lower(event);
-//			}
-//		}
-//
-//		var sames = onSweepLine.get(event.getY());
-//
-//		if (sames == null) {
-//			return new CrossPointAndOriLine[] { lower, higher };
-//		}
-//
-//		if (higher == null && lower != null) {
-//			if (!sames.isEmpty()) {
-//				higher = sames.higher(event);
-//			}
-//		}
-//
-//		if (higher != null && lower == null) {
-//			if (!sames.isEmpty()) {
-//				lower = sames.lower(event);
-//			}
-//		}
-//
-//		return new CrossPointAndOriLine[] { lower, higher };
-//	}
-
 	private Optional<CrossPointAndOriLine> getLower(
 			final CrossPointAndOriLine event,
 			final TreeMap<Double, TreeSet<CrossPointAndOriLine>> onSweepLine,
@@ -594,19 +581,21 @@ public class CrossingLineSplitter {
 		if (event.isVertical()) {
 			var lowerEntries = onSweepLine.headMap(event.getY());
 
-			var list = new ArrayList<CrossPointAndOriLine>();
-			lowerEntries.forEach((y, points) -> {
-				list.addAll(points.stream()
-						.filter((p) -> GeomUtil.getCrossPoint(event.getLine(),
-								p.getLine()).isPresent()
-				// && !p.getPoint().equals(event.getPoint(), eps)
-				)
-						.toList());
-			});
-			lowerOpt = list
-					.stream()
-					.findFirst();
-
+			var found = false;
+			for (var points : lowerEntries.values()) {
+				for (var p : points) {
+					lowerOpt = GeomUtil.getCrossPoint(
+							event.getLine(),
+							p.getLine()).isPresent() ? Optional.of(p) : Optional.empty();
+					if (lowerOpt.isPresent()) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					break;
+				}
+			}
 		}
 
 		logger.debug("lowers:{}", lowers);
@@ -635,20 +624,23 @@ public class CrossingLineSplitter {
 				: Optional.ofNullable(highers.getValue().first());
 
 		if (event.isVertical()) {
-			var higherEntries = onSweepLine.tailMap(event.getY());
-			var list = new ArrayList<CrossPointAndOriLine>();
-			higherEntries.forEach((y, points) -> {
-				list.addAll(points.stream()
-						.filter((p) -> GeomUtil.getCrossPoint(event.getLine(),
-								p.getLine()).isPresent()
-				// && !p.getPoint().equals(event.getPoint(), eps)
-				)
-						.toList());
-			});
-			higherOpt = list
-					.stream()
-					.findFirst();
+			var higherEtries = onSweepLine.tailMap(event.getY());
 
+			var found = false;
+			for (var points : higherEtries.values()) {
+				for (var p : points) {
+					higherOpt = GeomUtil.getCrossPoint(
+							event.getLine(),
+							p.getLine()).isPresent() ? Optional.of(p) : Optional.empty();
+					if (higherOpt.isPresent()) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					break;
+				}
+			}
 		}
 
 		logger.debug("highers:{}", highers);
@@ -684,7 +676,8 @@ public class CrossingLineSplitter {
 		}
 	}
 
-	private List<CrossPointAndOriLine> create(final Vector2d left, final Vector2d cross) {
-		return CrossPointAndOriLine.create(new OriLine(left, cross, Type.MOUNTAIN));
+	private List<CrossPointAndOriLine> create(
+			final Vector2d left, final Vector2d right) {
+		return CrossPointAndOriLine.create(new OriLine(left, right, Type.MOUNTAIN));
 	}
 }

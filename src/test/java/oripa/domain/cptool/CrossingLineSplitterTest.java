@@ -460,6 +460,101 @@ public class CrossingLineSplitterTest {
 	}
 
 	@Test
+	void test_FishBase() {
+		var p00 = new Vector2d(-1 + 1e-9, 0 + 1e-9);
+		var p01 = new Vector2d(6 + 1e-9, 7 + 1e-9);
+
+		var p10 = new Vector2d(0 - 1e-9, 1 - 1e-9);
+		var p11 = new Vector2d(4 + 1e-9, 1 + 1e-9);
+
+		var p20 = new Vector2d(4 - 1e-9, 1 - 1e-9);
+		var p21 = new Vector2d(4 + 1e-9, 5 - 1e-9);
+
+		var p30 = new Vector2d(2 - 1e-9, 3 - 1e-9);
+		var p31 = new Vector2d(4 - 1e-9, 1 - 1e-9);
+
+		var p40 = new Vector2d(-1 - 1e-9, 0 - 1e-9);
+		var p41 = new Vector2d(4 - 1e-9, 1 + 1e-9);
+
+		var p50 = new Vector2d(4 + 1e-9, 1 + 1e-9);
+		var p51 = new Vector2d(6 - 1e-9, 7 - 1e-9);
+
+		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
+		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
+		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
+		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
+		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
+		var line5 = new OriLine(p50, p51, Type.MOUNTAIN);
+
+		var result = new CrossingLineSplitter().splitIgnoringType(
+				List.of(line0, line1, line2, line3, line4, line5),
+				1e-8);
+
+		assertEquals(9, result.size());
+
+		AssertionUtil.assertAnyMatch(new OriLine(p00, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+		AssertionUtil.assertAnyMatch(new OriLine(p10, p30, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p10, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+		AssertionUtil.assertAnyMatch(new OriLine(p30, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p30, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+		AssertionUtil.assertAnyMatch(new OriLine(p21, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p21, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p11, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+	}
+
+	@Test
+	void test_Diamond() {
+		var p00 = new Vector2d(1 + 1e-9, 1 + 1e-9);
+		var p01 = new Vector2d(3 + 1e-9, 1 + 1e-9);
+
+		var p10 = new Vector2d(1 - 1e-9, 1 - 1e-9);
+		var p11 = new Vector2d(1 + 1e-9, 3 + 1e-9);
+
+		var p20 = new Vector2d(1 - 1e-9, 3 - 1e-9);
+		var p21 = new Vector2d(4 + 1e-9, 4 - 1e-9);
+
+		var p30 = new Vector2d(3 - 1e-9, 1 - 1e-9);
+		var p31 = new Vector2d(4 - 1e-9, 4 - 1e-9);
+
+		var p40 = new Vector2d(1 - 1e-9, 1 - 1e-9);
+		var p41 = new Vector2d(4 - 1e-9, 4 + 1e-9);
+
+		var p50 = new Vector2d(1 + 1e-9, 3 + 1e-9);
+		var p51 = new Vector2d(3 - 1e-9, 1 - 1e-9);
+
+		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
+		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
+		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
+		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
+		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
+		var line5 = new OriLine(p50, p51, Type.MOUNTAIN);
+
+		var result = new CrossingLineSplitter().splitIgnoringType(
+				List.of(line0, line1, line2, line3, line4, line5),
+				1e-8);
+
+		assertEquals(8, result.size());
+		var cross0 = new Vector2d(2, 2);
+
+		AssertionUtil.assertAnyMatch(new OriLine(p00, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+		AssertionUtil.assertAnyMatch(new OriLine(p10, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+		AssertionUtil.assertAnyMatch(new OriLine(p20, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+		AssertionUtil.assertAnyMatch(new OriLine(p30, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p00, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+	}
+
+	@Test
 	void test_4_Lines_sameCross_1_independent() {
 		var p00 = new Vector2d(-359.992, 356.240);
 		var p01 = new Vector2d(-354.956, 351.204);
