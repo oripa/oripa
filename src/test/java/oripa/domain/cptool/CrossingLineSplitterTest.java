@@ -360,8 +360,8 @@ public class CrossingLineSplitterTest {
 		var p10 = new Vector2d(0, 2);
 		var p11 = new Vector2d(2, 0);
 
-		var p20 = new Vector2d(1, 0);
-		var p21 = new Vector2d(1 - 1e-9, 0 - 1e-9);
+		var p20 = new Vector2d(0, 1);
+		var p21 = new Vector2d(1 - 1e-9, 1 - 1e-9);
 
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
@@ -369,7 +369,7 @@ public class CrossingLineSplitterTest {
 
 		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
-		assertEquals(4, result.size());
+		assertEquals(5, result.size());
 
 		var cross = new Vector2d(1, 1);
 
@@ -377,6 +377,7 @@ public class CrossingLineSplitterTest {
 		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 		AssertionUtil.assertAnyMatch(new OriLine(cross, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -471,7 +472,7 @@ public class CrossingLineSplitterTest {
 		var p21 = new Vector2d(7, 2);
 
 		var p30 = new Vector2d(0, 4);
-		var p31 = new Vector2d(4, 6);
+		var p31 = new Vector2d(6, 7);
 
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
