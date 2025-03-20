@@ -596,18 +596,18 @@ public class CrossingLineSplitterTest {
 	}
 
 	@Test
-	void test_4_Lines_sameCross_1_independent() {
-		var p00 = new Vector2d(-359.992, 356.240);
-		var p01 = new Vector2d(-354.956, 351.204);
+	void test_4_Lines_3_SameTouch_1_independent() {
+		var p00 = new Vector2d(4, 4);
+		var p01 = new Vector2d(2, 2);
 
-		var p10 = new Vector2d(-361.835, 358.083);
-		var p11 = new Vector2d(-354.956, 364.963);
+		var p10 = new Vector2d(6, 6);
+		var p11 = new Vector2d(4, 8);
 
-		var p20 = new Vector2d(-373.751, 332.409);
-		var p21 = new Vector2d(-354.956, 351.204);
+		var p20 = new Vector2d(2, 2);
+		var p21 = new Vector2d(5, 0);
 
-		var p30 = new Vector2d(-354.956, 351.204);
-		var p31 = new Vector2d(-336.160, 332.409);
+		var p30 = new Vector2d(2, 2);
+		var p31 = new Vector2d(0, 0);
 
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
@@ -618,10 +618,10 @@ public class CrossingLineSplitterTest {
 
 		assertEquals(4, result.size());
 
-		var cross = new Vector2d(-354.956, 351.204);
+		var cross = new Vector2d(2, 2);
 
 		AssertionUtil.assertAnyMatch(new OriLine(cross, p00, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
 		AssertionUtil.assertAnyMatch(new OriLine(cross, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
 
 		AssertionUtil.assertAnyMatch(new OriLine(p10, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));

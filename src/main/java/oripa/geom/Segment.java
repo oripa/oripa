@@ -80,7 +80,17 @@ public class Segment {
 	}
 
 	public boolean isVertical() {
-		return MathUtil.areRadianEqual(Math.PI / 2, getAngle());
+		var angle = getAngle();
+		return MathUtil.areRadianEqual(angle, Math.PI / 2)
+				|| MathUtil.areRadianEqual(angle, 3 * Math.PI / 2);
+	}
+
+	public boolean isHorizontal() {
+		var angle = getAngle();
+		return MathUtil.areRadianEqual(angle, 0)
+				|| MathUtil.areRadianEqual(angle, Math.PI)
+				|| MathUtil.areRadianEqual(angle, 2 * Math.PI);
+
 	}
 
 	/**
@@ -95,9 +105,7 @@ public class Segment {
 		var p1 = getP1();
 
 		// vertical line does not have y value.
-		var angle = p0.subtract(p1).ownAngle();
-		if (MathUtil.areRadianEqual(angle, Math.PI / 2)
-				|| MathUtil.areRadianEqual(angle, 3 * Math.PI / 2)) {
+		if (isVertical()) {
 			return Double.NaN;
 		}
 
@@ -117,10 +125,7 @@ public class Segment {
 		var p1 = getP1();
 
 		// horizontal line does not have x value.
-		var angle = p0.subtract(p1).ownAngle();
-		if (MathUtil.areRadianEqual(angle, 0)
-				|| MathUtil.areRadianEqual(angle, Math.PI)
-				|| MathUtil.areRadianEqual(angle, 2 * Math.PI)) {
+		if (isHorizontal()) {
 			return Double.NaN;
 		}
 
