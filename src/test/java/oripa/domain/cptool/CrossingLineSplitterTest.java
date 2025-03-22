@@ -105,7 +105,7 @@ public class CrossingLineSplitterTest {
 		var p01 = new Vector2d(2, 2);
 
 		var p10 = new Vector2d(1, 0);
-		var p11 = new Vector2d(1.5, 1.5);
+		var p11 = new Vector2d(1.5 - 1e-9, 1.5 - 1e-9);
 
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
@@ -391,8 +391,8 @@ public class CrossingLineSplitterTest {
 		var p20 = new Vector2d(-1, 2);
 		var p21 = new Vector2d(0, 1);
 
-		var p30 = new Vector2d(1, 0);
-		var p31 = new Vector2d(1, 5);
+		var p30 = new Vector2d(1 - 1e-9, 0);
+		var p31 = new Vector2d(1 + 1e-9, 5);
 
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
