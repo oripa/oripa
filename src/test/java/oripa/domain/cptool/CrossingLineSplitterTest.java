@@ -628,4 +628,54 @@ public class CrossingLineSplitterTest {
 
 	}
 
+	@Test
+	void test_5_Lines_1_Vertical_touchAtBothVerticalEnds_crossOnRight() {
+		var p00 = new Vector2d(2, 0);
+		var p01 = new Vector2d(2, 4 - 1e-9);
+
+		var p10 = new Vector2d(2, 0);
+		var p11 = new Vector2d(8, 6);
+
+		var p20 = new Vector2d(2 + 1e-9, 4 + 1e-9);
+		var p21 = new Vector2d(7, -1);
+
+		var p30 = new Vector2d(0, 2);
+		var p31 = new Vector2d(2, 0);
+
+		var p40 = new Vector2d(0, 2);
+		var p41 = new Vector2d(3, 5 + 1e-9);
+
+		var p50 = new Vector2d(-2, 0);
+		var p51 = new Vector2d(0, 2);
+
+		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
+		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
+		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
+		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
+		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
+		var line5 = new OriLine(p50, p51, Type.MOUNTAIN);
+
+		var result = new CrossingLineSplitter().splitIgnoringType(
+				List.of(line0, line1, line2, line3, line4, line5), 1e-8);
+
+		assertEquals(9, result.size());
+
+		var cross0 = new Vector2d(4, 2);
+		var cross1 = new Vector2d(2, 4);
+
+		AssertionUtil.assertAnyMatch(new OriLine(p00, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+
+		AssertionUtil.assertAnyMatch(new OriLine(p30, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p40, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p41, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p50, p51, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+
+	}
+
 }
