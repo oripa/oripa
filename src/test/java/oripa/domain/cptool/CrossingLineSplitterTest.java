@@ -631,19 +631,19 @@ public class CrossingLineSplitterTest {
 	@Test
 	void test_5_Lines_1_Vertical_touchAtBothVerticalEnds_crossOnRight() {
 		var p00 = new Vector2d(2, 0);
-		var p01 = new Vector2d(2, 4 - 1e-9);
+		var p01 = new Vector2d(2, 4);
 
 		var p10 = new Vector2d(2, 0);
 		var p11 = new Vector2d(8, 6);
 
-		var p20 = new Vector2d(2 + 1e-9, 4 + 1e-9);
+		var p20 = new Vector2d(2, 4);
 		var p21 = new Vector2d(7, -1);
 
 		var p30 = new Vector2d(0, 2);
 		var p31 = new Vector2d(2, 0);
 
 		var p40 = new Vector2d(0, 2);
-		var p41 = new Vector2d(3, 5 + 1e-9);
+		var p41 = new Vector2d(3, 5);
 
 		var p50 = new Vector2d(-2, 0);
 		var p51 = new Vector2d(0, 2);
