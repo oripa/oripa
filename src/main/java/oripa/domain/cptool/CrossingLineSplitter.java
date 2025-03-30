@@ -128,10 +128,8 @@ public class CrossingLineSplitter {
 		}
 	}
 
-	private record StatusElementSegment(Double yAtSweep, Double x, OriLine line, boolean containsEvent)
+	private record StatusElementSegment(Double yAtSweep, Double x, OriLine line, boolean containsEvent, double eps)
 			implements Comparable<StatusElementSegment> {
-
-		private static final double X_DIFF = 1e-8;
 
 		public static StatusElementSegment create(final OriPoint eventPosition, final OriLine line,
 				final TreeSet<Double> foundYs, final double eps) {
@@ -145,7 +143,7 @@ public class CrossingLineSplitter {
 			y = getAndAdd(y, foundYs, eps);
 
 			var containsPoint = containsPoint(line, eventPosition, eps);
-			return new StatusElementSegment(containsPoint ? eventPosition.getY() : y, x, line, containsPoint);
+			return new StatusElementSegment(containsPoint ? eventPosition.getY() : y, x, line, containsPoint, eps);
 		}
 
 		@Override
@@ -164,7 +162,7 @@ public class CrossingLineSplitter {
 					return -1;
 				}
 
-				var dx = X_DIFF;
+				var dx = eps * 1e-5;
 				var x = this.x > o.x ? this.x : o.x;
 				var y = computeYPlus(line, x, dx, yAtSweep);
 
@@ -506,6 +504,7 @@ public class CrossingLineSplitter {
 			sweepStatus.add(StatusElementSegment.create(eventPosition, s.line, foundYs, eps));
 		});
 		interiors.forEach(s -> {
+			sweepStatus.remove(s);
 			sweepStatus.add(
 					StatusElementSegment.create(
 							eventPosition,
