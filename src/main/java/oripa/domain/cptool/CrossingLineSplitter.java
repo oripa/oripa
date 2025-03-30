@@ -153,6 +153,10 @@ public class CrossingLineSplitter {
 			var comp = Double.compare(yAtSweep, o.yAtSweep);
 
 			if (comp == 0) {
+				if (line.compareTo(o.line) == 0) {
+					return 0;
+				}
+
 				if (containsEvent && o.containsEvent && line.isVertical() && !o.line.isVertical()) {
 					return 1;
 				}
@@ -161,7 +165,7 @@ public class CrossingLineSplitter {
 				}
 
 				var dx = X_DIFF;
-				var x = this.x;
+				var x = this.x > o.x ? this.x : o.x;
 				var y = computeYPlus(line, x, dx, yAtSweep);
 
 				var ox = x;
@@ -624,17 +628,28 @@ public class CrossingLineSplitter {
 			final EventPoint event) {
 
 		var oldLefts = sweepStatus.stream()
-				.filter(s ->
-				// usual
-				!s.line.isVertical()
-						&& s.line.getP0().getX() <= event.getX() + eps
-						&& s.line.getP1().getX() > event.getX() + eps
-						// vertical
-						|| s.line.isVertical()
-								&& MathUtil.areEqual(s.line.getP0().getX(), s.line.getP1().getX(), eps)
-								&& MathUtil.areEqual(s.line.getP0().getX(), event.getX(), eps)
-								&& s.line.getP0().getY() <= event.getY() - eps
-								&& s.line.getP1().getY() > event.getY() + eps)
+				.filter(s -> {
+					// usual
+					if (!s.line.isVertical()
+							&& s.line.getP0().getX() <= event.getX() + eps
+							&& s.line.getP1().getX() > event.getX() + eps) {
+						return true;
+					}
+					// vertical
+					if (s.line.isVertical()) {
+						// on sweep line?
+						if (MathUtil.areEqual(s.line.getP0().getX(), s.line.getP1().getX(), eps)
+								&& MathUtil.areEqual(s.line.getP0().getX(), event.getX(), eps)) {
+							// the current event is between the end points?
+							if (s.line.getP0().getY() <= event.getY() - eps
+									&& s.line.getP1().getY() > event.getY() + eps) {
+								return true;
+							}
+						}
+					}
+
+					return false;
+				})
 
 				.toList();
 
@@ -650,15 +665,26 @@ public class CrossingLineSplitter {
 	private Set<StatusElementSegment> getOldRights(
 			final EventPoint event) {
 
-		var oldRights = sweepStatus.stream().filter(s ->
-		// usual
-		!s.line.isVertical()
-				&& s.line.getP1().getX() < event.getX() - eps
-				// vertical
-				|| s.line.isVertical()
-						&& MathUtil.areEqual(s.line.getP0().getX(), s.line.getP1().getX(), eps)
-						&& MathUtil.areEqual(s.line.getP0().getX(), event.getX(), eps)
-						&& s.line.getP1().getY() < event.getY() - eps)
+		var oldRights = sweepStatus.stream().filter(s -> {
+
+			// completely old
+			if (s.line.getP1().getX() <= event.getX()) {
+				return true;
+			}
+
+			// vertical
+			if (s.line.isVertical()) {
+				// on sweep line?
+				if (MathUtil.areEqual(s.line.getP0().getX(), s.line.getP1().getX(), eps)
+						&& MathUtil.areEqual(s.line.getP0().getX(), event.getX(), eps)) {
+					// the current event is over the right end point?
+					if (s.line.getP1().getY() < event.getY() - eps) {
+						return true;
+					}
+				}
+			}
+			return false;
+		})
 				.toList();
 
 		return new HashSet<>(oldRights);

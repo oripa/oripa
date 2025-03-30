@@ -629,7 +629,7 @@ public class CrossingLineSplitterTest {
 	}
 
 	@Test
-	void test_5_Lines_1_Vertical_touchAtBothVerticalEnds_crossOnRight() {
+	void test_6_Lines_1_Vertical_touchAtBothVerticalEnds_crossOnRight() {
 		var p00 = new Vector2d(2, 0);
 		var p01 = new Vector2d(2, 4);
 
@@ -677,5 +677,4 @@ public class CrossingLineSplitterTest {
 		AssertionUtil.assertAnyMatch(new OriLine(p50, p51, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
 
 	}
-
 }
