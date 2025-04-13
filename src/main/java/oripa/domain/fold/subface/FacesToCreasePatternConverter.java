@@ -18,7 +18,6 @@
  */
 package oripa.domain.fold.subface;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +34,6 @@ import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
-import oripa.persistence.doc.exporter.ExporterCP;
 import oripa.value.OriLine;
 
 /**
@@ -120,19 +118,18 @@ public class FacesToCreasePatternConverter {
 		// make cross in O(n log n) time
 		logger.info("split {} lines", faceLines.size());
 		faceLines = lineSplitter.splitIgnoringType(faceLines, pointEps);
+
+//		try {
+//			var creasePattern = cpFactory.createCreasePattern(faceLines);
+//			// creasePattern.forEach(line -> logger.debug("{}", line));
+//			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug_split.cp", null);
+//		} catch (IllegalArgumentException | IOException e) {
+//		}
+
+		lines = cpFactory.createCreasePattern(faceLines, pointEps);
+//		logger.info("merge close points");
+//		lines = pointsMerger.mergeClosePoints(faceLines, pointEps);
 //
-//			lineAdder.addAll(faceLines, lines, pointEps);
-
-		try {
-			var creasePattern = cpFactory.createCreasePattern(faceLines);
-			// creasePattern.forEach(line -> logger.debug("{}", line));
-			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null), "debug_split.cp", null);
-		} catch (IllegalArgumentException | IOException e) {
-		}
-
-		logger.info("merge close points");
-		lines = pointsMerger.mergeClosePoints(faceLines, pointEps);
-
 		elementRemover.removeMeaninglessVertices(lines, pointEps);
 
 		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);

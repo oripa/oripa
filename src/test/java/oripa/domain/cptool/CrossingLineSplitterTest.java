@@ -51,10 +51,10 @@ public class CrossingLineSplitterTest {
 		assertEquals(4, result.size());
 
 		var cross = new Vector2d(1, 1);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -73,9 +73,9 @@ public class CrossingLineSplitterTest {
 		assertEquals(3, result.size());
 
 		var cross = new Vector2d(1, 1);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -94,9 +94,9 @@ public class CrossingLineSplitterTest {
 		assertEquals(3, result.size());
 
 		var cross = new Vector2d(1, 1);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -115,9 +115,9 @@ public class CrossingLineSplitterTest {
 		assertEquals(3, result.size());
 
 		var cross = new Vector2d(1.5, 1.5);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -136,10 +136,10 @@ public class CrossingLineSplitterTest {
 		assertEquals(4, result.size());
 
 		var cross = new Vector2d(1, 1);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -158,10 +158,10 @@ public class CrossingLineSplitterTest {
 		assertEquals(4, result.size());
 
 		var cross = new Vector2d(1, 1);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -230,10 +230,10 @@ public class CrossingLineSplitterTest {
 		assertEquals(4, result.size());
 
 		var cross = new Vector2d(1, 1);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p10, cross, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -256,17 +256,17 @@ public class CrossingLineSplitterTest {
 		assertEquals(7, result.size());
 
 		var cross0 = new Vector2d(1, 0);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross0, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross0, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
 		var cross1 = new Vector2d(3, 0);
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -289,12 +289,12 @@ public class CrossingLineSplitterTest {
 		assertEquals(6, result.size());
 
 		var cross0 = new Vector2d(1, 0);
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross0, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross0, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -320,19 +320,19 @@ public class CrossingLineSplitterTest {
 		var cross1 = new Vector2d(3, 2);
 		var cross2 = new Vector2d(4, 1);
 
-		AssertionUtil.assertAnyMatch(new OriLine(p00, cross0, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, cross0, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p20, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p20, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross2, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross2, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross2, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross2, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
 	}
 
@@ -359,16 +359,16 @@ public class CrossingLineSplitterTest {
 		var cross1 = new Vector2d(3, 2);
 		var cross2 = new Vector2d(4, 1);
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p20, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p20, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross2, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross2, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross2, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross2, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -393,13 +393,13 @@ public class CrossingLineSplitterTest {
 		var cross0 = new Vector2d(3, 3);
 		var cross1 = new Vector2d(6, 0);
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p00, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p00, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 	}
 
 	@Test
@@ -670,11 +670,11 @@ public class CrossingLineSplitterTest {
 
 		var cross = new Vector2d(2, 2);
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p00, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p00, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(p10, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p10, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
 	}
 
@@ -713,18 +713,87 @@ public class CrossingLineSplitterTest {
 		var cross0 = new Vector2d(4, 2);
 		var cross1 = new Vector2d(2, 4);
 
-		AssertionUtil.assertAnyMatch(new OriLine(p00, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p00, p01, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(cross0, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p10, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p11, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p20, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, p21, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(p30, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p40, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(p30, p31, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p40, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
-		AssertionUtil.assertAnyMatch(new OriLine(cross1, p41, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
-		AssertionUtil.assertAnyMatch(new OriLine(p50, p51, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-5));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, p41, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p50, p51, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
 
 	}
+
+	@Test
+	void test_5_Lines_TouchVerticalUpperEnd_3_Crosses() {
+		var p00 = new Vector2d(2, 0);
+		var p01 = new Vector2d(2, 3);
+
+		var p10 = new Vector2d(0, 3);
+		var p11 = new Vector2d(2, 3);
+
+		var p20 = new Vector2d(1, 0);
+		var p21 = new Vector2d(4, 6);
+
+		var p30 = new Vector2d(0, 1);
+		var p31 = new Vector2d(4, 5);
+
+		var p40 = new Vector2d(0, 2);
+		var p41 = new Vector2d(4, 4);
+
+		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
+		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
+		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
+		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
+		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
+
+		var result = new CrossingLineSplitter().splitIgnoringType(
+				List.of(line0, line1, line2, line3, line4), 1e-8);
+
+		assertEquals(13, result.size());
+
+		var cross0 = new Vector2d(2, 2);
+		var cross1 = new Vector2d(8.0 / 3, 10.0 / 3);
+		var cross2 = new Vector2d(3, 4);
+
+		AssertionUtil.assertAnyMatch(new OriLine(cross0, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(cross1, cross2, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+		AssertionUtil.assertAnyMatch(new OriLine(p01, cross1, Type.MOUNTAIN), result, (a, b) -> a.equals(b, 1e-8));
+
+	}
+
+	@Test
+	void test_5_Lines_TouchVerticalUpperEnd_2_Crosses_X() {
+		var p00 = new Vector2d(2, 0);
+		var p01 = new Vector2d(2, 3);
+
+		var p10 = new Vector2d(0, 3);
+		var p11 = new Vector2d(2, 3);
+
+		var p20 = new Vector2d(1, 5);
+		var p21 = new Vector2d(5, 1);
+
+		var p30 = new Vector2d(0, 1);
+		var p31 = new Vector2d(4, 5);
+
+		var p40 = new Vector2d(0, 2);
+		var p41 = new Vector2d(4, 4);
+
+		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
+		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
+		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
+		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
+		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
+
+		var result = new CrossingLineSplitter().splitIgnoringType(
+				List.of(line0, line1, line2, line3, line4), 1e-8);
+
+		assertEquals(11, result.size());
+
+	}
+
 }

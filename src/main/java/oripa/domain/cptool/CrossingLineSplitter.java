@@ -174,7 +174,7 @@ public class CrossingLineSplitter {
 
 				comp = Double.compare(y, oy);
 
-				// logger.debug("compare {}->{} {}->{} {}", line, y, o.line, oy,
+				// logger.trace("compare {}->{} {}->{} {}", line, y, o.line, oy,
 				// comp);
 			}
 			if (comp == 0) {
@@ -185,16 +185,16 @@ public class CrossingLineSplitter {
 		}
 
 		private static double computeYPlus(final OriLine l, final double x, final double dx, final double horizontalY) {
+			var x1 = l.getP1().getX();
+
 			if (l.isHorizontal()) {
 				return horizontalY;
-
 			}
 
 			if (l.isVertical()) {
 				return Double.NaN;
 			}
 
-			var x1 = l.getP1().getX();
 			if (x > x1 + dx) {
 				return l.getP1().getY();
 			}
@@ -342,7 +342,7 @@ public class CrossingLineSplitter {
 						.map(EventPoint::getLine)
 						.toList());
 
-		logger.debug("left map {}", leftMap);
+		logger.trace("left map {}", leftMap);
 
 		var crossInfos = new HashMap<OriPoint, Collection<OriLine>>();
 
@@ -353,15 +353,15 @@ public class CrossingLineSplitter {
 		while (!events.isEmpty() && count++ <= inputLines.size() * inputLines.size()) {
 			var event = events.removeFirst();
 
-			logger.debug("event {}", event);
+			logger.trace("event {}", event);
 
 			handleEventPoint(event, leftMap, reportReceiver);
 
-			logger.debug("sweep status x = {} {}", event.getX(), sweepStatus);
+			logger.trace("sweep status x = {} {}", event.getX(), sweepStatus);
 		}
 
 		var splits = split(fixedLines, crossInfos);
-		logger.debug("splits {}", splits);
+		logger.trace("splits {}", splits);
 		logger.info("loop count {}", count);
 
 		return splits;
@@ -456,16 +456,16 @@ public class CrossingLineSplitter {
 		// left end points corresponding to event point (= points to be swept)
 		var lefts = getLefts(event, leftMap);
 
-		logger.debug("lefts {}", lefts);
+		logger.trace("lefts {}", lefts);
 
 		// right end points corresponding to event point (= swept lines'
 		// points)
 		var rights = getRights(event);
-		logger.debug("rights {}", rights);
+		logger.trace("rights {}", rights);
 
 		// interior points correspond to event point
 		var interiors = getInteriors(event);
-		logger.debug("interiors {} from {}", interiors, sweepStatus);
+		logger.trace("interiors {} from {}", interiors, sweepStatus);
 
 		var crossings = new HashSet<OriLine>();
 
@@ -489,19 +489,21 @@ public class CrossingLineSplitter {
 			sweepStatus.add(StatusElementSegment.create(eventPosition, s.line, foundYs, eps));
 		});
 		interiors.forEach(s -> {
-			sweepStatus.add(
-					StatusElementSegment.create(
-							eventPosition,
-							s.line,
-							foundYs,
-							eps));
+			if (!rights.contains(s)) {
+				sweepStatus.add(
+						StatusElementSegment.create(
+								eventPosition,
+								s.line,
+								foundYs,
+								eps));
+			}
 		});
 
 		lefts.forEach(s -> sweepStatus.add(s));
 
-		logger.debug("old rights {}", oldRights);
-		logger.debug("old lefts {}", oldLefts);
-		logger.debug("updated sweep status {}", sweepStatus);
+		logger.trace("old rights {}", oldRights);
+		logger.trace("old lefts {}", oldLefts);
+		logger.trace("updated sweep status {}", sweepStatus);
 
 		var leftsAndInteriors = computeLeftsAndInteriors(event, lefts);
 
@@ -514,11 +516,11 @@ public class CrossingLineSplitter {
 
 			var crossPoint = computeCrossPoint(lower, higher);
 
-			logger.debug("no lefts and interiors");
+			logger.trace("no lefts and interiors");
 			findNewEvent(lower, higher, event, crossPoint);
 		} else {
-			logger.debug("lower");
-			// logger.debug("leftsAndInterior {}", leftsAndinteriors);
+			logger.trace("lower");
+			// logger.trace("leftsAndInterior {}", leftsAndinteriors);
 
 			var localLowest = leftsAndInteriors.first().line;
 			var lowerOpt = getLower(event, localLowest);
@@ -531,7 +533,7 @@ public class CrossingLineSplitter {
 			leftsAndInteriors = computeLeftsAndInteriors(event, lefts);
 			var localHighest = leftsAndInteriors.last().line;
 
-			logger.debug("higher");
+			logger.trace("higher");
 
 			var higherOpt = getHigher(event, localHighest);
 			var higher = higherOpt.orElse(null);
@@ -545,7 +547,7 @@ public class CrossingLineSplitter {
 
 	private void report(final EventPoint event, final Collection<OriLine> crossings,
 			final BiConsumer<EventPoint, Collection<OriLine>> reportReceiver) {
-		logger.debug("report {} {}", event, crossings);
+		logger.trace("report {} {}", event, crossings);
 		reportReceiver.accept(event, crossings);
 	}
 
@@ -590,7 +592,8 @@ public class CrossingLineSplitter {
 	 * @param eps
 	 * @return
 	 */
-	private Set<StatusElementSegment> getLefts(final EventPoint event, final HashMap<OriPoint, Set<OriLine>> leftMap) {
+	private HashSet<StatusElementSegment> getLefts(final EventPoint event,
+			final HashMap<OriPoint, Set<OriLine>> leftMap) {
 		var lefts = leftMap.get(event.getPoint());
 		if (lefts == null) {
 			lefts = Set.of();
@@ -610,7 +613,7 @@ public class CrossingLineSplitter {
 	 * @param eps
 	 * @return
 	 */
-	private Set<StatusElementSegment> getOldLeftsOnTreat(
+	private HashSet<StatusElementSegment> getOldLeftsOnTreat(
 			final EventPoint event) {
 
 		var oldLefts = sweepStatus.stream()
@@ -648,33 +651,27 @@ public class CrossingLineSplitter {
 	 * @param eps
 	 * @return
 	 */
-	private Set<StatusElementSegment> getOldRights(
+	private HashSet<StatusElementSegment> getOldRights(
 			final EventPoint event) {
 
 		var oldRights = sweepStatus.stream().filter(s -> {
 
 			// completely old
-			if (s.line.getP1().getX() <= event.getX()) {
-				if (event.getLine().isVertical()) {
-					if (s.line.getP1().getY() < event.getY()) {
-						return true;
-					}
-				} else {
-					return true;
-				}
+			if (s.line.getP1().getX() < event.getX()) {
+				return true;
 			}
 
 			// vertical
 			if (s.line.isVertical()) {
 				// on sweep line?
-				if (MathUtil.areEqual(s.line.getP0().getX(), s.line.getP1().getX(), eps)
-						&& MathUtil.areEqual(s.line.getP0().getX(), event.getX(), eps)) {
+				if (MathUtil.areEqual(s.line.getP0().getX(), event.getX(), eps)) {
 					// the current event is over the right end point?
-					if (s.line.getP1().getY() <= event.getY()) {
+					if (s.line.getP1().getY() < event.getY()) {
 						return true;
 					}
 				}
 			}
+
 			return false;
 		})
 				.toList();
@@ -690,7 +687,7 @@ public class CrossingLineSplitter {
 	 * @param eps
 	 * @return
 	 */
-	private Set<StatusElementSegment> getRights(
+	private HashSet<StatusElementSegment> getRights(
 			final EventPoint event) {
 
 		var rights = getAffinePoints(event).stream()
@@ -707,7 +704,7 @@ public class CrossingLineSplitter {
 	 * @param eps
 	 * @return
 	 */
-	private Set<StatusElementSegment> getInteriors(
+	private HashSet<StatusElementSegment> getInteriors(
 			final EventPoint event) {
 
 		var statusSegments = getAffinePoints(event);
@@ -721,7 +718,7 @@ public class CrossingLineSplitter {
 	 * @param eps
 	 * @return
 	 */
-	private Set<StatusElementSegment> getAffinePoints(final EventPoint event) {
+	private HashSet<StatusElementSegment> getAffinePoints(final EventPoint event) {
 		var statusSegments = sweepStatus
 				.stream()
 				// event point should be on the line
@@ -742,7 +739,7 @@ public class CrossingLineSplitter {
 		var lower = sweepStatus.lower(eventStatusSegment);
 		Optional<StatusElementSegment> lowerOpt = Optional.ofNullable(lower);
 
-//logger.debug("lowers:{}", lowers);
+//logger.trace("lowers:{}", lowers);
 
 		return lowerOpt.map(s -> s.line);
 
@@ -760,7 +757,7 @@ public class CrossingLineSplitter {
 		var higher = sweepStatus.higher(eventStatusSegment);
 		Optional<StatusElementSegment> higherOpt = Optional.ofNullable(higher);
 
-//logger.debug("lowers:{}", lowers);
+//logger.trace("lowers:{}", lowers);
 
 		return higherOpt.map(s -> s.line);
 	}
@@ -783,7 +780,7 @@ public class CrossingLineSplitter {
 			final EventPoint event,
 			final OriPoint crossPoint) {
 
-		logger.debug("find new events for {} {} {}", lower, higher, event);
+		logger.trace("find new events for {} {} {}", lower, higher, event);
 
 		if (lower == null || higher == null || crossPoint == null) {
 			return;
@@ -794,7 +791,7 @@ public class CrossingLineSplitter {
 		};
 
 		if (crossPoint.getX() > event.getX()) {
-			logger.debug("cross on right. {}", crossPoint);
+			logger.trace("cross on right. {}", crossPoint);
 
 			events.add(create.apply(lower));
 			events.add(create.apply(higher));
@@ -804,7 +801,7 @@ public class CrossingLineSplitter {
 
 		if (MathUtil.areEqual(crossPoint.getX(), event.getX(), eps)) {
 			if (crossPoint.getY() > event.getY()) {
-				logger.debug("same x, cross on higher. {}", crossPoint);
+				logger.trace("same x, cross on higher. {}", crossPoint);
 				events.add(create.apply(lower));
 				events.add(create.apply(higher));
 			}
