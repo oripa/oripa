@@ -85,6 +85,10 @@ public class Segment {
 				|| MathUtil.areRadianEqual(angle, 3 * Math.PI / 2);
 	}
 
+	public boolean isStrictlyVertical() {
+		return getP0().getX() == getP1().getX();
+	}
+
 	public boolean isHorizontal() {
 		var angle = getAngle();
 		return MathUtil.areRadianEqual(angle, 0)
