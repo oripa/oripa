@@ -88,6 +88,7 @@ public class SharedPointsMapFactory<P extends PointAndOriLine> {
 		// end point and the line.
 		var sharedPointsMap = new SharedPointsMap<P>(factory);
 
+		var setCount = 0;
 		// build a map and set keyPoint
 		for (var byX : xOrderHash) {
 			var yHash = hashFactory.create(byX, P::getY, eps);
@@ -98,7 +99,12 @@ public class SharedPointsMapFactory<P extends PointAndOriLine> {
 				var keyPoint = xyPoints.get(0).getPoint();
 				sharedPointsMap.put(keyPoint, xyPoints);
 				xyPoints.forEach(p -> p.setKeyPoint(keyPoint));
+				setCount += xyPoints.size();
 			}
+		}
+
+		if (setCount != creasePattern.size() * 2) {
+			logger.error("wrong hashing. map creation fails.");
 		}
 
 		// set oppositeKeyPoint
@@ -108,8 +114,10 @@ public class SharedPointsMapFactory<P extends PointAndOriLine> {
 						.ifPresentOrElse(
 								opposite -> point.setOppositeKeyPoint(opposite),
 								() -> logger.error(
-										"failed to get opposite key point: line: "
-												+ point.getLine()));
+										"failed to get opposite key point of {}, eps:{}, line: {}",
+										keyPoint,
+										eps,
+										point.getLine()));
 			}
 		});
 

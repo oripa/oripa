@@ -163,7 +163,7 @@ public class OriFacesFactory {
 	}
 
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge, final double eps) {
-		return makeFace(startingVertex, startingEdge, 500,
+		return makeFace(startingVertex, startingEdge, 10000,
 				eps,
 				// to make a loop in counterclockwise in mathematical
 				// coordinates.

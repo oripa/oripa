@@ -65,6 +65,38 @@ public class Segment {
 		return dp.length();
 	}
 
+	public double getAngle() {
+		var angle = Math.atan2(p1.getY() - p0.getY(), p1.getX() - p0.getX());
+		// limit the angle 0 to PI.
+		if (angle < 0) {
+			angle += Math.PI;
+		}
+		// a line with angle PI is the same as one with angle 0.
+		if (Math.PI - angle < MathUtil.angleRadianEps()) {
+			angle = 0;
+		}
+
+		return angle;
+	}
+
+	public boolean isVertical() {
+		var angle = getAngle();
+		return MathUtil.areRadianEqual(angle, Math.PI / 2)
+				|| MathUtil.areRadianEqual(angle, 3 * Math.PI / 2);
+	}
+
+	public boolean isStrictlyVertical() {
+		return getP0().getX() == getP1().getX();
+	}
+
+	public boolean isHorizontal() {
+		var angle = getAngle();
+		return MathUtil.areRadianEqual(angle, 0)
+				|| MathUtil.areRadianEqual(angle, Math.PI)
+				|| MathUtil.areRadianEqual(angle, 2 * Math.PI);
+
+	}
+
 	/**
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression
@@ -77,9 +109,7 @@ public class Segment {
 		var p1 = getP1();
 
 		// vertical line does not have y value.
-		var angle = p0.subtract(p1).ownAngle();
-		if (MathUtil.areRadianEqual(angle, Math.PI / 2)
-				|| MathUtil.areRadianEqual(angle, 3 * Math.PI / 2)) {
+		if (isVertical()) {
 			return Double.NaN;
 		}
 
@@ -99,10 +129,7 @@ public class Segment {
 		var p1 = getP1();
 
 		// horizontal line does not have x value.
-		var angle = p0.subtract(p1).ownAngle();
-		if (MathUtil.areRadianEqual(angle, 0)
-				|| MathUtil.areRadianEqual(angle, Math.PI)
-				|| MathUtil.areRadianEqual(angle, 2 * Math.PI)) {
+		if (isHorizontal()) {
 			return Double.NaN;
 		}
 
@@ -148,7 +175,7 @@ public class Segment {
 
 	@Override
 	public String toString() {
-		return "(" + p0 + ", " + p1 + ")";
+		return "(" + p0 + ", " + p1 + ") len:" + length();
 	}
 
 }

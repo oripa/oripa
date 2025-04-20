@@ -66,6 +66,10 @@ public class CreasePatternFactory {
 	 * @return
 	 */
 	public CreasePattern createCreasePattern(final Collection<OriLine> lines) {
+		return createCreasePattern(lines, 0);
+	}
+
+	public CreasePattern createCreasePattern(final Collection<OriLine> lines, final double eps) {
 		// To get paper size, consider boundary only
 		var domain = RectangleDomain.createFromSegments(
 				lines.stream()
@@ -76,10 +80,20 @@ public class CreasePatternFactory {
 			domain = RectangleDomain.createFromSegments(lines);
 		}
 
+		domain.enlarge(eps);
+
 		// Construct CP
 		CreasePattern creasePattern = new CreasePatternImpl(domain);
 		creasePattern.addAll(lines);
 
 		return creasePattern;
 	}
+
+	public CreasePattern createCreasePattern(final RectangleDomain domain) {
+		// Construct CP
+		CreasePattern creasePattern = new CreasePatternImpl(domain);
+
+		return creasePattern;
+	}
+
 }

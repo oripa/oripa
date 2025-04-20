@@ -19,37 +19,18 @@
 package oripa.domain.creasepattern;
 
 import java.util.Collection;
-import java.util.Set;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
- * A collection of lines with vertices information. In implementation of this
- * interface, vertices information must be updated via Collection methods but
- * not guaranteed if a line in this object is update directly like
- * {@code line.p0 = new OriPoint(x, y);} or {@code line.p0.x = newX;} That is,
- * if you want to change an end point vertex or its coordinate value of line(s)
- * in this object, you have to remove the line before changing and add it after
- * changing.
- *
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface CreasePattern
-		extends Set<OriLine>, NearVerticesGettable, Clippable<OriLine> {
+public interface Clippable<T> {
 
-	double getPaperSize();
+	Collection<T> clip(RectangleDomain domain, double pointEps);
 
-	RectangleDomain getPaperDomain();
+	Collection<OriLine> clipAlong(final OriLine line, final double eps);
 
-	default boolean isUnassigned() {
-		return stream().anyMatch(line -> line.isUnassigned());
-	}
-
-	void replaceWith(final Collection<OriLine> lines);
-
-	void refresh(double pointEps);
-
-	boolean cleanDuplicatedLines(final double pointEps);
 }

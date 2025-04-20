@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,12 +31,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import oripa.domain.cptool.AnalyticOverlappingLineMerger;
+import oripa.domain.cptool.CrossingLineSplitter;
 import oripa.domain.cptool.ElementRemover;
-import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.geom.RectangleDomain;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -48,11 +52,13 @@ class FacesToCreasePatternConverterTest {
 	@Mock
 	private CreasePatternFactory cpFactory;
 	@Mock
-	private LineAdder adder;
+	private CrossingLineSplitter lineSplitter;
 	@Mock
 	private ElementRemover remover;
 	@Mock
 	private PointsMerger pointMerger;
+	@Mock
+	private AnalyticOverlappingLineMerger overlapMerger;
 
 	@Mock
 	private CreasePattern creasePattern;
@@ -61,20 +67,31 @@ class FacesToCreasePatternConverterTest {
 
 	@Test
 	void testConvertToCreasePattern() {
-		var face1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
-		var face2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
+		OriFace face1 = mock();
+		OriFace face2 = mock();
+
+		when(face1.remove180degreeVertices(anyDouble())).thenReturn(face1);
+		when(face1.removeDuplicatedVertices(anyDouble())).thenReturn(face1);
+		when(face1.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
+		when(face1.halfedgeCount()).thenReturn(3);
+
+		when(face2.remove180degreeVertices(anyDouble())).thenReturn(face2);
+		when(face2.removeDuplicatedVertices(anyDouble())).thenReturn(face2);
+		when(face2.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
+		when(face2.halfedgeCount()).thenReturn(3);
 
 		var faces = List.of(face1, face2);
 
+		when(cpFactory.createCreasePattern(any(RectangleDomain.class))).thenReturn(creasePattern);
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
+		when(cpFactory.createCreasePattern(anyCollection(), anyDouble())).thenReturn(creasePattern);
 
-		when(pointMerger.mergeClosePoints(anyCollection(), anyDouble())).thenReturn(creasePattern);
+		OriLine line = mock();
+		when(overlapMerger.mergeIgnoringType(anyCollection(), anyDouble())).thenReturn(List.of(line));
+		when(lineSplitter.splitIgnoringType(anyCollection(), anyDouble())).thenReturn(creasePattern);
 
-		var converted = converter.convertToCreasePattern(faces, POINT_EPS);
+		var converted = converter.convertToCreasePattern(faces, 100, POINT_EPS);
 		assertSame(creasePattern, converted);
-
-		// tried to convert all faces?
-		verify(adder, times(faces.size())).addAll(any(), anyCollection(), anyDouble());
 
 		verify(remover).removeMeaninglessVertices(creasePattern, POINT_EPS);
 	}

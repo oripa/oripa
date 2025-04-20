@@ -78,7 +78,7 @@ public class SubFacesFactory {
 			final List<OriFace> faces, final double paperSize, final double eps) {
 		logger.debug("createSubFaces() start");
 
-		var creasePattern = facesToCPConverter.convertToCreasePattern(faces, eps);
+		var creasePattern = facesToCPConverter.convertToCreasePattern(faces, paperSize, eps);
 
 		// By this construction, we get faces that are composed of the edges
 		// after folding where the edges are split at cross points in the crease
