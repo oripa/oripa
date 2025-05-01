@@ -1,5 +1,5 @@
 [versions]
-gson = "2.12.1"
+gson = "2.13.1"
 commons-cli = "1.9.0"
 log4j = "2.24.3"
 junit-jupiter = "5.12.2"
