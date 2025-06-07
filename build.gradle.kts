@@ -29,7 +29,7 @@ dependencies {
 }
 
 group = "oripa"
-version = "1.75"
+version = "1.76"
 description = "oripa"
 
 java {
