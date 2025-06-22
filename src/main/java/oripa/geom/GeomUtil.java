@@ -559,6 +559,14 @@ public class GeomUtil {
 		return CCWcheck(p0, p1, q, 0) == 1;
 	}
 
+	/**
+	 * @return true if vector p0 -> q ends in left side of p0 -> p1 (q is at
+	 *         counterclockwise position) otherwise false.
+	 */
+	public static boolean isStrictlyCCW(final Vector2d p0, final Vector2d p1, final Vector2d q, final double eps) {
+		return CCWcheck(p0, p1, q, eps) == 1;
+	}
+
 	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		return CCWcheck(p0, p1, q, 0) >= 0;
 	}

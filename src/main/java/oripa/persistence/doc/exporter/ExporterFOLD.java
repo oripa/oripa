@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.GsonBuilder;
 
-import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.PointsMerger;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.foldformat.CreasePatternElementConverter;
@@ -55,7 +54,7 @@ public class ExporterFOLD implements DocExporter {
 
 		final double pointEps = config.getEps();
 
-		var pointsMerger = new PointsMerger(new LineAdder());
+		var pointsMerger = new PointsMerger();
 		var creasePattern = pointsMerger.mergeClosePoints(doc.getCreasePattern(), pointEps);
 
 		var property = doc.getProperty();
