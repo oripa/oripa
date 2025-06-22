@@ -20,8 +20,6 @@ package oripa.domain.fold;
 
 import oripa.domain.cptool.AnalyticOverlappingLineMerger;
 import oripa.domain.cptool.CrossingLineSplitter;
-import oripa.domain.cptool.ElementRemover;
-import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.ModelType;
@@ -61,13 +59,11 @@ public class FolderFactory {
 	}
 
 	private Folder createAssigned() {
-		var lineAdder = new LineAdder();
 		var subfacesFactory = new SubFacesFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
 						new CrossingLineSplitter(),
-						new ElementRemover(),
-						new PointsMerger(lineAdder),
+						new PointsMerger(),
 						new AnalyticOverlappingLineMerger()),
 				new OrigamiModelFactory(),
 				new SplitFacesToSubFacesConverter(),
@@ -79,13 +75,11 @@ public class FolderFactory {
 	}
 
 	private Folder createUnassigned() {
-		var lineAdder = new LineAdder();
 		var subfacesFactory = new SubfacesOneTimeFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
 						new CrossingLineSplitter(),
-						new ElementRemover(),
-						new PointsMerger(lineAdder),
+						new PointsMerger(),
 						new AnalyticOverlappingLineMerger()),
 				new OrigamiModelFactory(),
 				new SplitFacesToSubFacesConverter(),

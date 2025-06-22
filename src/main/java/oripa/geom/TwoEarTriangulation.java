@@ -27,6 +27,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -96,7 +97,7 @@ public class TwoEarTriangulation {
 
 			// center angle v1 should not be larger than or equal to 180
 			// degrees.
-			if (GeomUtil.isStrictlyCCW(v0, v1, v2)) {
+			if (GeomUtil.isStrictlyCCW(v0, v1, v2, MathUtil.normalizedValueEps())) {
 				isConvex[i1] = true;
 				convexes.add(vertex);
 			}
@@ -135,18 +136,20 @@ public class TwoEarTriangulation {
 				vertex0.nextIndexOnP = vertex1.nextIndexOnP;
 				vertex2.prevIndexOnP = vertex1.prevIndexOnP;
 
-				// test vertex0
+				// test vertex0 after removing vertex1
 				int i0 = vertex1.prevIndexOnP;
 				var vertexPrev0 = p.get(vertex0.prevIndexOnP);
-				if (!isConvex[i0] && GeomUtil.isStrictlyCCW(vertexPrev0.v, vertex0.v, vertex1.v)) {
+				if (!isConvex[i0]
+						&& GeomUtil.isStrictlyCCW(vertexPrev0.v, vertex0.v, vertex2.v, MathUtil.normalizedValueEps())) {
 					isConvex[i0] = true;
 					convexes.add(vertex0);
 				}
 
-				// test vertex2
+				// test vertex2 after removing vertex1
 				int i2 = vertex1.nextIndexOnP;
 				var vertexNext2 = p.get(vertex2.nextIndexOnP);
-				if (!isConvex[i2] && GeomUtil.isStrictlyCCW(vertex1.v, vertex2.v, vertexNext2.v)) {
+				if (!isConvex[i2]
+						&& GeomUtil.isStrictlyCCW(vertex0.v, vertex2.v, vertexNext2.v, MathUtil.normalizedValueEps())) {
 					isConvex[i2] = true;
 					convexes.add(vertex2);
 				}
@@ -157,6 +160,23 @@ public class TwoEarTriangulation {
 			}
 
 		}
+
+		// debug output
+//		try {
+//			var lines = new ArrayList<OriLine>();
+//			for (var t : triangles) {
+//				for (int i = 0; i < 3; i++) {
+//					lines.add(new OriLine(t.getEdge(i), OriLine.Type.MOUNTAIN));
+//				}
+//			}
+//
+//			var creasePattern = new CreasePatternFactory().createCreasePattern(lines);
+//
+//			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null),
+//					"debug_triangulation.cp",
+//					null);
+//		} catch (IllegalArgumentException | IOException e) {
+//		}
 
 		if (triangles.size() != polygon.verticesCount() - 2) {
 			logger.debug("failed: fewer triangles, #triangle should be " + (polygon.verticesCount() - 2)

@@ -33,12 +33,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.cptool.AnalyticOverlappingLineMerger;
 import oripa.domain.cptool.CrossingLineSplitter;
-import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -53,8 +51,6 @@ class FacesToCreasePatternConverterTest {
 	private CreasePatternFactory cpFactory;
 	@Mock
 	private CrossingLineSplitter lineSplitter;
-	@Mock
-	private ElementRemover remover;
 	@Mock
 	private PointsMerger pointMerger;
 	@Mock
@@ -82,9 +78,7 @@ class FacesToCreasePatternConverterTest {
 
 		var faces = List.of(face1, face2);
 
-		when(cpFactory.createCreasePattern(any(RectangleDomain.class))).thenReturn(creasePattern);
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
-		when(cpFactory.createCreasePattern(anyCollection(), anyDouble())).thenReturn(creasePattern);
 
 		OriLine line = mock();
 		when(overlapMerger.mergeIgnoringType(anyCollection(), anyDouble())).thenReturn(List.of(line));
@@ -92,7 +86,5 @@ class FacesToCreasePatternConverterTest {
 
 		var converted = converter.convertToCreasePattern(faces, 100, POINT_EPS);
 		assertSame(creasePattern, converted);
-
-		verify(remover).removeMeaninglessVertices(creasePattern, POINT_EPS);
 	}
 }

@@ -26,14 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.CrossingLineSplitter;
-import oripa.domain.cptool.ElementRemover;
 import oripa.domain.cptool.OverlappingLineMerger;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
-import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -46,7 +43,6 @@ public class FacesToCreasePatternConverter {
 
 	private final CreasePatternFactory cpFactory;
 	private final CrossingLineSplitter lineSplitter;
-	private final ElementRemover elementRemover;
 	private final PointsMerger pointsMerger;
 	private final OverlappingLineMerger overlapMerger;
 
@@ -54,12 +50,11 @@ public class FacesToCreasePatternConverter {
 	 * Constructor
 	 */
 	public FacesToCreasePatternConverter(final CreasePatternFactory cpFactory,
-			final CrossingLineSplitter lineSplitter, final ElementRemover elementRemover,
+			final CrossingLineSplitter lineSplitter,
 			final PointsMerger pointsMerger,
 			final OverlappingLineMerger overlapMerger) {
 		this.cpFactory = cpFactory;
 		this.lineSplitter = lineSplitter;
-		this.elementRemover = elementRemover;
 		this.pointsMerger = pointsMerger;
 		this.overlapMerger = overlapMerger;
 	}
@@ -75,13 +70,6 @@ public class FacesToCreasePatternConverter {
 	public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double paperSize,
 			final double pointEps) {
 		logger.info("toCreasePattern(): construct edge structure after folding");
-
-		var lines = cpFactory.createCreasePattern(
-				RectangleDomain.createFromPoints(
-						faces.stream()
-								.flatMap(OriFace::halfedgeStream)
-								.map(OriHalfedge::getPosition)
-								.toList()));
 
 		var filteredFaces = faces.stream()
 				.map(face -> face.remove180degreeVertices(pointEps))
@@ -119,6 +107,9 @@ public class FacesToCreasePatternConverter {
 		logger.info("split {} lines", faceLines.size());
 		faceLines = lineSplitter.splitIgnoringType(faceLines, pointEps);
 
+		logger.info("merge close points");
+		faceLines = pointsMerger.mergeClosePoints(faceLines, pointEps);
+
 //		try {
 //			var creasePattern = cpFactory.createCreasePattern(faceLines);
 //			// creasePattern.forEach(line -> logger.debug("{}", line));
@@ -126,13 +117,7 @@ public class FacesToCreasePatternConverter {
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
 
-		lines = cpFactory.createCreasePattern(faceLines, pointEps);
-//		logger.info("merge close points");
-//		lines = pointsMerger.mergeClosePoints(faceLines, pointEps);
-//
-		elementRemover.removeMeaninglessVertices(lines, pointEps);
-
-		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);
+		CreasePattern creasePattern = cpFactory.createCreasePattern(faceLines);
 
 		logger.debug("toCreasePattern(): {} segments", creasePattern.size());
 
