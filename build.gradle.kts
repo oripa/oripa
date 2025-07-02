@@ -98,8 +98,8 @@ tasks.jpackage {
 
     dependsOn("build", "copyDependencies", "copyJar")
 
-    input  = "$buildDirectory/jars"
-    destination = "$buildDirectory/dist"
+    input  = buildDirectory.dir("jars")
+    destination = buildDirectory.dir("dist")
 
     appName = "oripa"
     vendor = "oripa"
