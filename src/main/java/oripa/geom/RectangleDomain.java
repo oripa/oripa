@@ -254,6 +254,10 @@ public class RectangleDomain {
 				MathUtil.areEqual(right, other.right, eps) &&
 				MathUtil.areEqual(top, other.top, eps) &&
 				MathUtil.areEqual(bottom, other.bottom, eps);
+	}
 
+	@Override
+	public String toString() {
+		return "(" + left + "," + top + "," + right + "," + bottom + ")";
 	}
 }

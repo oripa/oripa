@@ -57,12 +57,12 @@ public class SubFramePresentationLogicTest {
 	UIPanelView view;
 
 	@Mock
+	ModelIndexChangeSupport modelIndexChangeSupport;
+
+	@Mock
 	SubFrameFactory subFrameFactory;
 	@Mock
 	SubFramePresenterFactory subFramePresenterFactory;
-
-	@Mock
-	ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 
 	@Mock
 	ModelComputationFacadeFactory modelComputationFacadeFactory;

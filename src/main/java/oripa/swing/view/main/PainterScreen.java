@@ -32,6 +32,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -59,7 +60,7 @@ public class PainterScreen extends JPanel
 		implements PainterScreenView, MouseListener, MouseMotionListener, MouseWheelListener,
 		ComponentListener {
 
-	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final PainterScreenSetting setting;
 	private final ViewScreenUpdater screenUpdater;

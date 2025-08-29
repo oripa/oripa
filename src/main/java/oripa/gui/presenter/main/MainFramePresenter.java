@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
 import oripa.application.main.PaintContextService;
+import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
@@ -335,6 +336,10 @@ public class MainFramePresenter {
 		presentationLogic.updateMenu();
 		presentationLogic.updateTitleText();
 		presentationLogic.updateValuePanelFractionDigits();
+	}
+
+	public void setPaperDomainOfModel(final RectangleDomain domain) {
+		presentationLogic.setPaperDomainOfModel(domain);
 	}
 
 	private void windowClosing() {
