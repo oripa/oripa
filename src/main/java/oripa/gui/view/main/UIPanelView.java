@@ -151,23 +151,28 @@ public interface UIPanelView extends View {
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();
 
-	public void showNoAnswerMessage();
+	void showNoAnswerMessage();
 
-	public boolean showCleaningUpDuplicationDialog();
+	boolean showCleaningUpDuplicationDialog();
 
-	public void showCleaningUpMessage();
+	void showCleaningUpMessage();
 
-	public void showFoldFailureMessage();
+	void showFoldFailureMessage();
 
-	public void setModelComputationListener(Runnable listener);
+	void setModelComputationListener(Runnable listener);
 
-	public void setShowFoldedModelWindowsListener(Runnable listener);
+	void setShowFoldedModelWindowsListener(Runnable listener);
 
-	public void showLocalFlatFoldabilityViolationMessage();
+	void showLocalFlatFoldabilityViolationMessage();
 
-	public void showErrorMessage(Exception e);
+	void showErrorMessage(Exception e);
 
-	public void addMouseActionPluginListener(final String name, Runnable listener, KeyProcessing keyProcessing);
+	void addMouseActionPluginListener(final String name, Runnable listener, KeyProcessing keyProcessing);
 
-	public void updatePluginPanel();
+	void updatePluginPanel();
+
+	void setEstimationResultSaveColorsListener(final BiConsumer<Color, Color> listener);
+
+	void setPaperDomainOfModelChangeListener(final PropertyChangeListener listener);
+
 }

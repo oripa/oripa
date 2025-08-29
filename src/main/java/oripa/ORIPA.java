@@ -18,7 +18,12 @@
 
 package oripa;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 
@@ -35,6 +40,8 @@ import oripa.inject.PaintDomainModule;
 import oripa.inject.PluginModule;
 
 public class ORIPA {
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	public static void main(final String[] args) {
 
 		if (args.length > 0) {
@@ -43,24 +50,29 @@ public class ORIPA {
 		}
 
 		SwingUtilities.invokeLater(() -> {
-			// Construction of the main frame
+			try {
 
-			var injector = Guice.createInjector(
-					new PluginModule(),
-					new MainViewSwingModule(),
-					new MainViewOripaModule(),
-					new BindingModule(),
-					new CreasePatternPresenterModule(),
-					new FileAccessServiceModule(),
-					new PaintDomainModule(),
-					new FileHistoryModule());
+				// Construction of the main frame
 
-			var mainFrame = injector.getInstance(MainFrameView.class);
-			mainFrame.initializeFrameBounds();
+				var injector = Guice.createInjector(
+						new PluginModule(),
+						new MainViewSwingModule(),
+						new MainViewOripaModule(),
+						new BindingModule(),
+						new CreasePatternPresenterModule(),
+						new FileAccessServiceModule(),
+						new PaintDomainModule(),
+						new FileHistoryModule());
 
-			var presenter = injector.getInstance(
-					MainFramePresenter.class);
-			presenter.setViewVisible(true);
+				var mainFrame = injector.getInstance(MainFrameView.class);
+				mainFrame.initializeFrameBounds();
+
+				var presenter = injector.getInstance(
+						MainFramePresenter.class);
+				presenter.setViewVisible(true);
+			} catch (Exception e) {
+				logger.error("Failed to start. {}", e);
+			}
 
 		});
 	}

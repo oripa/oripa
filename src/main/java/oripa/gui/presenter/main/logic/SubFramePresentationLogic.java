@@ -19,6 +19,7 @@
 package oripa.gui.presenter.main.logic;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,10 @@ import org.slf4j.LoggerFactory;
 import jakarta.inject.Inject;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.EstimationResultRules;
+import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.PaintContext;
+import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.main.logic.ModelComputationFacade.ComputationType;
 import oripa.gui.view.FrameView;
@@ -44,10 +47,11 @@ public class SubFramePresentationLogic {
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final UIPanelView view;
+	private final PainterScreenPresenter mainScreenPresenter;
+	private final ModelIndexChangeSupport modelIndexChangeSupport;
 	private final SubFrameFactory subFrameFactory;
 
 	private final SubFramePresenterFactory subFramePresenterFactory;
-	private final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter;
 
 	private final ModelComputationFacadeFactory computationFacadeFactory;
 	private ComputationResult computationResult;
@@ -59,16 +63,18 @@ public class SubFramePresentationLogic {
 	@Inject
 	public SubFramePresentationLogic(
 			final UIPanelView view,
+			final PainterScreenPresenter mainScreenPresenter,
+			final ModelIndexChangeSupport modelIndexChangeSupport,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
-			final ModelIndexChangeListenerPutter modelIndexChangeListenerPutter,
 			final ModelComputationFacadeFactory computationFacadeFactory,
 			final PaintContext paintContext) {
 
 		this.view = view;
+		this.mainScreenPresenter = mainScreenPresenter;
+		this.modelIndexChangeSupport = modelIndexChangeSupport;
 		this.subFrameFactory = subFrameFactory;
 		this.subFramePresenterFactory = subFramePresenterFactory;
-		this.modelIndexChangeListenerPutter = modelIndexChangeListenerPutter;
 		this.computationFacadeFactory = computationFacadeFactory;
 		this.paintContext = paintContext;
 
@@ -175,14 +181,45 @@ public class SubFramePresentationLogic {
 			}
 		}
 
-		putModelIndexChangeListener(modelViewFrame, resultFrame);
+		putModelIndexChangeListener(modelViewFrame, resultFrame, foldedModels);
 
 		modelViewPresenter.setViewVisible(true);
 	}
 
 	private void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
-			final EstimationResultFrameView resultFrame) {
-		modelIndexChangeListenerPutter.put(modelViewFrame, resultFrame);
+			final EstimationResultFrameView resultFrame,
+			final List<FoldedModel> foldedModels) {
+		modelIndexChangeSupport.removeListeners();
+
+		if (modelViewFrame == null || resultFrame == null) {
+			return;
+		}
+		// bind change event from view to presenter support
+		modelViewFrame.putModelIndexChangeListener(modelIndexChangeSupport,
+				e -> {
+					logger.debug("modelViewFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
+					modelIndexChangeSupport.setIndex((int) e.getNewValue());
+				});
+		resultFrame.putModelIndexChangeListener(modelIndexChangeSupport,
+				e -> {
+					logger.debug("resultFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
+					modelIndexChangeSupport.setIndex((int) e.getNewValue());
+				});
+
+		// bind change event from presenter support to view/presenter
+		modelIndexChangeSupport.putListener(modelViewFrame, e -> {
+			modelViewFrame.selectModel((Integer) e.getNewValue());
+		});
+		modelIndexChangeSupport.putListener(resultFrame, e -> {
+			resultFrame.selectModel((Integer) e.getNewValue());
+		});
+		modelIndexChangeSupport.putListener(mainScreenPresenter, e -> {
+			var domain = foldedModels.get((int) e.getNewValue()).origamiModel().createPaperDomain();
+			logger.debug("model index change: update domain {}", domain);
+			mainScreenPresenter.setPaperDomainOfModel(domain);
+		});
+
+		modelIndexChangeSupport.setIndex(0);
 	}
 
 }

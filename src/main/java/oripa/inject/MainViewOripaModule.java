@@ -68,6 +68,8 @@ public class MainViewOripaModule extends AbstractModule {
 		return new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
 	}
 
+	// assuming that main frame is singleton.
+
 	@Provides
 	PainterScreenView getPainterScreenView(final MainFrameView mainFrame) {
 		return mainFrame.getPainterScreenView();

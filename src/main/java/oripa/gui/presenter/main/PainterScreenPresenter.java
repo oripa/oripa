@@ -18,7 +18,13 @@
  */
 package oripa.gui.presenter.main;
 
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
@@ -37,7 +43,10 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
+@Singleton
 public class PainterScreenPresenter {
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	private final PainterScreenView view;
 
 	private final ViewScreenUpdater screenUpdater;
@@ -150,6 +159,7 @@ public class PainterScreenPresenter {
 		var domain = new RectangleDomain(
 				paperDomainOfModel.getLeft() - 10, paperDomainOfModel.getTop() - 10,
 				paperDomainOfModel.getRight() + 10, paperDomainOfModel.getBottom() + 10);
+
 		objDrawer.drawRectangle(domain.getLeftTop(), domain.getRightBottom());
 	}
 
