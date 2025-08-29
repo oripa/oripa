@@ -47,7 +47,7 @@ public class SubFramePresentationLogic {
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final UIPanelView view;
-	private final PainterScreenPresenter mainPresenter;
+	private final PainterScreenPresenter mainScreenPresenter;
 	private final ModelIndexChangeSupport modelIndexChangeSupport;
 	private final SubFrameFactory subFrameFactory;
 
@@ -63,7 +63,7 @@ public class SubFramePresentationLogic {
 	@Inject
 	public SubFramePresentationLogic(
 			final UIPanelView view,
-			final PainterScreenPresenter mainPresenter,
+			final PainterScreenPresenter mainScreenPresenter,
 			final ModelIndexChangeSupport modelIndexChangeSupport,
 			final SubFrameFactory subFrameFactory,
 			final SubFramePresenterFactory subFramePresenterFactory,
@@ -71,7 +71,7 @@ public class SubFramePresentationLogic {
 			final PaintContext paintContext) {
 
 		this.view = view;
-		this.mainPresenter = mainPresenter;
+		this.mainScreenPresenter = mainScreenPresenter;
 		this.modelIndexChangeSupport = modelIndexChangeSupport;
 		this.subFrameFactory = subFrameFactory;
 		this.subFramePresenterFactory = subFramePresenterFactory;
@@ -213,10 +213,10 @@ public class SubFramePresentationLogic {
 		modelIndexChangeSupport.putListener(resultFrame, e -> {
 			resultFrame.selectModel((Integer) e.getNewValue());
 		});
-		modelIndexChangeSupport.putListener(mainPresenter, e -> {
+		modelIndexChangeSupport.putListener(mainScreenPresenter, e -> {
 			var domain = foldedModels.get((int) e.getNewValue()).origamiModel().createPaperDomain();
 			logger.debug("model index change: update domain {}", domain);
-			mainPresenter.setPaperDomainOfModel(domain);
+			mainScreenPresenter.setPaperDomainOfModel(domain);
 		});
 
 		modelIndexChangeSupport.setIndex(0);
