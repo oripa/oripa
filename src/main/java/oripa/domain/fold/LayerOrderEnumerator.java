@@ -88,6 +88,8 @@ class LayerOrderEnumerator {
 
 	private boolean firstOnly;
 
+	private final TransitivityChecker transitivityChecker = new TransitivityChecker();
+
 	public LayerOrderEnumerator(final SubFacesFactory subfacesFactory, final boolean shouldLogStats) {
 		this.subfacesFactory = subfacesFactory;
 		this.shouldLogStats = shouldLogStats;
@@ -248,6 +250,10 @@ class LayerOrderEnumerator {
 		}
 
 		SubFace sub = subfaces.get(0);
+
+		if (transitivityChecker.checkSubfaceTransitivity(sub, overlapRelation) != null) {
+			return 0;
+		}
 
 		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, false);
 
