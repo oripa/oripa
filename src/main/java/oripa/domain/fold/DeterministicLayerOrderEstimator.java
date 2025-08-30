@@ -26,7 +26,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.fold.condfac.RelationPathEnumerator;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.origeom.EstimationResult;
@@ -47,6 +46,8 @@ class DeterministicLayerOrderEstimator {
 	private final List<Integer>[][] overlappingFaceIndexIntersections;
 	private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge;
 	private final List<StackConditionOf4Faces> condition4s;
+
+	private final TransitivityChecker transitivityChecker = new TransitivityChecker();
 
 	/**
 	 *
@@ -161,95 +162,48 @@ class DeterministicLayerOrderEstimator {
 		return result;
 	}
 
-	private void checkTransitivity(final OverlapRelation overlapRelation, final EstimationResultRules result) {
-		var relationPaths = new RelationPathEnumerator();
-
-		relationPaths.findPaths(overlapRelation);
-
-		var faceCount = overlapRelation.getSize();
-
-		for (int i = 0; i < faceCount; i++) {
-			for (int j = 0; j < faceCount; j++) {
-				var path = relationPaths.getPath(i, j);
-				if (path.isEmpty()) {
-					continue;
-				}
-
-				var isCycle = relationPaths.isOnCycle(i, j);
-				if (isCycle) {
-					path = relationPaths.getCycle(i, j);
-					logger.trace("onCycle: ({},{}) {}", i, j, path);
-					continue;
-				}
-
-				logger.trace("path: {}", path);
-
-				checkTransitivity(overlapRelation, path, result);
-				if (result.isUnfoldable()) {
-					logger.debug("invalid transitivity {}", path);
-					return;
-				}
-			}
-		}
-	}
-
-	private void checkTransitivity(final OverlapRelation overlapRelation, final List<Integer> order,
-			final EstimationResultRules result) {
-		var length = order.size();
-		for (int a = 0; a < length - 1; a++) {
-			int f1 = order.get(a);
-			for (int b = a + 1; b < length; b++) {
-				int f2 = order.get(b);
-
-				if (overlapRelation.isLower(f1, f2)) {
-					logger.trace("wrong: ({},{})", f1, f2);
-					result.setEstimationResult(EstimationResult.UNFOLDABLE);
-					result.addTransitivityViolation(toFaces(order));
-					return;
-				}
-			}
-
-		}
-
-	}
+//	private void checkTransitivity(final OverlapRelation overlapRelation, final EstimationResultRules result) {
+//		var relationPaths = new RelationPathEnumerator();
+//
+//		relationPaths.findPaths(overlapRelation);
+//
+//		var faceCount = overlapRelation.getSize();
+//
+//		for (int i = 0; i < faceCount; i++) {
+//			for (int j = 0; j < faceCount; j++) {
+//				var path = relationPaths.getPath(i, j);
+//				if (path.isEmpty()) {
+//					continue;
+//				}
+//
+//				var isCycle = relationPaths.isOnCycle(i, j);
+//				if (isCycle) {
+//					path = relationPaths.getCycle(i, j);
+//					logger.trace("onCycle: ({},{}) {}", i, j, path);
+//					continue;
+//				}
+//
+//				logger.trace("path: {}", path);
+//
+//				checkTransitivity(overlapRelation, path, result);
+//				if (result.isUnfoldable()) {
+//					logger.debug("invalid transitivity {}", path);
+//					return;
+//				}
+//			}
+//		}
+//	}
 
 	private void checkSubfaceTransitivity(final OverlapRelation overlapRelation, final EstimationResultRules result) {
 
 		for (var subface : subfaces) {
-			var parentFaceIndices = subface.getParentFaceIndices();
+			var invalidOrder = transitivityChecker.checkSubfaceTransitivity(subface, overlapRelation);
 
-			var undefined = false;
-			for (var i : parentFaceIndices) {
-				for (var j : parentFaceIndices) {
-					if (i == j) {
-						continue;
-					}
-					if (overlapRelation.isUndefined(i, j)) {
-						undefined = true;
-						break;
-					}
-				}
-				if (undefined) {
-					break;
-				}
-			}
-			if (undefined) {
-				logger.trace("skip: {}", parentFaceIndices);
-				continue;
-			}
+			if (invalidOrder != null) {
+				logger.debug("invalid parent face order {}", invalidOrder);
 
-			var sortedParentFaceIDs = parentFaceIndices.stream()
-					.sorted((a, b) -> {
-						if (a == b) {
-							return 0;
-						}
-						return overlapRelation.isLower(a, b) ? 1 : -1;
-					}).toList();
-
-			checkTransitivity(overlapRelation, sortedParentFaceIDs, result);
-
-			if (result.isUnfoldable()) {
-				logger.debug("invalid parent face order {}", sortedParentFaceIDs);
+				result.setEstimationResult(EstimationResult.UNFOLDABLE);
+				result.addTransitivityViolation(toFaces(invalidOrder));
 				return;
 			}
 		}

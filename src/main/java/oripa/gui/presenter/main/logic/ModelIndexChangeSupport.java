@@ -21,6 +21,7 @@ package oripa.gui.presenter.main.logic;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author OUCHI Koji
@@ -38,6 +39,8 @@ public class ModelIndexChangeSupport {
 	public void putListener(final Object parentOfListener, final PropertyChangeListener listener) {
 		removeListener(parentOfListener);
 
+		map.put(parentOfListener, listener);
+
 		support.addPropertyChangeListener(INDEX, listener);
 	}
 
@@ -50,11 +53,12 @@ public class ModelIndexChangeSupport {
 	}
 
 	public void removeListeners() {
-		map.keySet().forEach(parent -> removeListener(parent));
+		List.of(support.getPropertyChangeListeners())
+				.forEach(listener -> support.removePropertyChangeListener(listener));
 
 		map.clear();
 
-		index = -1;
+		setIndex(-1);
 	}
 
 	public int getIndex() {
