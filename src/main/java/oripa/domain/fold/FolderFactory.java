@@ -19,7 +19,8 @@
 package oripa.domain.fold;
 
 import oripa.domain.cptool.AnalyticOverlappingLineMerger;
-import oripa.domain.cptool.CrossingLineSplitter;
+import oripa.domain.cptool.CrossingLineSplitterNaiveAlgorithm;
+import oripa.domain.cptool.LineDivider;
 import oripa.domain.cptool.PointsMerger;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.ModelType;
@@ -62,7 +63,8 @@ public class FolderFactory {
 		var subfacesFactory = new SubFacesFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						new CrossingLineSplitter(),
+//						new CrossingLineSplitterSweepLineAlgorithm(),
+						new CrossingLineSplitterNaiveAlgorithm(new LineDivider()),
 						new PointsMerger(),
 						new AnalyticOverlappingLineMerger()),
 				new OrigamiModelFactory(),
@@ -78,7 +80,8 @@ public class FolderFactory {
 		var subfacesFactory = new SubfacesOneTimeFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
-						new CrossingLineSplitter(),
+//						new CrossingLineSplitterSweepLineAlgorithm(),
+						new CrossingLineSplitterNaiveAlgorithm(new LineDivider()),
 						new PointsMerger(),
 						new AnalyticOverlappingLineMerger()),
 				new OrigamiModelFactory(),

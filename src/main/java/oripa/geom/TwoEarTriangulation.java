@@ -161,24 +161,24 @@ public class TwoEarTriangulation {
 
 		}
 
-		// debug output
-//		try {
-//			var lines = new ArrayList<OriLine>();
-//			for (var t : triangles) {
-//				for (int i = 0; i < 3; i++) {
-//					lines.add(new OriLine(t.getEdge(i), OriLine.Type.MOUNTAIN));
-//				}
-//			}
-//
-//			var creasePattern = new CreasePatternFactory().createCreasePattern(lines);
-//
-//			new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null),
-//					"debug_triangulation.cp",
-//					null);
-//		} catch (IllegalArgumentException | IOException e) {
-//		}
-
 		if (triangles.size() != polygon.verticesCount() - 2) {
+//			// debug output
+//			try {
+//				var lines = new ArrayList<OriLine>();
+//				for (var t : triangles) {
+//					for (int i = 0; i < 3; i++) {
+//						lines.add(new OriLine(t.getEdge(i), OriLine.Type.MOUNTAIN));
+//					}
+//				}
+//
+//				var creasePattern = new CreasePatternFactory().createCreasePattern(lines);
+//
+//				new ExporterCP().export(oripa.persistence.doc.Doc.forSaving(creasePattern, null),
+//						"debug_triangulation.cp",
+//						null);
+//			} catch (IllegalArgumentException | IOException e) {
+//			}
+
 			logger.debug("failed: fewer triangles, #triangle should be " + (polygon.verticesCount() - 2)
 					+ " but is " + triangles.size() + System.lineSeparator()
 					+ " polygon:" + polygon + System.lineSeparator()

@@ -33,7 +33,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-public class CrossingLineSplitterTest {
+public class CrossingLineSplitterSweepLineAlgorithmTest {
 
 	@Test
 	void test_2_Lines_Cross() {
@@ -46,7 +46,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(4, result.size());
 
@@ -68,7 +68,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(3, result.size());
 
@@ -89,7 +89,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(3, result.size());
 
@@ -110,7 +110,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(3, result.size());
 
@@ -131,7 +131,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(4, result.size());
 
@@ -153,7 +153,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(4, result.size());
 
@@ -175,7 +175,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(3, result.size());
 
@@ -201,7 +201,7 @@ public class CrossingLineSplitterTest {
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
 		assertEquals(4, result.size());
 
@@ -225,7 +225,7 @@ public class CrossingLineSplitterTest {
 		var line0 = new OriLine(p00, p01, Type.MOUNTAIN);
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1), 1e-8);
 
 		assertEquals(4, result.size());
 
@@ -251,7 +251,7 @@ public class CrossingLineSplitterTest {
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
 		assertEquals(7, result.size());
 
@@ -284,7 +284,7 @@ public class CrossingLineSplitterTest {
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
 		assertEquals(6, result.size());
 
@@ -312,7 +312,7 @@ public class CrossingLineSplitterTest {
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
 		assertEquals(9, result.size());
 
@@ -351,7 +351,7 @@ public class CrossingLineSplitterTest {
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
 		assertEquals(7, result.size());
 
@@ -386,7 +386,7 @@ public class CrossingLineSplitterTest {
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
 		assertEquals(6, result.size());
 
@@ -417,7 +417,7 @@ public class CrossingLineSplitterTest {
 		var line1 = new OriLine(p10, p11, Type.MOUNTAIN);
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2), 1e-8);
 
 		assertEquals(5, result.size());
 
@@ -449,7 +449,8 @@ public class CrossingLineSplitterTest {
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2, line3), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2, line3),
+				1e-8);
 
 		assertEquals(8, result.size());
 
@@ -488,7 +489,8 @@ public class CrossingLineSplitterTest {
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2, line3), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2, line3),
+				1e-8);
 
 		assertEquals(10, result.size());
 
@@ -529,7 +531,8 @@ public class CrossingLineSplitterTest {
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2, line3), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2, line3),
+				1e-8);
 
 		assertEquals(9, result.size());
 
@@ -577,7 +580,7 @@ public class CrossingLineSplitterTest {
 		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
 		var line5 = new OriLine(p50, p51, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(
 				List.of(line0, line1, line2, line3, line4, line5),
 				1e-8);
 
@@ -624,7 +627,7 @@ public class CrossingLineSplitterTest {
 		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
 		var line5 = new OriLine(p50, p51, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(
 				List.of(line0, line1, line2, line3, line4, line5),
 				1e-8);
 
@@ -664,7 +667,8 @@ public class CrossingLineSplitterTest {
 		var line2 = new OriLine(p20, p21, Type.MOUNTAIN);
 		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(List.of(line0, line1, line2, line3), 1e-8);
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(List.of(line0, line1, line2, line3),
+				1e-8);
 
 		assertEquals(4, result.size());
 
@@ -705,7 +709,7 @@ public class CrossingLineSplitterTest {
 		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
 		var line5 = new OriLine(p50, p51, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(
 				List.of(line0, line1, line2, line3, line4, line5), 1e-8);
 
 		assertEquals(9, result.size());
@@ -751,7 +755,7 @@ public class CrossingLineSplitterTest {
 		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
 		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(
 				List.of(line0, line1, line2, line3, line4), 1e-8);
 
 		assertEquals(13, result.size());
@@ -789,7 +793,7 @@ public class CrossingLineSplitterTest {
 		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
 		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(
 				List.of(line0, line1, line2, line3, line4), 1e-8);
 
 		assertEquals(11, result.size());
@@ -819,7 +823,7 @@ public class CrossingLineSplitterTest {
 		var line3 = new OriLine(p30, p31, Type.MOUNTAIN);
 		var line4 = new OriLine(p40, p41, Type.MOUNTAIN);
 
-		var result = new CrossingLineSplitter().splitIgnoringType(
+		var result = new CrossingLineSplitterSweepLineAlgorithm().splitIgnoringType(
 				List.of(line0, line1, line2, line3, line4), 1e-8);
 
 		assertEquals(11, result.size());
