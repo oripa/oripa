@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,9 +18,9 @@
  */
 package oripa.domain.cptool;
 
-public class CrossingLineSplitterSweepLineAlgorithmTest implements CrossingLineSplitterTest {
+public class CrossingLineSplitterNaiveAlgorithmTest implements CrossingLineSplitterTest {
 	@Override
 	public CrossingLineSplitter createTarget() {
-		return new CrossingLineSplitterSweepLineAlgorithm();
+		return new CrossingLineSplitterNaiveAlgorithm(new LineDivider());
 	}
 }
