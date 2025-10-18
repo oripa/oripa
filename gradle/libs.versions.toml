@@ -1,6 +1,6 @@
 [versions]
 gson = "2.13.1"
-commons-cli = "1.9.0"
+commons-cli = "1.10.0"
 log4j = "2.25.0"
 junit-jupiter = "5.13.2"
 mockito = "5.18.0"
