@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor
+ * ORIPA - Origami Pattern Editor 
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,24 +18,9 @@
  */
 package oripa.domain.cptool;
 
-import java.util.Collection;
-
-import oripa.value.OriLine;
-
-/**
- * @author OUCHI Koji
- *
- */
-public interface CrossingLineSplitter {
-
-	/**
-	 * make cross among all given lines. each line may cross twice or more.
-	 *
-	 * @param inputLines
-	 * @param eps
-	 * @return
-	 */
-	Collection<OriLine> splitIgnoringType(
-			Collection<OriLine> inputLines, double eps);
-
+public class CrossingLineSplitterSweepLineAlgorithmTest implements CrossingLineSplitterTest {
+	@Override
+	public CrossingLineSplitter createTarget() {
+		return new CrossingLineSplitterSweepLineAlgorithm();
+	}
 }

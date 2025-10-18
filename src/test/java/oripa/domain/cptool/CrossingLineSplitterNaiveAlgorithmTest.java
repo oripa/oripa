@@ -18,24 +18,9 @@
  */
 package oripa.domain.cptool;
 
-import java.util.Collection;
-
-import oripa.value.OriLine;
-
-/**
- * @author OUCHI Koji
- *
- */
-public interface CrossingLineSplitter {
-
-	/**
-	 * make cross among all given lines. each line may cross twice or more.
-	 *
-	 * @param inputLines
-	 * @param eps
-	 * @return
-	 */
-	Collection<OriLine> splitIgnoringType(
-			Collection<OriLine> inputLines, double eps);
-
+public class CrossingLineSplitterNaiveAlgorithmTest implements CrossingLineSplitterTest {
+	@Override
+	public CrossingLineSplitter createTarget() {
+		return new CrossingLineSplitterNaiveAlgorithm(new LineDivider());
+	}
 }
