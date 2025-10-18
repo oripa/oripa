@@ -7,7 +7,7 @@ mockito = "5.18.0"
 slf4j-api = "2.0.16"
 guice = "7.0.0"
 
-spotless = "7.0.2"
+spotless = "8.0.0"
 shadow = "8.1.1"
 jpackage = "1.7.3"
 
