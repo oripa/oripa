@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import oripa.geom.RectangleDomain;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainFrameView;
@@ -564,11 +563,6 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	public void setFileNameToTitle(final String fileName) {
 		setTitle(fileName + " - "
 				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
-	}
-
-	@Override
-	public void setPaperDomainOfModelChangeListener(final Consumer<RectangleDomain> listener) {
-		uiPanel.setPaperDomainOfModelChangeListener(e -> listener.accept((RectangleDomain) e.getNewValue()));
 	}
 
 	@Override

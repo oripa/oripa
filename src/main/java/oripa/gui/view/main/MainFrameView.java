@@ -22,7 +22,6 @@ import java.awt.Color;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import oripa.geom.RectangleDomain;
 import oripa.gui.view.FrameView;
 
 /**
@@ -83,8 +82,6 @@ public interface MainFrameView extends FrameView {
 	void addExitButtonListener(Runnable listener);
 
 	void setEstimationResultSaveColorsListener(BiConsumer<Color, Color> listener);
-
-	void setPaperDomainOfModelChangeListener(Consumer<RectangleDomain> listener);
 
 	default void setEstimationResultColors(final Color front, final Color back) {
 		getUIPanelView().setEstimationResultColors(front, back);

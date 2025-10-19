@@ -140,8 +140,7 @@ public class SubFramePresentationLogic {
 		var origamiModels = computationResult.origamiModels();
 		var foldedModels = computationResult.foldedModels();
 
-		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent,
-				view.getPaperDomainOfModelChangeListener());
+		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent);
 
 		var modelViewPresenter = subFramePresenterFactory.createModelViewFramePresenter(
 				modelViewFrame,

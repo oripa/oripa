@@ -18,8 +18,6 @@
  */
 package oripa.gui.view.model;
 
-import java.beans.PropertyChangeListener;
-
 import oripa.gui.view.FrameView;
 
 /**
@@ -29,7 +27,6 @@ import oripa.gui.view.FrameView;
 public interface ModelViewFrameFactory {
 
 	ModelViewFrameView createFrame(
-			FrameView parent,
-			PropertyChangeListener onChangePaperDomain);
+			FrameView parent);
 
 }

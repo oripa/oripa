@@ -18,8 +18,6 @@
  */
 package oripa.swing.view.model;
 
-import java.beans.PropertyChangeListener;
-
 import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -50,8 +48,7 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 
 	@Override
 	public ModelViewFrameView createFrame(
-			final FrameView parent,
-			final PropertyChangeListener onChangePaperDomain) {
+			final FrameView parent) {
 
 		var frameOpt = childFrameManager.find(parent,
 				ModelViewFrame.class);
@@ -62,8 +59,6 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 		});
 
 		var frame = new ModelViewFrame(400, 400, mainScreenSetting, resourceHolder);
-
-		frame.putPaperDomainChangeListener(parent, onChangePaperDomain);
 
 		frame.setOnCloseListener(this::removeFromChildFrameManager);
 		childFrameManager.putChild(parent, frame);

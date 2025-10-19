@@ -36,7 +36,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.application.main.PaintContextService;
-import oripa.geom.RectangleDomain;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.presenter.main.logic.MainFramePaintMenuListenerFactory;
 import oripa.gui.presenter.main.logic.MainFramePresentationLogic;
@@ -311,25 +310,6 @@ class MainFramePresenterTest {
 					listenerCaptor.getValue().accept(front, back);
 
 					verify(presentationLogic).setEstimationResultSaveColors(front, back);
-				}
-			}
-
-			@Nested
-			class TestSetPaperDomainOfModelChange {
-				@Captor
-				ArgumentCaptor<Consumer<RectangleDomain>> listenerCaptor;
-
-				@Test
-				void setPaperDomainOfModelLogicShouldBeCalled() {
-
-					construct();
-
-					verify(view).setPaperDomainOfModelChangeListener(listenerCaptor.capture());
-
-					RectangleDomain domain = mock();
-					listenerCaptor.getValue().accept(domain);
-
-					verify(presentationLogic).setPaperDomainOfModel(domain);
 				}
 			}
 
