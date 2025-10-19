@@ -27,7 +27,6 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -35,7 +34,6 @@ import java.util.function.Consumer;
 import javax.swing.*;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.geom.RectangleDomain;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
@@ -80,11 +78,6 @@ public class ModelViewFrame extends JFrame
 	private final ListItemSelectionPanel modelSelectionPanel;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
-
-	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-	private final String PAPER_DOMAIN = "PAPER_DOMAIN";
-	private RectangleDomain domainBeforeFolding;
-	private final Map<Object, PropertyChangeListener> paperDomainChangeListenerMap = new HashMap<>();
 
 	private Consumer<FrameView> onCloseListener;
 
@@ -197,22 +190,6 @@ public class ModelViewFrame extends JFrame
 		int boundSize = Math.min(getWidth(), getHeight()
 				- getJMenuBar().getHeight() - 100);
 		screen.setModel(origamiModel, boundSize);
-
-		setDomainBeforeFolding(origamiModel.createPaperDomain());
-	}
-
-	private void setDomainBeforeFolding(final RectangleDomain domain) {
-		var old = domainBeforeFolding;
-		domainBeforeFolding = domain;
-		support.firePropertyChange(PAPER_DOMAIN, old, domainBeforeFolding);
-	}
-
-	@Override
-	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
-		if (paperDomainChangeListenerMap.get(parentOfListener) == null) {
-			paperDomainChangeListenerMap.put(parentOfListener, listener);
-			support.addPropertyChangeListener(PAPER_DOMAIN, listener);
-		}
 	}
 
 	@Override
@@ -262,7 +239,6 @@ public class ModelViewFrame extends JFrame
 
 	@Override
 	public void windowClosed(final WindowEvent e) {
-		setDomainBeforeFolding(null);
 		onCloseListener.accept(this);
 		mainScreenSetting.setCrossLineVisible(false);
 
@@ -306,7 +282,6 @@ public class ModelViewFrame extends JFrame
 
 	@Override
 	public void componentHidden(final ComponentEvent e) {
-		// setDomainBeforeFolding(null);
 	}
 
 	@Override

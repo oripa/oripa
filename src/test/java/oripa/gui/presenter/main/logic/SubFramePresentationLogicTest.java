@@ -120,7 +120,7 @@ public class SubFramePresentationLogicTest {
 				setupModelComputation(true, true);
 
 				ModelViewFrameView modelFrame = mock();
-				when(subFrameFactory.createModelViewFrame(any(), any())).thenReturn(modelFrame);
+				when(subFrameFactory.createModelViewFrame(any())).thenReturn(modelFrame);
 
 				ModelViewFramePresenter modelPresenter = mock();
 				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
@@ -161,7 +161,7 @@ public class SubFramePresentationLogicTest {
 				when(computationResult.getEstimationResultRules()).thenReturn(mock());
 
 				ModelViewFrameView modelFrame = mock();
-				when(subFrameFactory.createModelViewFrame(any(), any())).thenReturn(modelFrame);
+				when(subFrameFactory.createModelViewFrame(any())).thenReturn(modelFrame);
 
 				ModelViewFramePresenter modelPresenter = mock();
 				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
@@ -230,7 +230,6 @@ public class SubFramePresentationLogicTest {
 			if (locallyFlatFoldable) {
 				when(computationResult.allLocallyFlatFoldable()).thenReturn(locallyFlatFoldable);
 				when(computationResult.origamiModels()).thenReturn(mock());
-				when(view.getPaperDomainOfModelChangeListener()).thenReturn(mock());
 				when(computationResult.foldedModels()).thenReturn(mock());
 				when(computationResult.allGloballyFlatFoldable()).thenReturn(globallyFlatFoldable);
 			}

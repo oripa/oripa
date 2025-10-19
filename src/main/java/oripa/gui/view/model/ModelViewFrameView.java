@@ -36,8 +36,6 @@ public interface ModelViewFrameView extends FrameView {
 
 	void setModel(final OrigamiModel origamiModel);
 
-	void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
-
 	void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
 	void removeModelIndexChangeListeners();

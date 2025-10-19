@@ -150,8 +150,6 @@ public class MainFramePresenter {
 
 		view.setEstimationResultSaveColorsListener(presentationLogic::setEstimationResultSaveColors);
 
-		view.setPaperDomainOfModelChangeListener(presentationLogic::setPaperDomainOfModel);
-
 		view.addWindowClosingListener(this::windowClosing);
 	}
 

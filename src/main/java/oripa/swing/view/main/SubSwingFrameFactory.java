@@ -18,8 +18,6 @@
  */
 package oripa.swing.view.main;
 
-import java.beans.PropertyChangeListener;
-
 import jakarta.inject.Inject;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
@@ -57,10 +55,9 @@ public class SubSwingFrameFactory implements SubFrameFactory {
 	}
 
 	@Override
-	public ModelViewFrameView createModelViewFrame(final FrameView parent,
-			final PropertyChangeListener onChangePaperDomain) {
+	public ModelViewFrameView createModelViewFrame(final FrameView parent) {
 
-		return modelViewFrameFactory.createFrame(parent, onChangePaperDomain);
+		return modelViewFrameFactory.createFrame(parent);
 	}
 
 	@Override

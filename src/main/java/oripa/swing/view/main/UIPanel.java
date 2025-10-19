@@ -28,7 +28,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -182,8 +181,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private Color estimationResultFrontColor;
 	private Color estimationResultBackColor;
 	private BiConsumer<Color, Color> estimationResultSaveColorsListener;
-
-	private PropertyChangeListener paperDomainOfModelChangeListener;
 
 	private Runnable modelComputationListener;
 	private Runnable showFoldedModelWindowsListener;
@@ -1179,16 +1176,13 @@ public class UIPanel extends JPanel implements UIPanelView {
 		textFieldGrid.setValue(gridDivNum);
 	}
 
-	public void setPaperDomainOfModelChangeListener(final PropertyChangeListener listener) {
-		paperDomainOfModelChangeListener = listener;
-	}
-
 	@Override
 	public void setEstimationResultColors(final Color frontColor, final Color backColor) {
 		estimationResultFrontColor = frontColor;
 		estimationResultBackColor = backColor;
 	}
 
+	@Override
 	public void setEstimationResultSaveColorsListener(final BiConsumer<Color, Color> listener) {
 		estimationResultSaveColorsListener = (front, back) -> {
 			setEstimationResultColors(front, back);
@@ -1302,11 +1296,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public BiConsumer<Color, Color> getEstimationResultSaveColorsListener() {
 		return estimationResultSaveColorsListener;
-	}
-
-	@Override
-	public PropertyChangeListener getPaperDomainOfModelChangeListener() {
-		return paperDomainOfModelChangeListener;
 	}
 
 	@Override

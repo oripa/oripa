@@ -19,7 +19,6 @@
 package oripa.gui.view.main;
 
 import java.awt.Color;
-import java.beans.PropertyChangeListener;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -149,8 +148,6 @@ public interface UIPanelView extends View {
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
-	PropertyChangeListener getPaperDomainOfModelChangeListener();
-
 	void showNoAnswerMessage();
 
 	boolean showCleaningUpDuplicationDialog();
@@ -172,7 +169,5 @@ public interface UIPanelView extends View {
 	void updatePluginPanel();
 
 	void setEstimationResultSaveColorsListener(final BiConsumer<Color, Color> listener);
-
-	void setPaperDomainOfModelChangeListener(final PropertyChangeListener listener);
 
 }
