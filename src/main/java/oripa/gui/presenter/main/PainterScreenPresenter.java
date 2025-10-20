@@ -215,6 +215,10 @@ public class PainterScreenPresenter {
 		screenUpdater.updateScreen();
 	}
 
+	public void clearPaperDomainOfModel() {
+		setPaperDomainOfModel(null);
+	}
+
 	private void updateUsingCtrlKeyOnDrag() {
 		var actionOpt = mouseActionHolder.getMouseAction();
 
