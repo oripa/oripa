@@ -133,6 +133,7 @@ public class FileAccessPresentationLogic {
 								.setCreasePatternToPaintContext(
 										doc.getCreasePattern());
 						screenPresenter.updateCameraCenter();
+						screenPresenter.clearPaperDomainOfModel();
 						return filePath;
 					}).orElse(null);
 		} catch (DataAccessException | IllegalArgumentException e) {

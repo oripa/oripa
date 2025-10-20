@@ -30,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import oripa.application.main.PaintContextService;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.gui.view.ViewScreenUpdater;
+import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.ChildFrameManager;
@@ -49,7 +49,7 @@ class ClearActionPresentationLogicTest {
 	MainFrameView view;
 
 	@Mock
-	ViewScreenUpdater screenUpdater;
+	PainterScreenPresenter screenPresenter;
 
 	@Mock
 	PainterScreenSetting screenSetting;
@@ -83,7 +83,8 @@ class ClearActionPresentationLogicTest {
 
 			verify(childFrameManager).closeAll(view);
 
-			verify(screenUpdater).updateScreen();
+			verify(screenPresenter).clearPaperDomainOfModel();
+			verify(screenPresenter).updateScreen();
 		}
 	}
 }

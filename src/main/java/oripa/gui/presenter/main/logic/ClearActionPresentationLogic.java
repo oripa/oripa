@@ -20,7 +20,7 @@ package oripa.gui.presenter.main.logic;
 
 import jakarta.inject.Inject;
 import oripa.application.main.PaintContextService;
-import oripa.gui.view.ViewScreenUpdater;
+import oripa.gui.presenter.main.PainterScreenPresenter;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.ChildFrameManager;
@@ -34,7 +34,7 @@ public class ClearActionPresentationLogic {
 
 	private final MainFrameView view;
 
-	private final ViewScreenUpdater screenUpdater;
+	private final PainterScreenPresenter screenPresenter;
 	private final PainterScreenSetting screenSetting;
 
 	private final ChildFrameManager childFrameManager;
@@ -46,13 +46,13 @@ public class ClearActionPresentationLogic {
 	@Inject
 	public ClearActionPresentationLogic(
 			final MainFrameView view,
-			final ViewScreenUpdater screenUpdater,
+			final PainterScreenPresenter screenPresenter,
 			final PainterScreenSetting screenSetting,
 			final ChildFrameManager childFrameManager,
 			final Project project,
 			final PaintContextService paintContextService) {
 		this.view = view;
-		this.screenUpdater = screenUpdater;
+		this.screenPresenter = screenPresenter;
 		this.screenSetting = screenSetting;
 		this.childFrameManager = childFrameManager;
 		this.project = project;
@@ -67,7 +67,8 @@ public class ClearActionPresentationLogic {
 
 		childFrameManager.closeAll(view);
 
-		screenUpdater.updateScreen();
+		screenPresenter.clearPaperDomainOfModel();
+		screenPresenter.updateScreen();
 	}
 
 }

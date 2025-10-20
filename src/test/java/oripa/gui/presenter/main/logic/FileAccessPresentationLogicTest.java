@@ -123,7 +123,7 @@ class FileAccessPresentationLogicTest {
 			verify(screenSetting).setGridVisible(false);
 			verify(paintContextService).setCreasePatternToPaintContext(any());
 			verify(screenPresenter).updateCameraCenter();
-
+			verify(screenPresenter).clearPaperDomainOfModel();
 		}
 
 		@Test
@@ -172,6 +172,7 @@ class FileAccessPresentationLogicTest {
 			verify(screenSetting, never()).setGridVisible(false);
 			verify(paintContextService, never()).setCreasePatternToPaintContext(any());
 			verify(screenPresenter, never()).updateCameraCenter();
+			verify(screenPresenter, never()).clearPaperDomainOfModel();
 
 		}
 

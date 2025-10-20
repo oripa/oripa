@@ -142,7 +142,6 @@ public class MainFramePresentationLogic {
 	}
 
 	public void clear() {
-		clearPaperDomainOfModel();
 		clearActionPresentationLogic.clear();
 		updateTitleText();
 	}
@@ -215,7 +214,6 @@ public class MainFramePresentationLogic {
 	 * This method opens the file dialog and load the selected file.
 	 */
 	public void loadFileUsingGUI() {
-		clearPaperDomainOfModel();
 		mainFrameFilePresentationLogic.loadFileUsingGUI();
 	}
 
@@ -226,12 +224,7 @@ public class MainFramePresentationLogic {
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	public String loadFile(final String filePath) {
-		clearPaperDomainOfModel();
 		return mainFrameFilePresentationLogic.loadFile(filePath);
-	}
-
-	private void clearPaperDomainOfModel() {
-		screenPresenter.setPaperDomainOfModel(null);
 	}
 
 	public void importFileUsingGUI(final Runnable importStateAction) {
