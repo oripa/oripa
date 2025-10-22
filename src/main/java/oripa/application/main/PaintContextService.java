@@ -71,7 +71,7 @@ public class PaintContextService {
 
 	public void clear() {
 		setCreasePatternToPaintContext(
-				new CreasePatternFactory().createCreasePattern(Constants.DEFAULT_PAPER_SIZE));
+				new CreasePatternFactory().createSquareCreasePattern(Constants.DEFAULT_PAPER_SIZE));
 	}
 
 	public boolean linesSelected() {

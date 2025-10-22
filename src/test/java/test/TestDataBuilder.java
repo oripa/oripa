@@ -24,7 +24,7 @@ public class TestDataBuilder {
 		final int RIGHT = -LEFT;
 
 		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePattern creasePattern = factory.createCreasePattern(SIZE);
+		CreasePattern creasePattern = factory.createSquareCreasePattern(SIZE);
 		Painter painter = new Painter(creasePattern, GeomUtil.pointEps());
 
 		final int DIV_NUM = 100;
