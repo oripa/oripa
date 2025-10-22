@@ -292,27 +292,99 @@ class PaintContextImpl implements PaintContext {
 
 	@Override
 	public void updateGrids() {
-		var points = new ArrayList<Vector2d>();
-		double paperSize = getCreasePattern().getPaperSize();
+		ArrayList<Vector2d> points;
+		if (triangularGridMode) {
+			points = getTriangularGridPoints();
+		} else {
+			points = getRectangularGridPoints();
+		}
+		gridPoints = Collections.unmodifiableList(points);
+	}
 
-		double step = paperSize / gridDivNum;
+	private ArrayList<Vector2d> getRectangularGridPoints() {
+		var points = new ArrayList<Vector2d>();
+		var paperDomain = getPaperDomain();
+		double width = paperDomain.getWidth();
+		double height = paperDomain.getHeight();
+
+		double stepX = width / gridDivNum;
+		double stepY = height / gridDivNum;
+
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				var paperDomain = getPaperDomain();
-				double x = paperDomain.getLeft() + step * ix;
-				double y = paperDomain.getTop() + step * iy;
+				double x = paperDomain.getLeft() + stepX * ix;
+				double y = paperDomain.getTop() + stepY * iy;
+				points.add(new Vector2d(x, y));
+			}
+		}
+		return points;
+	}
 
+	private ArrayList<Vector2d> getTriangularGridPoints() {
+		var points = new ArrayList<Vector2d>();
+		var paperDomain = getPaperDomain();
+
+		double width = paperDomain.getWidth();
+		double height = paperDomain.getHeight();
+
+		double stepX = width / gridDivNum;
+		double stepY = height / gridDivNum;
+
+		for (int ix = 0; ix < gridDivNum + 1; ix++) {
+			double columnOffset = (ix % 2 == 0) ? 0.0 : stepY / 2.0;
+			for (int iy = 0; iy < gridDivNum + 1; iy++) {
+				double x = paperDomain.getLeft() + stepX * ix;
+				double y = paperDomain.getTop() + stepY * iy + columnOffset;
+				if (y > paperDomain.getBottom()) {
+					points.add(new Vector2d(x, paperDomain.getTop()));
+					y = paperDomain.getBottom();
+				}
 				points.add(new Vector2d(x, y));
 			}
 		}
 
-		gridPoints = Collections.unmodifiableList(points);
+		return points;
 	}
 
 	public void setTriangularGridMode(boolean enabled) {
-		this.triangularGridMode = enabled;
+		if (this.triangularGridMode != enabled) {
+			reshapeCreasePattern(enabled);
+
+			this.triangularGridMode = enabled;
+			updateGrids();
+		}
 	}
 
+	private void reshapeCreasePattern(boolean triangularGridMode) {
+		if (creasePattern != null) {
+			var oldCP = creasePattern;
+
+			double width = oldCP.getPaperWidth();
+			double oldHeight = oldCP.getPaperHeight();
+
+			CreasePattern newCP;
+			var factory = new oripa.domain.creasepattern.CreasePatternFactory();
+
+			if (triangularGridMode) {
+				newCP = factory.createCreasePatternForTriangularGrid(width);
+			} else {
+				newCP = factory.createSquareCreasePattern(width);
+			}
+
+			double newHeight = newCP.getPaperHeight();
+
+			// Only recreate if size changed significantly
+			if (Math.abs(newHeight - oldHeight) > 1e-6) {
+				for (OriLine l : oldCP) {
+					if (!l.isBoundary()) {
+						newCP.add(l);
+					}
+				}
+
+				setCreasePattern(newCP);
+			}
+		}
+	}
 
 	public boolean isTriangularGridMode() {
 		return triangularGridMode;
