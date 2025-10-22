@@ -35,6 +35,8 @@ class PaintContextImpl implements PaintContext {
 
 	private int gridDivNum;
 	private List<Vector2d> gridPoints;
+	private boolean triangularGridMode = false; // true: triangular grid, false:
+												// square grid
 
 	private Collection<Line> solutionLines = new ArrayList<>();
 	private Collection<Vector2d> snapPoints = new ArrayList<Vector2d>();
@@ -305,6 +307,15 @@ class PaintContextImpl implements PaintContext {
 		}
 
 		gridPoints = Collections.unmodifiableList(points);
+	}
+
+	public void setTriangularGridMode(boolean enabled) {
+		this.triangularGridMode = enabled;
+	}
+
+
+	public boolean isTriangularGridMode() {
+		return triangularGridMode;
 	}
 
 	@Override

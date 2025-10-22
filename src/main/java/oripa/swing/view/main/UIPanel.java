@@ -80,7 +80,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final MainDialogService dialogService;
 
 	private final UIPanelSetting setting;
-//	private final ByValueSetting valueSetting = setting.getValueSetting();
+	// private final ByValueSetting valueSetting = setting.getValueSetting();
 
 	// main three panels
 	private final JPanel editModePanel = new JPanel();
@@ -158,6 +158,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JButton gridLargeButton = new JButton("x1/2");
 	private final JButton gridChangeButton;
 	private final JCheckBox dispGridCheckBox;
+	private final JCheckBox dispTriangularGridCheckBox;
 
 	// plug-in
 	private final JPanel pluginPanel = new JPanel();
@@ -225,6 +226,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		dispGridCheckBox = new JCheckBox(
 				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
 				InitialVisibilities.GRID);
+		dispTriangularGridCheckBox = new JCheckBox(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHOW_TRIANGULAR_GRID_ID),
+				false);
 		dispMVULinesCheckBox = new JCheckBox(
 				resourceHolder.getString(ResourceKey.LABEL, StringID.UI.SHOW_MVU_ID),
 				InitialVisibilities.MVU);
@@ -603,6 +607,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		var gbBuilder = new GridBagConstraintsBuilder(3);
 
 		gridPanel.add(dispGridCheckBox, gbBuilder.getLineField());
+		gridPanel.add(dispTriangularGridCheckBox, gbBuilder.getLineField());
 
 		gridPanel.add(gridDivideLabel, gbBuilder.getNextField());
 		gridPanel.add(textFieldGrid, gbBuilder.setWeight(1, 0.5).getNextField());
@@ -1123,6 +1128,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addDispGridCheckBoxListener(final Consumer<Boolean> listener) {
 		dispGridCheckBox.addActionListener(e -> listener.accept(dispGridCheckBox.isSelected()));
+	}
+
+	@Override
+	public void addDispTriangularGridCheckBoxListener(final Consumer<Boolean> listener) {
+		dispTriangularGridCheckBox.addActionListener(e -> listener.accept(dispTriangularGridCheckBox.isSelected()));
 	}
 
 	@Override

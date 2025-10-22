@@ -135,6 +135,7 @@ public class StringID {
 		public static final String VIEW_SETTINGS_PANEL_ID = "View_Settings_Panel";
 
 		public static final String SHORTCUT_ID = "Shortcut";
+		public static final String SHOW_TRIANGULAR_GRID_ID = "UI_ShowTriangularGrid";
 	}
 
 	public static class EstimationResultUI {

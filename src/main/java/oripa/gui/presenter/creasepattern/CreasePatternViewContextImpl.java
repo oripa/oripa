@@ -33,6 +33,8 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 
 	private boolean gridVisible = InitialVisibilities.GRID;
 
+	private boolean triangularGridVisible = false;
+
 	private boolean vertexVisible = InitialVisibilities.VERTEX;
 	private boolean mvLineVisible = InitialVisibilities.MVU;
 	private boolean auxLineVisible = InitialVisibilities.AUX;
@@ -134,6 +136,16 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 	@Override
 	public void setZeroLineWidth(final boolean zeroLineWidth) {
 		this.zeroLineWidth = zeroLineWidth;
+	}
+
+	@Override
+	public boolean isTriangularGridVisible() {
+		return triangularGridVisible;
+	}
+
+	@Override
+	public void setTriangularGridVisible(final boolean visible) {
+		this.triangularGridVisible = visible;
 	}
 
 }
