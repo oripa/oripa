@@ -70,8 +70,20 @@ public class PaintContextService {
 	}
 
 	public void clear() {
-		setCreasePatternToPaintContext(
-				new CreasePatternFactory().createSquareCreasePattern(Constants.DEFAULT_PAPER_SIZE));
+		var factory = new CreasePatternFactory();
+
+		var current = paintContext.getCreasePattern();
+		CreasePattern newCp;
+
+		if (current != null) {
+			newCp = factory.createCreasePatternFromBoundsOf(current);
+		} else if (paintContext.isTriangularGridMode()) {
+			newCp = factory.createCreasePatternForTriangularGrid(Constants.DEFAULT_PAPER_SIZE);
+		} else {
+			newCp = factory.createSquareCreasePattern(Constants.DEFAULT_PAPER_SIZE);
+		}
+
+		setCreasePatternToPaintContext(newCp);
 	}
 
 	public boolean linesSelected() {
