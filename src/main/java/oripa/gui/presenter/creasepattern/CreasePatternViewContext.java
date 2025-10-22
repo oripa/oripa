@@ -81,8 +81,4 @@ public interface CreasePatternViewContext {
 	void setZeroLineWidth(final boolean zeroLineWidth);
 
 	boolean isZeroLineWidth();
-
-	void setTriangularGridVisible(boolean visible);
-
-	boolean isTriangularGridVisible();
 }
