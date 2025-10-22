@@ -56,9 +56,15 @@ public class CreasePatternGraphicDrawer {
 		CreasePattern creasePattern = paintContext.getCreasePattern();
 
 		if (viewContext.isGridVisible()) {
-			drawGridLines(drawer, paintContext.getGridDivNum(), creasePattern.getPaperSize(),
-					paintContext.getPaperDomain(),
-					viewContext.getScale(), viewContext.isZeroLineWidth());
+			if (paintContext.isTriangularGridMode()) {
+				drawTriangularGrid(drawer, paintContext.getGridDivNum(),
+						paintContext.getPaperDomain(),
+						viewContext.getScale(), viewContext.isZeroLineWidth());
+			} else {
+				drawRectangularGrid(drawer, paintContext.getGridDivNum(),
+						paintContext.getPaperDomain(),
+						viewContext.getScale(), viewContext.isZeroLineWidth());
+			}
 		}
 
 		drawLines(drawer, creasePattern, viewContext.getScale(), viewContext.isZeroLineWidth(),
@@ -220,14 +226,12 @@ public class CreasePatternGraphicDrawer {
 	}
 
 	/**
-	 * draws grid lines.
+	 * draws rectangular grid lines.
 	 *
 	 * @param drawer
 	 *            a graphic object.
 	 * @param gridDivNum
 	 *            the number of grid division.
-	 * @param paperSize
-	 *            the paper size.
 	 * @param domain
 	 *            a ractangle domain fitting to the crease pattern.
 	 * @param scale
@@ -235,8 +239,8 @@ public class CreasePatternGraphicDrawer {
 	 * @param zeroLineWidth
 	 *            true if width of each line should be zero (thinnest).
 	 */
-	private void drawGridLines(final ObjectGraphicDrawer drawer,
-			final int gridDivNum, final double paperSize,
+	private void drawRectangularGrid(final ObjectGraphicDrawer drawer,
+			final int gridDivNum,
 			final RectangleDomain domain,
 			final double scale, final boolean zeroLineWidth) {
 
@@ -244,16 +248,69 @@ public class CreasePatternGraphicDrawer {
 		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
 
 		int lineNum = gridDivNum;
-		double step = paperSize / lineNum;
+
+		double width = domain.getWidth();
+		double height = domain.getHeight();
+
+		double stepX = width / lineNum;
+		double stepY = height / lineNum;
 
 		for (int i = 0; i < lineNum + 1; i++) {
-			drawer.drawLine(
-					step * i + domain.getLeft(), domain.getTop(),
-					step * i + domain.getLeft(), domain.getTop() + paperSize);
+			double x = stepX * i + domain.getLeft();
+			double y = stepY * i + domain.getTop();
 
+			// vertical line
 			drawer.drawLine(
-					domain.getLeft(), step * i + domain.getTop(),
-					domain.getLeft() + paperSize, step * i + domain.getTop());
+					x, domain.getTop(),
+					x, domain.getTop() + height);
+
+			// horizontal line
+			drawer.drawLine(
+					domain.getLeft(), y,
+					domain.getLeft() + width, y);
+		}
+	}
+
+	public void drawTriangularGrid(final ObjectGraphicDrawer drawer,
+			final int gridDivNum,
+			final RectangleDomain domain,
+			final double scale, final boolean zeroLineWidth) {
+		drawer.selectColor(OriLine.Type.AUX);
+		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
+
+		double sizeX = domain.getWidth() / 2D;
+		double sizeY = domain.getHeight() / 2D;
+
+		double stepX = domain.getWidth() / gridDivNum;
+		double stepY = domain.getHeight() / gridDivNum;
+
+		// Draw vertical and horizontal grid lines (staggered triangular grid
+		// visual is handled by the paintContext grid points / offsets)
+		for (int i = 0; i < gridDivNum / 2; i++) {
+			// Vertical right
+			drawer.drawLine(stepX * i, -sizeY, stepX * i, sizeY);
+
+			// Following left bottom
+			drawer.drawLine(-sizeX, sizeY - i * stepY, sizeX, i * -stepY);
+
+			// Following right bottom
+			drawer.drawLine(sizeX, sizeY - i * stepY, -sizeX, i * -stepY);
+
+			// Following left top
+			drawer.drawLine(-sizeX, (i + 1) * stepY - sizeY, -sizeX + (i + 1) * stepX * 2, -sizeY);
+
+			// Following right top
+			drawer.drawLine(sizeX, (i + 1) * stepY - sizeY, sizeX - (i + 1) * stepX * 2, -sizeY);
+			if (i > 0) {
+				// Vertical left
+				drawer.drawLine(-stepX * i, -sizeY, -stepX * i, sizeY);
+
+				// Following left bottom
+				drawer.drawLine(-sizeX, i * stepY, sizeX - i * stepX * 2, sizeY);
+
+				// Following bottom right
+				drawer.drawLine(sizeX, i * stepY, -sizeX + i * stepX * 2, sizeY);
+			}
 		}
 	}
 
