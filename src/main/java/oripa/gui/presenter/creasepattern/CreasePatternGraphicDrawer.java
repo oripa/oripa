@@ -132,9 +132,9 @@ public class CreasePatternGraphicDrawer {
 					if (line.isFoldLine() && !creaseVisible) {
 						return;
 					}
-//					if (pickedLines != null && pickedLines.contains(line)) {
-//						return;
-//					}
+					// if (pickedLines != null && pickedLines.contains(line)) {
+					// return;
+					// }
 					drawLine(drawer, line, scale, zeroLineWidth);
 				});
 	}
@@ -278,39 +278,40 @@ public class CreasePatternGraphicDrawer {
 		drawer.selectColor(OriLine.Type.AUX);
 		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
 
-		double sizeX = domain.getWidth() / 2D;
-		double sizeY = domain.getHeight() / 2D;
-
 		double stepX = domain.getWidth() / gridDivNum;
 		double stepY = domain.getHeight() / gridDivNum;
 
-		// Draw vertical and horizontal grid lines (staggered triangular grid
-		// visual is handled by the paintContext grid points / offsets)
-		for (int i = 0; i < gridDivNum / 2; i++) {
-			// Vertical right
-			drawer.drawLine(stepX * i, -sizeY, stepX * i, sizeY);
+		double left = domain.getLeft();
+		double right = domain.getRight();
+		double top = domain.getTop();
+		double bottom = domain.getBottom();
+		double centerY = domain.getCenterY();
 
-			// Following left bottom
-			drawer.drawLine(-sizeX, sizeY - i * stepY, sizeX, i * -stepY);
+		// Vertical lines
+		for (int i = 1; i < gridDivNum; i++) {
+			drawer.drawLine(left + stepX * i, top, left + stepX * i, bottom);
+		}
 
-			// Following right bottom
-			drawer.drawLine(sizeX, sizeY - i * stepY, -sizeX, i * -stepY);
+		// Assuming the size of the paper is perfect to fit an equilateral
+		// triangle we can divide the height in gridDivNum intervals that will
+		// form the base for smaller equilateral triangles. See
+		// CreasePatternFactory.createCreasePatternForTriangularGrid()
 
-			// Following left top
-			drawer.drawLine(-sizeX, (i + 1) * stepY - sizeY, -sizeX + (i + 1) * stepX * 2, -sizeY);
+		// Oblique lines
+		// From left border to right border
+		for (int i = 0; i < gridDivNum / 2 + 1; i++) {
+			drawer.drawLine(left, bottom - i * stepY, right, centerY - i * stepY);
+			drawer.drawLine(right, bottom - i * stepY, left, centerY - i * stepY);
+			drawer.drawLine(left, top + i * stepY, right, centerY + i * stepY);
+			drawer.drawLine(right, top + i * stepY, left, centerY + i * stepY);
+		}
 
-			// Following right top
-			drawer.drawLine(sizeX, (i + 1) * stepY - sizeY, sizeX - (i + 1) * stepX * 2, -sizeY);
-			if (i > 0) {
-				// Vertical left
-				drawer.drawLine(-stepX * i, -sizeY, -stepX * i, sizeY);
-
-				// Following left bottom
-				drawer.drawLine(-sizeX, i * stepY, sizeX - i * stepX * 2, sizeY);
-
-				// Following bottom right
-				drawer.drawLine(sizeX, i * stepY, -sizeX + i * stepX * 2, sizeY);
-			}
+		// From left or right to bottom or top
+		for (int i = 1; i < gridDivNum / 2; i++) {
+			drawer.drawLine(left, bottom - i * stepY, left + 2 * i * stepX, bottom);
+			drawer.drawLine(right, bottom - i * stepY, right - 2 * i * stepX, bottom);
+			drawer.drawLine(left, top + i * stepY, left + 2 * i * stepX, top);
+			drawer.drawLine(right, top + i * stepY, right - 2 * i * stepX, top);
 		}
 	}
 

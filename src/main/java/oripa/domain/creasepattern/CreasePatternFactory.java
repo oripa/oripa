@@ -100,10 +100,16 @@ public class CreasePatternFactory {
 	}
 
 	/**
-	 * Create a crease pattern suited for a triangular grid given a paper width.
-	 * The height is computed as width / cos(30deg) to produce a taller paper.
+	 * Create non-folded crease pattern suited for a triangular grid for the
+	 * given width.
+	 * 
+	 * Using Cos(30) we compute the side of an equilateral triangle that exactly
+	 * fits in the width of the CP. Dividing the triangle in regular intervals
+	 * leads to a regular grid of equilateral triangles. This is a very common
+	 * base for origami tesellations.
 	 */
 	public CreasePattern createCreasePatternForTriangularGrid(final double width) {
+
 		double cos30 = Math.cos(Math.toRadians(30.0));
 		double height = width / cos30;
 		return createCreasePattern(width, height);
