@@ -85,7 +85,21 @@ class CreasePatternImpl implements CreasePattern {
 
 	@Override
 	public double getPaperSize() {
-		return vertices.getDomainSize();
+		// For backward compatibility, return paper width as the representative
+		// paper size. This prevents visual widening when paper height is
+		// increased for triangular grid mode (height may become larger than
+		// width).
+		return getPaperWidth();
+	}
+
+	@Override
+	public double getPaperWidth() {
+		return getPaperDomain().getWidth();
+	}
+
+	@Override
+	public double getPaperHeight() {
+		return getPaperDomain().getHeight();
 	}
 
 	@Override

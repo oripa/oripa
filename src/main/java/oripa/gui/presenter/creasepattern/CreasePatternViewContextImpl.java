@@ -135,5 +135,4 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 	public void setZeroLineWidth(final boolean zeroLineWidth) {
 		this.zeroLineWidth = zeroLineWidth;
 	}
-
 }

@@ -56,9 +56,15 @@ public class CreasePatternGraphicDrawer {
 		CreasePattern creasePattern = paintContext.getCreasePattern();
 
 		if (viewContext.isGridVisible()) {
-			drawGridLines(drawer, paintContext.getGridDivNum(), creasePattern.getPaperSize(),
-					paintContext.getPaperDomain(),
-					viewContext.getScale(), viewContext.isZeroLineWidth());
+			if (paintContext.isTriangularGridMode()) {
+				drawTriangularGrid(drawer, paintContext.getGridDivNum(),
+						paintContext.getPaperDomain(),
+						viewContext.getScale(), viewContext.isZeroLineWidth());
+			} else {
+				drawRectangularGrid(drawer, paintContext.getGridDivNum(),
+						paintContext.getPaperDomain(),
+						viewContext.getScale(), viewContext.isZeroLineWidth());
+			}
 		}
 
 		drawLines(drawer, creasePattern, viewContext.getScale(), viewContext.isZeroLineWidth(),
@@ -126,9 +132,9 @@ public class CreasePatternGraphicDrawer {
 					if (line.isFoldLine() && !creaseVisible) {
 						return;
 					}
-//					if (pickedLines != null && pickedLines.contains(line)) {
-//						return;
-//					}
+					// if (pickedLines != null && pickedLines.contains(line)) {
+					// return;
+					// }
 					drawLine(drawer, line, scale, zeroLineWidth);
 				});
 	}
@@ -220,14 +226,12 @@ public class CreasePatternGraphicDrawer {
 	}
 
 	/**
-	 * draws grid lines.
+	 * draws rectangular grid lines.
 	 *
 	 * @param drawer
 	 *            a graphic object.
 	 * @param gridDivNum
 	 *            the number of grid division.
-	 * @param paperSize
-	 *            the paper size.
 	 * @param domain
 	 *            a ractangle domain fitting to the crease pattern.
 	 * @param scale
@@ -235,8 +239,8 @@ public class CreasePatternGraphicDrawer {
 	 * @param zeroLineWidth
 	 *            true if width of each line should be zero (thinnest).
 	 */
-	private void drawGridLines(final ObjectGraphicDrawer drawer,
-			final int gridDivNum, final double paperSize,
+	private void drawRectangularGrid(final ObjectGraphicDrawer drawer,
+			final int gridDivNum,
 			final RectangleDomain domain,
 			final double scale, final boolean zeroLineWidth) {
 
@@ -244,16 +248,70 @@ public class CreasePatternGraphicDrawer {
 		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
 
 		int lineNum = gridDivNum;
-		double step = paperSize / lineNum;
+
+		double width = domain.getWidth();
+		double height = domain.getHeight();
+
+		double stepX = width / lineNum;
+		double stepY = height / lineNum;
 
 		for (int i = 0; i < lineNum + 1; i++) {
-			drawer.drawLine(
-					step * i + domain.getLeft(), domain.getTop(),
-					step * i + domain.getLeft(), domain.getTop() + paperSize);
+			double x = stepX * i + domain.getLeft();
+			double y = stepY * i + domain.getTop();
 
+			// vertical line
 			drawer.drawLine(
-					domain.getLeft(), step * i + domain.getTop(),
-					domain.getLeft() + paperSize, step * i + domain.getTop());
+					x, domain.getTop(),
+					x, domain.getTop() + height);
+
+			// horizontal line
+			drawer.drawLine(
+					domain.getLeft(), y,
+					domain.getLeft() + width, y);
+		}
+	}
+
+	public void drawTriangularGrid(final ObjectGraphicDrawer drawer,
+			final int gridDivNum,
+			final RectangleDomain domain,
+			final double scale, final boolean zeroLineWidth) {
+		drawer.selectColor(OriLine.Type.AUX);
+		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
+
+		double stepX = domain.getWidth() / gridDivNum;
+		double stepY = domain.getHeight() / gridDivNum;
+
+		double left = domain.getLeft();
+		double right = domain.getRight();
+		double top = domain.getTop();
+		double bottom = domain.getBottom();
+		double centerY = domain.getCenterY();
+
+		// Vertical lines
+		for (int i = 1; i < gridDivNum; i++) {
+			drawer.drawLine(left + stepX * i, top, left + stepX * i, bottom);
+		}
+
+		// Assuming the size of the paper is perfect to fit an equilateral
+		// triangle we can divide the height in gridDivNum intervals that will
+		// form the base for smaller equilateral triangles. See
+		// CreasePatternFactory.createCreasePatternForTriangularGrid()
+
+		// Oblique lines
+		// From left border to right border
+		for (int i = 0; i < gridDivNum / 2 + 1; i++) {
+			drawer.drawLine(left, bottom - i * stepY, right, centerY - i * stepY);
+			drawer.drawLine(right, bottom - i * stepY, left, centerY - i * stepY);
+			drawer.drawLine(left, top + i * stepY, right, centerY + i * stepY);
+			drawer.drawLine(right, top + i * stepY, left, centerY + i * stepY);
+		}
+
+		// From left or right to bottom or top
+		for (int i = 1; i < gridDivNum / 2; i++) {
+			drawer.drawLine(left, bottom - i * stepY, left + 2 * i * stepX, bottom);
+			drawer.drawLine(right, bottom - i * stepY, right - 2 * i * stepX, bottom);
+			drawer.drawLine(left, top + i * stepY, left + 2 * i * stepX, top);
+			drawer.drawLine(right, top + i * stepY, right - 2 * i * stepX, top);
 		}
 	}
 

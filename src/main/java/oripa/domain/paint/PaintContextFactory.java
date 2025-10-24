@@ -10,7 +10,7 @@ public class PaintContextFactory {
 
 		PaintContext context = new PaintContextImpl();
 		context.setCreasePattern(
-				patternFactory.createCreasePattern(
+				patternFactory.createSquareCreasePattern(
 						Constants.DEFAULT_PAPER_SIZE));
 
 		context.setGridDivNum(Constants.DEFAULT_GRID_DIV_NUM);

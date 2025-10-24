@@ -16,6 +16,9 @@ import oripa.vecmath.Vector2d;
  *
  */
 public interface PaintContext extends CreasePatternHolder {
+	boolean isTriangularGridMode();
+
+	void setTriangularGridMode(boolean enabled);
 
 	// =================================================================================
 	// Properties used by action state
