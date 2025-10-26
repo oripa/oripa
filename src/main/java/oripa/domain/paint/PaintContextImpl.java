@@ -321,22 +321,23 @@ class PaintContextImpl implements PaintContext {
 
 	private ArrayList<Vector2d> getTriangularGridPoints() {
 		var points = new ArrayList<Vector2d>();
-		var paperDomain = getPaperDomain();
+		var domain = getPaperDomain();
 
-		double width = paperDomain.getWidth();
-		double height = paperDomain.getHeight();
+		double stepX = domain.getWidth() / gridDivNum;
+		double stepY = stepX / Math.cos(Math.PI / 6);
 
-		double stepX = width / gridDivNum;
-		double stepY = height / gridDivNum;
+		double left = domain.getLeft();
+		double bottom = domain.getBottom();
+		double top = bottom - stepY * gridDivNum;
 
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
-			double columnOffset = (ix % 2 == 0) ? 0.0 : stepY / 2.0;
+			double oddColumnsOffset = (ix % 2 == 1) ? stepY / 2.0 : 0.0;
+			double x = left + stepX * ix;
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = paperDomain.getLeft() + stepX * ix;
-				double y = paperDomain.getTop() + stepY * iy + columnOffset;
-				if (y > paperDomain.getBottom()) {
-					points.add(new Vector2d(x, paperDomain.getTop()));
-					y = paperDomain.getBottom();
+				double y = bottom - stepY * iy + oddColumnsOffset;
+				if (y > bottom) {
+					y = bottom;
+					points.add(new Vector2d(x, top));
 				}
 				points.add(new Vector2d(x, y));
 			}

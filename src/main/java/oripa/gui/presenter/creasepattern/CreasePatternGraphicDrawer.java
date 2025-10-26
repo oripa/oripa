@@ -278,23 +278,18 @@ public class CreasePatternGraphicDrawer {
 		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
 
 		double stepX = domain.getWidth() / gridDivNum;
-		double stepY = domain.getHeight() / gridDivNum;
+		double stepY = stepX / Math.cos(Math.PI / 6);
 
 		double left = domain.getLeft();
 		double right = domain.getRight();
-		double top = domain.getTop();
 		double bottom = domain.getBottom();
-		double centerY = domain.getCenterY();
+		double top = bottom - stepY * gridDivNum;
+		double centerY = (bottom + top) / 2;
 
 		// Vertical lines
 		for (int i = 1; i < gridDivNum; i++) {
 			drawer.drawLine(left + stepX * i, top, left + stepX * i, bottom);
 		}
-
-		// Assuming the size of the paper is perfect to fit an equilateral
-		// triangle we can divide the height in gridDivNum intervals that will
-		// form the base for smaller equilateral triangles. See
-		// CreasePatternFactory.createCreasePatternForTriangularGrid()
 
 		// Oblique lines
 		// From left border to right border
