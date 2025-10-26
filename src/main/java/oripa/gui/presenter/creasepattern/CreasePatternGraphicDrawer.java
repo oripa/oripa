@@ -226,7 +226,7 @@ public class CreasePatternGraphicDrawer {
 	}
 
 	/**
-	 * draws rectangular grid lines.
+	 * draws square grid lines.
 	 *
 	 * @param drawer
 	 *            a graphic object.
