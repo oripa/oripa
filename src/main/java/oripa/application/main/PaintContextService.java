@@ -82,6 +82,7 @@ public class PaintContextService {
 		}
 
 		setCreasePatternToPaintContext(newCp);
+		paintContext.updateGrids();
 	}
 
 	public boolean linesSelected() {
