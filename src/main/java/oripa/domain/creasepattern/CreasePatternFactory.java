@@ -98,31 +98,4 @@ public class CreasePatternFactory {
 
 		return creasePattern;
 	}
-
-	/**
-	 * Create non-folded crease pattern suited for a triangular grid for the
-	 * given width.
-	 * 
-	 * Using Cos(30) we compute the side of an equilateral triangle that exactly
-	 * fits in the width of the CP. Dividing the triangle in regular intervals
-	 * leads to a regular grid of equilateral triangles. This is a very common
-	 * base for origami tesellations.
-	 */
-	public CreasePattern createCreasePatternForTriangularGrid(final double width) {
-
-		double cos30 = Math.cos(Math.toRadians(30.0));
-		double height = width / cos30;
-		return createCreasePattern(width, height);
-	}
-
-	/**
-	 * Create a new crease pattern preserving the bounds (width/height) of an
-	 * existing crease pattern. Only boundary will be recreated; lines are not
-	 * copied by this method.
-	 */
-	public CreasePattern createCreasePatternFromBoundsOf(final CreasePattern existing) {
-		var domain = existing.getPaperDomain();
-		return createCreasePattern(domain.getWidth(), domain.getHeight());
-	}
-
 }
