@@ -77,8 +77,6 @@ public class PaintContextService {
 
 		if (current != null) {
 			newCp = factory.createCreasePatternFromBoundsOf(current);
-		} else if (paintContext.isTriangularGridMode()) {
-			newCp = factory.createCreasePatternForTriangularGrid(Constants.DEFAULT_PAPER_SIZE);
 		} else {
 			newCp = factory.createSquareCreasePattern(Constants.DEFAULT_PAPER_SIZE);
 		}

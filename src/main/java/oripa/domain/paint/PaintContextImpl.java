@@ -348,41 +348,9 @@ class PaintContextImpl implements PaintContext {
 
 	public void setTriangularGridMode(boolean enabled) {
 		if (this.triangularGridMode != enabled) {
-			reshapeCreasePattern(enabled);
 
 			this.triangularGridMode = enabled;
 			updateGrids();
-		}
-	}
-
-	private void reshapeCreasePattern(boolean triangularGridMode) {
-		if (creasePattern != null) {
-			var oldCP = creasePattern;
-
-			double width = oldCP.getPaperWidth();
-			double oldHeight = oldCP.getPaperHeight();
-
-			CreasePattern newCP;
-			var factory = new oripa.domain.creasepattern.CreasePatternFactory();
-
-			if (triangularGridMode) {
-				newCP = factory.createCreasePatternForTriangularGrid(width);
-			} else {
-				newCP = factory.createSquareCreasePattern(width);
-			}
-
-			double newHeight = newCP.getPaperHeight();
-
-			// Only recreate if size changed significantly
-			if (Math.abs(newHeight - oldHeight) > 1e-6) {
-				for (OriLine l : oldCP) {
-					if (!l.isBoundary()) {
-						newCP.add(l);
-					}
-				}
-
-				setCreasePattern(newCP);
-			}
 		}
 	}
 
