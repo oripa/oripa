@@ -61,7 +61,7 @@ public class CreasePatternGraphicDrawer {
 						paintContext.getPaperDomain(),
 						viewContext.getScale(), viewContext.isZeroLineWidth());
 			} else {
-				drawRectangularGrid(drawer, paintContext.getGridDivNum(),
+				drawSquareGrid(drawer, paintContext.getGridDivNum(),
 						paintContext.getPaperDomain(),
 						viewContext.getScale(), viewContext.isZeroLineWidth());
 			}
@@ -239,7 +239,7 @@ public class CreasePatternGraphicDrawer {
 	 * @param zeroLineWidth
 	 *            true if width of each line should be zero (thinnest).
 	 */
-	private void drawRectangularGrid(final ObjectGraphicDrawer drawer,
+	private void drawSquareGrid(final ObjectGraphicDrawer drawer,
 			final int gridDivNum,
 			final RectangleDomain domain,
 			final double scale, final boolean zeroLineWidth) {
@@ -250,10 +250,9 @@ public class CreasePatternGraphicDrawer {
 		int lineNum = gridDivNum;
 
 		double width = domain.getWidth();
-		double height = domain.getHeight();
 
 		double stepX = width / lineNum;
-		double stepY = height / lineNum;
+		double stepY = stepX;
 
 		for (int i = 0; i < lineNum + 1; i++) {
 			double x = stepX * i + domain.getLeft();
@@ -262,12 +261,12 @@ public class CreasePatternGraphicDrawer {
 			// vertical line
 			drawer.drawLine(
 					x, domain.getTop(),
-					x, domain.getTop() + height);
+					x, domain.getBottom());
 
 			// horizontal line
 			drawer.drawLine(
 					domain.getLeft(), y,
-					domain.getLeft() + width, y);
+					domain.getRight(), y);
 		}
 	}
 

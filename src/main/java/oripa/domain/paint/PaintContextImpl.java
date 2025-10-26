@@ -296,19 +296,18 @@ class PaintContextImpl implements PaintContext {
 		if (triangularGridMode) {
 			points = getTriangularGridPoints();
 		} else {
-			points = getRectangularGridPoints();
+			points = getSquareGridPoints();
 		}
 		gridPoints = Collections.unmodifiableList(points);
 	}
 
-	private ArrayList<Vector2d> getRectangularGridPoints() {
+	private ArrayList<Vector2d> getSquareGridPoints() {
 		var points = new ArrayList<Vector2d>();
 		var paperDomain = getPaperDomain();
 		double width = paperDomain.getWidth();
-		double height = paperDomain.getHeight();
 
 		double stepX = width / gridDivNum;
-		double stepY = height / gridDivNum;
+		double stepY = stepX;
 
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
