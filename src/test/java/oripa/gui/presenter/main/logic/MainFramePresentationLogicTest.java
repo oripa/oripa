@@ -148,7 +148,7 @@ class MainFramePresentationLogicTest {
 	}
 
 	@Nested
-	class TestClear {
+	class TestNew {
 		@Test
 		void succeeds() {
 
@@ -158,6 +158,21 @@ class MainFramePresentationLogicTest {
 			presentationLogic.clearAll();
 
 			verify(clearActionPresentationLogic).clear(false);
+			verifyUpdateTitleText("default");
+		}
+	}
+
+	@Nested
+	class TestClear {
+		@Test
+		void succeeds() {
+
+			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
+			when(project.getDataFileName()).thenReturn(Optional.empty());
+
+			presentationLogic.clearCreasePattern();
+
+			verify(clearActionPresentationLogic).clear(true);
 			verifyUpdateTitleText("default");
 		}
 	}
