@@ -98,4 +98,15 @@ public class CreasePatternFactory {
 
 		return creasePattern;
 	}
+
+	/**
+	 * Create a new crease pattern preserving the bounds (width/height) of an
+	 * existing crease pattern. Only boundary will be recreated; lines are not
+	 * copied by this method.
+	 */
+	public CreasePattern createCreasePatternFromContourOf(final CreasePattern existing) {
+		var domain = existing.getPaperDomain();
+		return createCreasePattern(domain.getWidth(), domain.getHeight());
+	}
+
 }

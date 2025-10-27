@@ -13,6 +13,7 @@ public class StringID {
 		public static final String EDIT_ID = "Edit";
 		public static final String HELP_ID = "Help";
 		public static final String NEW_ID = "New";
+		public static final String CLEAR_ID = "Clear";
 		public static final String OPEN_ID = "Open";
 		public static final String SAVE_ID = "Save";
 		public static final String SAVE_AS_ID = "SaveAs";

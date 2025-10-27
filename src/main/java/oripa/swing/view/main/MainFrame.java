@@ -80,6 +80,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	private final JMenu menuHelp;
 
 	// file menu items
+	private final JMenuItem menuItemNew;
 	private final JMenuItem menuItemClear;
 	private final JMenuItem menuItemOpen;
 
@@ -161,8 +162,10 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.HELP_ID));
 
 		// file menu items
-		menuItemClear = new JMenuItem(
+		menuItemNew = new JMenuItem(
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.NEW_ID));
+		menuItemClear = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.CLEAR_ID));
 		menuItemOpen = new JMenuItem(
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.OPEN_ID));
 
@@ -310,7 +313,9 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 		menuItemRedo.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_Y));
 
-		menuItemClear.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_N));
+		menuItemNew.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_N));
+
+		menuItemClear.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_C));
 
 		menuItemSelectAll.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_A));
 
@@ -326,6 +331,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	public void buildFileMenu() {
 		menuFile.removeAll();
 
+		menuFile.add(menuItemNew);
 		menuFile.add(menuItemClear);
 		menuFile.add(menuItemOpen);
 		menuFile.add(menuItemImport);
@@ -415,6 +421,11 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	@Override
 	public PainterScreenView getPainterScreenView() {
 		return mainScreen;
+	}
+
+	@Override
+	public void addNewButtonListener(final Runnable listener) {
+		menuItemNew.addActionListener(e -> listener.run());
 	}
 
 	@Override

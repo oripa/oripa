@@ -141,8 +141,13 @@ public class MainFramePresentationLogic {
 		iniFileAccessPresentationLogic.loadIniFile();
 	}
 
-	public void clear() {
-		clearActionPresentationLogic.clear();
+	public void clearAll() {
+		clearActionPresentationLogic.clear(false);
+		updateTitleText();
+	}
+
+	public void clearCreasePattern() {
+		clearActionPresentationLogic.clear(true);
 		updateTitleText();
 	}
 

@@ -166,11 +166,11 @@ class MainFramePresenterTest {
 
 					construct();
 
-					verify(view).addClearButtonListener(listenerCaptor.capture());
+					verify(view).addNewButtonListener(listenerCaptor.capture());
 
 					listenerCaptor.getValue().run();
 
-					verify(presentationLogic).clear();
+					verify(presentationLogic).clearAll();
 
 				}
 			}

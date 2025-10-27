@@ -74,9 +74,9 @@ class ClearActionPresentationLogicTest {
 		@Test
 		void succeeds() {
 
-			presentationLogic.clear();
+			presentationLogic.clear(false);
 
-			verify(paintContextService).clear();
+			verify(paintContextService).clear(false);
 			verify(project).clear();
 
 			verify(screenSetting).setGridVisible(true);

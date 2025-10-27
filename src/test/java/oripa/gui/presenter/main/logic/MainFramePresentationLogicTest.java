@@ -155,9 +155,9 @@ class MainFramePresentationLogicTest {
 			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
 			when(project.getDataFileName()).thenReturn(Optional.empty());
 
-			presentationLogic.clear();
+			presentationLogic.clearAll();
 
-			verify(clearActionPresentationLogic).clear();
+			verify(clearActionPresentationLogic).clear(false);
 			verifyUpdateTitleText("default");
 		}
 	}
