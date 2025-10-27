@@ -69,4 +69,9 @@ public class GridDivNumPresentationLogic {
 	private boolean isValidGridDivNum(final int gridDivNum) {
 		return gridDivNum >= 2 && gridDivNum <= 256;
 	}
+
+	public void setTriangularGridMode(boolean enabled) {
+		paintContext.setTriangularGridMode(enabled);
+		screenUpdater.updateScreen();
+	}
 }

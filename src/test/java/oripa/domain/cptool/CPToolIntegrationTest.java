@@ -16,7 +16,7 @@ class CPToolIntegrationTest {
 
 	@Test
 	void addedLineCanBeDeletedAfterTypeChange() {
-		var creasePattern = new CreasePatternFactory().createCreasePattern(400);
+		var creasePattern = new CreasePatternFactory().createSquareCreasePattern(400);
 		var line = new OriLine(new OriPoint(0, 0), new OriPoint(100, 0), Type.MOUNTAIN);
 		var changedLine = new OriLine(new OriPoint(0, 0), new OriPoint(100, 0), Type.VALLEY);
 

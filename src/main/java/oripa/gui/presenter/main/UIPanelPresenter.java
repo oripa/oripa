@@ -118,6 +118,9 @@ public class UIPanelPresenter {
 		view.addGridLargeButtonListener(gridDivNumPresentationLogic::makeGridSizeTwiceLarge);
 		view.addGridChangeButtonListener(gridDivNumPresentationLogic::updateGridDivNum);
 
+		// Triangular grid mode wiring (matches grid size logic)
+		view.addDispTriangularGridCheckBoxListener(gridDivNumPresentationLogic::setTriangularGridMode);
+
 		// ------------------------------------------------------------
 		// display setting
 

@@ -35,6 +35,8 @@ class PaintContextImpl implements PaintContext {
 
 	private int gridDivNum;
 	private List<Vector2d> gridPoints;
+	private boolean triangularGridMode = false; // true: triangular grid, false:
+												// square grid
 
 	private Collection<Line> solutionLines = new ArrayList<>();
 	private Collection<Vector2d> snapPoints = new ArrayList<Vector2d>();
@@ -290,21 +292,70 @@ class PaintContextImpl implements PaintContext {
 
 	@Override
 	public void updateGrids() {
-		var points = new ArrayList<Vector2d>();
-		double paperSize = getCreasePattern().getPaperSize();
+		ArrayList<Vector2d> points;
+		if (triangularGridMode) {
+			points = getTriangularGridPoints();
+		} else {
+			points = getSquareGridPoints();
+		}
+		gridPoints = Collections.unmodifiableList(points);
+	}
 
-		double step = paperSize / gridDivNum;
+	private ArrayList<Vector2d> getSquareGridPoints() {
+		var points = new ArrayList<Vector2d>();
+		var paperDomain = getPaperDomain();
+		double width = paperDomain.getWidth();
+
+		double stepX = width / gridDivNum;
+		double stepY = stepX;
+
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				var paperDomain = getPaperDomain();
-				double x = paperDomain.getLeft() + step * ix;
-				double y = paperDomain.getTop() + step * iy;
+				double x = paperDomain.getLeft() + stepX * ix;
+				double y = paperDomain.getTop() + stepY * iy;
+				points.add(new Vector2d(x, y));
+			}
+		}
+		return points;
+	}
 
+	private ArrayList<Vector2d> getTriangularGridPoints() {
+		var points = new ArrayList<Vector2d>();
+		var domain = getPaperDomain();
+
+		double stepX = domain.getWidth() / gridDivNum;
+		double stepY = stepX / Math.cos(Math.PI / 6);
+
+		double left = domain.getLeft();
+		double bottom = domain.getBottom();
+		double top = bottom - stepY * gridDivNum;
+
+		for (int ix = 0; ix < gridDivNum + 1; ix++) {
+			double oddColumnsOffset = (ix % 2 == 1) ? stepY / 2.0 : 0.0;
+			double x = left + stepX * ix;
+			for (int iy = 0; iy < gridDivNum + 1; iy++) {
+				double y = bottom - stepY * iy + oddColumnsOffset;
+				if (y > bottom) {
+					y = bottom;
+					points.add(new Vector2d(x, top));
+				}
 				points.add(new Vector2d(x, y));
 			}
 		}
 
-		gridPoints = Collections.unmodifiableList(points);
+		return points;
+	}
+
+	public void setTriangularGridMode(boolean enabled) {
+		if (this.triangularGridMode != enabled) {
+
+			this.triangularGridMode = enabled;
+			updateGrids();
+		}
+	}
+
+	public boolean isTriangularGridMode() {
+		return triangularGridMode;
 	}
 
 	@Override

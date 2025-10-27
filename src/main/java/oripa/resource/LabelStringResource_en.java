@@ -41,6 +41,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.DELETE_LINE_ID, "Delete Line" },
 
 			{ StringID.UI.SHOW_GRID_ID, "Show Grid" },
+			{ StringID.UI.SHOW_TRIANGULAR_GRID_ID, "Triangular Grid" },
 			{ StringID.UI.SHOW_MVU_ID, "Show M/V/U Lines" },
 			{ StringID.UI.SHOW_AUX_ID, "Show Aux Lines" },
 

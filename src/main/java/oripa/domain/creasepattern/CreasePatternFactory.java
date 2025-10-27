@@ -35,19 +35,18 @@ public class CreasePatternFactory {
 	 * which describe the edges of a square paper. The center of the paper is
 	 * set to (0, 0).
 	 *
-	 * @param paperSize
+	 * @param width
+	 * @param heigh
 	 * @return crease pattern of non-folded case.
 	 */
-	public CreasePattern createCreasePattern(final double paperSize) {
+	public CreasePattern createCreasePattern(final double width, final double height) {
+		double halfW = width / 2.0;
+		double halfH = height / 2.0;
 
-		OriLine l0 = new OriLine(-paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
-				-paperSize / 2.0, OriLine.Type.CUT);
-		OriLine l1 = new OriLine(paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
-				paperSize / 2.0, OriLine.Type.CUT);
-		OriLine l2 = new OriLine(paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
-				paperSize / 2.0, OriLine.Type.CUT);
-		OriLine l3 = new OriLine(-paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
-				-paperSize / 2.0, OriLine.Type.CUT);
+		OriLine l0 = new OriLine(-halfW, -halfH, halfW, -halfH, OriLine.Type.CUT);
+		OriLine l1 = new OriLine(halfW, -halfH, halfW, halfH, OriLine.Type.CUT);
+		OriLine l2 = new OriLine(halfW, halfH, -halfW, halfH, OriLine.Type.CUT);
+		OriLine l3 = new OriLine(-halfW, halfH, -halfW, -halfH, OriLine.Type.CUT);
 
 		var lines = List.of(l0, l1, l2, l3);
 		var domain = RectangleDomain.createFromSegments(lines);
@@ -57,6 +56,10 @@ public class CreasePatternFactory {
 		creasePattern.addAll(lines);
 
 		return creasePattern;
+	}
+
+	public CreasePattern createSquareCreasePattern(final double paperSize) {
+		return createCreasePattern(paperSize, paperSize);
 	}
 
 	/**
@@ -95,5 +98,4 @@ public class CreasePatternFactory {
 
 		return creasePattern;
 	}
-
 }

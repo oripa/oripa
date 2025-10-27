@@ -37,19 +37,27 @@ import oripa.value.OriLine;
  *
  */
 public interface CreasePattern
-		extends Set<OriLine>, NearVerticesGettable, Clippable<OriLine> {
+      extends Set<OriLine>, NearVerticesGettable, Clippable<OriLine> {
 
-	double getPaperSize();
+   double getPaperSize();
 
-	RectangleDomain getPaperDomain();
+   default double getPaperWidth() {
+      return getPaperSize();
+   }
 
-	default boolean isUnassigned() {
-		return stream().anyMatch(line -> line.isUnassigned());
-	}
+   default double getPaperHeight() {
+      return getPaperSize();
+   }
 
-	void replaceWith(final Collection<OriLine> lines);
+   RectangleDomain getPaperDomain();
 
-	void refresh(double pointEps);
+   default boolean isUnassigned() {
+      return stream().anyMatch(line -> line.isUnassigned());
+   }
 
-	boolean cleanDuplicatedLines(final double pointEps);
+   void replaceWith(final Collection<OriLine> lines);
+
+   void refresh(double pointEps);
+
+   boolean cleanDuplicatedLines(final double pointEps);
 }
