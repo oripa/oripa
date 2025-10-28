@@ -148,6 +148,21 @@ class MainFramePresentationLogicTest {
 	}
 
 	@Nested
+	class TestNew {
+		@Test
+		void succeeds() {
+
+			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
+			when(project.getDataFileName()).thenReturn(Optional.empty());
+
+			presentationLogic.clearAll();
+
+			verify(clearActionPresentationLogic).clear(false);
+			verifyUpdateTitleText("default");
+		}
+	}
+
+	@Nested
 	class TestClear {
 		@Test
 		void succeeds() {
@@ -155,9 +170,9 @@ class MainFramePresentationLogicTest {
 			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
 			when(project.getDataFileName()).thenReturn(Optional.empty());
 
-			presentationLogic.clear();
+			presentationLogic.clearCreasePattern();
 
-			verify(clearActionPresentationLogic).clear();
+			verify(clearActionPresentationLogic).clear(true);
 			verifyUpdateTitleText("default");
 		}
 	}

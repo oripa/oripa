@@ -157,6 +157,25 @@ class MainFramePresenterTest {
 			}
 
 			@Nested
+			class TestNew {
+				@Captor
+				ArgumentCaptor<Runnable> listenerCaptor;
+
+				@Test
+				void clearLogicShouldBeCalled() {
+
+					construct();
+
+					verify(view).addNewButtonListener(listenerCaptor.capture());
+
+					listenerCaptor.getValue().run();
+
+					verify(presentationLogic).clearAll();
+
+				}
+			}
+
+			@Nested
 			class TestClear {
 				@Captor
 				ArgumentCaptor<Runnable> listenerCaptor;
@@ -170,7 +189,7 @@ class MainFramePresenterTest {
 
 					listenerCaptor.getValue().run();
 
-					verify(presentationLogic).clear();
+					verify(presentationLogic).clearCreasePattern();
 
 				}
 			}

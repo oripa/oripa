@@ -10,6 +10,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.EDIT_ID, "Edit" },
 			{ StringID.Main.HELP_ID, "Help" },
 			{ StringID.Main.NEW_ID, "New" },
+			{ StringID.Main.CLEAR_ID, "Clear" },
 			{ StringID.Main.OPEN_ID, "Open" },
 			{ StringID.Main.SAVE_ID, "Save" },
 			{ StringID.Main.SAVE_AS_ID, "Save As ..." },

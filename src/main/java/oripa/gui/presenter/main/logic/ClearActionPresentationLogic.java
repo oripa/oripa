@@ -59,8 +59,8 @@ public class ClearActionPresentationLogic {
 		this.paintContextService = paintContextService;
 	}
 
-	public void clear() {
-		paintContextService.clear();
+	public void clear(boolean maintainContour) {
+		paintContextService.clear(maintainContour);
 		project.clear();
 
 		screenSetting.setGridVisible(true);
