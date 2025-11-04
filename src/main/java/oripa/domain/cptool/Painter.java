@@ -381,4 +381,10 @@ public class Painter {
 	public double getPointEps() {
 		return pointEps;
 	}
+
+	public void clear() {
+		var toRemove = creasePattern.stream().filter(OriLine::isNotBoundary).toList();
+
+		removeLines(toRemove);
+	}
 }

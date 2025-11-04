@@ -35,6 +35,8 @@ public interface MainFrameView extends FrameView {
 
 	PainterScreenView getPainterScreenView();
 
+	void addNewButtonListener(Runnable listener);
+
 	void addClearButtonListener(Runnable listener);
 
 	void addOpenButtonListener(Runnable listener);

@@ -69,9 +69,14 @@ public class PaintContextService {
 
 	}
 
-	public void clear() {
+	public void clearLines() {
+		paintContext.getPainter().clear();
+	}
+
+	public void clearAll() {
 		setCreasePatternToPaintContext(
 				new CreasePatternFactory().createSquareCreasePattern(Constants.DEFAULT_PAPER_SIZE));
+		paintContext.updateGrids();
 	}
 
 	public boolean linesSelected() {

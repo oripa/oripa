@@ -42,49 +42,65 @@ import oripa.project.Project;
  */
 @ExtendWith(MockitoExtension.class)
 class ClearActionPresentationLogicTest {
-	@InjectMocks
-	ClearActionPresentationLogic presentationLogic;
+    @InjectMocks
+    ClearActionPresentationLogic presentationLogic;
 
-	@Mock
-	MainFrameView view;
+    @Mock
+    MainFrameView view;
 
-	@Mock
-	PainterScreenPresenter screenPresenter;
+    @Mock
+    PainterScreenPresenter screenPresenter;
 
-	@Mock
-	PainterScreenSetting screenSetting;
+    @Mock
+    PainterScreenSetting screenSetting;
 
-	@Mock
-	ChildFrameManager childFrameManager;
+    @Mock
+    ChildFrameManager childFrameManager;
 
-	@Mock
-	Project project;
+    @Mock
+    Project project;
 
-	@Mock
-	PaintContext paintContext;
+    @Mock
+    PaintContext paintContext;
 
-	@Mock
-	CutModelOutlinesHolder cutModelOutlinesHolder;
+    @Mock
+    CutModelOutlinesHolder cutModelOutlinesHolder;
 
-	@Mock
-	PaintContextService paintContextService;
+    @Mock
+    PaintContextService paintContextService;
 
-	@Nested
-	class TestClear {
-		@Test
-		void succeeds() {
+    @Nested
+    class TestClear {
+        @Test
+        void clearAll() {
 
-			presentationLogic.clear();
+            presentationLogic.clear(false);
 
-			verify(paintContextService).clear();
-			verify(project).clear();
+            verify(paintContextService).clearAll();
+            verify(project).clear();
 
-			verify(screenSetting).setGridVisible(true);
+            verify(screenSetting).setGridVisible(true);
 
-			verify(childFrameManager).closeAll(view);
+            verify(childFrameManager).closeAll(view);
 
-			verify(screenPresenter).clearPaperDomainOfModel();
-			verify(screenPresenter).updateScreen();
-		}
-	}
+            verify(screenPresenter).clearPaperDomainOfModel();
+            verify(screenPresenter).updateScreen();
+        }
+
+        @Test
+        void clearCreasePattern() {
+
+            presentationLogic.clear(true);
+
+            verify(paintContextService).clearLines();
+            verify(project).clear();
+
+            verify(screenSetting).setGridVisible(true);
+
+            verify(childFrameManager).closeAll(view);
+
+            verify(screenPresenter).clearPaperDomainOfModel();
+            verify(screenPresenter).updateScreen();
+        }
+    }
 }
