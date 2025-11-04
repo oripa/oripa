@@ -153,7 +153,7 @@ class MainFramePresentationLogicTest {
 		void succeeds() {
 
 			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
-			when(project.getDataFileName()).thenReturn(Optional.of("not empty"));
+			when(project.getDataFileName()).thenReturn(Optional.empty());
 
 			presentationLogic.clearAll();
 
@@ -168,7 +168,7 @@ class MainFramePresentationLogicTest {
 		void succeeds() {
 
 			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
-			when(project.getDataFileName()).thenReturn(Optional.of("not empty"));
+			when(project.getDataFileName()).thenReturn(Optional.empty());
 
 			presentationLogic.clearCreasePattern();
 
