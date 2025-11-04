@@ -88,7 +88,7 @@ class ClearActionPresentationLogicTest {
         }
 
         @Test
-        void clearCreasePatter() {
+        void clearCreasePattern() {
 
             presentationLogic.clear(true);
 
