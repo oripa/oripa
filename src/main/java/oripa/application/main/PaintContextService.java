@@ -69,19 +69,13 @@ public class PaintContextService {
 
 	}
 
-	public void clear(boolean maitainContour) {
-		var factory = new CreasePatternFactory();
+	public void clearLines() {
+		paintContext.getPainter().clear();
+	}
 
-		CreasePattern newCp;
-
-		if (maitainContour) {
-			var current = paintContext.getCreasePattern();
-			newCp = factory.createCreasePatternFromContourOf(current);
-		} else {
-			newCp = factory.createSquareCreasePattern(Constants.DEFAULT_PAPER_SIZE);
-		}
-
-		setCreasePatternToPaintContext(newCp);
+	public void clearAll() {
+		setCreasePatternToPaintContext(
+				new CreasePatternFactory().createSquareCreasePattern(Constants.DEFAULT_PAPER_SIZE));
 		paintContext.updateGrids();
 	}
 

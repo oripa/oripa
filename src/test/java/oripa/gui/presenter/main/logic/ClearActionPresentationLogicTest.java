@@ -76,7 +76,7 @@ class ClearActionPresentationLogicTest {
 
             presentationLogic.clear(false);
 
-            verify(paintContextService).clear(false);
+            verify(paintContextService).clearAll();
             verify(project).clear();
 
             verify(screenSetting).setGridVisible(true);
@@ -92,7 +92,7 @@ class ClearActionPresentationLogicTest {
 
             presentationLogic.clear(true);
 
-            verify(paintContextService).clear(true);
+            verify(paintContextService).clearLines();
             verify(project).clear();
 
             verify(screenSetting).setGridVisible(true);
