@@ -303,18 +303,23 @@ class PaintContextImpl implements PaintContext {
 
 	private ArrayList<Vector2d> getSquareGridPoints() {
 		var points = new ArrayList<Vector2d>();
-		var paperDomain = getPaperDomain();
-		double width = paperDomain.getWidth();
+		var domain = getPaperDomain();
 
-		double stepX = width / gridDivNum;
-		double stepY = stepX;
+		double smaller = Math.min(domain.getWidth(), domain.getHeight());
+		double step = smaller / gridDivNum;
+		double right = domain.getRight();
+		double top = domain.getTop();
 
-		for (int ix = 0; ix < gridDivNum + 1; ix++) {
-			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = paperDomain.getLeft() + stepX * ix;
-				double y = paperDomain.getTop() + stepY * iy;
+		for (var x = domain.getLeft(); x < right; x += step) {
+			points.add(new Vector2d(x, top));
+			for (var y = domain.getBottom(); y > top; y -= step) {
 				points.add(new Vector2d(x, y));
 			}
+		}
+
+		// When smaller is vertical, right end may not have points
+		for (var y = domain.getBottom(); y > top; y -= step) {
+			points.add(new Vector2d(right, y));
 		}
 		return points;
 	}

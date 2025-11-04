@@ -247,26 +247,21 @@ public class CreasePatternGraphicDrawer {
 		drawer.selectColor(OriLine.Type.AUX);
 		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
 
-		int lineNum = gridDivNum;
+		double smaller = Math.min(domain.getWidth(), domain.getHeight());
+		double step = smaller / gridDivNum;
+		double left = domain.getLeft();
+		double right = domain.getRight();
+		double top = domain.getTop();
+		double bottom = domain.getBottom();
 
-		double width = domain.getWidth();
+		// vertical lines
+		for (var x = left; x <= right; x += step) {
+			drawer.drawLine(x, top, x, bottom);
+		}
 
-		double stepX = width / lineNum;
-		double stepY = stepX;
-
-		for (int i = 0; i < lineNum + 1; i++) {
-			double x = stepX * i + domain.getLeft();
-			double y = stepY * i + domain.getTop();
-
-			// vertical line
-			drawer.drawLine(
-					x, domain.getTop(),
-					x, domain.getBottom());
-
-			// horizontal line
-			drawer.drawLine(
-					domain.getLeft(), y,
-					domain.getRight(), y);
+		// horizontal lines
+		for (var y = bottom; y >= top; y -= step) {
+			drawer.drawLine(left, y, right, y);
 		}
 	}
 
