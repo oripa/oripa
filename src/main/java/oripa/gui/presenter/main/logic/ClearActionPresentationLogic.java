@@ -59,8 +59,8 @@ public class ClearActionPresentationLogic {
 		this.paintContextService = paintContextService;
 	}
 
-	public void clear(boolean maintainContour) {
-		if (maintainContour) {
+	public void clear(boolean keepContour) {
+		if (keepContour) {
 			paintContextService.clearLines();
 		} else {
 			paintContextService.clearAll();
