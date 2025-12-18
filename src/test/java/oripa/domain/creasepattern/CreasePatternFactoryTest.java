@@ -54,34 +54,4 @@ public class CreasePatternFactoryTest {
 		AssertionUtil.assertAnyMatch(cut1, cp, (a, b) -> a.equals(b));
 		AssertionUtil.assertAnyMatch(cut2, cp, (a, b) -> a.equals(b));
 	}
-
-	@Test
-	public void testCreateFromContourOf() {
-		var factory = new CreasePatternFactory();
-		double size = 100;
-
-		OriLine cut0 = new OriLine(0, 0, 0, size, OriLine.Type.CUT);
-		OriLine cut1 = new OriLine(0, size, size, size, OriLine.Type.CUT);
-		OriLine cut2 = new OriLine(size, size, 0, 0, OriLine.Type.CUT);
-
-		var lines = List.of(cut0, cut1, cut2);
-
-		var cp = factory.createCreasePattern(lines);
-		cp.add(new OriLine(size / 2, size / 2, 0, 0, OriLine.Type.MOUNTAIN));
-		cp.add(new OriLine(size / 2, 0, 0, size / 2, OriLine.Type.VALLEY));
-		cp.add(new OriLine(0, size / 2, size / 2, 0, OriLine.Type.AUX));
-
-		assertEquals(6, cp.size());
-
-		var newCP = factory.createCreasePatternFromContourOf(cp);
-
-		assertEquals(size, newCP.getPaperWidth());
-		assertEquals(size, newCP.getPaperHeight());
-
-		assertEquals(3, newCP.size());
-		AssertionUtil.assertAnyMatch(cut0, newCP, (a, b) -> a.equals(b));
-		AssertionUtil.assertAnyMatch(cut1, newCP, (a, b) -> a.equals(b));
-		AssertionUtil.assertAnyMatch(cut2, newCP, (a, b) -> a.equals(b));
-
-	}
 }
