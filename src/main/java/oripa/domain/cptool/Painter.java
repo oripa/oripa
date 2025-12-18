@@ -2,6 +2,7 @@ package oripa.domain.cptool;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
@@ -383,7 +384,7 @@ public class Painter {
 	}
 
 	public void clear() {
-		var toRemove = creasePattern.stream().filter(OriLine::isNotBoundary).toList();
+		var toRemove = creasePattern.stream().filter(Predicate.not(OriLine::isBoundary)).toList();
 
 		removeLines(toRemove);
 	}
