@@ -747,7 +747,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 				StringID.UI.CHECK_WINDOW_ID);
 
 		setShortcut(buildButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_F),
-				StringID.UI.CHECK_WINDOW_ID);
+				StringID.UI.FOLD_ID);
 
 	}
 
