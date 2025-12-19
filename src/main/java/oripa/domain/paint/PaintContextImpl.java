@@ -303,18 +303,23 @@ class PaintContextImpl implements PaintContext {
 
 	private ArrayList<Vector2d> getSquareGridPoints() {
 		var points = new ArrayList<Vector2d>();
-		var paperDomain = getPaperDomain();
-		double width = paperDomain.getWidth();
+		var domain = getPaperDomain();
 
-		double stepX = width / gridDivNum;
-		double stepY = stepX;
+		double smaller = Math.min(domain.getWidth(), domain.getHeight());
+		double step = smaller / gridDivNum;
+		double right = domain.getRight();
+		double top = domain.getTop();
 
-		for (int ix = 0; ix < gridDivNum + 1; ix++) {
-			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = paperDomain.getLeft() + stepX * ix;
-				double y = paperDomain.getTop() + stepY * iy;
+		for (var x = domain.getLeft(); x < right; x += step) {
+			points.add(new Vector2d(x, top));
+			for (var y = domain.getBottom(); y > top; y -= step) {
 				points.add(new Vector2d(x, y));
 			}
+		}
+
+		// When smaller is vertical, right end may not have points
+		for (var y = domain.getBottom(); y > top; y -= step) {
+			points.add(new Vector2d(right, y));
 		}
 		return points;
 	}
@@ -323,24 +328,26 @@ class PaintContextImpl implements PaintContext {
 		var points = new ArrayList<Vector2d>();
 		var domain = getPaperDomain();
 
+		double tan30 = Math.tan(Math.PI / 6);
+
 		double stepX = domain.getWidth() / gridDivNum;
-		double stepY = stepX / Math.cos(Math.PI / 6);
+		double stepY = stepX * tan30 * 2;
 
 		double left = domain.getLeft();
-		double bottom = domain.getBottom();
-		double top = bottom - stepY * gridDivNum;
+		double right = domain.getRight();
 
-		for (int ix = 0; ix < gridDivNum + 1; ix++) {
-			double oddColumnsOffset = (ix % 2 == 1) ? stepY / 2.0 : 0.0;
-			double x = left + stepX * ix;
-			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double y = bottom - stepY * iy + oddColumnsOffset;
-				if (y > bottom) {
-					y = bottom;
-					points.add(new Vector2d(x, top));
-				}
-				points.add(new Vector2d(x, y));
+		double bottom = domain.getBottom();
+		double top = bottom - Math.ceil(domain.getHeight() / stepY) * stepY;
+
+		double oddColumnsYOffset = 0;
+		for (var x = left; x <= right; x += stepX) {
+			points.add(new Vector2d(x, top));
+			points.add(new Vector2d(x, bottom));
+
+			for (var y = bottom; y > top; y -= stepY) {
+				points.add(new Vector2d(x, y + oddColumnsYOffset));
 			}
+			oddColumnsYOffset = -oddColumnsYOffset + stepY / 2.0;
 		}
 
 		return points;

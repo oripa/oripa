@@ -130,7 +130,8 @@ public class MainFramePresenter {
 			}
 		});
 
-		view.addClearButtonListener(presentationLogic::clear);
+		view.addNewButtonListener(presentationLogic::clearAll);
+		view.addClearButtonListener(presentationLogic::clearCreasePattern);
 
 		view.addAboutButtonListener(view::showAboutAppMessage);
 

@@ -247,26 +247,21 @@ public class CreasePatternGraphicDrawer {
 		drawer.selectColor(OriLine.Type.AUX);
 		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
 
-		int lineNum = gridDivNum;
+		double smaller = Math.min(domain.getWidth(), domain.getHeight());
+		double step = smaller / gridDivNum;
+		double left = domain.getLeft();
+		double right = domain.getRight();
+		double top = domain.getTop();
+		double bottom = domain.getBottom();
 
-		double width = domain.getWidth();
+		// vertical lines
+		for (var x = left; x <= right; x += step) {
+			drawer.drawLine(x, top, x, bottom);
+		}
 
-		double stepX = width / lineNum;
-		double stepY = stepX;
-
-		for (int i = 0; i < lineNum + 1; i++) {
-			double x = stepX * i + domain.getLeft();
-			double y = stepY * i + domain.getTop();
-
-			// vertical line
-			drawer.drawLine(
-					x, domain.getTop(),
-					x, domain.getBottom());
-
-			// horizontal line
-			drawer.drawLine(
-					domain.getLeft(), y,
-					domain.getRight(), y);
+		// horizontal lines
+		for (var y = bottom; y >= top; y -= step) {
+			drawer.drawLine(left, y, right, y);
 		}
 	}
 
@@ -274,38 +269,52 @@ public class CreasePatternGraphicDrawer {
 			final int gridDivNum,
 			final RectangleDomain domain,
 			final double scale, final boolean zeroLineWidth) {
-		drawer.selectColor(OriLine.Type.AUX);
-		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
+		double tan30 = Math.tan(Math.PI / 6);
 
 		double stepX = domain.getWidth() / gridDivNum;
-		double stepY = stepX / Math.cos(Math.PI / 6);
+		double stepY = stepX * tan30 * 2;
 
 		double left = domain.getLeft();
 		double right = domain.getRight();
+
+		double fullY = (right - left) * tan30;
+
 		double bottom = domain.getBottom();
-		double top = bottom - stepY * gridDivNum;
-		double centerY = (bottom + top) / 2;
+		double top = bottom - Math.ceil(domain.getHeight() / stepY) * stepY;
+		double fullX = (bottom - top) / tan30;
+
+		drawer.selectColor(OriLine.Type.AUX);
+		drawer.selectStroke(OriLine.Type.AUX, scale, zeroLineWidth);
 
 		// Vertical lines
-		for (int i = 1; i < gridDivNum; i++) {
-			drawer.drawLine(left + stepX * i, top, left + stepX * i, bottom);
+		for (var x = left; x <= right; x += stepX) {
+			drawer.drawLine(x, top, x, bottom);
 		}
 
-		// Oblique lines
-		// From left border to right border
-		for (int i = 0; i < gridDivNum / 2 + 1; i++) {
-			drawer.drawLine(left, bottom - i * stepY, right, centerY - i * stepY);
-			drawer.drawLine(right, bottom - i * stepY, left, centerY - i * stepY);
-			drawer.drawLine(left, top + i * stepY, right, centerY + i * stepY);
-			drawer.drawLine(right, top + i * stepY, left, centerY + i * stepY);
+		// Oblique lines: walking left and right
+		for (var y = bottom; y - fullY >= top; y -= stepY) {
+			drawer.drawLine(left, y, right, y - fullY);
+			drawer.drawLine(right, y, left, y - fullY);
 		}
 
-		// From left or right to bottom or top
-		for (int i = 1; i < gridDivNum / 2; i++) {
-			drawer.drawLine(left, bottom - i * stepY, left + 2 * i * stepX, bottom);
-			drawer.drawLine(right, bottom - i * stepY, right - 2 * i * stepX, bottom);
-			drawer.drawLine(left, top + i * stepY, left + 2 * i * stepX, top);
-			drawer.drawLine(right, top + i * stepY, right - 2 * i * stepX, top);
+		// Oblique lines: walking top and bottom
+		for (var deltaX = stepX * 2; deltaX <= right - left; deltaX += stepX * 2) {
+			double h = deltaX * tan30;
+
+			// side-to-top
+			if (top + h < bottom) {
+				drawer.drawLine(left + deltaX, top, left, top + h);
+				drawer.drawLine(right - deltaX, top, right, top + h);
+			} else {
+				drawer.drawLine(left + deltaX, top, left + deltaX - fullX, bottom);
+				drawer.drawLine(right - deltaX, top, right - deltaX + fullX, bottom);
+			}
+
+			// side-to-bottom
+			if (bottom - h > top) {
+				drawer.drawLine(left + deltaX, bottom, left, bottom - h);
+				drawer.drawLine(right - deltaX, bottom, right, bottom - h);
+			}
 		}
 	}
 

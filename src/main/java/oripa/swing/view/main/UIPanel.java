@@ -742,6 +742,13 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(lineTypeUnassignedButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_U),
 				StringID.UI.UNASSIGNED_ID);
 
+		// Check and Fold
+		setShortcut(checkWindowButton, KeyStrokes.get(KeyEvent.VK_C),
+				StringID.UI.CHECK_WINDOW_ID);
+
+		setShortcut(buildButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_F),
+				StringID.UI.FOLD_ID);
+
 	}
 
 	/**
