@@ -315,7 +315,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 		menuItemNew.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_N));
 
-		menuItemClear.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_C));
+		menuItemClear.setAccelerator(KeyStrokes.getWithControlShiftDown(KeyEvent.VK_C));
 
 		menuItemSelectAll.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_A));
 
