@@ -93,7 +93,7 @@ public class FacesToCreasePatternConverter {
 //		}
 
 		logger.info("merge ignoring type");
-		// put segments in a collection, remove overlaps in almost O(n log n)
+		// put segments in a collection
 		faceLines = overlapMerger.mergeIgnoringType(faceLines, pointEps);
 
 //		try {
@@ -103,7 +103,7 @@ public class FacesToCreasePatternConverter {
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
 
-		// make cross in O(n log n) time
+		// make cross
 		logger.info("split {} lines", faceLines.size());
 		faceLines = lineSplitter.splitIgnoringType(faceLines, pointEps);
 
