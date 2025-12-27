@@ -20,6 +20,7 @@ package oripa.domain.cptool;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
+import java.util.function.BiFunction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.compgeom.HashFactory;
 import oripa.geom.GeomUtil;
 import oripa.util.MathUtil;
+import oripa.util.Pair;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
@@ -284,6 +286,95 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 
 	@Override
 	public Collection<OriLine> mergeIgnoringType(final Collection<OriLine> inputLines, final double eps) {
+
+		return runNaive(inputLines, eps);
+	}
+
+	private Collection<OriLine> runNaive(final Collection<OriLine> inputLines, final double eps) {
+		var results = new HashSet<OriLine>();
+
+		var points = new ArrayList<MyPointAndOriLine>();
+		for (var line : inputLines) {
+			if (line.length() < eps) {
+				continue;
+			}
+			points.add(MyPointAndOriLineFactory.createWithCanoincalization(line).get(0));
+		}
+
+		points.sort(Comparator.comparing(MyPointAndOriLine::getAngle));
+
+		var hashFactory = new HashFactory();
+		var byAngles = hashFactory.create(points, MyPointAndOriLine::getAngle, MathUtil.angleRadianEps());
+
+		for (var byAngle : byAngles) {
+			var byIntercepts = hashFactory.create(byAngle, MyPointAndOriLine::getIntercept, eps);
+			for (var byIntercept : byIntercepts) {
+				results.addAll(executeNaive(byIntercept, eps));
+			}
+		}
+
+		return results;
+
+	}
+
+	private Collection<OriLine> executeNaive(final Collection<MyPointAndOriLine> byIntercept, final double eps) {
+
+		var sortedPoints = byIntercept.stream().sorted((a, b) -> Double.compare(a.coord, b.coord)).toList();
+
+		var indexToPointPairs = new HashMap<Integer, Pair<MyPointAndOriLine, MyPointAndOriLine>>();
+
+		int i = 0;
+
+		while (i < sortedPoints.size()) {
+			var left = sortedPoints.get(i);
+			// overlap with itself
+			indexToPointPairs.put(i, new Pair<MyPointAndOriLine, MyPointAndOriLine>(left, left.opposite));
+
+			BiFunction<Integer, Integer, MyPointAndOriLine> getRight = (a, b) -> {
+				var newRight = sortedPoints.get(b).getRight();
+
+				var oldRight = indexToPointPairs.get(a).v2();
+
+				if (oldRight.coord + eps >= newRight.coord) {
+					return oldRight;
+				}
+
+				return newRight;
+			};
+
+			// update
+			int j = i + 1;
+			while (j < sortedPoints.size()) {
+
+				var oldPair = indexToPointPairs.get(i);
+				var oldLine = new OriLine(oldPair.v1().point, oldPair.v2().point, OriLine.Type.MOUNTAIN);
+
+				var p = sortedPoints.get(j);
+
+				if (GeomUtil.isOverlap(oldLine, p.line, eps)) {
+					var right = getRight.apply(i, j);
+					indexToPointPairs.put(i, new Pair<MyPointAndOriLine, MyPointAndOriLine>(left, right));
+					j++;
+				} else {
+					break;
+				}
+			}
+			i = j;
+		}
+
+		// restore from index pairs
+		var results = new ArrayList<OriLine>();
+		for (var leftIndex : indexToPointPairs.keySet()) {
+			var points = indexToPointPairs.get(leftIndex);
+			var line = new OriLine(points.v1().point, points.v2().point, OriLine.Type.MOUNTAIN);
+
+			results.add(line);
+		}
+
+		return results;
+	}
+
+	private Collection<OriLine> run(final Collection<OriLine> inputLines, final double eps) {
 		var results = new HashSet<OriLine>();
 
 		var points = new ArrayList<MyPointAndOriLine>();
@@ -296,15 +387,18 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 
 		points.sort(Comparator.comparing(MyPointAndOriLine::getAngle));
 
-		var byAngles = new HashFactory().create(points, MyPointAndOriLine::getAngle, MathUtil.angleRadianEps());
+		var hashFactory = new HashFactory();
+		var byAngles = hashFactory.create(points, MyPointAndOriLine::getAngle, MathUtil.angleRadianEps());
 
 		for (var byAngle : byAngles) {
 			results.addAll(execute(byAngle, eps));
 		}
 
 		return results;
+
 	}
 
+	// FIXME: a little buggy
 	private Collection<OriLine> execute(final Collection<MyPointAndOriLine> points, final double eps) {
 		// sweep line on coord-intercept space, along coord.
 		// for a pair of angle and intercept, only one mergeable line appears
