@@ -309,7 +309,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 		for (var byAngle : byAngles) {
 			var byIntercepts = hashFactory.create(byAngle, MyPointAndOriLine::getIntercept, eps);
 			for (var byIntercept : byIntercepts) {
-				results.addAll(executeNaive(byIntercept, eps));
+				results.addAll(naive(byIntercept, eps));
 			}
 		}
 
@@ -317,7 +317,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 
 	}
 
-	private Collection<OriLine> executeNaive(final Collection<MyPointAndOriLine> byIntercept, final double eps) {
+	private Collection<OriLine> naive(final Collection<MyPointAndOriLine> byIntercept, final double eps) {
 
 		var sortedPoints = byIntercept.stream().sorted((a, b) -> Double.compare(a.coord, b.coord)).toList();
 
@@ -351,7 +351,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 
 				var p = sortedPoints.get(j);
 
-				if (GeomUtil.isOverlap(oldLine, p.line, eps)) {
+				if (GeomUtil.isRelaxedOverlap(oldLine, p.line, eps)) {
 					var right = getRight.apply(i, j);
 					indexToPointPairs.put(i, new Pair<MyPointAndOriLine, MyPointAndOriLine>(left, right));
 					j++;
@@ -391,7 +391,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 		var byAngles = hashFactory.create(points, MyPointAndOriLine::getAngle, MathUtil.angleRadianEps());
 
 		for (var byAngle : byAngles) {
-			results.addAll(execute(byAngle, eps));
+			results.addAll(sweepLine(byAngle, eps));
 		}
 
 		return results;
@@ -399,7 +399,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 	}
 
 	// FIXME: a little buggy
-	private Collection<OriLine> execute(final Collection<MyPointAndOriLine> points, final double eps) {
+	private Collection<OriLine> sweepLine(final Collection<MyPointAndOriLine> points, final double eps) {
 		// sweep line on coord-intercept space, along coord.
 		// for a pair of angle and intercept, only one mergeable line appears
 		// when the sweep encounter a point.

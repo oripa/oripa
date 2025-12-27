@@ -313,6 +313,24 @@ class OverlappingLineMergerTest {
 	}
 
 	@Test
+	void test_2_Lines_Touch() {
+		var lines = List.of(
+				new OriLine(1, 2, 3, 4, Type.MOUNTAIN),
+				new OriLine(3, 4, 5, 6, Type.MOUNTAIN));
+
+		OverlappingLineMerger merger = new AnalyticOverlappingLineMerger();
+
+		var result = merger.mergeIgnoringType(lines, 1e-8);
+
+		assertEquals(1, result.size());
+
+		AssertionUtil.assertAnyMatch(
+				new OriLine(1, 2, 5, 6, Type.MOUNTAIN).createCanonical(),
+				result,
+				(a, b) -> a.equals(b, 1e-8));
+	}
+
+	@Test
 	void test_3_Lines_1_shortOverlaps_1_Touch() {
 		var lines = List.of(
 				new OriLine(1, 2, 3, 4, Type.MOUNTAIN),
