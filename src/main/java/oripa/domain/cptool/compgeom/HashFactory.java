@@ -19,7 +19,10 @@
 package oripa.domain.cptool.compgeom;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author OUCHI Koji
@@ -37,8 +40,8 @@ public class HashFactory {
 	 * {@code keyExtractor.apply(b) - keyExtractor.apply(a) > eps}.
 	 *
 	 * @param <T>
-	 * @param sortedItems
-	 *            must be sorted by {@code keyExtractor} in advance.
+	 * @param items
+	 *            items to be hashed by the key value.
 	 * @param keyExtractor
 	 *            is a function that returns the key for hashing.
 	 * @param eps
@@ -46,9 +49,13 @@ public class HashFactory {
 	 * @return a 2D table of items.
 	 */
 	public <T> ArrayList<ArrayList<T>> create(
-			final ArrayList<T> sortedItems,
+			final Collection<T> items,
 			final Function<T, Double> keyExtractor,
 			final double eps) {
+		var sortedItems = items.stream()
+				.sorted(Comparator.comparing(keyExtractor))
+				.collect(Collectors.toCollection(ArrayList::new));
+
 		var hash = new ArrayList<ArrayList<T>>();
 
 		int split_i = 0;

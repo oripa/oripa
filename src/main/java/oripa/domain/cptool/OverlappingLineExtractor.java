@@ -26,7 +26,8 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.compgeom.AnalyticLineHashFactory;
+import oripa.domain.cptool.compgeom.AnalyticLine;
+import oripa.domain.cptool.compgeom.AngleInterceptHashFactory;
 import oripa.geom.GeomUtil;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
@@ -50,8 +51,8 @@ public class OverlappingLineExtractor {
 	public Collection<Collection<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
 			final double pointEps) {
 		// make a data structure for fast computation.
-		var hashFactory = new AnalyticLineHashFactory(pointEps);
-		var hash = hashFactory.create(lines);
+		var hashFactory = new AngleInterceptHashFactory<AnalyticLine>(pointEps);
+		var hash = hashFactory.create(lines, AnalyticLine::new);
 
 		var overlapGroups = new ConcurrentLinkedQueue<Collection<OriLine>>();
 

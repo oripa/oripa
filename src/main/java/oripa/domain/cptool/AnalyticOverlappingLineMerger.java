@@ -21,7 +21,6 @@ package oripa.domain.cptool;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,9 +30,9 @@ import java.util.function.BiFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.compgeom.HashFactory;
+import oripa.domain.cptool.compgeom.AngleInterceptGettable;
+import oripa.domain.cptool.compgeom.AngleInterceptHashFactory;
 import oripa.geom.GeomUtil;
-import oripa.util.MathUtil;
 import oripa.util.Pair;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -86,7 +85,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 
 	}
 
-	private static class MyPointAndOriLine implements Comparable<MyPointAndOriLine> {
+	private static class MyPointAndOriLine implements Comparable<MyPointAndOriLine>, AngleInterceptGettable {
 		private final OriPoint point;
 		private final OriLine line;
 		private boolean isLeft;
@@ -139,12 +138,9 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 			return isRight() ? this : opposite;
 		}
 
+		@Override
 		public double getAngle() {
 			return line.getAngle();
-		}
-
-		public boolean isVertical() {
-			return line.isVertical();
 		}
 
 		/**
@@ -154,22 +150,11 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 			return line;
 		}
 
-//		public double getAngle() {
-//			return angle;
-//		}
-//
-		public double getX() {
-			return point.getX();
-		}
-
-		public double getY() {
-			return point.getY();
-		}
-
 		public double getCoord() {
 			return coord;
 		}
 
+		@Override
 		public double getIntercept() {
 			return intercept;
 		}
@@ -245,23 +230,13 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 	private Collection<OriLine> runNaive(final Collection<OriLine> inputLines, final double eps) {
 		var results = new HashSet<OriLine>();
 
-		var points = new ArrayList<MyPointAndOriLine>();
-		for (var line : inputLines) {
-			if (line.length() < eps) {
-				continue;
-			}
-			points.add(MyPointAndOriLineFactory.createWithCanoincalization(line).get(0));
-		}
+		var lines = inputLines.stream().filter(l -> l.length() >= eps).toList();
 
-		points.sort(Comparator.comparing(MyPointAndOriLine::getAngle));
+		var hashFactory = new AngleInterceptHashFactory<MyPointAndOriLine>(eps);
+		var hash = hashFactory.create(lines, line -> MyPointAndOriLineFactory.createWithCanoincalization(line).get(0));
 
-		var hashFactory = new HashFactory();
-		var byAngles = hashFactory.create(points, MyPointAndOriLine::getAngle, MathUtil.angleRadianEps());
-
-		for (var byAngle : byAngles) {
-			byAngle.sort(Comparator.comparing(MyPointAndOriLine::getIntercept));
-			var byIntercepts = hashFactory.create(byAngle, MyPointAndOriLine::getIntercept, eps);
-			for (var byIntercept : byIntercepts) {
+		for (var byAngle : hash) {
+			for (var byIntercept : byAngle) {
 				results.addAll(naive(byIntercept, eps));
 			}
 		}
