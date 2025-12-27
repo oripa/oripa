@@ -19,7 +19,13 @@
 package oripa.domain.cptool;
 
 import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 import org.slf4j.Logger;
@@ -29,9 +35,7 @@ import oripa.domain.cptool.compgeom.HashFactory;
 import oripa.geom.GeomUtil;
 import oripa.util.MathUtil;
 import oripa.util.Pair;
-import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
-import oripa.value.OriLine.Type;
 import oripa.value.OriPoint;
 
 /**
@@ -90,8 +94,8 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 		private final double intercept;
 		private final double coord;
 
-		private SweepKey key;
-		private SweepKey oppositeKey;
+		private Key key;
+		private Key oppositeKey;
 
 		private MyPointAndOriLine opposite;
 
@@ -170,7 +174,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 			return intercept;
 		}
 
-		public SweepKey getKey() {
+		public Key getKey() {
 			return key;
 		}
 
@@ -212,10 +216,10 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 		}
 	}
 
-	private static record SweepKey(double intercept, double coord) implements Comparable<SweepKey> {
+	private static record Key(double intercept, double coord) implements Comparable<Key> {
 
 		@Override
-		public int compareTo(final SweepKey other) {
+		public int compareTo(final Key other) {
 //			if (angle != other.angle) {
 //				return (int) Math.signum(angle - other.angle);
 //			}
@@ -226,62 +230,10 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 
 			return (int) Math.signum(intercept - other.intercept);
 		}
-
-		private static Comparator<SweepKey> getComparatorOnSweep() {
-			return (a, b) -> {
-				if (a.intercept != b.intercept) {
-					return (int) Math.signum(a.intercept - b.intercept);
-
-				}
-
-				return (int) Math.signum(a.coord - b.coord);
-			};
-		}
 	}
 
-	private static SweepKey toSweepKey(final MyPointAndOriLine p) {
-		return new SweepKey(p.intercept, p.getCoord());
-	}
-
-	private SweepKey toSweepKey(final MyPointAndOriLine p, final TreeSet<SweepKey> keys, final double eps) {
-		var key = findKey(p, keys, eps);
-		if (key != null) {
-			return key;
-		}
-
-		return p.getKey();
-	}
-
-	private SweepKey findKey(final MyPointAndOriLine p, final TreeSet<SweepKey> sortedKeys, final double eps) {
-		var key = p.getKey();
-
-		var coord = p.getCoord();
-
-		var range = CollectionUtil.rangeSetInclusive(sortedKeys,
-				new SweepKey(key.intercept - eps, coord - eps),
-				new SweepKey(key.intercept + eps, coord + eps));
-
-		var filtered = range.stream()
-				.filter(k -> MathUtil.areEqual(k.intercept, key.intercept, eps))
-				.filter(k -> MathUtil.areEqual(k.coord, key.coord, eps));
-		return filtered.findFirst().get();
-
-	}
-
-	private HashMap<MyPointAndOriLine, SweepKey> createKeyTable(final Collection<MyPointAndOriLine> points,
-			final double eps) {
-		var sorted = new TreeSet<SweepKey>();
-		points.forEach(p -> sorted.add(toSweepKey(p)));
-
-		var keyTable = new HashMap<MyPointAndOriLine, SweepKey>();
-
-		for (var p : points) {
-
-			var presentativeKey = findKey(p, sorted, eps);
-			keyTable.put(p, presentativeKey);
-		}
-
-		return keyTable;
+	private static Key toSweepKey(final MyPointAndOriLine p) {
+		return new Key(p.intercept, p.getCoord());
 	}
 
 	@Override
@@ -362,7 +314,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 			i = j;
 		}
 
-		// restore from index pairs
+		// restore from point pairs
 		var results = new ArrayList<OriLine>();
 		for (var leftIndex : indexToPointPairs.keySet()) {
 			var points = indexToPointPairs.get(leftIndex);
@@ -374,265 +326,4 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 		return results;
 	}
 
-	private Collection<OriLine> run(final Collection<OriLine> inputLines, final double eps) {
-		var results = new HashSet<OriLine>();
-
-		var points = new ArrayList<MyPointAndOriLine>();
-		for (var line : inputLines) {
-			if (line.length() < eps) {
-				continue;
-			}
-			points.addAll(MyPointAndOriLineFactory.createWithCanoincalization(line));
-		}
-
-		points.sort(Comparator.comparing(MyPointAndOriLine::getAngle));
-
-		var hashFactory = new HashFactory();
-		var byAngles = hashFactory.create(points, MyPointAndOriLine::getAngle, MathUtil.angleRadianEps());
-
-		for (var byAngle : byAngles) {
-			results.addAll(sweepLine(byAngle, eps));
-		}
-
-		return results;
-
-	}
-
-	// FIXME: a little buggy
-	private Collection<OriLine> sweepLine(final Collection<MyPointAndOriLine> points, final double eps) {
-		// sweep line on coord-intercept space, along coord.
-		// for a pair of angle and intercept, only one mergeable line appears
-		// when the sweep encounter a point.
-
-		var results = new HashMap<SweepKey, OriLine>();
-
-		var keyTable = createKeyTable(points, eps);
-		var keys = new TreeSet<>(keyTable.values());
-
-		var events = new PriorityQueue<MyPointAndOriLine>(points);
-
-		var onSweepLine = new TreeMap<SweepKey, Set<MyPointAndOriLine>>(SweepKey.getComparatorOnSweep());
-
-		var p = events.peek();
-		var eventLeftKey = keyTable.get(p);
-
-		var eventPoint = p;
-		var count = 0;
-		while (!events.isEmpty() && count++ <= 2 * points.size() * points.size()) {
-//		while (!events.isEmpty() && count++ <= 100) {
-			eventPoint = events.poll();
-			logger.trace("event : {}", eventPoint);
-			// logger.trace("event : {}, remain: {}", eventPoint, events);
-
-			eventLeftKey = keyTable.get(eventPoint.getLeft());
-			var eventRightKey = keyTable.get(eventPoint.getRight());
-
-			var merging = getMerging(eventLeftKey, eventPoint, onSweepLine, eps);
-
-			var mergingLeft = merging == null ? null : merging.getLeft();
-			var mergingRight = merging == null ? null : merging.getRight();
-			var mergingLeftKey = merging == null ? null : toSweepKey(mergingLeft, keys, eps);
-			var mergingRightKey = merging == null ? null : toSweepKey(mergingRight, keys, eps);
-
-			logger.trace("sweep key:{} merging value: {}", eventLeftKey, merging);
-
-			if (eventPoint.isRight()) {
-				events.remove(eventPoint.opposite);
-				remove(eventLeftKey, eventPoint, onSweepLine);
-				remove(eventRightKey, eventPoint, onSweepLine);
-
-				if (mergingRightKey == null) {
-					results.put(eventRightKey, eventPoint.getLine());
-					continue;
-				}
-
-				// merging point is on the right.
-				// it should be treated in the future.
-				if (getComparatorOnSweep().compare(merging, eventPoint) == 1) {
-					continue;
-				}
-
-				var merged = merge(merging, eventPoint, eps);
-				logger.trace("merge result: {}", merged);
-
-				events.remove(mergingLeft);
-				events.remove(mergingRight);
-				remove(mergingLeftKey, mergingLeft, onSweepLine);
-				remove(mergingRightKey, mergingRight, onSweepLine);
-
-				var mergedLeft = merged.get(0);
-				var mergedRight = merged.get(1);
-				var mergedLeftKey = toSweepKey(mergedLeft, keys, eps);
-				var mergedRightKey = toSweepKey(mergedRight, keys, eps);
-
-				add(mergedRightKey, mergedRight, onSweepLine);
-				keyTable.put(mergedLeft, mergedLeftKey);
-				keyTable.put(mergedRight, mergedRightKey);
-
-				results.remove(mergingRightKey);
-				results.remove(eventRightKey);
-				results.put(mergedRightKey, mergedRight.getLine());
-
-				continue;
-			}
-
-			if (merging == null) {
-				merging = eventPoint;
-				mergingLeft = eventPoint.getLeft();
-				mergingRight = eventPoint.getRight();
-				mergingLeftKey = eventLeftKey;
-				mergingRightKey = eventRightKey;
-			}
-
-			// event is left side
-
-			// remove points to be old.
-			var rightEventPoint = eventPoint.opposite;
-			events.remove(rightEventPoint);
-			events.remove(mergingRight);
-			remove(eventLeftKey, eventPoint, onSweepLine);
-			remove(eventRightKey, rightEventPoint, onSweepLine);
-			remove(mergingLeftKey, mergingLeft, onSweepLine);
-			remove(mergingRightKey, mergingRight, onSweepLine);
-
-			logger.trace("after remove, remain: {}", events);
-
-			var merged = merge(merging, eventPoint, eps);
-			logger.trace("merge result: {}", merged);
-
-			var mergedLeft = merged.get(0);
-			var mergedRight = merged.get(1);
-			var mergedLeftKey = toSweepKey(mergedLeft, keys, eps);
-			var mergedRightKey = toSweepKey(mergedRight, keys, eps);
-
-			events.add(mergedRight);
-
-			keyTable.put(mergedLeft, mergedLeftKey);
-			keyTable.put(mergedRight, mergedRightKey);
-
-			// left has been swept and no need to be remembered.
-			add(mergedRightKey, mergedRight, onSweepLine);
-
-			results.remove(mergingRightKey);
-			results.remove(eventRightKey);
-
-			logger.trace("after add, remain: {}", events);
-
-			logger.trace("on sweep line {}", onSweepLine);
-		}
-
-		logger.trace("results: {}", results);
-
-		logger.info("loop count: {}", count);
-
-		return results.values().stream().toList();
-
-	}
-
-	private List<MyPointAndOriLine> merge(final MyPointAndOriLine merging, final MyPointAndOriLine eventPoint,
-			final double eps) {
-
-		if (merging.getLine().equals(eventPoint.getLine(), eps)) {
-			var list = List.of(merging, merging.opposite)
-					.stream()
-					.sorted(getComparatorOnSweep())
-					.toList();
-
-			return MyPointAndOriLineFactory.create(
-					new OriLine(list.getFirst().point, list.getLast().point, Type.MOUNTAIN));
-		}
-
-		var list = List.of(merging, merging.opposite, eventPoint, eventPoint.opposite)
-				.stream()
-				.sorted(getComparatorOnSweep())
-				.toList();
-
-		var merged = MyPointAndOriLineFactory.create(
-				new OriLine(list.getFirst().point, list.getLast().point, Type.MOUNTAIN));
-
-		if (merged.get(0).getLine().length() + eps < merging.getLine().length()
-				|| merged.get(0).getLine().length() + eps < eventPoint.getLine().length()) {
-			throw new IllegalStateException(
-					"wrong merge. %s %s result in %s".formatted(merging, eventPoint, merged.get(0)));
-		}
-
-		return merged;
-	}
-
-	private MyPointAndOriLine getMerging(final SweepKey key, final MyPointAndOriLine p,
-			final TreeMap<SweepKey, Set<MyPointAndOriLine>> onSweepLine, final double eps) {
-
-		var group = CollectionUtil.rangeMapInclusive(onSweepLine,
-				new SweepKey(key.intercept - eps, key.coord - eps),
-				new SweepKey(key.intercept + eps, key.coord + eps));
-
-		var candidates = new TreeSet<MyPointAndOriLine>(getComparatorOnSweep());
-
-		// FIXME: O(n log n)
-		group.forEach((key_, points) -> {
-			if (MathUtil.areEqual(key.intercept, key_.intercept, eps)) {
-				candidates.addAll(points);
-			}
-		});
-
-		logger.trace("merging's candidates {}", candidates);
-
-		var lower = candidates.lower(p);
-		var higher = candidates.higher(p);
-
-		var merging = lower == null ? higher : lower;
-
-		if (merging == null) {
-			return null;
-		}
-
-		var overlapType = GeomUtil.distinguishSegmentsOverlap(merging.getLine(), p.getLine(), eps);
-		var canMerge = switch (overlapType) {
-		case 2, 3, 4 -> true;
-		default -> false;
-		};
-
-		logger.trace("overlap type {}, {} {}", overlapType, p.getLine(), merging.getLine());
-
-		return canMerge ? merging : null;
-	}
-
-	private Comparator<MyPointAndOriLine> getComparatorOnSweep() {
-		return Comparator.comparing(MyPointAndOriLine::getCoord);
-	}
-
-	private MyPointAndOriLine get(final SweepKey key, final MyPointAndOriLine p,
-			final TreeMap<SweepKey, Set<MyPointAndOriLine>> onSweepLine) {
-
-		var set = onSweepLine.get(key);
-		if (set == null || set.isEmpty()) {
-			return null;
-		}
-
-		if (set.contains(p)) {
-			return p;
-		}
-
-		return onSweepLine.get(key).iterator().next();
-	}
-
-	private void add(final SweepKey key, final MyPointAndOriLine p,
-			final TreeMap<SweepKey, Set<MyPointAndOriLine>> onSweepLine) {
-		onSweepLine.putIfAbsent(key, new HashSet<>());
-
-		onSweepLine.get(key).add(p);
-	}
-
-	private MyPointAndOriLine remove(final SweepKey key, final MyPointAndOriLine p,
-			final TreeMap<SweepKey, Set<MyPointAndOriLine>> onSweepLine) {
-		var set = onSweepLine.get(key);
-
-		if (set == null || set.isEmpty()) {
-			return null;
-		}
-
-		set.remove(get(key, p, onSweepLine));
-
-		return p;
-	}
 }
