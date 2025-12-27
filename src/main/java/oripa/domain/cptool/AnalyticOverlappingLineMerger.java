@@ -316,8 +316,7 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 
 		// restore from point pairs
 		var results = new ArrayList<OriLine>();
-		for (var leftIndex : indexToPointPairs.keySet()) {
-			var points = indexToPointPairs.get(leftIndex);
+		for (var points : indexToPointPairs.values()) {
 			var line = new OriLine(points.v1().point, points.v2().point, OriLine.Type.MOUNTAIN);
 
 			results.add(line);
