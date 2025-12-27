@@ -26,7 +26,7 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class AnalyticLine {
+public class AnalyticLine implements AngleInterceptGettable {
 	private final OriLine line;
 	private final double angle;
 	private final double intercept;
@@ -71,6 +71,7 @@ public class AnalyticLine {
 	/**
 	 * @return angle
 	 */
+	@Override
 	public double getAngle() {
 		return angle;
 	}
@@ -78,6 +79,7 @@ public class AnalyticLine {
 	/**
 	 * @return intercept
 	 */
+	@Override
 	public double getIntercept() {
 		return intercept;
 	}

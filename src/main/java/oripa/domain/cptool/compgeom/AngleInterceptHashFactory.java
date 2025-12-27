@@ -24,17 +24,18 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AnalyticLineHashFactory {
+public class AngleInterceptHashFactory<T extends AngleInterceptGettable> {
 	private final double eps;
 	private final HashFactory hashFactory = new HashFactory();
 
-	public AnalyticLineHashFactory(final double eps) {
+	public AngleInterceptHashFactory(final double eps) {
 		this.eps = eps;
 	}
 
@@ -44,15 +45,16 @@ public class AnalyticLineHashFactory {
 	 * @param lineArray
 	 * @return
 	 */
-	private List<AnalyticLine> createAnalyticLines(final ArrayList<OriLine> lineArray) {
+	private List<T> createAnalyticLines(final ArrayList<OriLine> lineArray,
+			final Function<OriLine, T> factory) {
 		return lineArray.parallelStream()
-				.map(line -> new AnalyticLine(line))
+				.map(factory)
 				.toList();
 	}
 
-	private ArrayList<ArrayList<AnalyticLine>> createHash(
-			final List<AnalyticLine> lines,
-			final Function<AnalyticLine, Double> keyExtractor) {
+	private ArrayList<ArrayList<T>> createHash(
+			final List<T> lines,
+			final Function<T, Double> keyExtractor, final double eps) {
 		return hashFactory.create(lines, keyExtractor, eps);
 	}
 
@@ -64,10 +66,10 @@ public class AnalyticLineHashFactory {
 	 *            should be sorted by angle.
 	 * @return a hash table whose keys are index of lines ordered by angle.
 	 */
-	private ArrayList<ArrayList<AnalyticLine>> createAngleHash(
-			final List<AnalyticLine> lines) {
+	private ArrayList<ArrayList<T>> createAngleHash(
+			final List<T> lines) {
 
-		return createHash(lines, AnalyticLine::getAngle);
+		return createHash(lines, T::getAngle, MathUtil.angleRadianEps());
 	}
 
 	/**
@@ -77,11 +79,11 @@ public class AnalyticLineHashFactory {
 	 *            a hash table created by {@link #createAngleHash(ArrayList)}.
 	 * @return 3D hash table, e.g., hash[angle][intercept][lineIndex].
 	 */
-	private ArrayList<ArrayList<ArrayList<AnalyticLine>>> createInterceptHash(
-			final ArrayList<ArrayList<AnalyticLine>> angleHash) {
+	private ArrayList<ArrayList<ArrayList<T>>> createInterceptHash(
+			final ArrayList<ArrayList<T>> angleHash) {
 
 		return angleHash.stream()
-				.map(byAngle -> createHash(byAngle, AnalyticLine::getIntercept))
+				.map(byAngle -> createHash(byAngle, T::getIntercept, eps))
 				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
@@ -90,14 +92,16 @@ public class AnalyticLineHashFactory {
 	 * @param lines
 	 * @return 3D hash table, e.g., hash[angle][intercept][lineIndex].
 	 */
-	public ArrayList<ArrayList<ArrayList<AnalyticLine>>> create(
-			final Collection<OriLine> lines) {
+	public ArrayList<ArrayList<ArrayList<T>>> create(
+			final Collection<OriLine> lines,
+			final Function<OriLine, T> factory) {
 		// convert collection to ensure fast access to lines.
 		var lineArray = new ArrayList<OriLine>(lines);
 
 		// make a data structure for fast computation.
-		var analyticLines = createAnalyticLines(lineArray);
+		var analyticLines = createAnalyticLines(lineArray, factory);
 		var angleHash = createAngleHash(analyticLines);
 		return createInterceptHash(angleHash);
 	}
+
 }
