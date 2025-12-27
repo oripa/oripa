@@ -259,7 +259,6 @@ public class AnalyticOverlappingLineMerger implements OverlappingLineMerger {
 		var byAngles = hashFactory.create(points, MyPointAndOriLine::getAngle, MathUtil.angleRadianEps());
 
 		for (var byAngle : byAngles) {
-			byAngle.sort(Comparator.comparing(MyPointAndOriLine::getIntercept));
 			var byIntercepts = hashFactory.create(byAngle, MyPointAndOriLine::getIntercept, eps);
 			for (var byIntercept : byIntercepts) {
 				results.addAll(naive(byIntercept, eps));

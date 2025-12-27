@@ -20,7 +20,7 @@ package oripa.domain.cptool.compgeom;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,31 +44,30 @@ public class AnalyticLineHashFactory {
 	 * @param lineArray
 	 * @return
 	 */
-	private ArrayList<AnalyticLine> createAnalyticLines(final ArrayList<OriLine> lineArray) {
+	private List<AnalyticLine> createAnalyticLines(final ArrayList<OriLine> lineArray) {
 		return lineArray.parallelStream()
 				.map(line -> new AnalyticLine(line))
-				.sorted(Comparator.comparing(AnalyticLine::getAngle))
-				.collect(Collectors.toCollection(ArrayList::new));
+				.toList();
 	}
 
 	private ArrayList<ArrayList<AnalyticLine>> createHash(
-			final ArrayList<AnalyticLine> sortedLines,
+			final List<AnalyticLine> lines,
 			final Function<AnalyticLine, Double> keyExtractor) {
-		return hashFactory.create(sortedLines, keyExtractor, eps);
+		return hashFactory.create(lines, keyExtractor, eps);
 	}
 
 	/**
 	 * make a hash table whose keys are index of lines ordered by angle. if
 	 * angles are equal, then lines can overlap.
 	 *
-	 * @param sortedLines
+	 * @param lines
 	 *            should be sorted by angle.
 	 * @return a hash table whose keys are index of lines ordered by angle.
 	 */
 	private ArrayList<ArrayList<AnalyticLine>> createAngleHash(
-			final ArrayList<AnalyticLine> sortedLines) {
+			final List<AnalyticLine> lines) {
 
-		return createHash(sortedLines, AnalyticLine::getAngle);
+		return createHash(lines, AnalyticLine::getAngle);
 	}
 
 	/**
@@ -82,10 +81,7 @@ public class AnalyticLineHashFactory {
 			final ArrayList<ArrayList<AnalyticLine>> angleHash) {
 
 		return angleHash.stream()
-				.map(byAngle -> byAngle.stream()
-						.sorted(Comparator.comparing(AnalyticLine::getIntercept))
-						.collect(Collectors.toCollection(ArrayList::new)))
-				.map(sorted -> createHash(sorted, AnalyticLine::getIntercept))
+				.map(byAngle -> createHash(byAngle, AnalyticLine::getIntercept))
 				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
