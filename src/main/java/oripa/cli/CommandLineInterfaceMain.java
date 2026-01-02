@@ -19,9 +19,9 @@
 package oripa.cli;
 
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.help.HelpFormatter;
 
 import com.google.inject.Guice;
 
@@ -58,7 +58,7 @@ public class CommandLineInterfaceMain {
 				.argName(CP_FILE)
 				.desc("Convert crease pattern file format (opx, fold, cp) to other crease pattern format "
 						+ "or crease pattern image (png or jpg). The argument is output file path.")
-				.build();
+				.get();
 		options.addOption(convertOption);
 
 		var imageOption = Option.builder("i")
@@ -66,9 +66,9 @@ public class CommandLineInterfaceMain {
 				.hasArg()
 				.argName(IMAGE_FILE)
 				.desc("Output image file (svg, jpg, png) of folded forms in multiple frame FOLD format. "
-						+ "The argument is output file path."
+						+ "The argument is output file path. "
 						+ "This option requires --" + INDEX + " option.")
-				.build();
+				.get();
 		options.addOption(imageOption);
 
 		var indexOption = Option.builder("n")
@@ -76,19 +76,19 @@ public class CommandLineInterfaceMain {
 				.hasArg()
 				.argName(FRAME_INDEX)
 				.desc("0-start Index of face order matrices. This option is to be used with --" + IMAGE + " option.")
-				.build();
+				.get();
 		options.addOption(indexOption);
 
 		var reverseOption = Option.builder("r")
 				.longOpt(REVERSE)
 				.desc("Put this option if face order of the output image should be reversed.")
-				.build();
+				.get();
 		options.addOption(reverseOption);
 
 		var splitOption = Option.builder("s")
 				.longOpt(SPLIT)
 				.desc("Put this option if the output of --" + FOLD + " should be single frame FOLD files.")
-				.build();
+				.get();
 		options.addOption(splitOption);
 
 		var foldOption = Option.builder("f")
@@ -98,26 +98,26 @@ public class CommandLineInterfaceMain {
 				.desc("Fold crease pattern file (opx, fold, cp) and save as a multipule frame FOLD format. "
 						+ "The argument is output file path. If you specify --" + SPLIT + " option, "
 						+ "the output will be single frame FOLD files and index will be inserted into file name as \"givenName.123.fold\".")
-				.build();
+				.get();
 		options.addOption(foldOption);
 
 		var anyOption = Option.builder("a")
 				.longOpt(ANY)
 				.desc("Put this option if --" + FOLD
 						+ " should stop the computation as soon as it finds the first folded model.")
-				.build();
+				.get();
 		options.addOption(anyOption);
 
 		var countOption = Option.builder("C")
 				.longOpt(COUNT)
 				.desc("Count the folded models in the given FOLD format file and print it. -1 if something is wrong.")
-				.build();
+				.get();
 		options.addOption(countOption);
 
 		var helpOption = Option.builder("h")
 				.longOpt(HELP)
 				.desc("Show help.")
-				.build();
+				.get();
 		options.addOption(helpOption);
 
 		try {
@@ -133,10 +133,14 @@ public class CommandLineInterfaceMain {
 			var pointEps = GeomUtil.pointEps();
 
 			if (line.hasOption(HELP)) {
-				var formatter = new HelpFormatter();
-				formatter.printHelp(System.lineSeparator() +
-						"  command line: java -jar oripa-x.yz.jar inputFilePath [options]" + System.lineSeparator()
-						+ "  GUI: java -jar oripa-x.yz.jar", options);
+				var formatter = HelpFormatter.builder().get();
+
+				var header = "ORIPA has command line mode and GUI mode." + System.lineSeparator() +
+						"command line: java -jar oripa-x.yz.jar inputFilePath [options]" + System.lineSeparator()
+						+ "GUI:          java -jar oripa-x.yz.jar";
+				var footer = "https://github.com/oripa/oripa";
+
+				formatter.printHelp("java -jar oripa-x.yz.jar [inputFilePath]", header, options, footer, true);
 				return;
 			}
 
