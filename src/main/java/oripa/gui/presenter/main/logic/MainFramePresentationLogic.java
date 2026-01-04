@@ -142,12 +142,12 @@ public class MainFramePresentationLogic {
 	}
 
 	public void clearAll() {
-		clearActionPresentationLogic.clear(false);
+		clearActionPresentationLogic.clearAll();
 		updateTitleText();
 	}
 
 	public void clearCreasePattern() {
-		clearActionPresentationLogic.clear(true);
+		clearActionPresentationLogic.clearLines();
 		updateTitleText();
 	}
 

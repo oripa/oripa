@@ -157,7 +157,7 @@ class MainFramePresentationLogicTest {
 
 			presentationLogic.clearAll();
 
-			verify(clearActionPresentationLogic).clear(false);
+			verify(clearActionPresentationLogic).clearAll();
 			verifyUpdateTitleText("default");
 		}
 	}
@@ -172,7 +172,7 @@ class MainFramePresentationLogicTest {
 
 			presentationLogic.clearCreasePattern();
 
-			verify(clearActionPresentationLogic).clear(true);
+			verify(clearActionPresentationLogic).clearLines();
 			verifyUpdateTitleText("default");
 		}
 	}

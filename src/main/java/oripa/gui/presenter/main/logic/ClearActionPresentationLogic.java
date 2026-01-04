@@ -59,20 +59,29 @@ public class ClearActionPresentationLogic {
 		this.paintContextService = paintContextService;
 	}
 
-	public void clear(boolean keepContour) {
-		if (keepContour) {
-			paintContextService.clearLines();
-		} else {
-			paintContextService.clearAll();
-		}
-		project.clear();
+	public void clearAll() {
+		paintContextService.clearAll();
 
+		project.clear();
+		clearViews();
+	}
+
+	private void clearViews() {
 		screenSetting.setGridVisible(true);
 
 		childFrameManager.closeAll(view);
 
 		screenPresenter.clearPaperDomainOfModel();
 		screenPresenter.updateScreen();
+	}
+
+	public void clearLines() {
+		paintContextService.clearLines();
+
+		// prevents unintentional overwrite to original file.
+		project.clear();
+
+		clearViews();
 	}
 
 }
