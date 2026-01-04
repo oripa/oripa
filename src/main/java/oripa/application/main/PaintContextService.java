@@ -55,8 +55,12 @@ public class PaintContextService {
 	 * @param paintContext
 	 */
 	public void setCreasePatternToPaintContext(final CreasePattern creasePattern) {
-		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);
+		initializeContext();
+	}
+
+	private void initializeContext() {
+		paintContext.clear(true);
 		paintContext.creasePatternUndo().clear();
 		cutModelOutlinesHolder.setOutlines(List.of());
 	}
@@ -66,11 +70,11 @@ public class PaintContextService {
 
 		lines.forEach(l -> l.setSelected(true));
 		paintContext.SetImportedLines(lines);
-
 	}
 
 	public void clearLines() {
 		paintContext.getPainter().clear();
+		initializeContext();
 	}
 
 	public void clearAll() {

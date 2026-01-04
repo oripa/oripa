@@ -74,7 +74,7 @@ class ClearActionPresentationLogicTest {
 		@Test
 		void clearAll() {
 
-			presentationLogic.clear(false);
+			presentationLogic.clearAll();
 
 			verify(paintContextService).clearAll();
 			verify(project).clear();
@@ -90,7 +90,7 @@ class ClearActionPresentationLogicTest {
 		@Test
 		void clearCreasePattern() {
 
-			presentationLogic.clear(true);
+			presentationLogic.clearLines();
 
 			verify(paintContextService).clearLines();
 			verify(project).clear();
