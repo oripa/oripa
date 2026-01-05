@@ -95,8 +95,7 @@ We use Gradle to build ORIPA since ver. 1.74.
 We have configured the `compileJava` task to format source code automatically.
 
 Maven is used for older versions.
-`pom.xml` for Maven still exists in the project source 
-but it is not maintained and will be deleted someday.
+`pom.xml` for Maven has been deleted since ver. 1.78.
 
 ### Algorithms
 
