@@ -18,9 +18,12 @@
  */
 package oripa.domain.paint.suggestion;
 
+import java.util.List;
+
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -29,30 +32,31 @@ import oripa.vecmath.Vector2d;
  */
 public class TargetOriVertexFactory {
 
-	private class NearestVertex {
-		public OriVertex vertex;
-		public double distance = Double.MAX_VALUE;
+	public OriVertex create(final CreasePattern creasePattern, final Vector2d target, final double pointEps) {
+		var lines = findSelectedVertexLines(creasePattern, target, pointEps);
+		return toOriVertex(target, lines, pointEps);
 	}
 
-	public OriVertex create(final CreasePattern creasePattern, final Vector2d target, final double pointEps) {
-		var origamiModelFactory = new OrigamiModelFactory();
-		var origamiModel = origamiModelFactory.createOrigamiModel(
-				creasePattern,
-				pointEps);
+	private List<OriLine> findSelectedVertexLines(final CreasePattern creasePattern, final Vector2d target,
+			final double pointEps) {
+		return creasePattern.stream()
+				.filter(line -> line.pointStream()
+						.anyMatch(v -> v.equals(target, pointEps)))
+				.filter(line -> line.length() > pointEps)
+				.toList();
+	}
 
-		var nearest = new NearestVertex();
-		nearest.vertex = origamiModel.getVertices().get(0);
+	private OriVertex toOriVertex(final Vector2d target, final List<OriLine> lines, final double pointEps) {
+		var startVertex = new OriVertex(target);
 
-		for (var v : origamiModel.getVertices()) {
-			var p = v.getPositionBeforeFolding();
-			var distance = p.distance(target);
-			if (distance < nearest.distance) {
-				nearest.vertex = v;
-				nearest.distance = distance;
-			}
+		for (var line : lines) {
+			var endVertex = new OriVertex(
+					line.pointStream().filter(p -> !p.equals(target, pointEps)).findFirst().get());
+			var edge = new OriEdge(startVertex, endVertex, line.getType().toInt());
+
+			startVertex.addEdge(edge);
 		}
 
-		return nearest.vertex;
+		return startVertex;
 	}
-
 }
