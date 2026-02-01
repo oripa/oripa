@@ -8,12 +8,12 @@ slf4j-api = "2.0.17"
 guice = "7.0.0"
 
 spotless = "8.0.0"
-shadow = "8.1.1"
+shadow = "9.3.1"
 jpackage = "1.7.3"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 jpackage ={ id = "org.panteleyev.jpackageplugin", version.ref = "jpackage" }
 
 [libraries]
