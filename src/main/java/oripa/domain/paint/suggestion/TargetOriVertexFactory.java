@@ -24,6 +24,7 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
+import oripa.value.OriLine.Type;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -50,6 +51,9 @@ public class TargetOriVertexFactory {
 		var startVertex = new OriVertex(target);
 
 		for (var line : lines) {
+			if (line.getType() == Type.AUX) {
+				continue;
+			}
 			var endVertex = new OriVertex(
 					line.pointStream().filter(p -> !p.equals(target, pointEps)).findFirst().get());
 			var edge = new OriEdge(startVertex, endVertex, line.getType().toInt());
