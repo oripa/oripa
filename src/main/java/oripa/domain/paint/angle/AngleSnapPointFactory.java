@@ -31,19 +31,19 @@ import oripa.vecmath.Vector2d;
  *
  */
 class AngleSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		var step = context.getAngleStep();
+    public Collection<Vector2d> createSnapPoints(final PaintContext context) {
+        var step = context.getAngleStep();
 
-		var spOpt = context.peekVertex();
-		var angles = IntStream.range(0, step.getDivNum() * 2)
-				.mapToDouble(i -> i * step.getRadianStep())
-				.boxed()
-				.toList();
+        var spOpt = context.peekVertex();
+        var angles = IntStream.range(0, step.getDivNum() * 2)
+                .mapToDouble(i -> i * step.getRadianStep())
+                .boxed()
+                .toList();
 
-		return spOpt
-				.map(sp -> new MultipleRaySnapPointFactory()
-						.createSnapPoints(context.getCreasePattern(), sp, angles,
-								context.getPointEps()))
-				.orElse(List.of());
-	}
+        return spOpt
+                .map(sp -> new MultipleRaySnapPointFactory()
+                        .createSnapPoints(context.getCreasePattern(), sp, angles,
+                                context.getPointEps()))
+                .orElse(List.of());
+    }
 }

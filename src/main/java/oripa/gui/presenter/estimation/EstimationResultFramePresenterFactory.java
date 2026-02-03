@@ -31,32 +31,32 @@ import oripa.gui.view.estimation.EstimationResultFrameView;
  */
 public class EstimationResultFramePresenterFactory {
 
-	private final EstimationResultComponentPresenterFactory componentPresenterFactory;
+    private final EstimationResultComponentPresenterFactory componentPresenterFactory;
 
-	@Inject
-	public EstimationResultFramePresenterFactory(
-			final EstimationResultComponentPresenterFactory componentPresenterFactory) {
+    @Inject
+    public EstimationResultFramePresenterFactory(
+            final EstimationResultComponentPresenterFactory componentPresenterFactory) {
 
-		this.componentPresenterFactory = componentPresenterFactory;
+        this.componentPresenterFactory = componentPresenterFactory;
 
-	}
+    }
 
-	public EstimationResultFramePresenter create(
-			final EstimationResultFrameView view,
-			final List<FoldedModel> foldedModels,
-			final double eps,
-			final String lastFilePath,
-			final Consumer<String> lastFilePathChangeListener) {
+    public EstimationResultFramePresenter create(
+            final EstimationResultFrameView view,
+            final List<FoldedModel> foldedModels,
+            final double eps,
+            final String lastFilePath,
+            final Consumer<String> lastFilePathChangeListener) {
 
-		var uiPresenter = componentPresenterFactory.createEstimationResultUIPresenter(
-				view.getUI(),
-				lastFilePath,
-				lastFilePathChangeListener);
+        var uiPresenter = componentPresenterFactory.createEstimationResultUIPresenter(
+                view.getUI(),
+                lastFilePath,
+                lastFilePathChangeListener);
 
-		return new EstimationResultFramePresenter(
-				view,
-				foldedModels,
-				eps);
-	}
+        return new EstimationResultFramePresenter(
+                view,
+                foldedModels,
+                eps);
+    }
 
 }

@@ -30,9 +30,9 @@ import oripa.swing.view.util.SimpleModalDialog;
  *
  */
 class DialogWhileComputing extends SimpleModalDialog {
-	public DialogWhileComputing(final JFrame frame, final ResourceHolder resources) {
-		super(frame,
-				resources.getString(ResourceKey.INFO, StringID.Information.NOW_COMPUITNG_TITLE_ID),
-				resources.getString(ResourceKey.INFO, StringID.Information.NOW_COMPUITNG_ID));
-	}
+    public DialogWhileComputing(final JFrame frame, final ResourceHolder resources) {
+        super(frame,
+                resources.getString(ResourceKey.INFO, StringID.Information.NOW_COMPUITNG_TITLE_ID),
+                resources.getString(ResourceKey.INFO, StringID.Information.NOW_COMPUITNG_ID));
+    }
 }

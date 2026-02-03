@@ -23,5 +23,5 @@ package oripa.gui.view.util;
  * 
  */
 public interface CallbackOnUpdate {
-	void onUpdate();
+    void onUpdate();
 }

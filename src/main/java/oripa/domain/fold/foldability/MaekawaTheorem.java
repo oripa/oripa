@@ -29,37 +29,37 @@ import oripa.util.rule.AbstractRule;
  *
  */
 public class MaekawaTheorem extends AbstractRule<OriVertex> {
-	private static final Logger logger = LoggerFactory.getLogger(MaekawaTheorem.class);
+    private static final Logger logger = LoggerFactory.getLogger(MaekawaTheorem.class);
 
-	public MaekawaTheorem() {
-		super("Maekawa");
-	}
+    public MaekawaTheorem() {
+        super("Maekawa");
+    }
 
-	@Override
-	public boolean holds(final OriVertex vertex) {
-		if (!vertex.isInsideOfPaper()) {
-			return true;
-		}
+    @Override
+    public boolean holds(final OriVertex vertex) {
+        if (!vertex.isInsideOfPaper()) {
+            return true;
+        }
 
-		if (vertex.hasUnassignedEdge()) {
-			return true;
-		}
+        if (vertex.hasUnassignedEdge()) {
+            return true;
+        }
 
-		// counts lines which ends on given vertex
-		long mountainCount = vertex.edgeStream()
-				.filter(e -> e.isMountain())
-				.count();
-		long valleyCount = vertex.edgeStream()
-				.filter(e -> e.isValley())
-				.count();
+        // counts lines which ends on given vertex
+        long mountainCount = vertex.edgeStream()
+                .filter(e -> e.isMountain())
+                .count();
+        long valleyCount = vertex.edgeStream()
+                .filter(e -> e.isValley())
+                .count();
 
-		// maekawa's claim
-		if (Math.abs(mountainCount - valleyCount) != 2) {
-			logger.trace("edge type count invalid: " + vertex + " "
-					+ Math.abs(mountainCount - valleyCount));
-			return false;
-		}
+        // maekawa's claim
+        if (Math.abs(mountainCount - valleyCount) != 2) {
+            logger.trace("edge type count invalid: " + vertex + " "
+                    + Math.abs(mountainCount - valleyCount));
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

@@ -45,231 +45,231 @@ import oripa.value.OriLine;
  *
  */
 class AssignmentEnumerator {
-	private static final Logger logger = LoggerFactory.getLogger(AssignmentEnumerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(AssignmentEnumerator.class);
 
-	private final VertexFoldability foldability = new VertexFoldability();
-	private Consumer<OrigamiModel> answerConsumer = null;
+    private final VertexFoldability foldability = new VertexFoldability();
+    private Consumer<OrigamiModel> answerConsumer = null;
 
-	private Map<List<OriVertex>, OriEdge> edgeMap;
-	private Set<OriVertex> originallyAssigned;
+    private Map<List<OriVertex>, OriEdge> edgeMap;
+    private Set<OriVertex> originallyAssigned;
 
-	private Map<Map<List<OriVertex>, OriLine.Type>, List<Map<List<OriVertex>, OriLine.Type>>> assignmentMemos;
+    private Map<Map<List<OriVertex>, OriLine.Type>, List<Map<List<OriVertex>, OriLine.Type>>> assignmentMemos;
 
-	private int assignmentCallCount = 0;
-	private int enumerationCallCount = 0;
-	private int answerCount = 0;
+    private int assignmentCallCount = 0;
+    private int enumerationCallCount = 0;
+    private int answerCount = 0;
 
-	public AssignmentEnumerator() {
-	}
+    public AssignmentEnumerator() {
+    }
 
-	/**
-	 * Enumerates all locally-flat-foldable assignments of given origamiModel.
-	 * This method calls {@code answerConsumer} every time the algorithm finds a
-	 * locally-flat-foldable assignment.
-	 *
-	 * @param origamiModel
-	 */
-	public void enumerate(final OrigamiModel origamiModel, final Consumer<OrigamiModel> answerConsumer) {
-		var edges = origamiModel.getEdges();
+    /**
+     * Enumerates all locally-flat-foldable assignments of given origamiModel.
+     * This method calls {@code answerConsumer} every time the algorithm finds a
+     * locally-flat-foldable assignment.
+     *
+     * @param origamiModel
+     */
+    public void enumerate(final OrigamiModel origamiModel, final Consumer<OrigamiModel> answerConsumer) {
+        var edges = origamiModel.getEdges();
 
-		this.answerConsumer = answerConsumer;
+        this.answerConsumer = answerConsumer;
 
-		edgeMap = new HashMap<>();
-		edges.forEach(edge -> edgeMap.put(edgeToKey(edge), edge));
+        edgeMap = new HashMap<>();
+        edges.forEach(edge -> edgeMap.put(edgeToKey(edge), edge));
 
-		originallyAssigned = origamiModel.getVertices().stream()
-				.filter(Predicate.not(OriVertex::hasUnassignedEdge))
-				.collect(Collectors.toSet());
+        originallyAssigned = origamiModel.getVertices().stream()
+                .filter(Predicate.not(OriVertex::hasUnassignedEdge))
+                .collect(Collectors.toSet());
 
-		assignmentMemos = new HashMap<>();
+        assignmentMemos = new HashMap<>();
 
-		enumerationCallCount = 0;
-		assignmentCallCount = 0;
-		answerCount = 0;
+        enumerationCallCount = 0;
+        assignmentCallCount = 0;
+        answerCount = 0;
 
-		var watch = new StopWatch(true);
+        var watch = new StopWatch(true);
 
-		var sortedVertices = sort(origamiModel.getVertices());
+        var sortedVertices = sort(origamiModel.getVertices());
 
-		enumerateImpl(origamiModel, sortedVertices);
+        enumerateImpl(origamiModel, sortedVertices);
 
-		logger.debug("time: {}[ms]", watch.getMilliSec());
+        logger.debug("time: {}[ms]", watch.getMilliSec());
 
-		logger.debug("enumerationCallCount = {}, assignmentCallCount = {}, assignmentAnswerCount = {}",
-				enumerationCallCount, assignmentCallCount, answerCount);
-	}
+        logger.debug("enumerationCallCount = {}, assignmentCallCount = {}, assignmentAnswerCount = {}",
+                enumerationCallCount, assignmentCallCount, answerCount);
+    }
 
-	private void enumerateImpl(final OrigamiModel origamiModel,
-			final List<OriVertex> candidateVertices) {
+    private void enumerateImpl(final OrigamiModel origamiModel,
+            final List<OriVertex> candidateVertices) {
 
-		enumerationCallCount++;
+        enumerationCallCount++;
 
-		if (candidateVertices.isEmpty()) {
+        if (candidateVertices.isEmpty()) {
 //			if (origamiModel.isUnassigned()) {
 //				logger.debug("wrong answer. {}", origamiModel);
 //			}
-			answerCount++;
-			answerConsumer.accept(origamiModel);
-			return;
-		}
+            answerCount++;
+            answerConsumer.accept(origamiModel);
+            return;
+        }
 
-		var vertex = candidateVertices.get(0);
+        var vertex = candidateVertices.get(0);
 
-		if (originallyAssigned.contains(vertex)) {
-			var nextCandidateVertices = CollectionUtil.partialCopy(
-					candidateVertices, 1, candidateVertices.size());
-			enumerateImpl(origamiModel, nextCandidateVertices);
-			return;
-		}
+        if (originallyAssigned.contains(vertex)) {
+            var nextCandidateVertices = CollectionUtil.partialCopy(
+                    candidateVertices, 1, candidateVertices.size());
+            enumerateImpl(origamiModel, nextCandidateVertices);
+            return;
+        }
 
-		if (!vertex.hasUnassignedEdge()) {
-			// vertex can be fully assigned but sometimes not foldable if
-			// connected other vertex is assigned previously.
-			if (foldability.holds(vertex)) {
-				var nextCandidateVertices = CollectionUtil.partialCopy(
-						candidateVertices, 1, candidateVertices.size());
-				enumerateImpl(origamiModel, nextCandidateVertices);
-			}
-			return;
-		}
+        if (!vertex.hasUnassignedEdge()) {
+            // vertex can be fully assigned but sometimes not foldable if
+            // connected other vertex is assigned previously.
+            if (foldability.holds(vertex)) {
+                var nextCandidateVertices = CollectionUtil.partialCopy(
+                        candidateVertices, 1, candidateVertices.size());
+                enumerateImpl(origamiModel, nextCandidateVertices);
+            }
+            return;
+        }
 
-		var originalAssignment = toAssignmentMap(vertex);
+        var originalAssignment = toAssignmentMap(vertex);
 
-		List<Map<List<OriVertex>, OriLine.Type>> assignments = null;
+        List<Map<List<OriVertex>, OriLine.Type>> assignments = null;
 
-		if (assignmentMemos.keySet().contains(originalAssignment)) {
-			assignments = assignmentMemos.get(originalAssignment);
-		} else {
-			var mountainCount = vertex.edgeStream().filter(OriEdge::isMountain).count();
-			var valleyCount = vertex.edgeStream().filter(OriEdge::isValley).count();
+        if (assignmentMemos.keySet().contains(originalAssignment)) {
+            assignments = assignmentMemos.get(originalAssignment);
+        } else {
+            var mountainCount = vertex.edgeStream().filter(OriEdge::isMountain).count();
+            var valleyCount = vertex.edgeStream().filter(OriEdge::isValley).count();
 
-			assignments = createAssignments(vertex, 0, mountainCount, valleyCount);
-			assignmentMemos.put(originalAssignment, assignments);
-		}
+            assignments = createAssignments(vertex, 0, mountainCount, valleyCount);
+            assignmentMemos.put(originalAssignment, assignments);
+        }
 
-		var nextCandidateVertices = sort(candidateVertices.subList(1, candidateVertices.size()));
+        var nextCandidateVertices = sort(candidateVertices.subList(1, candidateVertices.size()));
 
-		for (var assignment : assignments) {
-			logger.trace("go next. vertex@{} = {}, assignment = {}", vertex.getVertexID(),
-					vertex.getPositionBeforeFolding(),
-					assignment);
-			apply(assignment);
-			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
+        for (var assignment : assignments) {
+            logger.trace("go next. vertex@{} = {}, assignment = {}", vertex.getVertexID(),
+                    vertex.getPositionBeforeFolding(),
+                    assignment);
+            apply(assignment);
+            logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
 
-			enumerateImpl(origamiModel, nextCandidateVertices);
+            enumerateImpl(origamiModel, nextCandidateVertices);
 
-			logger.trace("get back. vertex@{} = {}, assignment = {}", vertex.getVertexID(),
-					vertex.getPositionBeforeFolding(),
-					assignment);
-			apply(originalAssignment);
-			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
+            logger.trace("get back. vertex@{} = {}, assignment = {}", vertex.getVertexID(),
+                    vertex.getPositionBeforeFolding(),
+                    assignment);
+            apply(originalAssignment);
+            logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
 
-		}
+        }
 
-	}
+    }
 
-	private List<OriVertex> sort(final List<OriVertex> vertices) {
-		return vertices;
+    private List<OriVertex> sort(final List<OriVertex> vertices) {
+        return vertices;
 
-		// maybe this sort avoids the worst case.
+        // maybe this sort avoids the worst case.
 //		return vertices.stream()
 //				.sorted(Comparator.comparing(OriVertex::countUnassignedEdges))
 //				.toList();
-	}
+    }
 
-	private Map<List<OriVertex>, OriLine.Type> toAssignmentMap(final OriVertex vertex) {
-		return vertex.edgeStream()
-				.collect(Collectors.toMap(this::edgeToKey, edge -> OriLine.Type.fromInt(edge.getType())));
-	}
+    private Map<List<OriVertex>, OriLine.Type> toAssignmentMap(final OriVertex vertex) {
+        return vertex.edgeStream()
+                .collect(Collectors.toMap(this::edgeToKey, edge -> OriLine.Type.fromInt(edge.getType())));
+    }
 
-	private List<OriVertex> edgeToKey(final OriEdge edge) {
-		return Stream.of(edge.getStartVertex(), edge.getEndVertex()).sorted().toList();
-	}
+    private List<OriVertex> edgeToKey(final OriEdge edge) {
+        return Stream.of(edge.getStartVertex(), edge.getEndVertex()).sorted().toList();
+    }
 
-	private void apply(final Map<List<OriVertex>, OriLine.Type> assignment) {
-		logger.trace("apply assignment");
-		assignment.forEach(this::setType);
-	}
+    private void apply(final Map<List<OriVertex>, OriLine.Type> assignment) {
+        logger.trace("apply assignment");
+        assignment.forEach(this::setType);
+    }
 
-	private void setType(final List<OriVertex> edgeKey, final OriLine.Type type) {
-		var vertex = edgeKey.get(0);
-		var opposite = edgeKey.get(1);
-		logger.trace("set {} to ({},{})", type, vertex.getPositionBeforeFolding(), opposite.getPositionBeforeFolding());
-		vertex.getEdge(opposite).setType(type.toInt());
-		edgeMap.get(edgeKey).setType(type.toInt());
-	}
+    private void setType(final List<OriVertex> edgeKey, final OriLine.Type type) {
+        var vertex = edgeKey.get(0);
+        var opposite = edgeKey.get(1);
+        logger.trace("set {} to ({},{})", type, vertex.getPositionBeforeFolding(), opposite.getPositionBeforeFolding());
+        vertex.getEdge(opposite).setType(type.toInt());
+        edgeMap.get(edgeKey).setType(type.toInt());
+    }
 
-	private List<Map<List<OriVertex>, OriLine.Type>> createAssignments(final OriVertex vertex,
-			final int edgeIndex,
-			final long mountainCount, final long valleyCount) {
+    private List<Map<List<OriVertex>, OriLine.Type>> createAssignments(final OriVertex vertex,
+            final int edgeIndex,
+            final long mountainCount, final long valleyCount) {
 
-		assignmentCallCount++;
+        assignmentCallCount++;
 
-		logger.trace("createAssignments(): vertex={}, edgeIndex={}", vertex, edgeIndex);
+        logger.trace("createAssignments(): vertex={}, edgeIndex={}", vertex, edgeIndex);
 
-		var edgeCount = vertex.edgeCount();
+        var edgeCount = vertex.edgeCount();
 
-		if (edgeIndex == edgeCount) {
-			if (!foldability.holds(vertex)) {
-				logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
-				logger.trace("return empty assignments. ({})", vertex);
-				return List.of();
-			}
+        if (edgeIndex == edgeCount) {
+            if (!foldability.holds(vertex)) {
+                logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
+                logger.trace("return empty assignments. ({})", vertex);
+                return List.of();
+            }
 
-			var assignment = List.of(toAssignmentMap(vertex));
-			logger.trace("return {}", assignment);
-			return assignment;
-		}
-		var edge = vertex.getEdge(edgeIndex);
+            var assignment = List.of(toAssignmentMap(vertex));
+            logger.trace("return {}", assignment);
+            return assignment;
+        }
+        var edge = vertex.getEdge(edgeIndex);
 
-		if (!edge.isUnassigned()) {
-			if (vertex.isInsideOfPaper() && vertex.edgeCount() >= 4) {
-				// big-little-big lemma
-				var prevAngle = vertex.getAngleDifference(edgeIndex - 2);
-				var angle = vertex.getAngleDifference(edgeIndex - 1);
-				var nextAngle = vertex.getAngleDifference(edgeIndex);
-				if (prevAngle > angle + MathUtil.angleRadianEps()
-						&& nextAngle > angle + MathUtil.angleRadianEps()) {
-					if (edge.getType() == vertex.getEdge(edgeIndex - 1).getType()) {
-						return List.of();
-					}
-				}
-			}
-			return createAssignments(vertex, edgeIndex + 1, mountainCount, valleyCount);
-		}
+        if (!edge.isUnassigned()) {
+            if (vertex.isInsideOfPaper() && vertex.edgeCount() >= 4) {
+                // big-little-big lemma
+                var prevAngle = vertex.getAngleDifference(edgeIndex - 2);
+                var angle = vertex.getAngleDifference(edgeIndex - 1);
+                var nextAngle = vertex.getAngleDifference(edgeIndex);
+                if (prevAngle > angle + MathUtil.angleRadianEps()
+                        && nextAngle > angle + MathUtil.angleRadianEps()) {
+                    if (edge.getType() == vertex.getEdge(edgeIndex - 1).getType()) {
+                        return List.of();
+                    }
+                }
+            }
+            return createAssignments(vertex, edgeIndex + 1, mountainCount, valleyCount);
+        }
 
-		var types = List.of(OriLine.Type.MOUNTAIN, OriLine.Type.VALLEY);
+        var types = List.of(OriLine.Type.MOUNTAIN, OriLine.Type.VALLEY);
 
-		var assignments = new ArrayList<Map<List<OriVertex>, OriLine.Type>>();
+        var assignments = new ArrayList<Map<List<OriVertex>, OriLine.Type>>();
 
-		for (var type : types) {
-			if (vertex.isInsideOfPaper()) {
-				// pruning by Maekawa's theorem
-				if (type == OriLine.Type.MOUNTAIN) {
-					if (mountainCount >= edgeCount / 2 + 1) {
-						continue;
-					}
-				}
-				if (type == OriLine.Type.VALLEY) {
-					if (valleyCount >= edgeCount / 2 + 1) {
-						continue;
-					}
-				}
-			}
+        for (var type : types) {
+            if (vertex.isInsideOfPaper()) {
+                // pruning by Maekawa's theorem
+                if (type == OriLine.Type.MOUNTAIN) {
+                    if (mountainCount >= edgeCount / 2 + 1) {
+                        continue;
+                    }
+                }
+                if (type == OriLine.Type.VALLEY) {
+                    if (valleyCount >= edgeCount / 2 + 1) {
+                        continue;
+                    }
+                }
+            }
 
-			var nextMountainCount = type == OriLine.Type.MOUNTAIN ? mountainCount + 1 : mountainCount;
-			var nextValleyCount = type == OriLine.Type.VALLEY ? valleyCount + 1 : valleyCount;
+            var nextMountainCount = type == OriLine.Type.MOUNTAIN ? mountainCount + 1 : mountainCount;
+            var nextValleyCount = type == OriLine.Type.VALLEY ? valleyCount + 1 : valleyCount;
 
-			logger.trace("make assignment");
-			setType(edgeToKey(edge), type);
+            logger.trace("make assignment");
+            setType(edgeToKey(edge), type);
 
-			assignments.addAll(createAssignments(vertex, edgeIndex + 1, nextMountainCount, nextValleyCount));
+            assignments.addAll(createAssignments(vertex, edgeIndex + 1, nextMountainCount, nextValleyCount));
 
-			logger.trace("make unassignment");
-			setType(edgeToKey(edge), OriLine.Type.UNASSIGNED);
-		}
+            logger.trace("make unassignment");
+            setType(edgeToKey(edge), OriLine.Type.UNASSIGNED);
+        }
 
-		return assignments;
-	}
+        return assignments;
+    }
 
 }

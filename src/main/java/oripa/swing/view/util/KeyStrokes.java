@@ -30,48 +30,48 @@ import javax.swing.KeyStroke;
  */
 public class KeyStrokes {
 
-	/**
-	 * Gets the key stroke for the given key code.
-	 *
-	 * @param keyCode
-	 *            a value of KeyEvent.VK_A, VK_B,..., and so on.
-	 * @return a key stroke.
-	 */
-	public static KeyStroke get(final int keyCode) {
-		return KeyStroke.getKeyStroke(keyCode, 0);
-	}
+    /**
+     * Gets the key stroke for the given key code.
+     *
+     * @param keyCode
+     *            a value of KeyEvent.VK_A, VK_B,..., and so on.
+     * @return a key stroke.
+     */
+    public static KeyStroke get(final int keyCode) {
+        return KeyStroke.getKeyStroke(keyCode, 0);
+    }
 
-	/**
-	 * Gets the key stroke for the given key code with shift key.
-	 *
-	 * @param keyCode
-	 *            a value of KeyEvent.VK_A, VK_B,..., and so on.
-	 * @return a key stroke with shift key down.
-	 */
-	public static KeyStroke getWithShiftDown(final int keyCode) {
-		return KeyStroke.getKeyStroke(keyCode, InputEvent.SHIFT_DOWN_MASK);
-	}
+    /**
+     * Gets the key stroke for the given key code with shift key.
+     *
+     * @param keyCode
+     *            a value of KeyEvent.VK_A, VK_B,..., and so on.
+     * @return a key stroke with shift key down.
+     */
+    public static KeyStroke getWithShiftDown(final int keyCode) {
+        return KeyStroke.getKeyStroke(keyCode, InputEvent.SHIFT_DOWN_MASK);
+    }
 
-	/**
-	 * Gets the key stroke for the given key code with control key.
-	 *
-	 * @param keyCode
-	 *            a value of KeyEvent.VK_A, VK_B,..., and so on.
-	 * @return a key stroke with control key down.
-	 */
-	public static KeyStroke getWithControlDown(final int keyCode) {
-		return KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK);
-	}
+    /**
+     * Gets the key stroke for the given key code with control key.
+     *
+     * @param keyCode
+     *            a value of KeyEvent.VK_A, VK_B,..., and so on.
+     * @return a key stroke with control key down.
+     */
+    public static KeyStroke getWithControlDown(final int keyCode) {
+        return KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK);
+    }
 
-	/**
-	 * Gets the key stroke for the given key code with control key and shift
-	 * key.
-	 *
-	 * @param keyCode
-	 *            a value of KeyEvent.VK_A, VK_B,..., and so on.
-	 * @return a key stroke with control key and shift key down.
-	 */
-	public static KeyStroke getWithControlShiftDown(final int keyCode) {
-		return KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
-	}
+    /**
+     * Gets the key stroke for the given key code with control key and shift
+     * key.
+     *
+     * @param keyCode
+     *            a value of KeyEvent.VK_A, VK_B,..., and so on.
+     * @return a key stroke with control key and shift key down.
+     */
+    public static KeyStroke getWithControlShiftDown(final int keyCode) {
+        return KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
+    }
 }

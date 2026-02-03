@@ -27,17 +27,17 @@ import oripa.geom.RectangleDomain;
  */
 public interface CreasePatternHolder {
 
-	CreasePattern getCreasePattern();
+    CreasePattern getCreasePattern();
 
-	void setCreasePattern(CreasePattern creasePattern);
+    void setCreasePattern(CreasePattern creasePattern);
 
-	/**
-	 *
-	 * @return rectangle domain of crease pattern, whose values are those when
-	 *         crease pattern is set to this context.
-	 */
-	public default RectangleDomain getPaperDomain() {
-		return getCreasePattern().getPaperDomain();
-	}
+    /**
+     *
+     * @return rectangle domain of crease pattern, whose values are those when
+     *         crease pattern is set to this context.
+     */
+    public default RectangleDomain getPaperDomain() {
+        return getCreasePattern().getPaperDomain();
+    }
 
 }

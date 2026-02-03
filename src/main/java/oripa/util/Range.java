@@ -23,5 +23,5 @@ package oripa.util;
  *
  */
 public interface Range {
-	boolean includes(double value);
+    boolean includes(double value);
 }

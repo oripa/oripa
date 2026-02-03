@@ -50,72 +50,72 @@ import oripa.value.CalculationResource;
  */
 public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 
-	@Override
-	public Optional<FoldedModelEntity> load(final String filePath)
-			throws FileVersionError, IOException, WrongDataFormatException {
-		var gson = new Gson();
-		FoldedModelFOLDFormat foldFormat;
+    @Override
+    public Optional<FoldedModelEntity> load(final String filePath)
+            throws FileVersionError, IOException, WrongDataFormatException {
+        var gson = new Gson();
+        FoldedModelFOLDFormat foldFormat;
 
-		try {
-			foldFormat = gson.fromJson(
-					Files.readString(Paths.get(filePath)),
-					FoldedModelFOLDFormat.class);
-		} catch (JsonSyntaxException e) {
-			throw new WrongDataFormatException(
-					"The file does not follow JSON style."
-							+ " Note that FOLD format is based on JSON.",
-					e);
-		}
+        try {
+            foldFormat = gson.fromJson(
+                    Files.readString(Paths.get(filePath)),
+                    FoldedModelFOLDFormat.class);
+        } catch (JsonSyntaxException e) {
+            throw new WrongDataFormatException(
+                    "The file does not follow JSON style."
+                            + " Note that FOLD format is based on JSON.",
+                    e);
+        }
 
-		if (!foldFormat.frameClassesContains(FrameClass.FOLDED_FORM)) {
-			throw new WrongDataFormatException("frame_classes does not contain " + FrameClass.FOLDED_FORM + ".");
-		}
+        if (!foldFormat.frameClassesContains(FrameClass.FOLDED_FORM)) {
+            throw new WrongDataFormatException("frame_classes does not contain " + FrameClass.FOLDED_FORM + ".");
+        }
 
-		if (foldFormat.getEdgesVertices() == null) {
-			throw new WrongDataFormatException("edges_vertices property is needed in the file.");
-		}
-		if (foldFormat.getEdgesAssignment() == null) {
-			throw new WrongDataFormatException("edges_assignment property is needed in the file.");
-		}
-		if (foldFormat.getVerticesCoords() == null) {
-			throw new WrongDataFormatException("vertices_coords property is needed in the file.");
-		}
+        if (foldFormat.getEdgesVertices() == null) {
+            throw new WrongDataFormatException("edges_vertices property is needed in the file.");
+        }
+        if (foldFormat.getEdgesAssignment() == null) {
+            throw new WrongDataFormatException("edges_assignment property is needed in the file.");
+        }
+        if (foldFormat.getVerticesCoords() == null) {
+            throw new WrongDataFormatException("vertices_coords property is needed in the file.");
+        }
 
-		var converter = new FoldedModelElementConverter();
+        var converter = new FoldedModelElementConverter();
 
-		var vertices = converter.fromVerticesCoords(foldFormat.getVerticesCoords());
-		var positions = vertices.stream().map(OriVertex::getPosition).toList();
+        var vertices = converter.fromVerticesCoords(foldFormat.getVerticesCoords());
+        var positions = vertices.stream().map(OriVertex::getPosition).toList();
 
-		var domain = RectangleDomain.createFromPoints(positions);
-		var modelSize = domain.maxWidthHeight();
+        var domain = RectangleDomain.createFromPoints(positions);
+        var modelSize = domain.maxWidthHeight();
 
-		var edges = converter.fromEdges(foldFormat.getEdgesVertices(), foldFormat.getEdgesAssignment(), vertices);
-		var faces = converter.fromFacesVertices(foldFormat.getFacesVertices(), foldFormat.getEdgesVertices(),
-				vertices, edges, modelSize * CalculationResource.POINT_EPS);
+        var edges = converter.fromEdges(foldFormat.getEdgesVertices(), foldFormat.getEdgesAssignment(), vertices);
+        var faces = converter.fromFacesVertices(foldFormat.getFacesVertices(), foldFormat.getEdgesVertices(),
+                vertices, edges, modelSize * CalculationResource.POINT_EPS);
 
-		var precreases = foldFormat.getFacesPrecreases();
-		if (precreases != null) {
-			converter.restorePrecreases(precreases, edges, faces);
-		}
+        var precreases = foldFormat.getFacesPrecreases();
+        if (precreases != null) {
+            converter.restorePrecreases(precreases, edges, faces);
+        }
 
-		// tentative value
-		var origamiModel = new OrigamiModel(modelSize * 1.1);
+        // tentative value
+        var origamiModel = new OrigamiModel(modelSize * 1.1);
 
-		origamiModel.setVertices(vertices);
-		converter.setVertexIDs(origamiModel);
-		origamiModel.setEdges(edges);
-		origamiModel.setFaces(faces);
+        origamiModel.setVertices(vertices);
+        converter.setVertexIDs(origamiModel);
+        origamiModel.setEdges(edges);
+        origamiModel.setFaces(faces);
 
-		var overlapRelations = new ArrayList<OverlapRelation>();
-		var frameCount = foldFormat.getFileFrames() == null ? 1 : foldFormat.getFileFrames().size() + 1;
-		for (int i = 0; i < frameCount; i++) {
-			var frame = foldFormat.getFrame(i);
-			if (frame.getFaceOrders() != null) {
-				overlapRelations.add(converter.fromFaceOrders(frame.getFaceOrders(), faces));
-			}
-		}
+        var overlapRelations = new ArrayList<OverlapRelation>();
+        var frameCount = foldFormat.getFileFrames() == null ? 1 : foldFormat.getFileFrames().size() + 1;
+        for (int i = 0; i < frameCount; i++) {
+            var frame = foldFormat.getFrame(i);
+            if (frame.getFaceOrders() != null) {
+                overlapRelations.add(converter.fromFaceOrders(frame.getFaceOrders(), faces));
+            }
+        }
 
-		return Optional.of(new FoldedModelEntity(new FoldedModel(origamiModel, overlapRelations, List.of())));
-	}
+        return Optional.of(new FoldedModelEntity(new FoldedModel(origamiModel, overlapRelations, List.of())));
+    }
 
 }

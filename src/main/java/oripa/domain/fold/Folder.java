@@ -25,38 +25,38 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  *
  */
 public interface Folder {
-	enum EstimationType {
-		FULL,
-		FIRST_ONLY,
-		X_RAY
-	}
+    enum EstimationType {
+        FULL,
+        FIRST_ONLY,
+        X_RAY
+    }
 
-	/**
-	 * The fields are mutable. I know using record for mutable objects is bad
-	 * but it gets very simple...
-	 *
-	 * @author OUCHI Koji
-	 *
-	 */
-	record Result(
-			FoldedModel foldedModel,
-			EstimationResultRules estimationRules
+    /**
+     * The fields are mutable. I know using record for mutable objects is bad
+     * but it gets very simple...
+     *
+     * @author OUCHI Koji
+     *
+     */
+    record Result(
+            FoldedModel foldedModel,
+            EstimationResultRules estimationRules
 
-	) {
-	}
+    ) {
+    }
 
-	/**
-	 * Computes folded states.
-	 *
-	 * @param origamiModel
-	 *            half-edge based data structure before folding. It will be
-	 *            affected by this method.
-	 * @param eps
-	 *            error upper-bound for point equality measured by distance.
-	 * @param estimationType
-	 *            Specify the algorithm.
-	 * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
-	 *         the given {@code origamiModel}.
-	 */
-	Result fold(OrigamiModel origamiModel, double eps, EstimationType estimationType);
+    /**
+     * Computes folded states.
+     *
+     * @param origamiModel
+     *            half-edge based data structure before folding. It will be
+     *            affected by this method.
+     * @param eps
+     *            error upper-bound for point equality measured by distance.
+     * @param estimationType
+     *            Specify the algorithm.
+     * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
+     *         the given {@code origamiModel}.
+     */
+    Result fold(OrigamiModel origamiModel, double eps, EstimationType estimationType);
 }

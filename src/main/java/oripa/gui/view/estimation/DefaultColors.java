@@ -25,9 +25,9 @@ import java.awt.Color;
  *
  */
 public class DefaultColors {
-	public static final Color FRONT = new Color((int) (255 * 0.7), (int) (255 * 0.7), 255);
+    public static final Color FRONT = new Color((int) (255 * 0.7), (int) (255 * 0.7), 255);
 
-	public static final Color BACK = new Color((int) (255 * 1.0), (int) (255 * 0.8), (int) (255 * 0.7));
+    public static final Color BACK = new Color((int) (255 * 1.0), (int) (255 * 0.8), (int) (255 * 0.7));
 
-	public static final Color WHITE = new Color((int) (255 * 1.0), (int) (255 * 1.0), (int) (255 * 0.95));
+    public static final Color WHITE = new Color((int) (255 * 1.0), (int) (255 * 1.0), (int) (255 * 0.95));
 }

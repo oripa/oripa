@@ -45,202 +45,202 @@ import oripa.resource.StringID;
  *
  */
 public class MainFramePresentationLogic {
-	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final MainFrameView view;
+    private final MainFrameView view;
 
-	private final PainterScreenPresenter screenPresenter;
-	private final UIPanelPresenter uiPanelPresenter;
+    private final PainterScreenPresenter screenPresenter;
+    private final UIPanelPresenter uiPanelPresenter;
 
-	private final MainFrameFilePresentationLogic mainFrameFilePresentationLogic;
-	private final UndoRedoPresentationLogic undoRedoPresentationLogic;
-	private final ClearActionPresentationLogic clearActionPresentationLogic;
-	private final IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
+    private final MainFrameFilePresentationLogic mainFrameFilePresentationLogic;
+    private final UndoRedoPresentationLogic undoRedoPresentationLogic;
+    private final ClearActionPresentationLogic clearActionPresentationLogic;
+    private final IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
-	private final Project project;
+    private final Project project;
 
-	private final FileHistory fileHistory;
+    private final FileHistory fileHistory;
 
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public MainFramePresentationLogic(
-			final MainFrameView view,
-			final PainterScreenPresenter screenPresenter,
-			final UIPanelPresenter uiPanelPresenter,
-			final MainFrameFilePresentationLogic mainFrameFilePresentationLogic,
-			final ClearActionPresentationLogic clearActionPresentationLogic,
-			final UndoRedoPresentationLogic undoRedoPresentationLogic,
-			final IniFileAccessPresentationLogic iniFileAccessPresentationLogic,
-			final Project project,
-			final FileHistory fileHistory,
-			final ResourceHolder resourceHolder) {
+    @Inject
+    public MainFramePresentationLogic(
+            final MainFrameView view,
+            final PainterScreenPresenter screenPresenter,
+            final UIPanelPresenter uiPanelPresenter,
+            final MainFrameFilePresentationLogic mainFrameFilePresentationLogic,
+            final ClearActionPresentationLogic clearActionPresentationLogic,
+            final UndoRedoPresentationLogic undoRedoPresentationLogic,
+            final IniFileAccessPresentationLogic iniFileAccessPresentationLogic,
+            final Project project,
+            final FileHistory fileHistory,
+            final ResourceHolder resourceHolder) {
 
-		this.view = view;
+        this.view = view;
 
-		this.mainFrameFilePresentationLogic = mainFrameFilePresentationLogic;
-		this.clearActionPresentationLogic = clearActionPresentationLogic;
-		this.iniFileAccessPresentationLogic = iniFileAccessPresentationLogic;
+        this.mainFrameFilePresentationLogic = mainFrameFilePresentationLogic;
+        this.clearActionPresentationLogic = clearActionPresentationLogic;
+        this.iniFileAccessPresentationLogic = iniFileAccessPresentationLogic;
 
-		this.project = project;
+        this.project = project;
 
-		this.fileHistory = fileHistory;
+        this.fileHistory = fileHistory;
 
-		this.undoRedoPresentationLogic = undoRedoPresentationLogic;
+        this.undoRedoPresentationLogic = undoRedoPresentationLogic;
 
-		this.uiPanelPresenter = uiPanelPresenter;
-		this.screenPresenter = screenPresenter;
+        this.uiPanelPresenter = uiPanelPresenter;
+        this.screenPresenter = screenPresenter;
 
-		this.resourceHolder = resourceHolder;
-	}
+        this.resourceHolder = resourceHolder;
+    }
 
-	public void setPaperDomainOfModel(final RectangleDomain domain) {
-		screenPresenter.setPaperDomainOfModel(domain);
-	}
+    public void setPaperDomainOfModel(final RectangleDomain domain) {
+        screenPresenter.setPaperDomainOfModel(domain);
+    }
 
-	public void updateCameraCenter() {
-		screenPresenter.updateCameraCenter();
-	}
+    public void updateCameraCenter() {
+        screenPresenter.updateCameraCenter();
+    }
 
-	public void updateScreen() {
-		screenPresenter.updateScreen();
-	}
+    public void updateScreen() {
+        screenPresenter.updateScreen();
+    }
 
-	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
-		uiPanelPresenter.addPlugins(plugins);
-	}
+    public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
+        uiPanelPresenter.addPlugins(plugins);
+    }
 
-	public void updateValuePanelFractionDigits() {
-		uiPanelPresenter.updateValuePanelFractionDigits();
-	}
+    public void updateValuePanelFractionDigits() {
+        uiPanelPresenter.updateValuePanelFractionDigits();
+    }
 
-	public void updateMRUFilesMenuItem(final int index) {
-		var histories = fileHistory.getHistory();
-		if (index < histories.size()) {
-			view.setMRUFilesMenuItem(index, histories.get(index));
-		} else {
-			view.setMRUFilesMenuItem(index, "");
-		}
-	}
+    public void updateMRUFilesMenuItem(final int index) {
+        var histories = fileHistory.getHistory();
+        if (index < histories.size()) {
+            view.setMRUFilesMenuItem(index, histories.get(index));
+        } else {
+            view.setMRUFilesMenuItem(index, "");
+        }
+    }
 
-	public void exit(final Runnable doExit) {
-		saveIniFile();
-		doExit.run();
-	}
+    public void exit(final Runnable doExit) {
+        saveIniFile();
+        doExit.run();
+    }
 
-	public void saveIniFile() {
-		try {
-			iniFileAccessPresentationLogic.saveIniFile();
-		} catch (Exception e) {
-			logger.error("error when saving ini data", e);
-			view.showSaveIniFileFailureErrorMessage(e);
-		}
-	}
+    public void saveIniFile() {
+        try {
+            iniFileAccessPresentationLogic.saveIniFile();
+        } catch (Exception e) {
+            logger.error("error when saving ini data", e);
+            view.showSaveIniFileFailureErrorMessage(e);
+        }
+    }
 
-	public void loadIniFile() {
-		iniFileAccessPresentationLogic.loadIniFile();
-	}
+    public void loadIniFile() {
+        iniFileAccessPresentationLogic.loadIniFile();
+    }
 
-	public void clearAll() {
-		clearActionPresentationLogic.clearAll();
-		updateTitleText();
-	}
+    public void clearAll() {
+        clearActionPresentationLogic.clearAll();
+        updateTitleText();
+    }
 
-	public void clearCreasePattern() {
-		clearActionPresentationLogic.clearLines();
-		updateTitleText();
-	}
+    public void clearCreasePattern() {
+        clearActionPresentationLogic.clearLines();
+        updateTitleText();
+    }
 
-	public void updateTitleText() {
-		view.setFileNameToTitle(getTitleText());
-	}
+    public void updateTitleText() {
+        view.setFileNameToTitle(getTitleText());
+    }
 
-	private String getTitleText() {
-		var defaultFileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
-		var fileName = project.getDataFileName().orElse(defaultFileName);
+    private String getTitleText() {
+        var defaultFileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
+        var fileName = project.getDataFileName().orElse(defaultFileName);
 
-		return fileName.isEmpty() ? defaultFileName : fileName;
-	}
+        return fileName.isEmpty() ? defaultFileName : fileName;
+    }
 
-	/**
-	 * Update file menu. Do nothing if the previously loaded file is not of
-	 * project.
-	 *
-	 */
-	public void updateMenu() {
-		var filePath = project.getDataFilePath();
+    /**
+     * Update file menu. Do nothing if the previously loaded file is not of
+     * project.
+     *
+     */
+    public void updateMenu() {
+        var filePath = project.getDataFilePath();
 
-		if (!project.isProjectFile()) {
-			logger.debug("updating menu is canceled: {}", filePath);
-			return;
-		}
+        if (!project.isProjectFile()) {
+            logger.debug("updating menu is canceled: {}", filePath);
+            return;
+        }
 
-		fileHistory.useFile(filePath);
+        fileHistory.useFile(filePath);
 
-		view.buildFileMenu();
-	}
+        view.buildFileMenu();
+    }
 
-	public void undo() {
-		undoRedoPresentationLogic.undo();
-	}
+    public void undo() {
+        undoRedoPresentationLogic.undo();
+    }
 
-	public void redo() {
-		undoRedoPresentationLogic.redo();
-	}
+    public void redo() {
+        undoRedoPresentationLogic.redo();
+    }
 
-	public void modifySavingActions() {
-		mainFrameFilePresentationLogic.modifySavingActions();
-	}
+    public void modifySavingActions() {
+        mainFrameFilePresentationLogic.modifySavingActions();
+    }
 
-	/**
-	 * saves project without opening a dialog
-	 */
-	public String saveFileToCurrentPath(final FileType<Doc> type) {
-		return mainFrameFilePresentationLogic.saveFileToCurrentPath(type);
+    /**
+     * saves project without opening a dialog
+     */
+    public String saveFileToCurrentPath(final FileType<Doc> type) {
+        return mainFrameFilePresentationLogic.saveFileToCurrentPath(type);
 
-	}
+    }
 
-	/**
-	 * save file without origami model check
-	 */
-	public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
-		return mainFrameFilePresentationLogic.saveFileUsingGUI(types);
-	}
+    /**
+     * save file without origami model check
+     */
+    public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
+        return mainFrameFilePresentationLogic.saveFileUsingGUI(types);
+    }
 
-	/**
-	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
-	 * model check before saving.
-	 */
-	public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
-		mainFrameFilePresentationLogic.exportFileUsingGUIWithModelCheck(type);
-	}
+    /**
+     * Open Save File As Dialogue for specific file types {@code type}. Runs a
+     * model check before saving.
+     */
+    public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
+        mainFrameFilePresentationLogic.exportFileUsingGUIWithModelCheck(type);
+    }
 
-	/**
-	 * This method opens the file dialog and load the selected file.
-	 */
-	public void loadFileUsingGUI() {
-		mainFrameFilePresentationLogic.loadFileUsingGUI();
-	}
+    /**
+     * This method opens the file dialog and load the selected file.
+     */
+    public void loadFileUsingGUI() {
+        mainFrameFilePresentationLogic.loadFileUsingGUI();
+    }
 
-	/**
-	 * This method tries to read data from the path.
-	 *
-	 * @param filePath
-	 * @return file path for loaded file. {@code null} if loading is not done.
-	 */
-	public String loadFile(final String filePath) {
-		return mainFrameFilePresentationLogic.loadFile(filePath);
-	}
+    /**
+     * This method tries to read data from the path.
+     *
+     * @param filePath
+     * @return file path for loaded file. {@code null} if loading is not done.
+     */
+    public String loadFile(final String filePath) {
+        return mainFrameFilePresentationLogic.loadFile(filePath);
+    }
 
-	public void importFileUsingGUI(final Runnable importStateAction) {
-		mainFrameFilePresentationLogic.importFileUsingGUI();
-		importStateAction.run();
-	}
+    public void importFileUsingGUI(final Runnable importStateAction) {
+        mainFrameFilePresentationLogic.importFileUsingGUI();
+        importStateAction.run();
+    }
 
-	public void setEstimationResultSaveColors(final Color front, final Color back) {
-		var property = project.getProperty();
-		property.putFrontColorCode(ColorUtil.convertColorToCode(front));
-		property.putBackColorCode(ColorUtil.convertColorToCode(back));
-	}
+    public void setEstimationResultSaveColors(final Color front, final Color back) {
+        var property = project.getProperty();
+        property.putFrontColorCode(ColorUtil.convertColorToCode(front));
+        property.putBackColorCode(ColorUtil.convertColorToCode(back));
+    }
 
 }

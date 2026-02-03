@@ -33,23 +33,23 @@ import oripa.resource.ResourceHolder;
  */
 public class FileChooserSwingFactory implements FileChooserFactory {
 
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public FileChooserSwingFactory(final ResourceHolder resourceHolder) {
-		this.resourceHolder = resourceHolder;
-	}
+    @Inject
+    public FileChooserSwingFactory(final ResourceHolder resourceHolder) {
+        this.resourceHolder = resourceHolder;
+    }
 
-	@Override
-	public SavingFileChooserView createForSaving(final String path,
-			final Collection<FileFilterProperty> filterProperties) {
-		return new SavingFileChooser(path, filterProperties, resourceHolder);
-	}
+    @Override
+    public SavingFileChooserView createForSaving(final String path,
+            final Collection<FileFilterProperty> filterProperties) {
+        return new SavingFileChooser(path, filterProperties, resourceHolder);
+    }
 
-	@Override
-	public LoadingFileChooserView createForLoading(final String path,
-			final Collection<FileFilterProperty> filterProperties) {
-		return new LoadingFileChooser(path, filterProperties, resourceHolder);
-	}
+    @Override
+    public LoadingFileChooserView createForLoading(final String path,
+            final Collection<FileFilterProperty> filterProperties) {
+        return new LoadingFileChooser(path, filterProperties, resourceHolder);
+    }
 
 }

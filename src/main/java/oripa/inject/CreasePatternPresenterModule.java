@@ -31,14 +31,14 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
  */
 public class CreasePatternPresenterModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-	}
+    @Override
+    protected void configure() {
+    }
 
-	@Provides
-	@Singleton
-	public CreasePatternViewContext getViewContext() {
-		return new CreasePatternViewContextFactory().createContext();
-	}
+    @Provides
+    @Singleton
+    public CreasePatternViewContext getViewContext() {
+        return new CreasePatternViewContextFactory().createContext();
+    }
 
 }

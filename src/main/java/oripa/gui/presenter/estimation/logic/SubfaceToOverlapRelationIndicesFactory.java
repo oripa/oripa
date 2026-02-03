@@ -39,107 +39,107 @@ import oripa.util.StopWatch;
  *
  */
 public class SubfaceToOverlapRelationIndicesFactory {
-	private static final Logger logger = LoggerFactory.getLogger(SubfaceToOverlapRelationIndicesFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(SubfaceToOverlapRelationIndicesFactory.class);
 
-	private record OrderKey(List<Integer> faceIDs) {
-	}
+    private record OrderKey(List<Integer> faceIDs) {
+    }
 
-	/**
-	 *
-	 * @param foldedModel
-	 * @return mapping subface index to a list of index sets on overlap relation
-	 *         list. the first set of each list contains all indices as a "no
-	 *         filtering" option.
-	 */
-	public Map<Integer, List<BitSet>> create(final FoldedModel foldedModel) {
+    /**
+     *
+     * @param foldedModel
+     * @return mapping subface index to a list of index sets on overlap relation
+     *         list. the first set of each list contains all indices as a "no
+     *         filtering" option.
+     */
+    public Map<Integer, List<BitSet>> create(final FoldedModel foldedModel) {
 
-		var watch = new StopWatch(true);
-		logger.debug("start");
+        var watch = new StopWatch(true);
+        logger.debug("start");
 
-		var map = new HashMap<Integer, List<BitSet>>();
-		var orders = new ConcurrentHashMap<Integer, Map<OrderKey, BitSet>>();
+        var map = new HashMap<Integer, List<BitSet>>();
+        var orders = new ConcurrentHashMap<Integer, Map<OrderKey, BitSet>>();
 
-		var subfaces = foldedModel.subfaces();
-		var overlapRelations = foldedModel.overlapRelations();
+        var subfaces = foldedModel.subfaces();
+        var overlapRelations = foldedModel.overlapRelations();
 
-		// initialize
-		for (int s = 0; s < subfaces.size(); s++) {
-			orders.put(s, new ConcurrentHashMap<>());
-			map.put(s, new ArrayList<BitSet>());
-		}
+        // initialize
+        for (int s = 0; s < subfaces.size(); s++) {
+            orders.put(s, new ConcurrentHashMap<>());
+            map.put(s, new ArrayList<BitSet>());
+        }
 
-		// set "no filtering" option
-		IntStream.range(0, subfaces.size()).forEach(s -> {
-			var list = map.get(s);
-			var indices = new BitSet(overlapRelations.size());
-			for (int k = 0; k < overlapRelations.size(); k++) {
-				indices.add(k);
-			}
-			list.add(indices);
-		});
+        // set "no filtering" option
+        IntStream.range(0, subfaces.size()).forEach(s -> {
+            var list = map.get(s);
+            var indices = new BitSet(overlapRelations.size());
+            for (int k = 0; k < overlapRelations.size(); k++) {
+                indices.add(k);
+            }
+            list.add(indices);
+        });
 
-		// shortcut
-		if (subfaces.size() == 1) {
-			logger.debug("shortcut (only one subface)");
-			return map;
-		}
+        // shortcut
+        if (subfaces.size() == 1) {
+            logger.debug("shortcut (only one subface)");
+            return map;
+        }
 
-		// O(n^3 log n S) time and O(n^3 S) space to store the result
-		// n: #face, S #overlapRelation
-		IntStream.range(0, overlapRelations.size()).parallel().forEach(k -> {
-			var overlapRelation = overlapRelations.get(k);
+        // O(n^3 log n S) time and O(n^3 S) space to store the result
+        // n: #face, S #overlapRelation
+        IntStream.range(0, overlapRelations.size()).parallel().forEach(k -> {
+            var overlapRelation = overlapRelations.get(k);
 
-			// Parallelization on s is overkilling for usual PC since
-			// parallelization on k works very well.
-			IntStream.range(0, subfaces.size()).forEach(s -> {
+            // Parallelization on s is overkilling for usual PC since
+            // parallelization on k works very well.
+            IntStream.range(0, subfaces.size()).forEach(s -> {
 
-				var orderKey = createOrderKey(subfaces.get(s), overlapRelation);
+                var orderKey = createOrderKey(subfaces.get(s), overlapRelation);
 
-				var order = orders.get(s);
-				order.putIfAbsent(orderKey, new BitSet(overlapRelations.size()));
-				var indices = order.get(orderKey);
+                var order = orders.get(s);
+                order.putIfAbsent(orderKey, new BitSet(overlapRelations.size()));
+                var indices = order.get(orderKey);
 
-				indices.addSync(k);
-			});
-		});
+                indices.addSync(k);
+            });
+        });
 
-		IntStream.range(0, subfaces.size()).forEach(s -> {
-			var list = map.get(s);
-			orders.get(s).forEach((orderKey, indices) -> list.add(indices));
-		});
+        IntStream.range(0, subfaces.size()).forEach(s -> {
+            var list = map.get(s);
+            orders.get(s).forEach((orderKey, indices) -> list.add(indices));
+        });
 
-		logger.debug("end: {}[ms]", watch.getMilliSec());
+        logger.debug("end: {}[ms]", watch.getMilliSec());
 
-		return map;
-	}
+        return map;
+    }
 
-	/**
-	 * If we focus on a subface, the order of its parent faces is totally given
-	 * by the overlap relation matrix. Therefore we can sort the parent faces.
-	 *
-	 * @param subface
-	 * @param overlapRelation
-	 * @return
-	 */
-	private OrderKey createOrderKey(final SubFace subface, final OverlapRelation overlapRelation) {
+    /**
+     * If we focus on a subface, the order of its parent faces is totally given
+     * by the overlap relation matrix. Therefore we can sort the parent faces.
+     *
+     * @param subface
+     * @param overlapRelation
+     * @return
+     */
+    private OrderKey createOrderKey(final SubFace subface, final OverlapRelation overlapRelation) {
 
-		var parentFaceIDs = new ArrayList<Integer>(subface.getParentFaceCount());
-		for (int i = 0; i < subface.getParentFaceCount(); i++) {
-			var faceID = subface.getParentFace(i).getFaceID();
-			parentFaceIDs.add(faceID);
-		}
+        var parentFaceIDs = new ArrayList<Integer>(subface.getParentFaceCount());
+        for (int i = 0; i < subface.getParentFaceCount(); i++) {
+            var faceID = subface.getParentFace(i).getFaceID();
+            parentFaceIDs.add(faceID);
+        }
 
-		parentFaceIDs.sort((faceID_i, faceID_j) -> {
-			if (faceID_i == faceID_j) {
-				return 0;
-			}
-			if (overlapRelation.isUpper(faceID_i, faceID_j)) {
-				return 1;
-			}
+        parentFaceIDs.sort((faceID_i, faceID_j) -> {
+            if (faceID_i == faceID_j) {
+                return 0;
+            }
+            if (overlapRelation.isUpper(faceID_i, faceID_j)) {
+                return 1;
+            }
 
-			return -1;
-		});
+            return -1;
+        });
 
-		return new OrderKey(parentFaceIDs);
-	}
+        return new OrderKey(parentFaceIDs);
+    }
 }

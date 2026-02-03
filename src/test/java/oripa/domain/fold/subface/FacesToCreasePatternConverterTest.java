@@ -45,46 +45,46 @@ import oripa.value.OriLine;
  */
 @ExtendWith(MockitoExtension.class)
 class FacesToCreasePatternConverterTest {
-	@InjectMocks
-	private FacesToCreasePatternConverter converter;
-	@Mock
-	private CreasePatternFactory cpFactory;
-	@Mock
-	private CrossingLineSplitter lineSplitter;
-	@Mock
-	private PointsMerger pointMerger;
-	@Mock
-	private AnalyticOverlappingLineMerger overlapMerger;
+    @InjectMocks
+    private FacesToCreasePatternConverter converter;
+    @Mock
+    private CreasePatternFactory cpFactory;
+    @Mock
+    private CrossingLineSplitter lineSplitter;
+    @Mock
+    private PointsMerger pointMerger;
+    @Mock
+    private AnalyticOverlappingLineMerger overlapMerger;
 
-	@Mock
-	private CreasePattern creasePattern;
+    @Mock
+    private CreasePattern creasePattern;
 
-	private static final double POINT_EPS = 1e-7;
+    private static final double POINT_EPS = 1e-7;
 
-	@Test
-	void testConvertToCreasePattern() {
-		OriFace face1 = mock();
-		OriFace face2 = mock();
+    @Test
+    void testConvertToCreasePattern() {
+        OriFace face1 = mock();
+        OriFace face2 = mock();
 
-		when(face1.remove180degreeVertices(anyDouble())).thenReturn(face1);
-		when(face1.removeDuplicatedVertices(anyDouble())).thenReturn(face1);
-		when(face1.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
-		when(face1.halfedgeCount()).thenReturn(3);
+        when(face1.remove180degreeVertices(anyDouble())).thenReturn(face1);
+        when(face1.removeDuplicatedVertices(anyDouble())).thenReturn(face1);
+        when(face1.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
+        when(face1.halfedgeCount()).thenReturn(3);
 
-		when(face2.remove180degreeVertices(anyDouble())).thenReturn(face2);
-		when(face2.removeDuplicatedVertices(anyDouble())).thenReturn(face2);
-		when(face2.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
-		when(face2.halfedgeCount()).thenReturn(3);
+        when(face2.remove180degreeVertices(anyDouble())).thenReturn(face2);
+        when(face2.removeDuplicatedVertices(anyDouble())).thenReturn(face2);
+        when(face2.halfedgeStream()).thenAnswer((invocation) -> Stream.of());
+        when(face2.halfedgeCount()).thenReturn(3);
 
-		var faces = List.of(face1, face2);
+        var faces = List.of(face1, face2);
 
-		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
+        when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
 
-		OriLine line = mock();
-		when(overlapMerger.mergeIgnoringType(anyCollection(), anyDouble())).thenReturn(List.of(line));
-		when(lineSplitter.splitIgnoringType(anyCollection(), anyDouble())).thenReturn(creasePattern);
+        OriLine line = mock();
+        when(overlapMerger.mergeIgnoringType(anyCollection(), anyDouble())).thenReturn(List.of(line));
+        when(lineSplitter.splitIgnoringType(anyCollection(), anyDouble())).thenReturn(creasePattern);
 
-		var converted = converter.convertToCreasePattern(faces, 100, POINT_EPS);
-		assertSame(creasePattern, converted);
-	}
+        var converted = converter.convertToCreasePattern(faces, 100, POINT_EPS);
+        assertSame(creasePattern, converted);
+    }
 }

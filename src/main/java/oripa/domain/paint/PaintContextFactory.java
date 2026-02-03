@@ -5,15 +5,15 @@ import oripa.resource.Constants;
 
 public class PaintContextFactory {
 
-	public PaintContext createContext() {
-		CreasePatternFactory patternFactory = new CreasePatternFactory();
+    public PaintContext createContext() {
+        CreasePatternFactory patternFactory = new CreasePatternFactory();
 
-		PaintContext context = new PaintContextImpl();
-		context.setCreasePattern(
-				patternFactory.createSquareCreasePattern(
-						Constants.DEFAULT_PAPER_SIZE));
+        PaintContext context = new PaintContextImpl();
+        context.setCreasePattern(
+                patternFactory.createSquareCreasePattern(
+                        Constants.DEFAULT_PAPER_SIZE));
 
-		context.setGridDivNum(Constants.DEFAULT_GRID_DIV_NUM);
-		return context;
-	}
+        context.setGridDivNum(Constants.DEFAULT_GRID_DIV_NUM);
+        return context;
+    }
 }

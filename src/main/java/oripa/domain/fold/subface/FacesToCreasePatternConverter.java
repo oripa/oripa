@@ -38,52 +38,52 @@ import oripa.value.OriLine;
  *
  */
 public class FacesToCreasePatternConverter {
-	private static final Logger logger = LoggerFactory
-			.getLogger(FacesToCreasePatternConverter.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(FacesToCreasePatternConverter.class);
 
-	private final CreasePatternFactory cpFactory;
-	private final CrossingLineSplitter lineSplitter;
-	private final PointsMerger pointsMerger;
-	private final OverlappingLineMerger overlapMerger;
+    private final CreasePatternFactory cpFactory;
+    private final CrossingLineSplitter lineSplitter;
+    private final PointsMerger pointsMerger;
+    private final OverlappingLineMerger overlapMerger;
 
-	/**
-	 * Constructor
-	 */
-	public FacesToCreasePatternConverter(final CreasePatternFactory cpFactory,
-			final CrossingLineSplitter lineSplitter,
-			final PointsMerger pointsMerger,
-			final OverlappingLineMerger overlapMerger) {
-		this.cpFactory = cpFactory;
-		this.lineSplitter = lineSplitter;
-		this.pointsMerger = pointsMerger;
-		this.overlapMerger = overlapMerger;
-	}
+    /**
+     * Constructor
+     */
+    public FacesToCreasePatternConverter(final CreasePatternFactory cpFactory,
+            final CrossingLineSplitter lineSplitter,
+            final PointsMerger pointsMerger,
+            final OverlappingLineMerger overlapMerger) {
+        this.cpFactory = cpFactory;
+        this.lineSplitter = lineSplitter;
+        this.pointsMerger = pointsMerger;
+        this.overlapMerger = overlapMerger;
+    }
 
-	/**
-	 * construct edge structure after folding as a crease pattern for easy
-	 * calculation to obtain subfaces.
-	 *
-	 * @param faces
-	 *            faces after fold without layer ordering.
-	 * @return
-	 */
-	public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double paperSize,
-			final double pointEps) {
-		logger.info("toCreasePattern(): construct edge structure after folding");
+    /**
+     * construct edge structure after folding as a crease pattern for easy
+     * calculation to obtain subfaces.
+     *
+     * @param faces
+     *            faces after fold without layer ordering.
+     * @return
+     */
+    public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double paperSize,
+            final double pointEps) {
+        logger.info("toCreasePattern(): construct edge structure after folding");
 
-		var filteredFaces = faces.stream()
-				.map(face -> face.remove180degreeVertices(pointEps))
-				.map(face -> face.removeDuplicatedVertices(pointEps))
-				.filter(face -> face.halfedgeCount() >= 3)
-				.toList();
+        var filteredFaces = faces.stream()
+                .map(face -> face.remove180degreeVertices(pointEps))
+                .map(face -> face.removeDuplicatedVertices(pointEps))
+                .filter(face -> face.halfedgeCount() >= 3)
+                .toList();
 
-		Collection<OriLine> faceLines = new HashSet<OriLine>();
-		for (OriFace face : filteredFaces) {
-			faceLines.addAll(face.halfedgeStream()
-					.map(he -> new OriLine(he.getPosition(), he.getNext().getPosition(),
-							OriLine.Type.MOUNTAIN).createCanonical())
-					.toList());
-		}
+        Collection<OriLine> faceLines = new HashSet<OriLine>();
+        for (OriFace face : filteredFaces) {
+            faceLines.addAll(face.halfedgeStream()
+                    .map(he -> new OriLine(he.getPosition(), he.getNext().getPosition(),
+                            OriLine.Type.MOUNTAIN).createCanonical())
+                    .toList());
+        }
 
 //		try {
 //			var creasePattern = cpFactory.createCreasePattern(faceLines);
@@ -92,9 +92,9 @@ public class FacesToCreasePatternConverter {
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
 
-		logger.info("merge ignoring type");
-		// put segments in a collection
-		faceLines = overlapMerger.mergeIgnoringType(faceLines, pointEps);
+        logger.info("merge ignoring type");
+        // put segments in a collection
+        faceLines = overlapMerger.mergeIgnoringType(faceLines, pointEps);
 
 //		try {
 //			var creasePattern = cpFactory.createCreasePattern(faceLines);
@@ -103,12 +103,12 @@ public class FacesToCreasePatternConverter {
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
 
-		// make cross
-		logger.info("split {} lines", faceLines.size());
-		faceLines = lineSplitter.splitIgnoringType(faceLines, pointEps);
+        // make cross
+        logger.info("split {} lines", faceLines.size());
+        faceLines = lineSplitter.splitIgnoringType(faceLines, pointEps);
 
-		logger.info("merge close points");
-		faceLines = pointsMerger.mergeClosePoints(faceLines, pointEps);
+        logger.info("merge close points");
+        faceLines = pointsMerger.mergeClosePoints(faceLines, pointEps);
 
 //		try {
 //			var creasePattern = cpFactory.createCreasePattern(faceLines);
@@ -117,11 +117,11 @@ public class FacesToCreasePatternConverter {
 //		} catch (IllegalArgumentException | IOException e) {
 //		}
 
-		CreasePattern creasePattern = cpFactory.createCreasePattern(faceLines);
+        CreasePattern creasePattern = cpFactory.createCreasePattern(faceLines);
 
-		logger.debug("toCreasePattern(): {} segments", creasePattern.size());
+        logger.debug("toCreasePattern(): {} segments", creasePattern.size());
 
-		return creasePattern;
-	}
+        return creasePattern;
+    }
 
 }

@@ -26,22 +26,22 @@ import java.util.ListResourceBundle;
  */
 public class AppInfoResource extends ListResourceBundle {
 
-	static final Object[][] strings = {
-			{
-					StringID.AppInfo.ABOUT_THIS_ID,
-					"ORIPA: (c) 2013- ORIPA OSS Project\n"
-							+ "http://github.com/oripa\n"
-							+ "ORIPA: (c) 2005-2009 Jun Mitani\n"
-							+ "http://mitani.cs.tsukuba.ac.jp/\n\n"
-							+ "This program comes with ABSOLUTELY NO WARRANTY;\n"
-							+ "This is free software, and you are welcome to redistribute it\n"
-							+ "under certain conditions; For details check:"
-							+ "\nhttp://www.gnu.org/licenses/gpl.html" }
-	};
+    static final Object[][] strings = {
+            {
+                    StringID.AppInfo.ABOUT_THIS_ID,
+                    "ORIPA: (c) 2013- ORIPA OSS Project\n"
+                            + "http://github.com/oripa\n"
+                            + "ORIPA: (c) 2005-2009 Jun Mitani\n"
+                            + "http://mitani.cs.tsukuba.ac.jp/\n\n"
+                            + "This program comes with ABSOLUTELY NO WARRANTY;\n"
+                            + "This is free software, and you are welcome to redistribute it\n"
+                            + "under certain conditions; For details check:"
+                            + "\nhttp://www.gnu.org/licenses/gpl.html" }
+    };
 
-	@Override
-	protected Object[][] getContents() {
-		return strings;
-	}
+    @Override
+    protected Object[][] getContents() {
+        return strings;
+    }
 
 }

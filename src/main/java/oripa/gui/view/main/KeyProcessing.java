@@ -20,9 +20,9 @@ package oripa.gui.view.main;
 
 public interface KeyProcessing {
 
-	void controlKeyPressed();
+    void controlKeyPressed();
 
-	void escapeKeyPressed();
+    void escapeKeyPressed();
 
-	void keyReleased();
+    void keyReleased();
 }

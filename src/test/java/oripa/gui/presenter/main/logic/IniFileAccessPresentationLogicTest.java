@@ -46,70 +46,70 @@ import oripa.gui.view.main.PainterScreenSetting;
 @ExtendWith(MockitoExtension.class)
 class IniFileAccessPresentationLogicTest {
 
-	@InjectMocks
-	IniFileAccessPresentationLogic presentationLogic;
+    @InjectMocks
+    IniFileAccessPresentationLogic presentationLogic;
 
-	@Mock
-	MainFrameView view;
+    @Mock
+    MainFrameView view;
 
-	@Mock
-	PainterScreenSetting screenSetting;
+    @Mock
+    PainterScreenSetting screenSetting;
 
-	@Mock
-	CreasePatternViewContext creasePatternViewContext;
+    @Mock
+    CreasePatternViewContext creasePatternViewContext;
 
-	@Mock
-	IniFileAccess iniFileAccess;
+    @Mock
+    IniFileAccess iniFileAccess;
 
-	@Mock
-	FileHistory fileHistory;
+    @Mock
+    FileHistory fileHistory;
 
-	@Nested
-	class TestLoadIniFile {
+    @Nested
+    class TestLoadIniFile {
 
-		@MethodSource("createIniFileShouldBeLoadedArguments")
-		@ParameterizedTest
-		void iniFileShouldBeLoaded(
-				final boolean isZeroLineWidth,
-				final boolean isMvLineVisible,
-				final boolean isAuxLineVisible,
-				final boolean isVertexVisible) {
+        @MethodSource("createIniFileShouldBeLoadedArguments")
+        @ParameterizedTest
+        void iniFileShouldBeLoaded(
+                final boolean isZeroLineWidth,
+                final boolean isMvLineVisible,
+                final boolean isAuxLineVisible,
+                final boolean isVertexVisible) {
 
-			InitData initData = mock();
-			when(initData.isZeroLineWidth()).thenReturn(isZeroLineWidth);
-			when(initData.isMvLineVisible()).thenReturn(isMvLineVisible);
-			when(initData.isAuxLineVisible()).thenReturn(isAuxLineVisible);
-			when(initData.isVertexVisible()).thenReturn(isVertexVisible);
+            InitData initData = mock();
+            when(initData.isZeroLineWidth()).thenReturn(isZeroLineWidth);
+            when(initData.isMvLineVisible()).thenReturn(isMvLineVisible);
+            when(initData.isAuxLineVisible()).thenReturn(isAuxLineVisible);
+            when(initData.isVertexVisible()).thenReturn(isVertexVisible);
 
-			when(iniFileAccess.load()).thenReturn(initData);
+            when(iniFileAccess.load()).thenReturn(initData);
 
-			presentationLogic.loadIniFile();
+            presentationLogic.loadIniFile();
 
-			verify(iniFileAccess).load();
+            verify(iniFileAccess).load();
 
-			verify(fileHistory).loadFromInitData(initData);
+            verify(fileHistory).loadFromInitData(initData);
 
-			verify(screenSetting).setZeroLineWidth(isZeroLineWidth);
-			verify(screenSetting).setMVLineVisible(isMvLineVisible);
-			verify(screenSetting).setAuxLineVisible(isAuxLineVisible);
-			verify(screenSetting).setVertexVisible(isVertexVisible);
-		}
+            verify(screenSetting).setZeroLineWidth(isZeroLineWidth);
+            verify(screenSetting).setMVLineVisible(isMvLineVisible);
+            verify(screenSetting).setAuxLineVisible(isAuxLineVisible);
+            verify(screenSetting).setVertexVisible(isVertexVisible);
+        }
 
-		static List<Arguments> createIniFileShouldBeLoadedArguments() {
-			var booleanValues = List.of(true, false);
+        static List<Arguments> createIniFileShouldBeLoadedArguments() {
+            var booleanValues = List.of(true, false);
 
-			var args = new ArrayList<Arguments>();
+            var args = new ArrayList<Arguments>();
 
-			for (var zeroWidth : booleanValues) {
-				for (var mvLine : booleanValues) {
-					for (var auxLine : booleanValues) {
-						for (var vertex : booleanValues) {
-							args.add(Arguments.of(zeroWidth, mvLine, auxLine, vertex));
-						}
-					}
-				}
-			}
-			return args;
-		}
-	}
+            for (var zeroWidth : booleanValues) {
+                for (var mvLine : booleanValues) {
+                    for (var auxLine : booleanValues) {
+                        for (var vertex : booleanValues) {
+                            args.add(Arguments.of(zeroWidth, mvLine, auxLine, vertex));
+                        }
+                    }
+                }
+            }
+            return args;
+        }
+    }
 }

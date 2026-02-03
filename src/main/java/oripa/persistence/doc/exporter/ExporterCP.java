@@ -27,29 +27,29 @@ import oripa.value.OriLine;
 
 public class ExporterCP implements DocExporter {
 
-	@Override
-	public boolean export(final Doc doc, final String filepath, final Object configObj)
-			throws IOException, IllegalArgumentException {
+    @Override
+    public boolean export(final Doc doc, final String filepath, final Object configObj)
+            throws IOException, IllegalArgumentException {
 
-		if (doc.getCreasePattern().isUnassigned()) {
-			throw new IllegalArgumentException("Unassigned crease pattern is not allowed.");
-		}
+        if (doc.getCreasePattern().isUnassigned()) {
+            throw new IllegalArgumentException("Unassigned crease pattern is not allowed.");
+        }
 
-		try (var fw = new FileWriter(filepath);
-				var bw = new BufferedWriter(fw);) {
+        try (var fw = new FileWriter(filepath);
+                var bw = new BufferedWriter(fw);) {
 
-			for (OriLine line : doc.getCreasePattern()) {
-				if (line.isAux()) {
-					continue;
-				}
-				var p0 = line.getP0();
-				var p1 = line.getP1();
-				bw.write(
-						line.getType().toInt() + " " + p0.getX() + " " + p0.getY() + " " + p1.getX()
-								+ " " + p1.getY() + "\n");
-			}
-		}
+            for (OriLine line : doc.getCreasePattern()) {
+                if (line.isAux()) {
+                    continue;
+                }
+                var p0 = line.getP0();
+                var p1 = line.getP1();
+                bw.write(
+                        line.getType().toInt() + " " + p0.getX() + " " + p0.getY() + " " + p1.getX()
+                                + " " + p1.getY() + "\n");
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

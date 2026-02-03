@@ -34,34 +34,34 @@ import oripa.gui.view.model.ModelViewFrameView;
  */
 public class SubSwingFrameFactory implements SubFrameFactory {
 
-	private final FoldabilityCheckFrameFactory foldabilityFrameFactory;
-	private final ModelViewFrameFactory modelViewFrameFactory;
-	private final EstimationResultFrameFactory resultFrameFactory;
+    private final FoldabilityCheckFrameFactory foldabilityFrameFactory;
+    private final ModelViewFrameFactory modelViewFrameFactory;
+    private final EstimationResultFrameFactory resultFrameFactory;
 
-	@Inject
-	public SubSwingFrameFactory(
-			final FoldabilityCheckFrameFactory foldaFrameFactory,
-			final ModelViewFrameFactory modelViewFrameFactory,
-			final EstimationResultFrameFactory resultFrameFactory) {
+    @Inject
+    public SubSwingFrameFactory(
+            final FoldabilityCheckFrameFactory foldaFrameFactory,
+            final ModelViewFrameFactory modelViewFrameFactory,
+            final EstimationResultFrameFactory resultFrameFactory) {
 
-		this.foldabilityFrameFactory = foldaFrameFactory;
-		this.modelViewFrameFactory = modelViewFrameFactory;
-		this.resultFrameFactory = resultFrameFactory;
-	}
+        this.foldabilityFrameFactory = foldaFrameFactory;
+        this.modelViewFrameFactory = modelViewFrameFactory;
+        this.resultFrameFactory = resultFrameFactory;
+    }
 
-	@Override
-	public FoldabilityCheckFrameView createFoldabilityFrame(final FrameView parent) {
-		return foldabilityFrameFactory.createFrame(parent);
-	}
+    @Override
+    public FoldabilityCheckFrameView createFoldabilityFrame(final FrameView parent) {
+        return foldabilityFrameFactory.createFrame(parent);
+    }
 
-	@Override
-	public ModelViewFrameView createModelViewFrame(final FrameView parent) {
+    @Override
+    public ModelViewFrameView createModelViewFrame(final FrameView parent) {
 
-		return modelViewFrameFactory.createFrame(parent);
-	}
+        return modelViewFrameFactory.createFrame(parent);
+    }
 
-	@Override
-	public EstimationResultFrameView createResultFrame(final FrameView parent) {
-		return resultFrameFactory.createFrame(parent);
-	}
+    @Override
+    public EstimationResultFrameView createResultFrame(final FrameView parent) {
+        return resultFrameFactory.createFrame(parent);
+    }
 }

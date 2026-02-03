@@ -34,49 +34,49 @@ import oripa.resource.Constants;
  *
  */
 public class IniFileAccess {
-	private final InitDataFileReader reader;
-	private final InitDataFileWriter writer;
+    private final InitDataFileReader reader;
+    private final InitDataFileWriter writer;
 
-	/**
-	 *
-	 * @param r
-	 *            reader instance
-	 * @param w
-	 *            writer instance
-	 */
-	@Inject
-	public IniFileAccess(final InitDataFileReader r, final InitDataFileWriter w) {
-		reader = r;
-		writer = w;
-	}
+    /**
+     *
+     * @param r
+     *            reader instance
+     * @param w
+     *            writer instance
+     */
+    @Inject
+    public IniFileAccess(final InitDataFileReader r, final InitDataFileWriter w) {
+        reader = r;
+        writer = w;
+    }
 
-	/**
-	 * builds IniFile Object and saves it with writer instance
-	 *
-	 * @param fileHistory
-	 *            to be used
-	 * @param paintContext
-	 *            to read UI Settings
-	 * @throws IllegalStateException
-	 *             in case some of the fields are not set
-	 */
-	public void save(final FileHistory fileHistory, final CreasePatternViewContext viewContext)
-			throws IllegalStateException {
-		var builder = new InitDataBuilder();
+    /**
+     * builds IniFile Object and saves it with writer instance
+     *
+     * @param fileHistory
+     *            to be used
+     * @param paintContext
+     *            to read UI Settings
+     * @throws IllegalStateException
+     *             in case some of the fields are not set
+     */
+    public void save(final FileHistory fileHistory, final CreasePatternViewContext viewContext)
+            throws IllegalStateException {
+        var builder = new InitDataBuilder();
 
-		var ini = builder.setLastUsedFile(fileHistory.getLastPath())
-				.setMRUFiles(fileHistory.getHistory())
-				.setZeroLineWidth(viewContext.isZeroLineWidth())
-				.setMVLineVisible(viewContext.isMVLineVisible())
-				.setAuxLineVisible(viewContext.isAuxLineVisible())
-				.setVertexVisible(viewContext.isVertexVisible())
-				.get();
+        var ini = builder.setLastUsedFile(fileHistory.getLastPath())
+                .setMRUFiles(fileHistory.getHistory())
+                .setZeroLineWidth(viewContext.isZeroLineWidth())
+                .setMVLineVisible(viewContext.isMVLineVisible())
+                .setAuxLineVisible(viewContext.isAuxLineVisible())
+                .setVertexVisible(viewContext.isVertexVisible())
+                .get();
 
-		writer.write(ini, Constants.INI_FILE_PATH);
-	}
+        writer.write(ini, Constants.INI_FILE_PATH);
+    }
 
-	public InitData load() {
-		var ini = reader.read(Constants.INI_FILE_PATH);
-		return ini;
-	}
+    public InitData load() {
+        var ini = reader.read(Constants.INI_FILE_PATH);
+        return ini;
+    }
 }

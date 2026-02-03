@@ -34,49 +34,49 @@ import oripa.vecmath.Vector2d;
  */
 public class FoldableLineAngleSuggester {
 
-	/**
-	 *
-	 * @param vertex
-	 * @return angles of suggested lines. Empty collection if impossible or no
-	 *         need to interpolate.
-	 */
-	public Collection<Double> suggest(final OriVertex vertex) {
-		var typeOpt = new MaekawaTheoremSuggester().suggest(vertex);
+    /**
+     *
+     * @param vertex
+     * @return angles of suggested lines. Empty collection if impossible or no
+     *         need to interpolate.
+     */
+    public Collection<Double> suggest(final OriVertex vertex) {
+        var typeOpt = new MaekawaTheoremSuggester().suggest(vertex);
 
-		if (typeOpt.isEmpty()) {
-			return List.of();
-		}
+        if (typeOpt.isEmpty()) {
+            return List.of();
+        }
 
-		if (vertex.edgeCount() == 1) {
-			var edge = vertex.getEdge(0);
-			return List.of(MathUtil.normalizeAngle(edge.getAngle(vertex) + Math.PI));
-		}
+        if (vertex.edgeCount() == 1) {
+            var edge = vertex.getEdge(0);
+            return List.of(MathUtil.normalizeAngle(edge.getAngle(vertex) + Math.PI));
+        }
 
-		var type = typeOpt.get();
+        var type = typeOpt.get();
 
-		var kawasakiAngles = new KawasakiTheoremSuggester().suggest(vertex);
+        var kawasakiAngles = new KawasakiTheoremSuggester().suggest(vertex);
 
-		var foldableAngles = new ArrayList<Double>();
+        var foldableAngles = new ArrayList<Double>();
 
-		var checker = new FoldabilityChecker();
+        var checker = new FoldabilityChecker();
 
-		for (var angle : kawasakiAngles) {
-			var sp = vertex.getPositionBeforeFolding();
-			var sv = new OriVertex(sp);
+        for (var angle : kawasakiAngles) {
+            var sp = vertex.getPositionBeforeFolding();
+            var sv = new OriVertex(sp);
 
-			vertex.edgeStream().forEach(e -> sv.addEdge(new OriEdge(sv, e.oppositeVertex(vertex), e.getType())));
+            vertex.edgeStream().forEach(e -> sv.addEdge(new OriEdge(sv, e.oppositeVertex(vertex), e.getType())));
 
-			var ep = sp.add(Vector2d.unitVector(angle));
+            var ep = sp.add(Vector2d.unitVector(angle));
 
-			var ev = new OriVertex(ep);
-			var edge = new OriEdge(sv, ev, type.toInt());
-			sv.addEdge(edge);
+            var ev = new OriVertex(ep);
+            var edge = new OriEdge(sv, ev, type.toInt());
+            sv.addEdge(edge);
 
-			if (checker.testLocalFlatFoldability(sv)) {
-				foldableAngles.add(angle);
-			}
-		}
+            if (checker.testLocalFlatFoldability(sv)) {
+                foldableAngles.add(angle);
+            }
+        }
 
-		return foldableAngles;
-	}
+        return foldableAngles;
+    }
 }

@@ -32,169 +32,169 @@ import oripa.vecmath.Vector2d;
  */
 public class OrigamiModel {
 
-	private List<OriFace> faces = new ArrayList<OriFace>();
-	private List<OriVertex> vertices = new ArrayList<OriVertex>();
-	private List<OriEdge> edges = new ArrayList<OriEdge>();
+    private List<OriFace> faces = new ArrayList<OriFace>();
+    private List<OriVertex> vertices = new ArrayList<OriVertex>();
+    private List<OriEdge> edges = new ArrayList<OriEdge>();
 
-	private boolean folded = false;
+    private boolean folded = false;
 
-	private boolean locallyFlatFoldable = false;
+    private boolean locallyFlatFoldable = false;
 
-	private boolean hasModel = false;
+    private boolean hasModel = false;
 
-	private double paperSize = -1;
+    private double paperSize = -1;
 
-	// =============================================================
-	// Constructors
-	// =============================================================
+    // =============================================================
+    // Constructors
+    // =============================================================
 
-	@SuppressWarnings("unused")
-	private OrigamiModel() {
-	}
+    @SuppressWarnings("unused")
+    private OrigamiModel() {
+    }
 
-	public OrigamiModel(final double paperSize) {
-		this.paperSize = paperSize;
-	}
+    public OrigamiModel(final double paperSize) {
+        this.paperSize = paperSize;
+    }
 
-	// =============================================================
-	// Getter/Setter
-	// =============================================================
+    // =============================================================
+    // Getter/Setter
+    // =============================================================
 
-	public boolean isFolded() {
-		return folded;
-	}
+    public boolean isFolded() {
+        return folded;
+    }
 
-	public void setFolded(final boolean folded) {
-		this.folded = folded;
-	}
+    public void setFolded(final boolean folded) {
+        this.folded = folded;
+    }
 
-	/**
-	 * Returns local flat foldability given by
-	 * {@link #setLocallyFlatFoldable(boolean)}. This method does not compute
-	 * the value to save the computation cost.
-	 *
-	 * @return
-	 */
-	public boolean isLocallyFlatFoldable() {
-		return locallyFlatFoldable;
-	}
+    /**
+     * Returns local flat foldability given by
+     * {@link #setLocallyFlatFoldable(boolean)}. This method does not compute
+     * the value to save the computation cost.
+     *
+     * @return
+     */
+    public boolean isLocallyFlatFoldable() {
+        return locallyFlatFoldable;
+    }
 
-	public void setLocallyFlatFoldable(final boolean foldable) {
-		locallyFlatFoldable = foldable;
-	}
+    public void setLocallyFlatFoldable(final boolean foldable) {
+        locallyFlatFoldable = foldable;
+    }
 
-	public List<OriFace> getFaces() {
-		return faces;
-	}
+    public List<OriFace> getFaces() {
+        return faces;
+    }
 
-	public List<OriVertex> getVertices() {
-		return vertices;
-	}
+    public List<OriVertex> getVertices() {
+        return vertices;
+    }
 
-	public List<OriEdge> getEdges() {
-		return edges;
-	}
+    public List<OriEdge> getEdges() {
+        return edges;
+    }
 
-	public double getPaperSize() {
-		return paperSize;
-	}
+    public double getPaperSize() {
+        return paperSize;
+    }
 
-	/**
-	 * @param faces
-	 *            faces
-	 */
-	public void setFaces(final List<OriFace> faces) {
-		this.faces = faces;
-	}
+    /**
+     * @param faces
+     *            faces
+     */
+    public void setFaces(final List<OriFace> faces) {
+        this.faces = faces;
+    }
 
-	/**
-	 * @param vertices
-	 *            vertices
-	 */
-	public void setVertices(final List<OriVertex> vertices) {
-		this.vertices = vertices;
-	}
+    /**
+     * @param vertices
+     *            vertices
+     */
+    public void setVertices(final List<OriVertex> vertices) {
+        this.vertices = vertices;
+    }
 
-	/**
-	 * @param edges
-	 *            edges
-	 */
-	public void setEdges(final List<OriEdge> edges) {
-		this.edges = edges;
-	}
+    /**
+     * @param edges
+     *            edges
+     */
+    public void setEdges(final List<OriEdge> edges) {
+        this.edges = edges;
+    }
 
-	/**
-	 * @return hasModel
-	 */
-	public boolean hasModel() {
-		return hasModel;
-	}
+    /**
+     * @return hasModel
+     */
+    public boolean hasModel() {
+        return hasModel;
+    }
 
-	/**
-	 * @param hasModel
-	 *            hasModel
-	 */
-	public void setHasModel(final boolean hasModel) {
-		this.hasModel = hasModel;
-	}
+    /**
+     * @param hasModel
+     *            hasModel
+     */
+    public void setHasModel(final boolean hasModel) {
+        this.hasModel = hasModel;
+    }
 
-	// =============================================================
-	// Utility
-	// =============================================================
+    // =============================================================
+    // Utility
+    // =============================================================
 
-	/**
-	 * Flips x coordinates of the positions for display.
-	 */
-	public void flipXCoordinates() {
-		var domain = RectangleDomain.createFromPoints(
-				faces.stream()
-						.flatMap(OriFace::halfedgeStream)
-						.map(OriHalfedge::getPosition)
-						.toList());
+    /**
+     * Flips x coordinates of the positions for display.
+     */
+    public void flipXCoordinates() {
+        var domain = RectangleDomain.createFromPoints(
+                faces.stream()
+                        .flatMap(OriFace::halfedgeStream)
+                        .map(OriHalfedge::getPosition)
+                        .toList());
 
-		double centerX = domain.getCenterX();
+        double centerX = domain.getCenterX();
 
-		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
-			var x = 2 * centerX - he.getPositionForDisplay().getX();
-			var y = he.getPositionForDisplay().getY();
-			he.setPositionForDisplay(new Vector2d(x, y));
-		});
-	}
+        faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
+            var x = 2 * centerX - he.getPositionForDisplay().getX();
+            var y = he.getPositionForDisplay().getY();
+            he.setPositionForDisplay(new Vector2d(x, y));
+        });
+    }
 
-	public RectangleDomain createDomainOfFoldedModel() {
-		return createDomain(OriHalfedge::getPosition);
-	}
+    public RectangleDomain createDomainOfFoldedModel() {
+        return createDomain(OriHalfedge::getPosition);
+    }
 
-	public RectangleDomain createPaperDomain() {
-		return createDomain(OriHalfedge::getPositionBeforeFolding);
-	}
+    public RectangleDomain createPaperDomain() {
+        return createDomain(OriHalfedge::getPositionBeforeFolding);
+    }
 
-	private RectangleDomain createDomain(final Function<OriHalfedge, Vector2d> positionExtractor) {
-		var paperDomain = RectangleDomain.createFromPoints(
-				faces.stream()
-						.flatMap(OriFace::halfedgeStream)
-						.map(positionExtractor)
-						.toList());
+    private RectangleDomain createDomain(final Function<OriHalfedge, Vector2d> positionExtractor) {
+        var paperDomain = RectangleDomain.createFromPoints(
+                faces.stream()
+                        .flatMap(OriFace::halfedgeStream)
+                        .map(positionExtractor)
+                        .toList());
 
-		return paperDomain;
-	}
+        return paperDomain;
+    }
 
-	public boolean isUnassigned() {
-		return edges.stream().anyMatch(edge -> edge.isUnassigned());
-	}
+    public boolean isUnassigned() {
+        return edges.stream().anyMatch(edge -> edge.isUnassigned());
+    }
 
-	public ModelType getModelType() {
-		if (!isLocallyFlatFoldable()) {
-			return ModelType.ERROR_CONTAINING;
-		} else if (isUnassigned()) {
-			return ModelType.UNASSIGNED;
-		} else {
-			return ModelType.ASSIGNED;
-		}
-	}
+    public ModelType getModelType() {
+        if (!isLocallyFlatFoldable()) {
+            return ModelType.ERROR_CONTAINING;
+        } else if (isUnassigned()) {
+            return ModelType.UNASSIGNED;
+        } else {
+            return ModelType.ASSIGNED;
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "[" + faces.toString() + edges.toString() + vertices.toString() + "]";
-	}
+    @Override
+    public String toString() {
+        return "[" + faces.toString() + edges.toString() + vertices.toString() + "]";
+    }
 }

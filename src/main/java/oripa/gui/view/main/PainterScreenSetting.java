@@ -26,26 +26,26 @@ import java.beans.PropertyChangeListener;
  */
 public interface PainterScreenSetting {
 
-	String GRID_VISIBLE = "grid visible";
-	String CROSS_LINE_VISIBLE = "cross line visible";
-	String ZERO_LINE_WIDTH = "zero line width";
-	String VERTEX_VISIBLE = "vertex visible";
-	String MV_LINE_VISIBLE = "mv line visible";
-	String AUX_LINE_VISIBLE = "aux line visible";
+    String GRID_VISIBLE = "grid visible";
+    String CROSS_LINE_VISIBLE = "cross line visible";
+    String ZERO_LINE_WIDTH = "zero line width";
+    String VERTEX_VISIBLE = "vertex visible";
+    String MV_LINE_VISIBLE = "mv line visible";
+    String AUX_LINE_VISIBLE = "aux line visible";
 
-	void addPropertyChangeListener(String propertyName,
-			PropertyChangeListener listener);
+    void addPropertyChangeListener(String propertyName,
+            PropertyChangeListener listener);
 
-	void setGridVisible(boolean gridVisible);
+    void setGridVisible(boolean gridVisible);
 
-	void setCrossLineVisible(boolean visible);
+    void setCrossLineVisible(boolean visible);
 
-	void setZeroLineWidth(boolean zeroLineWidth);
+    void setZeroLineWidth(boolean zeroLineWidth);
 
-	void setVertexVisible(boolean vertexVisible);
+    void setVertexVisible(boolean vertexVisible);
 
-	void setMVLineVisible(boolean mvLineVisible);
+    void setMVLineVisible(boolean mvLineVisible);
 
-	void setAuxLineVisible(boolean auxLineVisible);
+    void setAuxLineVisible(boolean auxLineVisible);
 
 }

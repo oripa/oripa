@@ -1,5 +1,5 @@
 package oripa.appstate;
 
 public interface GroupMember<GroupEnum> {
-	GroupEnum getGroup();
+    GroupEnum getGroup();
 }

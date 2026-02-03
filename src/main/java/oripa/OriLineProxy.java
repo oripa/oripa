@@ -24,65 +24,65 @@ import oripa.vecmath.Vector2d;
 //TODO: Move this class to the package of persistence layer in order to remove circular dependency.
 //This change disables to read old opx file since serialization target becomes different.
 public class OriLineProxy {
-	private double x0;
-	private double y0;
-	private double x1;
-	private double y1;
-	private int type;
+    private double x0;
+    private double y0;
+    private double x1;
+    private double y1;
+    private int type;
 
-	public OriLineProxy() {
-	}
+    public OriLineProxy() {
+    }
 
-	public OriLineProxy(final OriLine l) {
-		x0 = l.getP0().getX();
-		y0 = l.getP0().getY();
-		x1 = l.getP1().getX();
-		y1 = l.getP1().getY();
-		type = l.getType().toInt();
-	}
+    public OriLineProxy(final OriLine l) {
+        x0 = l.getP0().getX();
+        y0 = l.getP0().getY();
+        x1 = l.getP1().getX();
+        y1 = l.getP1().getY();
+        type = l.getType().toInt();
+    }
 
-	public OriLine getLine() {
-		return new OriLine(new Vector2d(x0, y0), new Vector2d(x1, y1), OriLine.Type.fromInt(type));
-	}
+    public OriLine getLine() {
+        return new OriLine(new Vector2d(x0, y0), new Vector2d(x1, y1), OriLine.Type.fromInt(type));
+    }
 
-	public void setX0(final double x0) {
-		this.x0 = x0;
-	}
+    public void setX0(final double x0) {
+        this.x0 = x0;
+    }
 
-	public double getX0() {
-		return x0;
-	}
+    public double getX0() {
+        return x0;
+    }
 
-	public void setX1(final double x1) {
-		this.x1 = x1;
-	}
+    public void setX1(final double x1) {
+        this.x1 = x1;
+    }
 
-	public double getX1() {
-		return x1;
-	}
+    public double getX1() {
+        return x1;
+    }
 
-	public void setY0(final double y0) {
-		this.y0 = y0;
-	}
+    public void setY0(final double y0) {
+        this.y0 = y0;
+    }
 
-	public double getY0() {
-		return y0;
-	}
+    public double getY0() {
+        return y0;
+    }
 
-	public void setY1(final double y1) {
-		this.y1 = y1;
-	}
+    public void setY1(final double y1) {
+        this.y1 = y1;
+    }
 
-	public double getY1() {
-		return y1;
-	}
+    public double getY1() {
+        return y1;
+    }
 
-	public void setType(final int type) {
-		this.type = type;
-	}
+    public void setType(final int type) {
+        this.type = type;
+    }
 
-	public int getType() {
-		return type;
-	}
+    public int getType() {
+        return type;
+    }
 
 }

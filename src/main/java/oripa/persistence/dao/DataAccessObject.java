@@ -33,36 +33,36 @@ import oripa.persistence.filetool.WrongDataFormatException;
  */
 public interface DataAccessObject<Data> {
 
-	/**
-	 * try loading data from {@code path}
-	 *
-	 * @param path
-	 *            for the data to be loaded.
-	 * @return loaded data.
-	 * @throws FileVersionError
-	 * @throws IOException
-	 *             file IO trouble.
-	 * @throws FileNotFoundException
-	 * @throws IllegalArgumentException
-	 *             {@code path} is not correct.
-	 * @throws WrongDataFormatException
-	 */
-	Optional<Data> load(String path)
-			throws DataAccessException, IllegalArgumentException;
+    /**
+     * try loading data from {@code path}
+     *
+     * @param path
+     *            for the data to be loaded.
+     * @return loaded data.
+     * @throws FileVersionError
+     * @throws IOException
+     *             file IO trouble.
+     * @throws FileNotFoundException
+     * @throws IllegalArgumentException
+     *             {@code path} is not correct.
+     * @throws WrongDataFormatException
+     */
+    Optional<Data> load(String path)
+            throws DataAccessException, IllegalArgumentException;
 
-	/**
-	 * save data to {@code path}.
-	 *
-	 * @param data
-	 *            to be saved.
-	 * @param path
-	 *            for the place to save the {@code data}.
-	 * @throws IOException
-	 *             file IO trouble.
-	 * @throws IllegalArgumentException
-	 *             {@code data} can't be saved as the given extension.
-	 */
-	void save(Data data, String path)
-			throws DataAccessException, IllegalArgumentException;
+    /**
+     * save data to {@code path}.
+     *
+     * @param data
+     *            to be saved.
+     * @param path
+     *            for the place to save the {@code data}.
+     * @throws IOException
+     *             file IO trouble.
+     * @throws IllegalArgumentException
+     *             {@code data} can't be saved as the given extension.
+     */
+    void save(Data data, String path)
+            throws DataAccessException, IllegalArgumentException;
 
 }

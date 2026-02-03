@@ -37,80 +37,80 @@ import oripa.value.OriLine;
  *
  */
 public class OverlappingLineExtractor {
-	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
 
-	/**
-	 * Returns a collection of lines grouped by their support lines, i.e., lines
-	 * are in the same group if the angle and intercept are respectively the
-	 * same among the lines.
-	 *
-	 * @param lines
-	 * @param pointEps
-	 * @return grouping by support line
-	 */
-	public Collection<Collection<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
-			final double pointEps) {
-		// make a data structure for fast computation.
-		var hashFactory = new AngleInterceptHashFactory<AnalyticLine>(pointEps);
-		var hash = hashFactory.create(lines, AnalyticLine::new);
+    /**
+     * Returns a collection of lines grouped by their support lines, i.e., lines
+     * are in the same group if the angle and intercept are respectively the
+     * same among the lines.
+     *
+     * @param lines
+     * @param pointEps
+     * @return grouping by support line
+     */
+    public Collection<Collection<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
+            final double pointEps) {
+        // make a data structure for fast computation.
+        var hashFactory = new AngleInterceptHashFactory<AnalyticLine>(pointEps);
+        var hash = hashFactory.create(lines, AnalyticLine::new);
 
-		var overlapGroups = new ConcurrentLinkedQueue<Collection<OriLine>>();
+        var overlapGroups = new ConcurrentLinkedQueue<Collection<OriLine>>();
 
-		// for each angle and intercept, try all pairs of lines and find
-		// overlaps.
-		IntStream.range(0, hash.size()).parallel().forEach(angle_i -> {
-			var byAngle = hash.get(angle_i);
-			IntStream.range(0, byAngle.size()).parallel().forEach(intercept_i -> {
-				var byIntercept = byAngle.get(intercept_i);
-				Collection<OriLine> overlaps = new ConcurrentLinkedQueue<OriLine>();
-				// for each line
-				IntStream.range(0, byIntercept.size()).parallel().forEach(i -> {
-					var line0 = byIntercept.get(i).getLine();
-					// search another line of overlapping
-					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
-						var line1 = byIntercept.get(j).getLine();
-						if (GeomUtil.isOverlap(line0, line1, pointEps)) {
-							overlaps.add(line0);
-							overlaps.add(line1);
-						}
-					});
-				});
-				if (!overlaps.isEmpty()) {
-					overlapGroups.add(overlaps);
-				}
-			});
-		});
+        // for each angle and intercept, try all pairs of lines and find
+        // overlaps.
+        IntStream.range(0, hash.size()).parallel().forEach(angle_i -> {
+            var byAngle = hash.get(angle_i);
+            IntStream.range(0, byAngle.size()).parallel().forEach(intercept_i -> {
+                var byIntercept = byAngle.get(intercept_i);
+                Collection<OriLine> overlaps = new ConcurrentLinkedQueue<OriLine>();
+                // for each line
+                IntStream.range(0, byIntercept.size()).parallel().forEach(i -> {
+                    var line0 = byIntercept.get(i).getLine();
+                    // search another line of overlapping
+                    IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
+                        var line1 = byIntercept.get(j).getLine();
+                        if (GeomUtil.isOverlap(line0, line1, pointEps)) {
+                            overlaps.add(line0);
+                            overlaps.add(line1);
+                        }
+                    });
+                });
+                if (!overlaps.isEmpty()) {
+                    overlapGroups.add(overlaps);
+                }
+            });
+        });
 
-		return new ArrayList<>(overlapGroups);
-	}
+        return new ArrayList<>(overlapGroups);
+    }
 
-	/**
-	 * extracts all possible overlapping lines.
-	 *
-	 * @param lines
-	 * @return all overlapping lines.
-	 */
-	public Collection<OriLine> extract(final Collection<OriLine> lines, final double pointEps) {
-		var watch = new StopWatch(true);
+    /**
+     * extracts all possible overlapping lines.
+     *
+     * @param lines
+     * @return all overlapping lines.
+     */
+    public Collection<OriLine> extract(final Collection<OriLine> lines, final double pointEps) {
+        var watch = new StopWatch(true);
 
-		var overlappingLines = extractOverlapsGroupedBySupport(lines, pointEps).stream()
-				.flatMap(Collection::stream)
-				.toList();
+        var overlappingLines = extractOverlapsGroupedBySupport(lines, pointEps).stream()
+                .flatMap(Collection::stream)
+                .toList();
 
-		logger.debug("extract(): " + watch.getMilliSec() + "[ms]");
+        logger.debug("extract(): " + watch.getMilliSec() + "[ms]");
 
-		return overlappingLines;
-	}
+        return overlappingLines;
+    }
 
-	/**
-	 *
-	 * @param lines
-	 * @param target
-	 * @return overlapping lines of {@code target}.
-	 */
-	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target, final double pointEps) {
-		return lines.parallelStream()
-				.filter(l -> GeomUtil.isOverlap(l, target, pointEps))
-				.toList();
-	}
+    /**
+     *
+     * @param lines
+     * @param target
+     * @return overlapping lines of {@code target}.
+     */
+    public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target, final double pointEps) {
+        return lines.parallelStream()
+                .filter(l -> GeomUtil.isOverlap(l, target, pointEps))
+                .toList();
+    }
 }

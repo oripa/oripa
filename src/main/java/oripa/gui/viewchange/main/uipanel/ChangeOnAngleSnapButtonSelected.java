@@ -4,27 +4,27 @@ import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewchange.ChangeViewSetting;
 
 public class ChangeOnAngleSnapButtonSelected implements ChangeViewSetting {
-	private final UIPanelSetting setting;
+    private final UIPanelSetting setting;
 
-	/**
-	 * change UIPanel view settings for Angle Snap Line Input Tool
-	 */
-	public ChangeOnAngleSnapButtonSelected(final UIPanelSetting uiPanelSetting) {
-		setting = uiPanelSetting;
-	}
+    /**
+     * change UIPanel view settings for Angle Snap Line Input Tool
+     */
+    public ChangeOnAngleSnapButtonSelected(final UIPanelSetting uiPanelSetting) {
+        setting = uiPanelSetting;
+    }
 
-	@Override
-	public void changeViewSetting() {
-		setting.selectInputMode();
+    @Override
+    public void changeViewSetting() {
+        setting.selectInputMode();
 
-		setting.setByValuePanelVisible(false);
+        setting.setByValuePanelVisible(false);
 
-		setting.setLineSelectionPanelVisible(false);
-		setting.setLineInputPanelVisible(true);
+        setting.setLineSelectionPanelVisible(false);
+        setting.setLineInputPanelVisible(true);
 
-		setting.setAngleStepPanelVisible(true);
+        setting.setAngleStepPanelVisible(true);
 
-		setting.setAlterLineTypePanelVisible(false);
-	}
+        setting.setAlterLineTypePanelVisible(false);
+    }
 
 }

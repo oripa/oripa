@@ -23,7 +23,7 @@ package oripa.gui.view;
  *
  */
 public class ViewScreenUpdaterFactory {
-	public ViewScreenUpdater create() {
-		return new ViewScreenUpdaterImpl();
-	}
+    public ViewScreenUpdater create() {
+        return new ViewScreenUpdaterImpl();
+    }
 }

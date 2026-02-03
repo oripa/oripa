@@ -32,43 +32,43 @@ import oripa.resource.ResourceHolder;
  */
 public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 
-	private final PainterScreenSetting mainScreenSetting;
-	private final ChildFrameManager childFrameManager;
+    private final PainterScreenSetting mainScreenSetting;
+    private final ChildFrameManager childFrameManager;
 
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public ModelViewSwingFrameFactory(final PainterScreenSetting mainScreenSetting,
-			final ChildFrameManager childFrameManager,
-			final ResourceHolder resourceHolder) {
-		this.mainScreenSetting = mainScreenSetting;
-		this.childFrameManager = childFrameManager;
-		this.resourceHolder = resourceHolder;
-	}
+    @Inject
+    public ModelViewSwingFrameFactory(final PainterScreenSetting mainScreenSetting,
+            final ChildFrameManager childFrameManager,
+            final ResourceHolder resourceHolder) {
+        this.mainScreenSetting = mainScreenSetting;
+        this.childFrameManager = childFrameManager;
+        this.resourceHolder = resourceHolder;
+    }
 
-	@Override
-	public ModelViewFrameView createFrame(
-			final FrameView parent) {
+    @Override
+    public ModelViewFrameView createFrame(
+            final FrameView parent) {
 
-		var frameOpt = childFrameManager.find(parent,
-				ModelViewFrame.class);
+        var frameOpt = childFrameManager.find(parent,
+                ModelViewFrame.class);
 
-		frameOpt.ifPresent(frame -> {
-			removeFromChildFrameManager(frame);
-			frame.dispose();
-		});
+        frameOpt.ifPresent(frame -> {
+            removeFromChildFrameManager(frame);
+            frame.dispose();
+        });
 
-		var frame = new ModelViewFrame(400, 400, mainScreenSetting, resourceHolder);
+        var frame = new ModelViewFrame(400, 400, mainScreenSetting, resourceHolder);
 
-		frame.setOnCloseListener(this::removeFromChildFrameManager);
-		childFrameManager.putChild(parent, frame);
+        frame.setOnCloseListener(this::removeFromChildFrameManager);
+        childFrameManager.putChild(parent, frame);
 
-		return frame;
-	}
+        return frame;
+    }
 
-	private void removeFromChildFrameManager(final FrameView frame) {
-		childFrameManager.closeAll(frame);
-		childFrameManager.removeFromChildren(frame);
-	}
+    private void removeFromChildFrameManager(final FrameView frame) {
+        childFrameManager.closeAll(frame);
+        childFrameManager.removeFromChildren(frame);
+    }
 
 }

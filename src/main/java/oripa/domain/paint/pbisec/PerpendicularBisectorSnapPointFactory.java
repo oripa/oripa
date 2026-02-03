@@ -30,22 +30,22 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class PerpendicularBisectorSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		Vector2d p0, p1;
-		p0 = context.getVertex(0);
-		p1 = context.getVertex(1);
+    public Collection<Vector2d> createSnapPoints(final PaintContext context) {
+        Vector2d p0, p1;
+        p0 = context.getVertex(0);
+        p1 = context.getVertex(1);
 
-		var eps = context.getPainter().getPointEps();
+        var eps = context.getPainter().getPointEps();
 
-		var bisectorFactory = new PerpendicularBisectorFactory();
-		var pbisec = bisectorFactory.create(p0, p1);
+        var bisectorFactory = new PerpendicularBisectorFactory();
+        var pbisec = bisectorFactory.create(p0, p1);
 
-		var snapPointFactory = new SnapPointFactory();
+        var snapPointFactory = new SnapPointFactory();
 
-		var creasePattern = context.getCreasePattern();
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, pbisec,
-				eps);
+        var creasePattern = context.getCreasePattern();
+        Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, pbisec,
+                eps);
 
-		return snapPoints;
-	}
+        return snapPoints;
+    }
 }

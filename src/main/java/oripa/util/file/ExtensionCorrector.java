@@ -29,32 +29,32 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ExtensionCorrector {
-	final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	/**
-	 * this method does not change {@code path}.
-	 *
-	 * @param path
-	 * @param extensions
-	 *            example: "png"
-	 * @return path string with new extension
-	 */
-	public String correct(final String path, final String[] extensions) {
+    /**
+     * this method does not change {@code path}.
+     *
+     * @param path
+     * @param extensions
+     *            example: "png"
+     * @return path string with new extension
+     */
+    public String correct(final String path, final String[] extensions) {
 
-		logger.debug("extensions[0] for correction: {}", extensions[0]);
-		if (List.of(extensions).stream()
-				.noneMatch(ext -> path.endsWith("." + ext))) {
-			return replaceExtension(path, extensions[0]);
-		}
+        logger.debug("extensions[0] for correction: {}", extensions[0]);
+        if (List.of(extensions).stream()
+                .noneMatch(ext -> path.endsWith("." + ext))) {
+            return replaceExtension(path, extensions[0]);
+        }
 
-		return path;
-	}
+        return path;
+    }
 
-	private String replaceExtension(final String path, final String ext) {
-		// drop the old extension and append the new extension.
-		// replacing with extension is not correct if given path has no
-		// extension.
-		return path.replaceAll("\\.\\w+$", "") + "." + ext;
-	}
+    private String replaceExtension(final String path, final String ext) {
+        // drop the old extension and append the new extension.
+        // replacing with extension is not correct if given path has no
+        // extension.
+        return path.replaceAll("\\.\\w+$", "") + "." + ext;
+    }
 
 }

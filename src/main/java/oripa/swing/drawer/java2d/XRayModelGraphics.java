@@ -32,28 +32,28 @@ import oripa.gui.view.model.ObjectGraphicDrawer;
  */
 public class XRayModelGraphics implements ModelGraphics {
 
-	private final Graphics g;
-	private final Graphics2D bufferg;
-	private final Image bufferImage;
-	private final ImageObserver screen;
+    private final Graphics g;
+    private final Graphics2D bufferg;
+    private final Image bufferImage;
+    private final ImageObserver screen;
 
-	public XRayModelGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage,
-			final ImageObserver screen) {
+    public XRayModelGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage,
+            final ImageObserver screen) {
 
-		this.g = g;
-		this.bufferg = bufferg;
-		this.bufferImage = bufferImage;
-		this.screen = screen;
-	}
+        this.g = g;
+        this.bufferg = bufferg;
+        this.bufferImage = bufferImage;
+        this.screen = screen;
+    }
 
-	@Override
-	public ObjectGraphicDrawer getBufferObjectDrawer() {
-		return new OrigamiModelObjectDrawer(bufferg);
-	}
+    @Override
+    public ObjectGraphicDrawer getBufferObjectDrawer() {
+        return new OrigamiModelObjectDrawer(bufferg);
+    }
 
-	@Override
-	public void drawBufferImage() {
-		g.drawImage(bufferImage, 0, 0, screen);
-	}
+    @Override
+    public void drawBufferImage() {
+        g.drawImage(bufferImage, 0, 0, screen);
+    }
 
 }

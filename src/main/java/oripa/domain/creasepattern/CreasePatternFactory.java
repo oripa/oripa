@@ -30,72 +30,72 @@ import oripa.value.OriLine;
  */
 public class CreasePatternFactory {
 
-	/**
-	 * creates non-folded crease pattern. Returned collection has only 4 lines
-	 * which describe the edges of a square paper. The center of the paper is
-	 * set to (0, 0).
-	 *
-	 * @param width
-	 * @param heigh
-	 * @return crease pattern of non-folded case.
-	 */
-	public CreasePattern createCreasePattern(final double width, final double height) {
-		double halfW = width / 2.0;
-		double halfH = height / 2.0;
+    /**
+     * creates non-folded crease pattern. Returned collection has only 4 lines
+     * which describe the edges of a square paper. The center of the paper is
+     * set to (0, 0).
+     *
+     * @param width
+     * @param heigh
+     * @return crease pattern of non-folded case.
+     */
+    public CreasePattern createCreasePattern(final double width, final double height) {
+        double halfW = width / 2.0;
+        double halfH = height / 2.0;
 
-		OriLine l0 = new OriLine(-halfW, -halfH, halfW, -halfH, OriLine.Type.CUT);
-		OriLine l1 = new OriLine(halfW, -halfH, halfW, halfH, OriLine.Type.CUT);
-		OriLine l2 = new OriLine(halfW, halfH, -halfW, halfH, OriLine.Type.CUT);
-		OriLine l3 = new OriLine(-halfW, halfH, -halfW, -halfH, OriLine.Type.CUT);
+        OriLine l0 = new OriLine(-halfW, -halfH, halfW, -halfH, OriLine.Type.CUT);
+        OriLine l1 = new OriLine(halfW, -halfH, halfW, halfH, OriLine.Type.CUT);
+        OriLine l2 = new OriLine(halfW, halfH, -halfW, halfH, OriLine.Type.CUT);
+        OriLine l3 = new OriLine(-halfW, halfH, -halfW, -halfH, OriLine.Type.CUT);
 
-		var lines = List.of(l0, l1, l2, l3);
-		var domain = RectangleDomain.createFromSegments(lines);
+        var lines = List.of(l0, l1, l2, l3);
+        var domain = RectangleDomain.createFromSegments(lines);
 
-		CreasePattern creasePattern = new CreasePatternImpl(domain);
+        CreasePattern creasePattern = new CreasePatternImpl(domain);
 
-		creasePattern.addAll(lines);
+        creasePattern.addAll(lines);
 
-		return creasePattern;
-	}
+        return creasePattern;
+    }
 
-	public CreasePattern createSquareCreasePattern(final double paperSize) {
-		return createCreasePattern(paperSize, paperSize);
-	}
+    public CreasePattern createSquareCreasePattern(final double paperSize) {
+        return createCreasePattern(paperSize, paperSize);
+    }
 
-	/**
-	 * creates crease pattern which consists of given lines and no other lines.
-	 *
-	 * @param lines
-	 * @return
-	 */
-	public CreasePattern createCreasePattern(final Collection<OriLine> lines) {
-		return createCreasePattern(lines, 0);
-	}
+    /**
+     * creates crease pattern which consists of given lines and no other lines.
+     *
+     * @param lines
+     * @return
+     */
+    public CreasePattern createCreasePattern(final Collection<OriLine> lines) {
+        return createCreasePattern(lines, 0);
+    }
 
-	public CreasePattern createCreasePattern(final Collection<OriLine> lines, final double eps) {
-		// To get paper size, consider boundary only
-		var domain = RectangleDomain.createFromSegments(
-				lines.stream()
-						.filter(OriLine::isBoundary)
-						.toList());
+    public CreasePattern createCreasePattern(final Collection<OriLine> lines, final double eps) {
+        // To get paper size, consider boundary only
+        var domain = RectangleDomain.createFromSegments(
+                lines.stream()
+                        .filter(OriLine::isBoundary)
+                        .toList());
 
-		if (domain.isVoid()) {
-			domain = RectangleDomain.createFromSegments(lines);
-		}
+        if (domain.isVoid()) {
+            domain = RectangleDomain.createFromSegments(lines);
+        }
 
-		domain.enlarge(eps);
+        domain.enlarge(eps);
 
-		// Construct CP
-		CreasePattern creasePattern = new CreasePatternImpl(domain);
-		creasePattern.addAll(lines);
+        // Construct CP
+        CreasePattern creasePattern = new CreasePatternImpl(domain);
+        creasePattern.addAll(lines);
 
-		return creasePattern;
-	}
+        return creasePattern;
+    }
 
-	public CreasePattern createCreasePattern(final RectangleDomain domain) {
-		// Construct CP
-		CreasePattern creasePattern = new CreasePatternImpl(domain);
+    public CreasePattern createCreasePattern(final RectangleDomain domain) {
+        // Construct CP
+        CreasePattern creasePattern = new CreasePatternImpl(domain);
 
-		return creasePattern;
-	}
+        return creasePattern;
+    }
 }

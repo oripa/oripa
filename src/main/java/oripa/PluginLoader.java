@@ -12,24 +12,24 @@ import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.UIPanelSetting;
 
 public class PluginLoader {
-	private static Logger logger = LoggerFactory.getLogger(PluginLoader.class);
+    private static Logger logger = LoggerFactory.getLogger(PluginLoader.class);
 
-	public List<GraphicMouseActionPlugin> loadMouseActionPlugins(final MainFrameSetting frameSetting,
-			final UIPanelSetting uiPanelSetting) {
+    public List<GraphicMouseActionPlugin> loadMouseActionPlugins(final MainFrameSetting frameSetting,
+            final UIPanelSetting uiPanelSetting) {
 
-		var loader = ServiceLoader.load(GraphicMouseActionPlugin.class);
+        var loader = ServiceLoader.load(GraphicMouseActionPlugin.class);
 
-		var plugins = new ArrayList<GraphicMouseActionPlugin>();
+        var plugins = new ArrayList<GraphicMouseActionPlugin>();
 
-		loader.forEach(plugin -> {
-			plugin.setMainFrameSetting(frameSetting);
-			plugin.setUIPanelSetting(uiPanelSetting);
+        loader.forEach(plugin -> {
+            plugin.setMainFrameSetting(frameSetting);
+            plugin.setUIPanelSetting(uiPanelSetting);
 
-			plugins.add(plugin);
-		});
+            plugins.add(plugin);
+        });
 
-		logger.debug("{} plugins", plugins.size());
+        logger.debug("{} plugins", plugins.size());
 
-		return plugins;
-	}
+        return plugins;
+    }
 }

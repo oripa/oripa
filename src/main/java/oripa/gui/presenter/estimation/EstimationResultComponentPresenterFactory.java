@@ -30,24 +30,24 @@ import oripa.gui.view.estimation.EstimationResultUIView;
  */
 public class EstimationResultComponentPresenterFactory {
 
-	private final EstimationResultFilePresentationLogic estimationResultFilePresentationLogic;
+    private final EstimationResultFilePresentationLogic estimationResultFilePresentationLogic;
 
-	@Inject
-	public EstimationResultComponentPresenterFactory(
-			final EstimationResultFilePresentationLogic estimationResultFilePresenter) {
+    @Inject
+    public EstimationResultComponentPresenterFactory(
+            final EstimationResultFilePresentationLogic estimationResultFilePresenter) {
 
-		this.estimationResultFilePresentationLogic = estimationResultFilePresenter;
-	}
+        this.estimationResultFilePresentationLogic = estimationResultFilePresenter;
+    }
 
-	public EstimationResultUIPresenter createEstimationResultUIPresenter(
-			final EstimationResultUIView view,
-			final String lastFilePath,
-			final Consumer<String> lastFilePathChangeListener) {
-		return new EstimationResultUIPresenter(
-				view,
-				estimationResultFilePresentationLogic,
-				lastFilePath,
-				lastFilePathChangeListener);
+    public EstimationResultUIPresenter createEstimationResultUIPresenter(
+            final EstimationResultUIView view,
+            final String lastFilePath,
+            final Consumer<String> lastFilePathChangeListener) {
+        return new EstimationResultUIPresenter(
+                view,
+                estimationResultFilePresentationLogic,
+                lastFilePath,
+                lastFilePathChangeListener);
 
-	}
+    }
 }

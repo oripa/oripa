@@ -36,42 +36,42 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class SnapPointFactory {
-	private static final Logger logger = LoggerFactory.getLogger(SnapPointFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(SnapPointFactory.class);
 
-	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Line line,
-			final double pointEps) {
+    public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Line line,
+            final double pointEps) {
 
-		logger.trace("eps = {}", pointEps);
+        logger.trace("eps = {}", pointEps);
 
-		return Stream.concat(
-				// snap on cross points of line and creases.
-				creasePattern.stream()
-						.map(crease -> GeomUtil.getCrossPoint(line, crease))
-						.flatMap(Optional::stream),
+        return Stream.concat(
+                // snap on cross points of line and creases.
+                creasePattern.stream()
+                        .map(crease -> GeomUtil.getCrossPoint(line, crease))
+                        .flatMap(Optional::stream),
 
-				// snap on end points of overlapping creases.
-				creasePattern.stream()
-						.filter(crease -> GeomUtil.isOverlap(line, crease, pointEps))
-						.flatMap(OriLine::pointStream))
-				.toList();
-	}
+                // snap on end points of overlapping creases.
+                creasePattern.stream()
+                        .filter(crease -> GeomUtil.isOverlap(line, crease, pointEps))
+                        .flatMap(OriLine::pointStream))
+                .toList();
+    }
 
-	@Deprecated
-	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line,
-			final double pointEps) {
+    @Deprecated
+    public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line,
+            final double pointEps) {
 
-		logger.trace("eps = {}", pointEps);
+        logger.trace("eps = {}", pointEps);
 
-		return Stream.concat(
-				// snap on cross points of line and creases.
-				creasePattern.stream()
-						.map(crease -> GeomUtil.getCrossPoint(line, crease))
-						.flatMap(Optional::stream),
+        return Stream.concat(
+                // snap on cross points of line and creases.
+                creasePattern.stream()
+                        .map(crease -> GeomUtil.getCrossPoint(line, crease))
+                        .flatMap(Optional::stream),
 
-				// snap on end points of overlapping creases.
-				creasePattern.stream()
-						.filter(crease -> GeomUtil.isRelaxedOverlap(line, crease, pointEps))
-						.flatMap(OriLine::pointStream))
-				.toList();
-	}
+                // snap on end points of overlapping creases.
+                creasePattern.stream()
+                        .filter(crease -> GeomUtil.isRelaxedOverlap(line, crease, pointEps))
+                        .flatMap(OriLine::pointStream))
+                .toList();
+    }
 }

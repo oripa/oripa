@@ -28,81 +28,81 @@ import oripa.domain.fold.origeom.EstimationResult;
 import oripa.util.rule.Rule;
 
 public class EstimationResultRules {
-	private EstimationResult estimationResult;
+    private EstimationResult estimationResult;
 
-	private List<Rule<OriFace>> rules = Collections.synchronizedList(new ArrayList<>());
+    private List<Rule<OriFace>> rules = Collections.synchronizedList(new ArrayList<>());
 
-	public EstimationResultRules() {
-		estimationResult = EstimationResult.NOT_CHANGED;
-	}
+    public EstimationResultRules() {
+        estimationResult = EstimationResult.NOT_CHANGED;
+    }
 
-	public EstimationResultRules(final EstimationResult result) {
-		estimationResult = result;
-	}
+    public EstimationResultRules(final EstimationResult result) {
+        estimationResult = result;
+    }
 
-	void addMVAssignmentViolation(final List<OriFace> violatingFaces) {
-		rules.add(new LayerOrderRule("MV", violatingFaces));
-	}
+    void addMVAssignmentViolation(final List<OriFace> violatingFaces) {
+        rules.add(new LayerOrderRule("MV", violatingFaces));
+    }
 
-	void addTransitivityViolation(final List<OriFace> violatingFaces) {
-		rules.add(new LayerOrderRule("transitivity", violatingFaces));
-	}
+    void addTransitivityViolation(final List<OriFace> violatingFaces) {
+        rules.add(new LayerOrderRule("transitivity", violatingFaces));
+    }
 
-	void addPenetrationViolation(final List<OriFace> violatingFaces) {
-		rules.add(new LayerOrderRule("penetration", violatingFaces));
-	}
+    void addPenetrationViolation(final List<OriFace> violatingFaces) {
+        rules.add(new LayerOrderRule("penetration", violatingFaces));
+    }
 
-	void addStackCondition4FacesViolation(final List<OriFace> violatingFaces) {
-		rules.add(new LayerOrderRule("stack4Faces", violatingFaces));
-	}
+    void addStackCondition4FacesViolation(final List<OriFace> violatingFaces) {
+        rules.add(new LayerOrderRule("stack4Faces", violatingFaces));
+    }
 
-	void addCover3FacesViolation(final List<OriFace> violatingFaces) {
-		rules.add(new LayerOrderRule("cover3Faces", violatingFaces));
-	}
+    void addCover3FacesViolation(final List<OriFace> violatingFaces) {
+        rules.add(new LayerOrderRule("cover3Faces", violatingFaces));
+    }
 
 //	void addCover4FacesViolation(final List<OriFace> violatingFaces) {
 //		rules.add(new LayerOrderRule("cover4Faces", violatingFaces));
 //	}
 
-	EstimationResult getEstimationResult() {
-		return estimationResult;
-	}
+    EstimationResult getEstimationResult() {
+        return estimationResult;
+    }
 
-	void setEstimationResult(final EstimationResult result) {
-		estimationResult = result;
-	}
+    void setEstimationResult(final EstimationResult result) {
+        estimationResult = result;
+    }
 
-	public boolean isUnfoldable() {
-		return estimationResult == EstimationResult.UNFOLDABLE;
-	}
+    public boolean isUnfoldable() {
+        return estimationResult == EstimationResult.UNFOLDABLE;
+    }
 
-	public List<Rule<OriFace>> getAllRules() {
-		return rules;
-	}
+    public List<Rule<OriFace>> getAllRules() {
+        return rules;
+    }
 
-	public EstimationResultRules or(final EstimationResultRules result) {
-		if (estimationResult.or(result.estimationResult) == EstimationResult.UNFOLDABLE) {
-			var ret = new EstimationResultRules(EstimationResult.UNFOLDABLE);
-			ret.rules = Stream.concat(rules.stream(), result.rules.stream()).toList();
-			return ret;
-		}
+    public EstimationResultRules or(final EstimationResultRules result) {
+        if (estimationResult.or(result.estimationResult) == EstimationResult.UNFOLDABLE) {
+            var ret = new EstimationResultRules(EstimationResult.UNFOLDABLE);
+            ret.rules = Stream.concat(rules.stream(), result.rules.stream()).toList();
+            return ret;
+        }
 
-		if (estimationResult.or(result.estimationResult) == EstimationResult.CHANGED) {
-			return new EstimationResultRules(EstimationResult.CHANGED);
-		}
+        if (estimationResult.or(result.estimationResult) == EstimationResult.CHANGED) {
+            return new EstimationResultRules(EstimationResult.CHANGED);
+        }
 
-		return new EstimationResultRules(EstimationResult.NOT_CHANGED);
-	}
+        return new EstimationResultRules(EstimationResult.NOT_CHANGED);
+    }
 
-	public List<String> getViolationNames(final OriFace violatingFace) {
-		return getAllRules().stream()
-				.filter(rule -> rule.violates(violatingFace))
-				.map(Rule::toString)
-				.toList();
-	}
+    public List<String> getViolationNames(final OriFace violatingFace) {
+        return getAllRules().stream()
+                .filter(rule -> rule.violates(violatingFace))
+                .map(Rule::toString)
+                .toList();
+    }
 
-	@Override
-	public String toString() {
-		return String.join(",", getAllRules().stream().map(Rule::toString).toList());
-	}
+    @Override
+    public String toString() {
+        return String.join(",", getAllRules().stream().map(Rule::toString).toList());
+    }
 }

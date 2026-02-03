@@ -10,32 +10,32 @@ import oripa.domain.paint.PaintContext;
  */
 public abstract class PickingVertex extends AbstractActionState {
 
-	public PickingVertex() {
-		super();
-	}
+    public PickingVertex() {
+        super();
+    }
 
-	/**
-	 * Picks the nearest vertex and push it into context.
-	 *
-	 */
+    /**
+     * Picks the nearest vertex and push it into context.
+     *
+     */
 
-	@Override
-	protected boolean onAct(final PaintContext context, final boolean freeSelection) {
-		var pickedOpt = context.getCandidateVertexToPick();
+    @Override
+    protected boolean onAct(final PaintContext context, final boolean freeSelection) {
+        var pickedOpt = context.getCandidateVertexToPick();
 
-		pickedOpt.ifPresent(context::pushVertex);
+        pickedOpt.ifPresent(context::pushVertex);
 
-		return pickedOpt.isPresent();
-	}
+        return pickedOpt.isPresent();
+    }
 
-	/**
-	 * delete from context the latest picked vertex.
-	 *
-	 * @return Previous state
-	 */
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-	}
+    /**
+     * delete from context the latest picked vertex.
+     *
+     * @return Previous state
+     */
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popVertex();
+    }
 
 }

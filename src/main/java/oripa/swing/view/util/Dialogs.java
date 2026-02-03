@@ -27,21 +27,21 @@ import javax.swing.JOptionPane;
  *
  */
 public class Dialogs {
-	public static void showErrorDialog(final Component parent, final String title,
-			final Exception ex) {
-		JOptionPane.showMessageDialog(parent,
-				ex.getClass().getName() + ": " + ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
-	}
+    public static void showErrorDialog(final Component parent, final String title,
+            final Exception ex) {
+        JOptionPane.showMessageDialog(parent,
+                ex.getClass().getName() + ": " + ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+    }
 
-	/**
-	 *
-	 * @param parent
-	 * @param title
-	 * @param description
-	 * @return true if user selected "yes".
-	 */
-	public static boolean showYesNoConfirmDialog(final Component parent, final String title, final String description) {
-		return JOptionPane.showConfirmDialog(parent, description, title,
-				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
-	}
+    /**
+     *
+     * @param parent
+     * @param title
+     * @param description
+     * @return true if user selected "yes".
+     */
+    public static boolean showYesNoConfirmDialog(final Component parent, final String title, final String description) {
+        return JOptionPane.showConfirmDialog(parent, description, title,
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+    }
 }

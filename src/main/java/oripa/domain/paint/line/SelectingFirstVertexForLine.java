@@ -5,24 +5,24 @@ import oripa.domain.paint.core.PickingVertex;
 
 public class SelectingFirstVertexForLine extends PickingVertex {
 
-	public SelectingFirstVertexForLine() {
-		super();
-	}
+    public SelectingFirstVertexForLine() {
+        super();
+    }
 
-	@Override
-	public void undoAction(final PaintContext context) {
-		context.clear(false);
-	}
+    @Override
+    public void undoAction(final PaintContext context) {
+        context.clear(false);
+    }
 
-	@Override
-	public void onResult(final PaintContext context, final boolean doSpecial) {
+    @Override
+    public void onResult(final PaintContext context, final boolean doSpecial) {
 
-	}
+    }
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(this.getClass());
-		setNextClass(SelectingSecondVertexForLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(this.getClass());
+        setNextClass(SelectingSecondVertexForLine.class);
+    }
 
 }

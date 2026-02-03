@@ -35,43 +35,43 @@ import oripa.persistence.filetool.Exporter;
  */
 public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 
-	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filePath, final Object configObj)
-			throws IOException, IllegalArgumentException {
-		List<OriFace> faces = origamiModel.getFaces();
-		List<OriVertex> vertices = origamiModel.getVertices();
-		List<OriEdge> edges = origamiModel.getEdges();
+    @Override
+    public boolean export(final OrigamiModel origamiModel, final String filePath, final Object configObj)
+            throws IOException, IllegalArgumentException {
+        List<OriFace> faces = origamiModel.getFaces();
+        List<OriVertex> vertices = origamiModel.getVertices();
+        List<OriEdge> edges = origamiModel.getEdges();
 
-		try (var fw = new FileWriter(filePath);
-				var bw = new BufferedWriter(fw);) {
+        try (var fw = new FileWriter(filePath);
+                var bw = new BufferedWriter(fw);) {
 
-			// Align the center of the model, combine scales
-			bw.write("# Created by ORIPA\n");
-			bw.write("\n");
+            // Align the center of the model, combine scales
+            bw.write("# Created by ORIPA\n");
+            bw.write("\n");
 
-			int id = 1;
-			for (OriVertex vertex : vertices) {
-				var position = vertex.getPosition();
-				bw.write("v " + position.getX() + " " + position.getY() + " 0.0\n");
-				vertex.setVertexID(id);
-				id++;
-			}
+            int id = 1;
+            for (OriVertex vertex : vertices) {
+                var position = vertex.getPosition();
+                bw.write("v " + position.getX() + " " + position.getY() + " 0.0\n");
+                vertex.setVertexID(id);
+                id++;
+            }
 
-			for (OriFace face : faces) {
-				bw.write("f");
-				for (var he : face.halfedgeIterable()) {
-					bw.write(" " + he.getVertex().getVertexID());
-				}
-				bw.write("\n");
-			}
+            for (OriFace face : faces) {
+                bw.write("f");
+                for (var he : face.halfedgeIterable()) {
+                    bw.write(" " + he.getVertex().getVertexID());
+                }
+                bw.write("\n");
+            }
 
-			for (OriEdge edge : edges) {
-				bw.write("e " + edge.getStartVertex().getVertexID() + " " + edge.getEndVertex().getVertexID() + " "
-						+ edge.getType() + " 180\n");
-			}
-		}
+            for (OriEdge edge : edges) {
+                bw.write("e " + edge.getStartVertex().getVertexID() + " " + edge.getEndVertex().getVertexID() + " "
+                        + edge.getType() + " 180\n");
+            }
+        }
 
-		return true;
+        return true;
 
-	}
+    }
 }

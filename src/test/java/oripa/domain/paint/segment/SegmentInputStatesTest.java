@@ -10,88 +10,88 @@ import oripa.domain.paint.test.InputStatesTestBase;
 import oripa.vecmath.Vector2d;
 
 class SegmentInputStatesTest extends InputStatesTestBase {
-	@BeforeEach
-	void setUp() {
-		setUp(SelectingFirstVertexForSegment.class);
-	}
+    @BeforeEach
+    void setUp() {
+        setUp(SelectingFirstVertexForSegment.class);
+    }
 
-	private <T> void assertCurrentState(final int expectedVertexCount, final Class<T> expectedClass) {
-		assertEquals(expectedVertexCount, context.getVertexCount());
-		assertInstanceOf(expectedClass, state);
-	}
+    private <T> void assertCurrentState(final int expectedVertexCount, final Class<T> expectedClass) {
+        assertEquals(expectedVertexCount, context.getVertexCount());
+        assertInstanceOf(expectedClass, state);
+    }
 
-	@Test
-	void testUndo_firstState() {
-		state = state.undo(context);
-		assertCurrentState(0, SelectingFirstVertexForSegment.class);
-	}
+    @Test
+    void testUndo_firstState() {
+        state = state.undo(context);
+        assertCurrentState(0, SelectingFirstVertexForSegment.class);
+    }
 
-	@Nested
-	class FirstEndPointIsSelected {
-		Vector2d candidate1 = new Vector2d(1, 1);
+    @Nested
+    class FirstEndPointIsSelected {
+        Vector2d candidate1 = new Vector2d(1, 1);
 
-		@BeforeEach
-		void doAction() {
-			SegmentInputStatesTest.this.doAction(candidate1);
-		}
+        @BeforeEach
+        void doAction() {
+            SegmentInputStatesTest.this.doAction(candidate1);
+        }
 
-		@Test
-		void testAfterDoAction() {
-			assertCurrentState(1, SelectingSecondVertexForSegment.class);
-		}
+        @Test
+        void testAfterDoAction() {
+            assertCurrentState(1, SelectingSecondVertexForSegment.class);
+        }
 
-		@Test
-		void testUndo_secondState() {
-			state = state.undo(context);
-			assertCurrentState(0, SelectingFirstVertexForSegment.class);
-		}
+        @Test
+        void testUndo_secondState() {
+            state = state.undo(context);
+            assertCurrentState(0, SelectingFirstVertexForSegment.class);
+        }
 
-		@Nested
-		class SecondEndPointIsSelected {
-			Vector2d candidate2 = new Vector2d(2, 2);
+        @Nested
+        class SecondEndPointIsSelected {
+            Vector2d candidate2 = new Vector2d(2, 2);
 
-			@BeforeEach
-			void doAction() {
-				SegmentInputStatesTest.this.doAction(candidate2);
-			}
+            @BeforeEach
+            void doAction() {
+                SegmentInputStatesTest.this.doAction(candidate2);
+            }
 
-			@Test
-			void testAfterDoAction_NewLineShouldBePut() {
-				assertCurrentState(0, SelectingFirstVertexForSegment.class);
-				assertNewLineInput();
-			}
-		}
+            @Test
+            void testAfterDoAction_NewLineShouldBePut() {
+                assertCurrentState(0, SelectingFirstVertexForSegment.class);
+                assertNewLineInput();
+            }
+        }
 
-		@Nested
-		class SecondEndPointIsNotSelected {
-			Vector2d candidate2 = null;
+        @Nested
+        class SecondEndPointIsNotSelected {
+            Vector2d candidate2 = null;
 
-			@BeforeEach
-			void doAction() {
-				SegmentInputStatesTest.this.doAction(candidate2);
-			}
+            @BeforeEach
+            void doAction() {
+                SegmentInputStatesTest.this.doAction(candidate2);
+            }
 
-			@Test
-			void testAfterDoAction_NoChanges() {
-				assertCurrentState(1, SelectingSecondVertexForSegment.class);
-			}
-		}
+            @Test
+            void testAfterDoAction_NoChanges() {
+                assertCurrentState(1, SelectingSecondVertexForSegment.class);
+            }
+        }
 
-	}
+    }
 
-	@Nested
-	class FirstEndPointIsNotSelected {
+    @Nested
+    class FirstEndPointIsNotSelected {
 
-		@BeforeEach
-		void doAction() {
-			SegmentInputStatesTest.this.doAction((Vector2d) null);
-		}
+        @BeforeEach
+        void doAction() {
+            SegmentInputStatesTest.this.doAction((Vector2d) null);
+        }
 
-		@Test
-		void testAfterDoAction_NoChanges() {
-			assertCurrentState(0, SelectingFirstVertexForSegment.class);
-		}
+        @Test
+        void testAfterDoAction_NoChanges() {
+            assertCurrentState(0, SelectingFirstVertexForSegment.class);
+        }
 
-	}
+    }
 
 }

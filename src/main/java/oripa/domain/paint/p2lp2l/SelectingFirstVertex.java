@@ -27,13 +27,13 @@ import oripa.domain.paint.core.PickingVertex;
  */
 public class SelectingFirstVertex extends PickingVertex {
 
-	@Override
-	protected void initialize() {
-		setNextClass(SelectingFirstLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setNextClass(SelectingFirstLine.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-	}
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+    }
 
 }

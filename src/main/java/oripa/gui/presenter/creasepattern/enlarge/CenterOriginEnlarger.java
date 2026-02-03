@@ -29,48 +29,48 @@ import oripa.vecmath.Vector2d;
  */
 class CenterOriginEnlarger extends AbstractEnlarger {
 
-	@Override
-	public Optional<Vector2d> createOriginOfEnlargement(final RectangleDomain originalDomain,
-			final Vector2d mouseStartPoint) {
+    @Override
+    public Optional<Vector2d> createOriginOfEnlargement(final RectangleDomain originalDomain,
+            final Vector2d mouseStartPoint) {
 
-		return Optional.of(originalDomain.getCenter());
-	}
+        return Optional.of(originalDomain.getCenter());
+    }
 
-	@Override
-	public RectangleDomain createEnlargedDomain(final Vector2d mousePoint, final Vector2d originOfEnlargement,
-			final Vector2d mouseStartPoint) {
+    @Override
+    public RectangleDomain createEnlargedDomain(final Vector2d mousePoint, final Vector2d originOfEnlargement,
+            final Vector2d mouseStartPoint) {
 
-		var currentPoint = scalePosition(mouseStartPoint, mousePoint, originOfEnlargement, mouseStartPoint);
+        var currentPoint = scalePosition(mouseStartPoint, mousePoint, originOfEnlargement, mouseStartPoint);
 
-		var diff = currentPoint.subtract(originOfEnlargement);
+        var diff = currentPoint.subtract(originOfEnlargement);
 
-		return new RectangleDomain(
-				originOfEnlargement.getX() - diff.getX(), originOfEnlargement.getY() - diff.getY(),
-				currentPoint.getX(), currentPoint.getY());
-	}
+        return new RectangleDomain(
+                originOfEnlargement.getX() - diff.getX(), originOfEnlargement.getY() - diff.getY(),
+                currentPoint.getX(), currentPoint.getY());
+    }
 
-	@Override
-	protected Vector2d scalePosition(final Vector2d p, final Vector2d mousePoint, final Vector2d originOfEnlargement,
-			final Vector2d mouseStartPoint) {
+    @Override
+    protected Vector2d scalePosition(final Vector2d p, final Vector2d mousePoint, final Vector2d originOfEnlargement,
+            final Vector2d mouseStartPoint) {
 
-		var scales = computeScales(mousePoint, originOfEnlargement, mouseStartPoint);
-		double absScale = Math.min(Math.abs(scales.getX()), Math.abs(scales.getY()));
+        var scales = computeScales(mousePoint, originOfEnlargement, mouseStartPoint);
+        double absScale = Math.min(Math.abs(scales.getX()), Math.abs(scales.getY()));
 
-		var scaledDiff = p.subtract(originOfEnlargement).multiply(absScale);
+        var scaledDiff = p.subtract(originOfEnlargement).multiply(absScale);
 
-		var scaled = originOfEnlargement.add(scaledDiff);
+        var scaled = originOfEnlargement.add(scaledDiff);
 
-		return scaled;
-	}
+        return scaled;
+    }
 
-	private Vector2d computeScales(final Vector2d mousePoint, final Vector2d originOfEnlargement,
-			final Vector2d mouseStartPoint) {
-		var diff = mousePoint.subtract(originOfEnlargement);
+    private Vector2d computeScales(final Vector2d mousePoint, final Vector2d originOfEnlargement,
+            final Vector2d mouseStartPoint) {
+        var diff = mousePoint.subtract(originOfEnlargement);
 
-		double scaleX = diff.getX() / Math.abs(mouseStartPoint.getX() - originOfEnlargement.getX());
-		double scaleY = diff.getY() / Math.abs(mouseStartPoint.getY() - originOfEnlargement.getY());
+        double scaleX = diff.getX() / Math.abs(mouseStartPoint.getX() - originOfEnlargement.getX());
+        double scaleY = diff.getY() / Math.abs(mouseStartPoint.getY() - originOfEnlargement.getY());
 
-		return new Vector2d(scaleX, scaleY);
-	}
+        return new Vector2d(scaleX, scaleY);
+    }
 
 }

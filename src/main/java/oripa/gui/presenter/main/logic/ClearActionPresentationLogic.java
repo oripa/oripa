@@ -32,56 +32,56 @@ import oripa.project.Project;
  */
 public class ClearActionPresentationLogic {
 
-	private final MainFrameView view;
+    private final MainFrameView view;
 
-	private final PainterScreenPresenter screenPresenter;
-	private final PainterScreenSetting screenSetting;
+    private final PainterScreenPresenter screenPresenter;
+    private final PainterScreenSetting screenSetting;
 
-	private final ChildFrameManager childFrameManager;
+    private final ChildFrameManager childFrameManager;
 
-	private final Project project;
+    private final Project project;
 
-	private final PaintContextService paintContextService;
+    private final PaintContextService paintContextService;
 
-	@Inject
-	public ClearActionPresentationLogic(
-			final MainFrameView view,
-			final PainterScreenPresenter screenPresenter,
-			final PainterScreenSetting screenSetting,
-			final ChildFrameManager childFrameManager,
-			final Project project,
-			final PaintContextService paintContextService) {
-		this.view = view;
-		this.screenPresenter = screenPresenter;
-		this.screenSetting = screenSetting;
-		this.childFrameManager = childFrameManager;
-		this.project = project;
-		this.paintContextService = paintContextService;
-	}
+    @Inject
+    public ClearActionPresentationLogic(
+            final MainFrameView view,
+            final PainterScreenPresenter screenPresenter,
+            final PainterScreenSetting screenSetting,
+            final ChildFrameManager childFrameManager,
+            final Project project,
+            final PaintContextService paintContextService) {
+        this.view = view;
+        this.screenPresenter = screenPresenter;
+        this.screenSetting = screenSetting;
+        this.childFrameManager = childFrameManager;
+        this.project = project;
+        this.paintContextService = paintContextService;
+    }
 
-	public void clearAll() {
-		paintContextService.clearAll();
+    public void clearAll() {
+        paintContextService.clearAll();
 
-		project.clear();
-		clearViews();
-	}
+        project.clear();
+        clearViews();
+    }
 
-	private void clearViews() {
-		screenSetting.setGridVisible(true);
+    private void clearViews() {
+        screenSetting.setGridVisible(true);
 
-		childFrameManager.closeAll(view);
+        childFrameManager.closeAll(view);
 
-		screenPresenter.clearPaperDomainOfModel();
-		screenPresenter.updateScreen();
-	}
+        screenPresenter.clearPaperDomainOfModel();
+        screenPresenter.updateScreen();
+    }
 
-	public void clearLines() {
-		paintContextService.clearLines();
+    public void clearLines() {
+        paintContextService.clearLines();
 
-		// prevents unintentional overwrite to original file.
-		project.clear();
+        // prevents unintentional overwrite to original file.
+        project.clear();
 
-		clearViews();
-	}
+        clearViews();
+    }
 
 }

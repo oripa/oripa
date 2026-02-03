@@ -39,40 +39,40 @@ import oripa.util.file.FileFactory;
 @ExtendWith(MockitoExtension.class)
 class FoldedModelFileSelectionSupportSelectorFactoryTest {
 
-	@InjectMocks
-	FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
+    @InjectMocks
+    FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
 
-	@Mock
-	FileSelectionSupportFactory selectionSupportFactory;
+    @Mock
+    FileSelectionSupportFactory selectionSupportFactory;
 
-	@Mock
-	FileAccessSupportFactory accessSupportFactory;
+    @Mock
+    FileAccessSupportFactory accessSupportFactory;
 
-	@ValueSource(booleans = { true, false })
-	@ParameterizedTest
-	void selectorContainsAllTypes(final boolean modelFlipped) {
+    @ValueSource(booleans = { true, false })
+    @ParameterizedTest
+    void selectorContainsAllTypes(final boolean modelFlipped) {
 
-		for (var key : FoldedModelFileTypeKey.values()) {
+        for (var key : FoldedModelFileTypeKey.values()) {
 
-			if (modelFlipped && key == FoldedModelFileTypeKey.SVG_FOLDED_MODEL) {
-				continue;
-			}
+            if (modelFlipped && key == FoldedModelFileTypeKey.SVG_FOLDED_MODEL) {
+                continue;
+            }
 
-			if (!modelFlipped && key == FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP) {
-				continue;
-			}
+            if (!modelFlipped && key == FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP) {
+                continue;
+            }
 
-			when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
-					.thenReturn(mock());
+            when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
+                    .thenReturn(mock());
 
-			when(selectionSupportFactory.create(any())).thenReturn(mock());
+            when(selectionSupportFactory.create(any())).thenReturn(mock());
 
-		}
+        }
 
-		FileFactory fileFactory = mock();
+        FileFactory fileFactory = mock();
 
-		selectorFactory.create(modelFlipped, fileFactory);
+        selectorFactory.create(modelFlipped, fileFactory);
 
-	}
+    }
 
 }

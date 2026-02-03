@@ -9,24 +9,24 @@ import oripa.vecmath.Vector2d;
 
 public class AddVertexAction extends AbstractGraphicMouseAction {
 
-	public AddVertexAction() {
-		setEditMode(EditMode.VERTEX);
+    public AddVertexAction() {
+        setEditMode(EditMode.VERTEX);
 
-		setActionState(new AddingVertex());
-	}
+        setActionState(new AddingVertex());
+    }
 
-	@Override
-	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		return super.onMove(viewContext, paintContext, true);
-	}
+    @Override
+    public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
+        return super.onMove(viewContext, paintContext, true);
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		super.onDraw(drawer, viewContext, paintContext);
+        super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(drawer, viewContext, paintContext);
-	}
+        drawPickCandidateVertex(drawer, viewContext, paintContext);
+    }
 }

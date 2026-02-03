@@ -41,99 +41,99 @@ import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
  */
 public class EstimationResultFilePresentationLogic {
 
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
+    private final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
 
-	private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
+    private final FoldedModelFileAccessServiceFactory fileAccessServiceFactory;
 
-	@Inject
-	public EstimationResultFilePresentationLogic(
-			final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
-			final FoldedModelFileAccessServiceFactory fileAccessFactory) {
+    @Inject
+    public EstimationResultFilePresentationLogic(
+            final FoldedModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
+            final FoldedModelFileAccessServiceFactory fileAccessFactory) {
 
-		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
+        this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
 
-		this.fileAccessServiceFactory = fileAccessFactory;
-	}
+        this.fileAccessServiceFactory = fileAccessFactory;
+    }
 
-	/**
-	 * open export dialog for current folded estimation
-	 */
-	public String export(
-			final EstimationResultUIView view,
-			final String lastFilePath) {
-		try {
-			var fileAccessService = fileAccessServiceFactory.create(view.isFaceOrderFlipped());
+    /**
+     * open export dialog for current folded estimation
+     */
+    public String export(
+            final EstimationResultUIView view,
+            final String lastFilePath) {
+        try {
+            var fileAccessService = fileAccessServiceFactory.create(view.isFaceOrderFlipped());
 
-			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypes.svg(), () -> createSVGConfig(view));
-			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypes.flippedSvg(), () -> createSVGConfig(view));
+            fileAccessService.setConfigToSavingAction(
+                    FoldedModelFileTypes.svg(), () -> createSVGConfig(view));
+            fileAccessService.setConfigToSavingAction(
+                    FoldedModelFileTypes.flippedSvg(), () -> createSVGConfig(view));
 
-			fileAccessService.setConfigToSavingAction(
-					FoldedModelFileTypes.picture(), () -> createPictureConfig(view));
+            fileAccessService.setConfigToSavingAction(
+                    FoldedModelFileTypes.picture(), () -> createPictureConfig(view));
 
-			var foldedModel = view.getModel();
+            var foldedModel = view.getModel();
 
-			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
+            var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
 
-			var presenter = fileSelectionPresenterFactory.create(
-					(FrameView) view.getTopLevelView(), fileAccessService.getFileSelectionService());
+            var presenter = fileSelectionPresenterFactory.create(
+                    (FrameView) view.getTopLevelView(), fileAccessService.getFileSelectionService());
 
-			var selection = presenter.saveUsingGUI(lastFilePath);
+            var selection = presenter.saveUsingGUI(lastFilePath);
 
-			if (selection.action() == UserAction.CANCELED) {
-				return lastFilePath;
-			}
+            if (selection.action() == UserAction.CANCELED) {
+                return lastFilePath;
+            }
 
-			fileAccessService.saveFile(entity, selection.path(), selection.type());
+            fileAccessService.saveFile(entity, selection.path(), selection.type());
 
-			return selection.path();
+            return selection.path();
 
 //			lastFilePath = selection.path();
 //
 //			lastFilePathChangeListener.accept(lastFilePath);
 
-		} catch (Exception ex) {
-			logger.error("error: ", ex);
-			view.showExportErrorMessage(ex);
+        } catch (Exception ex) {
+            logger.error("error: ", ex);
+            view.showExportErrorMessage(ex);
 
-			return lastFilePath;
-		}
-	}
+            return lastFilePath;
+        }
+    }
 
-	public FoldedModelSVGConfig createSVGConfig(final EstimationResultUIView view) {
-		var svgConfig = new FoldedModelSVGConfig();
+    public FoldedModelSVGConfig createSVGConfig(final EstimationResultUIView view) {
+        var svgConfig = new FoldedModelSVGConfig();
 
-		svgConfig.setFaceStrokeWidth(view.getSVGFaceStrokeWidth());
-		svgConfig.setPrecreaseStrokeWidth(view.getSVGPrecreaseStrokeWidth());
+        svgConfig.setFaceStrokeWidth(view.getSVGFaceStrokeWidth());
+        svgConfig.setPrecreaseStrokeWidth(view.getSVGPrecreaseStrokeWidth());
 
-		svgConfig.setFrontFillColorCode(ColorUtil.convertColorToCode(view.getFrontColor()));
-		svgConfig.setBackFillColorCode(ColorUtil.convertColorToCode(view.getBackColor()));
+        svgConfig.setFrontFillColorCode(ColorUtil.convertColorToCode(view.getFrontColor()));
+        svgConfig.setBackFillColorCode(ColorUtil.convertColorToCode(view.getBackColor()));
 
-		return svgConfig;
-	}
+        return svgConfig;
+    }
 
-	private FoldedModelPictureConfig createPictureConfig(final EstimationResultUIView view) {
-		var pictureConfig = new FoldedModelPictureConfig();
+    private FoldedModelPictureConfig createPictureConfig(final EstimationResultUIView view) {
+        var pictureConfig = new FoldedModelPictureConfig();
 
-		pictureConfig.setAmbientOcclusion(view.isFaceShade());
-		pictureConfig.setFillFaces(view.isFillFace());
-		pictureConfig.setDrawEdges(view.isDrawEdges());
-		pictureConfig.setFaceOrderFlipped(view.isFaceOrderFlipped());
+        pictureConfig.setAmbientOcclusion(view.isFaceShade());
+        pictureConfig.setFillFaces(view.isFillFace());
+        pictureConfig.setDrawEdges(view.isDrawEdges());
+        pictureConfig.setFaceOrderFlipped(view.isFaceOrderFlipped());
 
-		pictureConfig.setColors(view.isUseColor() ? view.getFrontColor() : DefaultColors.WHITE,
-				view.isUseColor() ? view.getBackColor() : DefaultColors.WHITE);
+        pictureConfig.setColors(view.isUseColor() ? view.getFrontColor() : DefaultColors.WHITE,
+                view.isUseColor() ? view.getBackColor() : DefaultColors.WHITE);
 
-		pictureConfig.setDistortionMethod(view.getDistortionMethod());
-		pictureConfig.setDistortionParameter(view.getDistortionParameter());
-		pictureConfig.setVertexDepths(view.getVertexDepths());
-		pictureConfig.setEps(view.getEps());
+        pictureConfig.setDistortionMethod(view.getDistortionMethod());
+        pictureConfig.setDistortionParameter(view.getDistortionParameter());
+        pictureConfig.setVertexDepths(view.getVertexDepths());
+        pictureConfig.setEps(view.getEps());
 
-		pictureConfig.setRotateAngle(view.getRotateAngle());
+        pictureConfig.setRotateAngle(view.getRotateAngle());
 
-		return pictureConfig;
-	}
+        return pictureConfig;
+    }
 
 }

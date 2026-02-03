@@ -28,29 +28,29 @@ import oripa.value.OriLine;
 
 public class ExporterEPS implements DocExporter {
 
-	@Override
-	public boolean export(final Doc doc, final String filepath, final Object configObj)
-			throws IOException, IllegalArgumentException {
-		try (var fw = new FileWriter(filepath);
-				var bw = new BufferedWriter(fw);) {
+    @Override
+    public boolean export(final Doc doc, final String filepath, final Object configObj)
+            throws IOException, IllegalArgumentException {
+        try (var fw = new FileWriter(filepath);
+                var bw = new BufferedWriter(fw);) {
 
-			// Align the center of the model, combine scales
-			bw.write("%!PS-Adobe EPSF-3\n");
-			bw.write("%%BoundingBox:-200 -200 400 400\n");
-			bw.write("\n");
+            // Align the center of the model, combine scales
+            bw.write("%!PS-Adobe EPSF-3\n");
+            bw.write("%%BoundingBox:-200 -200 400 400\n");
+            bw.write("\n");
 
-			CreasePattern creasePattern = doc.getCreasePattern();
+            CreasePattern creasePattern = doc.getCreasePattern();
 
-			for (OriLine line : creasePattern) {
-				var p0 = line.getP0();
-				var p1 = line.getP1();
+            for (OriLine line : creasePattern) {
+                var p0 = line.getP0();
+                var p1 = line.getP1();
 
-				bw.write("[] 0 setdash\n");
-				bw.write("" + p0.getX() + " " + p0.getY() + " moveto\n");
-				bw.write("" + p1.getX() + " " + p1.getY() + " lineto\n");
-				bw.write("stroke\n");
-			}
-		}
-		return true;
-	}
+                bw.write("[] 0 setdash\n");
+                bw.write("" + p0.getX() + " " + p0.getY() + " moveto\n");
+                bw.write("" + p1.getX() + " " + p1.getY() + " lineto\n");
+                bw.write("stroke\n");
+            }
+        }
+        return true;
+    }
 }

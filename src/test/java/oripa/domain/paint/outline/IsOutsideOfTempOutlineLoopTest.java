@@ -35,41 +35,41 @@ import oripa.vecmath.Vector2d;
  */
 @ExtendWith(MockitoExtension.class)
 class IsOutsideOfTempOutlineLoopTest {
-	@InjectMocks
-	private IsOutsideOfTempOutlineLoop isOutside;
+    @InjectMocks
+    private IsOutsideOfTempOutlineLoop isOutside;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop#execute(java.util.Collection, oripa.vecmath.Vector2d)}.
-	 */
-	@Test
-	void testExecute_outside() {
-		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
-		var target = new Vector2d(0, 0.5);
+    /**
+     * Test method for
+     * {@link oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop#execute(java.util.Collection, oripa.vecmath.Vector2d)}.
+     */
+    @Test
+    void testExecute_outside() {
+        var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
+        var target = new Vector2d(0, 0.5);
 
-		var result = isOutside.execute(outlineVertices, target);
+        var result = isOutside.execute(outlineVertices, target);
 
-		assertTrue(result);
-	}
+        assertTrue(result);
+    }
 
-	@Test
-	void testExecute_outside_fix_v145() {
-		var outlineVertices = List.of(new Vector2d(-200, -200), new Vector2d(-200, 200), new Vector2d(200, 200));
-		var target = new Vector2d(200, 0);
+    @Test
+    void testExecute_outside_fix_v145() {
+        var outlineVertices = List.of(new Vector2d(-200, -200), new Vector2d(-200, 200), new Vector2d(200, 200));
+        var target = new Vector2d(200, 0);
 
-		var result = isOutside.execute(outlineVertices, target);
+        var result = isOutside.execute(outlineVertices, target);
 
-		assertTrue(result);
-	}
+        assertTrue(result);
+    }
 
-	@Test
-	void testExecute_inside() {
-		var outlineVertices = List.of(new Vector2d(-200, -200), new Vector2d(-200, 200), new Vector2d(200, 200));
-		var target = new Vector2d(-1, 0);
+    @Test
+    void testExecute_inside() {
+        var outlineVertices = List.of(new Vector2d(-200, -200), new Vector2d(-200, 200), new Vector2d(200, 200));
+        var target = new Vector2d(-1, 0);
 
-		var result = isOutside.execute(outlineVertices, target);
+        var result = isOutside.execute(outlineVertices, target);
 
-		assertFalse(result);
-	}
+        assertFalse(result);
+    }
 
 }

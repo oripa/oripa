@@ -34,58 +34,58 @@ import oripa.vecmath.Vector2d;
  */
 public class RaySnapPointFactory {
 
-	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Ray ray,
-			final double eps) {
-		return Stream.concat(
-				// snap on cross points of line and creases.
-				creasePattern.stream()
-						.map(crease -> GeomUtil.getCrossPoint(ray, crease))
-						.flatMap(Optional::stream),
+    public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Ray ray,
+            final double eps) {
+        return Stream.concat(
+                // snap on cross points of line and creases.
+                creasePattern.stream()
+                        .map(crease -> GeomUtil.getCrossPoint(ray, crease))
+                        .flatMap(Optional::stream),
 
-				// snap on end points of overlapping creases.
-				creasePattern.stream()
-						.filter(crease -> overlapsEntirely(crease, ray, eps))
-						.flatMap(OriLine::pointStream))
-				.filter(p -> !p.equals(ray.getEndPoint(), eps))
-				.toList();
-	}
+                // snap on end points of overlapping creases.
+                creasePattern.stream()
+                        .filter(crease -> overlapsEntirely(crease, ray, eps))
+                        .flatMap(OriLine::pointStream))
+                .filter(p -> !p.equals(ray.getEndPoint(), eps))
+                .toList();
+    }
 
-	@Deprecated
-	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment ray,
-			final double eps) {
-		return Stream.concat(
-				// snap on cross points of line and creases.
-				creasePattern.stream()
-						.map(crease -> GeomUtil.getCrossPoint(ray, crease))
-						.flatMap(Optional::stream),
+    @Deprecated
+    public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment ray,
+            final double eps) {
+        return Stream.concat(
+                // snap on cross points of line and creases.
+                creasePattern.stream()
+                        .map(crease -> GeomUtil.getCrossPoint(ray, crease))
+                        .flatMap(Optional::stream),
 
-				// snap on end points of overlapping creases.
-				creasePattern.stream()
-						.filter(crease -> overlapsEntirely(crease, ray, eps))
-						.flatMap(OriLine::pointStream))
-				.toList();
-	}
+                // snap on end points of overlapping creases.
+                creasePattern.stream()
+                        .filter(crease -> overlapsEntirely(crease, ray, eps))
+                        .flatMap(OriLine::pointStream))
+                .toList();
+    }
 
-	private boolean overlapsEntirely(final Segment crease, final Ray ray, final double eps) {
-		return crease.pointStream().allMatch(p -> GeomUtil.distancePointToRay(p, ray) < eps);
-	}
+    private boolean overlapsEntirely(final Segment crease, final Ray ray, final double eps) {
+        return crease.pointStream().allMatch(p -> GeomUtil.distancePointToRay(p, ray) < eps);
+    }
 
-	private boolean overlapsEntirely(final Segment crease, final Segment ray, final double eps) {
-		if (!GeomUtil.isRelaxedOverlap(ray, crease, eps)) {
-			return false;
-		}
+    private boolean overlapsEntirely(final Segment crease, final Segment ray, final double eps) {
+        if (!GeomUtil.isRelaxedOverlap(ray, crease, eps)) {
+            return false;
+        }
 
-		return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishSegmentsOverlap(ray, crease, eps) >= 3;
-	}
+        return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishSegmentsOverlap(ray, crease, eps) >= 3;
+    }
 
-	private boolean sharesEndPoint(final Segment s1, final Segment s2, final double eps) {
-		return findSharedEndPoint(s1, s2, eps).isPresent();
-	}
+    private boolean sharesEndPoint(final Segment s1, final Segment s2, final double eps) {
+        return findSharedEndPoint(s1, s2, eps).isPresent();
+    }
 
-	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2, final double eps) {
-		return s1.pointStream()
-				.filter(p -> s2.pointStream()
-						.anyMatch(q -> p.equals(q, eps)))
-				.findFirst();
-	}
+    private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2, final double eps) {
+        return s1.pointStream()
+                .filter(p -> s2.pointStream()
+                        .anyMatch(q -> p.equals(q, eps)))
+                .findFirst();
+    }
 }

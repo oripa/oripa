@@ -43,56 +43,56 @@ import oripa.swing.view.util.AffineCamera;
  *
  */
 public class PictureExporter implements DocExporter {
-	private static final Logger logger = LoggerFactory
-			.getLogger(PictureExporter.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(PictureExporter.class);
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.doc.exporter.Exporter#export(java.lang.Object,
-	 * java.lang.String)
-	 */
-	@Override
-	public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
-		CreasePattern creasePattern = doc.getCreasePattern();
-		var domain = RectangleDomain.createFromSegments(creasePattern);
-		double gWidth = domain.getWidth() * 2;
-		double gHeight = domain.getHeight() * 2;
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.persistent.doc.exporter.Exporter#export(java.lang.Object,
+     * java.lang.String)
+     */
+    @Override
+    public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
+        CreasePattern creasePattern = doc.getCreasePattern();
+        var domain = RectangleDomain.createFromSegments(creasePattern);
+        double gWidth = domain.getWidth() * 2;
+        double gHeight = domain.getHeight() * 2;
 
-		logger.info("save as image, size(w,h) = " + gWidth + ", " + gHeight);
+        logger.info("save as image, size(w,h) = " + gWidth + ", " + gHeight);
 
-		BufferedImage image = new BufferedImage((int) gWidth, (int) gHeight,
-				BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage((int) gWidth, (int) gHeight,
+                BufferedImage.TYPE_INT_RGB);
 
-		Graphics2D g2d = (Graphics2D) image.getGraphics();
+        Graphics2D g2d = (Graphics2D) image.getGraphics();
 
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		g2d.setBackground(Color.WHITE);
-		g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
+        g2d.setBackground(Color.WHITE);
+        g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
 
-		var camera = new AffineCamera();
-		var scale = Math.min(
-				gWidth / (domain.getWidth() + 20),
-				gHeight / (domain.getHeight() + 20));
+        var camera = new AffineCamera();
+        var scale = Math.min(
+                gWidth / (domain.getWidth() + 20),
+                gHeight / (domain.getHeight() + 20));
 
-		camera.updateCameraPosition(gWidth / 2, gHeight / 2);
-		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
-		camera.updateTranslateOfPaper(0, 0);
-		camera.updateScale(scale);
+        camera.updateCameraPosition(gWidth / 2, gHeight / 2);
+        camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
+        camera.updateTranslateOfPaper(0, 0);
+        camera.updateScale(scale);
 
-		g2d.setTransform(camera.getAffineTransform());
+        g2d.setTransform(camera.getAffineTransform());
 
-		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
+        CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
-		ObjectGraphicDrawer objDrawer = new CreasePatternObjectDrawer(g2d);
-		// TODO: make zeroLineWidth configurable
-		drawer.drawAllLines(objDrawer, creasePattern, scale, false);
+        ObjectGraphicDrawer objDrawer = new CreasePatternObjectDrawer(g2d);
+        // TODO: make zeroLineWidth configurable
+        drawer.drawAllLines(objDrawer, creasePattern, scale, false);
 
-		var file = new File(filePath);
-		ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),
-				file);
+        var file = new File(filePath);
+        ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),
+                file);
 
-		return true;
-	}
+        return true;
+    }
 }

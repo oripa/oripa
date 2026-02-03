@@ -5,33 +5,33 @@ import oripa.domain.paint.core.PickingVertex;
 
 public class SelectingVertexForBisector extends PickingVertex {
 
-	public SelectingVertexForBisector() {
-		super();
-	}
+    public SelectingVertexForBisector() {
+        super();
+    }
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(this.getClass());
-		setNextClass(SelectingLineForBisector.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(this.getClass());
+        setNextClass(SelectingLineForBisector.class);
+    }
 
-	@Override
-	protected boolean onAct(final PaintContext context, final boolean doSpecial) {
-		boolean vertexIsSelected = super.onAct(context, doSpecial);
+    @Override
+    protected boolean onAct(final PaintContext context, final boolean doSpecial) {
+        boolean vertexIsSelected = super.onAct(context, doSpecial);
 
-		if (!vertexIsSelected) {
-			return false;
-		}
+        if (!vertexIsSelected) {
+            return false;
+        }
 
-		if (context.getVertexCount() < 3) {
-			return false;
-		}
-		return true; // 3 vertices are selected. go to selecting a line.
-	}
+        if (context.getVertexCount() < 3) {
+            return false;
+        }
+        return true; // 3 vertices are selected. go to selecting a line.
+    }
 
-	@Override
-	public void onResult(final PaintContext context, final boolean doSpecial) {
+    @Override
+    public void onResult(final PaintContext context, final boolean doSpecial) {
 
-	}
+    }
 
 }

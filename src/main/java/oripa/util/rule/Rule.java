@@ -23,11 +23,11 @@ package oripa.util.rule;
  *
  */
 public interface Rule<Variable> {
-	boolean holds(Variable var);
+    boolean holds(Variable var);
 
-	boolean violates(Variable var);
+    boolean violates(Variable var);
 
-	Rule<Variable> asDenied();
+    Rule<Variable> asDenied();
 
-	String getName();
+    String getName();
 }

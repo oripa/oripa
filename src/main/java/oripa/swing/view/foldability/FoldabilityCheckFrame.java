@@ -38,83 +38,83 @@ import oripa.value.OriLine;
 
 public class FoldabilityCheckFrame extends JFrame implements FoldabilityCheckFrameView, ActionListener, WindowListener {
 
-	FoldabilityScreen screen;
+    FoldabilityScreen screen;
 
-	private Consumer<FrameView> onCloseListener;
+    private Consumer<FrameView> onCloseListener;
 
-	public FoldabilityCheckFrame() {
-		// Called when the "Check window" button is pressed.
-		setTitle("Check Inputed data");
-		screen = new FoldabilityScreen();
-		setBounds(0, 0, 800, 800);
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(screen, BorderLayout.CENTER);
+    public FoldabilityCheckFrame() {
+        // Called when the "Check window" button is pressed.
+        setTitle("Check Inputed data");
+        screen = new FoldabilityScreen();
+        setBounds(0, 0, 800, 800);
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(screen, BorderLayout.CENTER);
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		addWindowListener(this);
-	}
+        addWindowListener(this);
+    }
 
-	@Override
-	public void actionPerformed(final ActionEvent arg0) {
+    @Override
+    public void actionPerformed(final ActionEvent arg0) {
 
-	}
+    }
 
-	@Override
-	public void setModel(
-			final OrigamiModel origamiModel,
-			final EstimationResultRules estimationRules,
-			final Collection<OriLine> creasePattern,
-			final boolean zeroLineWidth,
-			final double pointEps) {
+    @Override
+    public void setModel(
+            final OrigamiModel origamiModel,
+            final EstimationResultRules estimationRules,
+            final Collection<OriLine> creasePattern,
+            final boolean zeroLineWidth,
+            final double pointEps) {
 
-		var presenter = new FoldabilityScreenPresenter(screen, origamiModel, estimationRules, creasePattern,
-				zeroLineWidth, pointEps);
+        var presenter = new FoldabilityScreenPresenter(screen, origamiModel, estimationRules, creasePattern,
+                zeroLineWidth, pointEps);
 
-		presenter.setViewVisible(true);
-	}
+        presenter.setViewVisible(true);
+    }
 
-	@Override
-	public void setOnCloseListener(final Consumer<FrameView> listener) {
-		onCloseListener = listener;
-	}
+    @Override
+    public void setOnCloseListener(final Consumer<FrameView> listener) {
+        onCloseListener = listener;
+    }
 
-	@Override
-	public void windowOpened(final WindowEvent e) {
+    @Override
+    public void windowOpened(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowClosing(final WindowEvent e) {
-	}
+    @Override
+    public void windowClosing(final WindowEvent e) {
+    }
 
-	@Override
-	public void windowClosed(final WindowEvent e) {
-		onCloseListener.accept(this);
-	}
+    @Override
+    public void windowClosed(final WindowEvent e) {
+        onCloseListener.accept(this);
+    }
 
-	@Override
-	public void windowIconified(final WindowEvent e) {
+    @Override
+    public void windowIconified(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowDeiconified(final WindowEvent e) {
+    @Override
+    public void windowDeiconified(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowActivated(final WindowEvent e) {
+    @Override
+    public void windowActivated(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowDeactivated(final WindowEvent e) {
+    @Override
+    public void windowDeactivated(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public FoldabilityScreenView getFoldabilityScreenView() {
-		return screen;
-	}
+    @Override
+    public FoldabilityScreenView getFoldabilityScreenView() {
+        return screen;
+    }
 }

@@ -19,7 +19,7 @@
 package oripa.renderer.estimation;
 
 public enum DistortionMethod {
-	NONE,
-	DEPTH,
-	MORISUE
+    NONE,
+    DEPTH,
+    MORISUE
 }

@@ -24,14 +24,14 @@ package oripa.exception;
  */
 public class UserCanceledException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4943504465378089160L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4943504465378089160L;
 
-	/**
-	 * Constructor
-	 */
-	public UserCanceledException() {
-	}
+    /**
+     * Constructor
+     */
+    public UserCanceledException() {
+    }
 }

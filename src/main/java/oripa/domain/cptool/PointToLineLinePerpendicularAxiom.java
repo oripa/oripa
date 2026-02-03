@@ -32,20 +32,20 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class PointToLineLinePerpendicularAxiom {
-	public Optional<Line> createFoldLine(final Vector2d p, final Segment s, final Segment perpendicular) {
+    public Optional<Line> createFoldLine(final Vector2d p, final Segment s, final Segment perpendicular) {
 
-		if (s.getLine().isParallel(perpendicular.getLine())) {
-			return Optional.empty();
-		}
+        if (s.getLine().isParallel(perpendicular.getLine())) {
+            return Optional.empty();
+        }
 
-		var perpendicularDirection = perpendicular.getLine().getDirection();
+        var perpendicularDirection = perpendicular.getLine().getDirection();
 
-		var motionLine = new Line(p, perpendicularDirection);
+        var motionLine = new Line(p, perpendicularDirection);
 
-		var crossPointOpt = GeomUtil.getCrossPoint(motionLine, s);
+        var crossPointOpt = GeomUtil.getCrossPoint(motionLine, s);
 
-		return crossPointOpt
-				.map(crossPoint -> new PerpendicularBisectorFactory().create(p, crossPoint))
-				.filter(line -> GeomUtil.getCrossPoint(line, perpendicular).isPresent());
-	}
+        return crossPointOpt
+                .map(crossPoint -> new PerpendicularBisectorFactory().create(p, crossPoint))
+                .filter(line -> GeomUtil.getCrossPoint(line, perpendicular).isPresent());
+    }
 }

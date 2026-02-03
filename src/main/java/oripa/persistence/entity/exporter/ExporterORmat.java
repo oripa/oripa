@@ -33,59 +33,59 @@ import oripa.persistence.filetool.Exporter;
 // export folded model
 public class ExporterORmat implements Exporter<FoldedModelEntity> {
 
-	@Override
-	public boolean export(final FoldedModelEntity foldedModel, final String filepath, final Object configObj)
-			throws IOException, IllegalArgumentException {
-		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
-		OverlapRelation overlapRelation = foldedModel.getOverlapRelation();
+    @Override
+    public boolean export(final FoldedModelEntity foldedModel, final String filepath, final Object configObj)
+            throws IOException, IllegalArgumentException {
+        OrigamiModel origamiModel = foldedModel.getOrigamiModel();
+        OverlapRelation overlapRelation = foldedModel.getOverlapRelation();
 
-		try (var fw = new FileWriter(filepath);
-				var bw = new BufferedWriter(fw);) {
+        try (var fw = new FileWriter(filepath);
+                var bw = new BufferedWriter(fw);) {
 
-			// Align the center of the model, combine scale
-			bw.write("# Created by ORIPA\n");
-			bw.write("#\n");
-			bw.write("# v (x) (y) (x: folded) (y: folded)\n");
-			bw.write("# f (index list of contour vertices. Index number starts from 1.)\n");
-			bw.write("\n");
+            // Align the center of the model, combine scale
+            bw.write("# Created by ORIPA\n");
+            bw.write("#\n");
+            bw.write("# v (x) (y) (x: folded) (y: folded)\n");
+            bw.write("# f (index list of contour vertices. Index number starts from 1.)\n");
+            bw.write("\n");
 
-			List<OriVertex> vertices = origamiModel.getVertices();
-			List<OriFace> faces = origamiModel.getFaces();
+            List<OriVertex> vertices = origamiModel.getVertices();
+            List<OriFace> faces = origamiModel.getFaces();
 
-			int id = 1;
-			for (OriVertex vertex : vertices) {
-				var positionBefore = vertex.getPositionBeforeFolding();
-				var positionAfter = vertex.getPosition();
-				bw.write("v " + positionBefore.getX() + " " + positionBefore.getY() + " "
-						+ positionAfter.getX() + " " + positionAfter.getY() + "\n");
-				vertex.setVertexID(id);
-				id++;
-			}
+            int id = 1;
+            for (OriVertex vertex : vertices) {
+                var positionBefore = vertex.getPositionBeforeFolding();
+                var positionAfter = vertex.getPosition();
+                bw.write("v " + positionBefore.getX() + " " + positionBefore.getY() + " "
+                        + positionAfter.getX() + " " + positionAfter.getY() + "\n");
+                vertex.setVertexID(id);
+                id++;
+            }
 
-			for (OriFace face : faces) {
-				bw.write("f");
-				for (var he : face.halfedgeIterable()) {
-					bw.write(" " + he.getVertex().getVertexID());
-				}
-				bw.write("\n");
-			}
+            for (OriFace face : faces) {
+                bw.write("f");
+                for (var he : face.halfedgeIterable()) {
+                    bw.write(" " + he.getVertex().getVertexID());
+                }
+                bw.write("\n");
+            }
 
-			int faceNum = faces.size();
-			bw.write("# overlap relation matrix\n");
-			bw.write("# 0: NO_OVERLAP\n");
-			bw.write("# 1: face[row_index] located LOWER than face[col_index]\n");
-			bw.write("# 2: face[row_index] located UPPER than face[col_index]\n");
-			bw.write("# 9: UNDEFINED (not used)\n");
-			bw.write("# matrix size (face num) =" + faceNum + "\n");
+            int faceNum = faces.size();
+            bw.write("# overlap relation matrix\n");
+            bw.write("# 0: NO_OVERLAP\n");
+            bw.write("# 1: face[row_index] located LOWER than face[col_index]\n");
+            bw.write("# 2: face[row_index] located UPPER than face[col_index]\n");
+            bw.write("# 9: UNDEFINED (not used)\n");
+            bw.write("# matrix size (face num) =" + faceNum + "\n");
 
-			for (int f0 = 0; f0 < faceNum; f0++) {
-				for (int f1 = 0; f1 < faceNum; f1++) {
-					bw.write("" + overlapRelation.get(f0, f1) + " ");
-				}
-				bw.write("\n");
-			}
-		}
+            for (int f0 = 0; f0 < faceNum; f0++) {
+                for (int f1 = 0; f1 < faceNum; f1++) {
+                    bw.write("" + overlapRelation.get(f0, f1) + " ");
+                }
+                bw.write("\n");
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

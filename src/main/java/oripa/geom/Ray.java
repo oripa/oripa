@@ -22,33 +22,33 @@ import oripa.vecmath.Vector2d;
 
 public class Ray {
 
-	private final Vector2d p;
-	private final Vector2d dir;
+    private final Vector2d p;
+    private final Vector2d dir;
 
-	public Ray(final Vector2d p, final Vector2d dir) {
-		this.p = p;
-		this.dir = dir.normalize();
-	}
+    public Ray(final Vector2d p, final Vector2d dir) {
+        this.p = p;
+        this.dir = dir.normalize();
+    }
 
-	public Ray(final Vector2d v, final double angle) {
-		this(v, Vector2d.unitVector(angle));
-	}
+    public Ray(final Vector2d v, final double angle) {
+        this(v, Vector2d.unitVector(angle));
+    }
 
-	/**
-	 * Returns the end point of this ray.
-	 *
-	 * @return
-	 */
-	public Vector2d getEndPoint() {
-		return p;
-	}
+    /**
+     * Returns the end point of this ray.
+     *
+     * @return
+     */
+    public Vector2d getEndPoint() {
+        return p;
+    }
 
-	/**
-	 * Returns unit vector of this ray's direction.
-	 *
-	 * @return
-	 */
-	public Vector2d getDirection() {
-		return dir;
-	}
+    /**
+     * Returns unit vector of this ray's direction.
+     *
+     * @return
+     */
+    public Vector2d getDirection() {
+        return dir;
+    }
 }

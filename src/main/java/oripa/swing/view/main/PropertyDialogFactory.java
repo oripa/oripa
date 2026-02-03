@@ -32,22 +32,22 @@ import oripa.resource.ResourceHolder;
  *
  */
 public class PropertyDialogFactory {
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public PropertyDialogFactory(final ResourceHolder resourceHolder) {
-		this.resourceHolder = resourceHolder;
-	}
+    @Inject
+    public PropertyDialogFactory(final ResourceHolder resourceHolder) {
+        this.resourceHolder = resourceHolder;
+    }
 
-	public PropertyDialogView create(final FrameView parent) {
-		var frame = (JFrame) parent;
-		PropertyDialog dialog = new PropertyDialog(frame, resourceHolder);
+    public PropertyDialogView create(final FrameView parent) {
+        var frame = (JFrame) parent;
+        PropertyDialog dialog = new PropertyDialog(frame, resourceHolder);
 
-		Rectangle rec = frame.getBounds();
-		dialog.setLocation(
-				(int) (rec.getCenterX() - dialog.getWidth() / 2),
-				(int) (rec.getCenterY() - dialog.getHeight() / 2));
+        Rectangle rec = frame.getBounds();
+        dialog.setLocation(
+                (int) (rec.getCenterX() - dialog.getWidth() / 2),
+                (int) (rec.getCenterY() - dialog.getHeight() / 2));
 
-		return dialog;
-	}
+        return dialog;
+    }
 }

@@ -28,24 +28,24 @@ import org.junit.jupiter.api.Test;
  */
 class KawasakiTheoremTest {
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.foldability.KawasakiTheorem#holds(oripa.domain.fold.halfedge.OriVertex)}.
-	 */
-	@Test
-	void testHolds_birdFoot() {
-		var vertex = OriVertexFactoryForTest.createBirdFootSpy();
-		var kawasaki = new KawasakiTheorem();
+    /**
+     * Test method for
+     * {@link oripa.domain.fold.foldability.KawasakiTheorem#holds(oripa.domain.fold.halfedge.OriVertex)}.
+     */
+    @Test
+    void testHolds_birdFoot() {
+        var vertex = OriVertexFactoryForTest.createBirdFootSpy();
+        var kawasaki = new KawasakiTheorem();
 
-		assertTrue(kawasaki.holds(vertex));
-	}
+        assertTrue(kawasaki.holds(vertex));
+    }
 
-	@Test
-	void testHolds_wrongShape() {
-		var vertex = OriVertexFactoryForTest.createWrongAngleShapeSpy();
-		var kawasaki = new KawasakiTheorem();
+    @Test
+    void testHolds_wrongShape() {
+        var vertex = OriVertexFactoryForTest.createWrongAngleShapeSpy();
+        var kawasaki = new KawasakiTheorem();
 
-		assertFalse(kawasaki.holds(vertex));
-	}
+        assertFalse(kawasaki.holds(vertex));
+    }
 
 }

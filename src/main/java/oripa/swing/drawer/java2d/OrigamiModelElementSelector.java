@@ -26,43 +26,43 @@ import java.awt.Color;
  *
  */
 public class OrigamiModelElementSelector {
-	public Color getScissorsLineColorForModelView() {
-		return Color.RED;
-	}
+    public Color getScissorsLineColorForModelView() {
+        return Color.RED;
+    }
 
-	public Color getEdgeColor() {
-		return Color.BLACK;
-	}
+    public Color getEdgeColor() {
+        return Color.BLACK;
+    }
 
-	public Color getFaceColor() {
-		return new Color(100, 100, 100);
-	}
+    public Color getFaceColor() {
+        return new Color(100, 100, 100);
+    }
 
-	private float createThinLineWidth(final double scale) {
-		return 1.5f / (float) scale;
-	}
+    private float createThinLineWidth(final double scale) {
+        return 1.5f / (float) scale;
+    }
 
-	private float createThickLineWidth(final double scale) {
-		return 4.0f / (float) scale;
-	}
+    private float createThickLineWidth(final double scale) {
+        return 4.0f / (float) scale;
+    }
 
-	public BasicStroke createDefaultStroke(final double scale) {
-		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER);
-	}
+    public BasicStroke createDefaultStroke(final double scale) {
+        return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER);
+    }
 
-	public BasicStroke createScissorsLineStrokeForModelView(final double scale) {
-		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER);
-	}
+    public BasicStroke createScissorsLineStrokeForModelView(final double scale) {
+        return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER);
+    }
 
-	public BasicStroke createPaperBoundaryStrokeForModelView(final double scale) {
-		return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER);
-	}
+    public BasicStroke createPaperBoundaryStrokeForModelView(final double scale) {
+        return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER);
+    }
 
-	public BasicStroke createFaceEdgeStrokeForModelView(final double scale) {
-		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER);
-	}
+    public BasicStroke createFaceEdgeStrokeForModelView(final double scale) {
+        return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER);
+    }
 }

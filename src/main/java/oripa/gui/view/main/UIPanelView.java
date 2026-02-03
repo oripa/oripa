@@ -30,146 +30,146 @@ import oripa.gui.view.View;
  */
 public interface UIPanelView extends View {
 
-	// UIPanelSetting getUIPanelSetting();
+    // UIPanelSetting getUIPanelSetting();
 
-	void initializeButtonSelection(String angleStep, String typeFrom, String typeTo, String computationType);
+    void initializeButtonSelection(String angleStep, String typeFrom, String typeTo, String computationType);
 
-	void addItemOfAlterLineComboFrom(String item);
+    void addItemOfAlterLineComboFrom(String item);
 
-	void addItemOfAlterLineComboTo(String item);
+    void addItemOfAlterLineComboTo(String item);
 
-	void addItemOfAngleStepCombo(String item);
+    void addItemOfAngleStepCombo(String item);
 
-	void addGridSmallButtonListener(Runnable listener);
+    void addGridSmallButtonListener(Runnable listener);
 
-	void addGridLargeButtonListener(Runnable listener);
+    void addGridLargeButtonListener(Runnable listener);
 
-	void addGridChangeButtonListener(Consumer<Integer> listener);
+    void addGridChangeButtonListener(Consumer<Integer> listener);
 
-	void addItemOfComputationTypeCombo(String item);
+    void addItemOfComputationTypeCombo(String item);
 
-	void setGridDivNum(int gridDivNum);
+    void setGridDivNum(int gridDivNum);
 
-	void setEstimationResultColors(Color front, Color back);
+    void setEstimationResultColors(Color front, Color back);
 
-	void setBuildButtonEnabled(boolean enabled);
+    void setBuildButtonEnabled(boolean enabled);
 
-	void setByValueAngle(double angle);
+    void setByValueAngle(double angle);
 
-	void setByValueLength(double length);
+    void setByValueLength(double length);
 
-	String getComputationType();
+    String getComputationType();
 
-	Color getEstimationResultFrontColor();
+    Color getEstimationResultFrontColor();
 
-	Color getEstimationResultBackColor();
+    Color getEstimationResultBackColor();
 
-	void addEditModeInputLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addEditModeInputLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeLineSelectionButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addEditModeLineSelectionButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeDeleteLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addEditModeDeleteLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeLineTypeButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addEditModeLineTypeButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addAlterLineComboFromSelectionListener(Consumer<String> listener);
+    void addAlterLineComboFromSelectionListener(Consumer<String> listener);
 
-	void addAlterLineComboToSelectionListener(Consumer<String> listener);
+    void addAlterLineComboToSelectionListener(Consumer<String> listener);
 
-	void addEditModeAddVertexButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addEditModeAddVertexButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeDeleteVertexButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addEditModeDeleteVertexButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addSelectionButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addSelectionButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEnlargementButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addEnlargementButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputDirectVButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputDirectVButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputOnVButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputOnVButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputVerticalLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputVerticalLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputAngleBisectorButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputAngleBisectorButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputLineToLineAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputLineToLineAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputP2LP2LAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputP2LP2LAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputP2LLAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputP2LLAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputP2LTPAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputP2LTPAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputTriangleSplitButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputTriangleSplitButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputSymmetricButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputSymmetricButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputMirrorButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputMirrorButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputByValueButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputByValueButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLengthButtonListener(Runnable listener);
+    void addLengthButtonListener(Runnable listener);
 
-	void addAngleButtonListener(Runnable listener);
+    void addAngleButtonListener(Runnable listener);
 
-	void addLengthTextFieldListener(Consumer<Double> listener);
+    void addLengthTextFieldListener(Consumer<Double> listener);
 
-	void addAngleTextFieldListener(Consumer<Double> listener);
+    void addAngleTextFieldListener(Consumer<Double> listener);
 
-	void addLineInputPBisectorButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputPBisectorButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputAngleSnapButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputAngleSnapButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputSuggestionButtonListener(Runnable listener, KeyProcessing keyProcessing);
+    void addLineInputSuggestionButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addAngleStepComboListener(Consumer<String> listener);
+    void addAngleStepComboListener(Consumer<String> listener);
 
-	void addLineTypeMountainButtonListener(Runnable listener);
+    void addLineTypeMountainButtonListener(Runnable listener);
 
-	void addLineTypeValleyButtonListener(Runnable listener);
+    void addLineTypeValleyButtonListener(Runnable listener);
 
-	void addLineTypeAuxButtonListener(Runnable listener);
+    void addLineTypeAuxButtonListener(Runnable listener);
 
-	void addLineTypeUnassignedButtonListener(Runnable listener);
+    void addLineTypeUnassignedButtonListener(Runnable listener);
 
-	void addDispGridCheckBoxListener(Consumer<Boolean> listener);
+    void addDispGridCheckBoxListener(Consumer<Boolean> listener);
 
-	void addDispTriangularGridCheckBoxListener(Consumer<Boolean> listener);
+    void addDispTriangularGridCheckBoxListener(Consumer<Boolean> listener);
 
-	void addDispVertexCheckBoxListener(Consumer<Boolean> listener);
+    void addDispVertexCheckBoxListener(Consumer<Boolean> listener);
 
-	void addDispMVLinesCheckBoxListener(Consumer<Boolean> listener);
+    void addDispMVLinesCheckBoxListener(Consumer<Boolean> listener);
 
-	void addDispAuxLinesCheckBoxListener(Consumer<Boolean> listener);
+    void addDispAuxLinesCheckBoxListener(Consumer<Boolean> listener);
 
-	void addZeroLineWidthCheckBoxListener(Consumer<Boolean> listener);
+    void addZeroLineWidthCheckBoxListener(Consumer<Boolean> listener);
 
-	void setValuePanelFractionDigits(int lengthDigitCount, int angleDigitCount);
+    void setValuePanelFractionDigits(int lengthDigitCount, int angleDigitCount);
 
-	void addCheckWindowButtonListener(Runnable listener);
+    void addCheckWindowButtonListener(Runnable listener);
 
-	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
+    BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
-	void showNoAnswerMessage();
+    void showNoAnswerMessage();
 
-	boolean showCleaningUpDuplicationDialog();
+    boolean showCleaningUpDuplicationDialog();
 
-	void showCleaningUpMessage();
+    void showCleaningUpMessage();
 
-	void showFoldFailureMessage();
+    void showFoldFailureMessage();
 
-	void setModelComputationListener(Runnable listener);
+    void setModelComputationListener(Runnable listener);
 
-	void setShowFoldedModelWindowsListener(Runnable listener);
+    void setShowFoldedModelWindowsListener(Runnable listener);
 
-	void showLocalFlatFoldabilityViolationMessage();
+    void showLocalFlatFoldabilityViolationMessage();
 
-	void showErrorMessage(Exception e);
+    void showErrorMessage(Exception e);
 
-	void addMouseActionPluginListener(final String name, Runnable listener, KeyProcessing keyProcessing);
+    void addMouseActionPluginListener(final String name, Runnable listener, KeyProcessing keyProcessing);
 
-	void updatePluginPanel();
+    void updatePluginPanel();
 
-	void setEstimationResultSaveColorsListener(final BiConsumer<Color, Color> listener);
+    void setEstimationResultSaveColorsListener(final BiConsumer<Color, Color> listener);
 
 }

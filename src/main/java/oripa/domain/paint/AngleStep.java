@@ -26,48 +26,48 @@ import java.util.stream.Stream;
  *
  */
 public enum AngleStep {
-	PI_OVER_12(12),
-	PI_OVER_10(10),
-	PI_OVER_8(8),
-	PI_OVER_6(6),
-	PI_OVER_4(4),
-	PI_OVER_2(2);
+    PI_OVER_12(12),
+    PI_OVER_10(10),
+    PI_OVER_8(8),
+    PI_OVER_6(6),
+    PI_OVER_4(4),
+    PI_OVER_2(2);
 
-	private final int divNum;
+    private final int divNum;
 
-	private AngleStep(final int divNum) {
-		this.divNum = divNum;
-	}
+    private AngleStep(final int divNum) {
+        this.divNum = divNum;
+    }
 
-	/**
-	 *
-	 * @return the n for PI/n.
-	 */
-	public int getDivNum() {
-		return divNum;
-	}
+    /**
+     *
+     * @return the n for PI/n.
+     */
+    public int getDivNum() {
+        return divNum;
+    }
 
-	public double getDegreeStep() {
-		return 180.0 / divNum;
-	}
+    public double getDegreeStep() {
+        return 180.0 / divNum;
+    }
 
-	public double getRadianStep() {
-		return Math.PI / divNum;
-	}
+    public double getRadianStep() {
+        return Math.PI / divNum;
+    }
 
-	public static Optional<AngleStep> fromString(final String s) {
-		return Stream.of(values())
-				.filter(type -> type.toString().equals(s))
-				.findFirst();
-	}
+    public static Optional<AngleStep> fromString(final String s) {
+        return Stream.of(values())
+                .filter(type -> type.toString().equals(s))
+                .findFirst();
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
-	@Override
-	public String toString() {
-		return getDegreeStep() + " Deg.";
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString() {
+        return getDegreeStep() + " Deg.";
+    }
 }

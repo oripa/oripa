@@ -28,37 +28,37 @@ import oripa.domain.fold.foldability.ring.RingArrayList;
  *
  */
 class MinimalAngleIndexManager {
-	private final Set<Integer> indices = new HashSet<>();
+    private final Set<Integer> indices = new HashSet<>();
 
-	public MinimalAngleIndexManager(final RingArrayList<LineGap> ring, final AngleMinimalityHelper helper) {
-		for (int i = 0; i < ring.size(); i++) {
-			if (helper.isMinimal(ring, i)) {
-				indices.add(i);
-			}
-		}
-	}
+    public MinimalAngleIndexManager(final RingArrayList<LineGap> ring, final AngleMinimalityHelper helper) {
+        for (int i = 0; i < ring.size(); i++) {
+            if (helper.isMinimal(ring, i)) {
+                indices.add(i);
+            }
+        }
+    }
 
-	public boolean exists(final int ringIndex) {
-		return indices.contains(ringIndex);
-	}
+    public boolean exists(final int ringIndex) {
+        return indices.contains(ringIndex);
+    }
 
-	public void add(final int ringIndex) {
-		indices.add(ringIndex);
-	}
+    public void add(final int ringIndex) {
+        indices.add(ringIndex);
+    }
 
-	public int pop() {
-		var iterator = indices.iterator();
-		int index = iterator.next();
-		iterator.remove();
+    public int pop() {
+        var iterator = indices.iterator();
+        int index = iterator.next();
+        iterator.remove();
 
-		return index;
-	}
+        return index;
+    }
 
-	public void remove(final int ringIndex) {
-		indices.remove(ringIndex);
-	}
+    public void remove(final int ringIndex) {
+        indices.remove(ringIndex);
+    }
 
-	public boolean isEmpty() {
-		return indices.isEmpty();
-	}
+    public boolean isEmpty() {
+        return indices.isEmpty();
+    }
 }

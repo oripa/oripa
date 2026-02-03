@@ -26,30 +26,30 @@ import java.util.ListResourceBundle;
  */
 public class InformationStringResource_en extends ListResourceBundle {
 
-	private static final Object[][] strings = {
-			{ StringID.Information.SIMPLIFYING_CP_ID,
-					"edge duplications with the same position are removed." },
-			{ StringID.Information.NO_ANSWER_ID,
-					"No answer was found." },
+    private static final Object[][] strings = {
+            { StringID.Information.SIMPLIFYING_CP_ID,
+                    "edge duplications with the same position are removed." },
+            { StringID.Information.NO_ANSWER_ID,
+                    "No answer was found." },
 
-			{ StringID.Information.SIMPLIFYING_CP_TITLE_ID,
-					"Simplifying CP" },
-			{ StringID.Information.FOLD_ALGORITHM_TITLE_ID,
-					"Fold algorithm" },
-			{ StringID.Information.NOW_FOLDING_TITLE_ID,
-					"Now folding..." },
-			{ StringID.Information.NOW_FOLDING_ID,
-					"Please wait." },
+            { StringID.Information.SIMPLIFYING_CP_TITLE_ID,
+                    "Simplifying CP" },
+            { StringID.Information.FOLD_ALGORITHM_TITLE_ID,
+                    "Fold algorithm" },
+            { StringID.Information.NOW_FOLDING_TITLE_ID,
+                    "Now folding..." },
+            { StringID.Information.NOW_FOLDING_ID,
+                    "Please wait." },
 
-			{ StringID.Information.NOW_COMPUITNG_TITLE_ID,
-					"Now computing..." },
-			{ StringID.Information.NOW_COMPUITNG_ID,
-					"Please wait." },
+            { StringID.Information.NOW_COMPUITNG_TITLE_ID,
+                    "Now computing..." },
+            { StringID.Information.NOW_COMPUITNG_ID,
+                    "Please wait." },
 
-	};
+    };
 
-	@Override
-	protected Object[][] getContents() {
-		return strings;
-	}
+    @Override
+    protected Object[][] getContents() {
+        return strings;
+    }
 }

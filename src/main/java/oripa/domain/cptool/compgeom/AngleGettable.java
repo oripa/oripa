@@ -24,9 +24,9 @@ package oripa.domain.cptool.compgeom;
  */
 public interface AngleGettable {
 
-	/**
-	 * @return angle
-	 */
-	double getAngle();
+    /**
+     * @return angle
+     */
+    double getAngle();
 
 }

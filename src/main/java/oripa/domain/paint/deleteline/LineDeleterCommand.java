@@ -31,24 +31,24 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class LineDeleterCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public LineDeleterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public LineDeleterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+    @Override
+    public void execute() {
+        validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
 
-		var lines = List.copyOf(context.getPickedLines());
+        var lines = List.copyOf(context.getPickedLines());
 
-		context.clear(true);
+        context.clear(true);
 
-		context.creasePatternUndo().pushUndoInfo();
-		Painter painter = context.getPainter();
-		painter.removeLines(lines);
+        context.creasePatternUndo().pushUndoInfo();
+        Painter painter = context.getPainter();
+        painter.removeLines(lines);
 
-		context.refreshCreasePattern();
-	}
+        context.refreshCreasePattern();
+    }
 }

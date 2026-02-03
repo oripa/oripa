@@ -59,311 +59,311 @@ import oripa.util.file.FileFactory;
 @ExtendWith(MockitoExtension.class)
 class MainFramePresentationLogicTest {
 
-	@InjectMocks
-	MainFramePresentationLogic presentationLogic;
+    @InjectMocks
+    MainFramePresentationLogic presentationLogic;
 
-	@Mock
-	MainFrameView view;
+    @Mock
+    MainFrameView view;
 
-	@Mock
-	ViewScreenUpdater screenUpdater;
+    @Mock
+    ViewScreenUpdater screenUpdater;
 
-	@Mock
-	PainterScreenPresenter screenPresenter;
+    @Mock
+    PainterScreenPresenter screenPresenter;
 
-	@Mock
-	UIPanelPresenter uiPanelPresenter;
+    @Mock
+    UIPanelPresenter uiPanelPresenter;
 
-	@Mock
-	ClearActionPresentationLogic clearActionPresentationLogic;
+    @Mock
+    ClearActionPresentationLogic clearActionPresentationLogic;
 
-	@Mock
-	UndoRedoPresentationLogic undoRedoPresentationLogic;
+    @Mock
+    UndoRedoPresentationLogic undoRedoPresentationLogic;
 
-	@Mock
-	MainFrameFilePresentationLogic mainFrameFilePresentationLogic;
+    @Mock
+    MainFrameFilePresentationLogic mainFrameFilePresentationLogic;
 
-	@Mock
-	FileAccessPresentationLogic fileAccessPresentationLogic;
+    @Mock
+    FileAccessPresentationLogic fileAccessPresentationLogic;
 
-	@Mock
-	IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
+    @Mock
+    IniFileAccessPresentationLogic iniFileAccessPresentationLogic;
 
-	@Mock
-	BindingObjectFactoryFacade bindingFactory;
+    @Mock
+    BindingObjectFactoryFacade bindingFactory;
 
-	@Mock
-	Project project;
+    @Mock
+    Project project;
 
-	@Mock
-	PaintContext paintContext;
+    @Mock
+    PaintContext paintContext;
 
-	@Mock
-	FileHistory fileHistory;
+    @Mock
+    FileHistory fileHistory;
 
-	@Mock
-	DocFileAccess docFileAccess;
+    @Mock
+    DocFileAccess docFileAccess;
 
-	@Mock
-	FileFactory fileFactory;
+    @Mock
+    FileFactory fileFactory;
 
-	@Mock
-	ResourceHolder resourceHolder;
+    @Mock
+    ResourceHolder resourceHolder;
 
-	@Nested
-	class TestUpdateMRUFilesMenuItem {
-		@Test
-		void setsHistoryValueWhenIndexIsSmallerThanSize() {
-			List<String> filePaths = List.of("1", "2");
-			when(fileHistory.getHistory()).thenReturn(filePaths);
+    @Nested
+    class TestUpdateMRUFilesMenuItem {
+        @Test
+        void setsHistoryValueWhenIndexIsSmallerThanSize() {
+            List<String> filePaths = List.of("1", "2");
+            when(fileHistory.getHistory()).thenReturn(filePaths);
 
-			presentationLogic.updateMRUFilesMenuItem(0);
+            presentationLogic.updateMRUFilesMenuItem(0);
 
-			verify(view).setMRUFilesMenuItem(0, filePaths.get(0));
-		}
+            verify(view).setMRUFilesMenuItem(0, filePaths.get(0));
+        }
 
-		@Test
-		void setsEmptyStringWhenIndexIsGreaterThanOrEqualToSize() {
-			List<String> filePaths = List.of("1", "2");
-			when(fileHistory.getHistory()).thenReturn(filePaths);
+        @Test
+        void setsEmptyStringWhenIndexIsGreaterThanOrEqualToSize() {
+            List<String> filePaths = List.of("1", "2");
+            when(fileHistory.getHistory()).thenReturn(filePaths);
 
-			presentationLogic.updateMRUFilesMenuItem(2);
+            presentationLogic.updateMRUFilesMenuItem(2);
 
-			verify(view).setMRUFilesMenuItem(2, "");
-		}
-	}
+            verify(view).setMRUFilesMenuItem(2, "");
+        }
+    }
 
-	@Nested
-	class TestExit {
-		@Test
-		void shouldSaveIniFile() {
+    @Nested
+    class TestExit {
+        @Test
+        void shouldSaveIniFile() {
 
-			Runnable doExit = mock();
-			presentationLogic.exit(doExit);
+            Runnable doExit = mock();
+            presentationLogic.exit(doExit);
 
-			verify(iniFileAccessPresentationLogic).saveIniFile();
+            verify(iniFileAccessPresentationLogic).saveIniFile();
 
-			verify(doExit).run();
-		}
-	}
+            verify(doExit).run();
+        }
+    }
 
-	@Nested
-	class TestNew {
-		@Test
-		void succeeds() {
+    @Nested
+    class TestNew {
+        @Test
+        void succeeds() {
 
-			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
-			when(project.getDataFileName()).thenReturn(Optional.empty());
+            when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
+            when(project.getDataFileName()).thenReturn(Optional.empty());
 
-			presentationLogic.clearAll();
+            presentationLogic.clearAll();
 
-			verify(clearActionPresentationLogic).clearAll();
-			verifyUpdateTitleText("default");
-		}
-	}
+            verify(clearActionPresentationLogic).clearAll();
+            verifyUpdateTitleText("default");
+        }
+    }
 
-	@Nested
-	class TestClear {
-		@Test
-		void succeeds() {
+    @Nested
+    class TestClear {
+        @Test
+        void succeeds() {
 
-			when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
-			when(project.getDataFileName()).thenReturn(Optional.empty());
+            when(resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID)).thenReturn("default");
+            when(project.getDataFileName()).thenReturn(Optional.empty());
 
-			presentationLogic.clearCreasePattern();
+            presentationLogic.clearCreasePattern();
 
-			verify(clearActionPresentationLogic).clearLines();
-			verifyUpdateTitleText("default");
-		}
-	}
+            verify(clearActionPresentationLogic).clearLines();
+            verifyUpdateTitleText("default");
+        }
+    }
 
-	void verifyUpdateTitleText(final String dataFileName) {
-		verify(resourceHolder).getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
-		verify(project).getDataFileName();
-		verify(view).setFileNameToTitle(dataFileName);
-	}
+    void verifyUpdateTitleText(final String dataFileName) {
+        verify(resourceHolder).getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
+        verify(project).getDataFileName();
+        verify(view).setFileNameToTitle(dataFileName);
+    }
 
-	@Nested
-	class TestUpdateMenu {
-		@Test
-		void menuShouldBeUpdatedWhenProjectIsProjectFile() {
-			when(project.getDataFilePath()).thenReturn("path");
-			when(project.isProjectFile()).thenReturn(true);
+    @Nested
+    class TestUpdateMenu {
+        @Test
+        void menuShouldBeUpdatedWhenProjectIsProjectFile() {
+            when(project.getDataFilePath()).thenReturn("path");
+            when(project.isProjectFile()).thenReturn(true);
 
-			presentationLogic.updateMenu();
+            presentationLogic.updateMenu();
 
-			verify(fileHistory).useFile("path");
+            verify(fileHistory).useFile("path");
 
-			verify(view).buildFileMenu();
-		}
+            verify(view).buildFileMenu();
+        }
 
-		@Test
-		void menuShouldNotBeUpdatedWhenProjectIsNotProjectFile() {
-			when(project.getDataFilePath()).thenReturn("path");
-			when(project.isProjectFile()).thenReturn(false);
+        @Test
+        void menuShouldNotBeUpdatedWhenProjectIsNotProjectFile() {
+            when(project.getDataFilePath()).thenReturn("path");
+            when(project.isProjectFile()).thenReturn(false);
 
-			presentationLogic.updateMenu();
+            presentationLogic.updateMenu();
 
-			verify(fileHistory, never()).useFile("path");
+            verify(fileHistory, never()).useFile("path");
 
-			verify(view, never()).buildFileMenu();
-		}
+            verify(view, never()).buildFileMenu();
+        }
 
-	}
+    }
 
-	@Nested
-	class TestUndo {
+    @Nested
+    class TestUndo {
 
-		@Test
-		void undoLogicShouldBeCalled() {
+        @Test
+        void undoLogicShouldBeCalled() {
 
-			presentationLogic.undo();
+            presentationLogic.undo();
 
-			verify(undoRedoPresentationLogic).undo();
-		}
-	}
+            verify(undoRedoPresentationLogic).undo();
+        }
+    }
 
-	@Nested
-	class TestRedo {
+    @Nested
+    class TestRedo {
 
-		@Test
-		void redoLogicShouldBeCalled() {
+        @Test
+        void redoLogicShouldBeCalled() {
 
-			presentationLogic.redo();
+            presentationLogic.redo();
 
-			verify(undoRedoPresentationLogic).redo();
-		}
-	}
+            verify(undoRedoPresentationLogic).redo();
+        }
+    }
 
-	@Nested
-	class TestModifySavingActions {
+    @Nested
+    class TestModifySavingActions {
 
-		@Test
-		void modifySavingActionsLogicShouldBeCalled() {
-			// execute
-			presentationLogic.modifySavingActions();
+        @Test
+        void modifySavingActionsLogicShouldBeCalled() {
+            // execute
+            presentationLogic.modifySavingActions();
 
-			verify(mainFrameFilePresentationLogic).modifySavingActions();
-		}
-	}
+            verify(mainFrameFilePresentationLogic).modifySavingActions();
+        }
+    }
 
-	@Nested
-	class TestSaveFileToCurrentPath {
-		@Test
-		void saveFileToCurrentPathLogicShouldBeCalled() {
-			// execute
-			presentationLogic.saveFileToCurrentPath(mock());
+    @Nested
+    class TestSaveFileToCurrentPath {
+        @Test
+        void saveFileToCurrentPathLogicShouldBeCalled() {
+            // execute
+            presentationLogic.saveFileToCurrentPath(mock());
 
-			verify(mainFrameFilePresentationLogic).saveFileToCurrentPath(any());
-		}
-	}
+            verify(mainFrameFilePresentationLogic).saveFileToCurrentPath(any());
+        }
+    }
 
-	@Nested
-	class TestSaveFileUsingGUI {
-		@SuppressWarnings("unchecked")
-		@Test
-		void saveFileUsingGUILogicShouldBeCalled() {
+    @Nested
+    class TestSaveFileUsingGUI {
+        @SuppressWarnings("unchecked")
+        @Test
+        void saveFileUsingGUILogicShouldBeCalled() {
 
-			// execute
-			presentationLogic.saveFileUsingGUI();
+            // execute
+            presentationLogic.saveFileUsingGUI();
 
-			verify(mainFrameFilePresentationLogic).saveFileUsingGUI(any(FileType[].class));
-		}
+            verify(mainFrameFilePresentationLogic).saveFileUsingGUI(any(FileType[].class));
+        }
 
-	}
+    }
 
-	@Nested
-	class TestExportFileUsingGUIWithModelCheck {
-		@Test
-		void ExportFileUsingGUIWithModelCheckLogicShouldBeCalled() throws IOException {
+    @Nested
+    class TestExportFileUsingGUIWithModelCheck {
+        @Test
+        void ExportFileUsingGUIWithModelCheckLogicShouldBeCalled() throws IOException {
 
-			// execute
-			presentationLogic.exportFileUsingGUIWithModelCheck(mock());
+            // execute
+            presentationLogic.exportFileUsingGUIWithModelCheck(mock());
 
-			verify(mainFrameFilePresentationLogic).exportFileUsingGUIWithModelCheck(any());
-		}
+            verify(mainFrameFilePresentationLogic).exportFileUsingGUIWithModelCheck(any());
+        }
 
-	}
+    }
 
-	@Nested
-	class TestLoadFile {
+    @Nested
+    class TestLoadFile {
 
-		@Test
-		void loadFileLogicShouldBeCalled() {
+        @Test
+        void loadFileLogicShouldBeCalled() {
 
-			String path = "path";
+            String path = "path";
 
-			// execute
-			presentationLogic.loadFile(path);
+            // execute
+            presentationLogic.loadFile(path);
 
-			verify(mainFrameFilePresentationLogic).loadFile(path);
-		}
+            verify(mainFrameFilePresentationLogic).loadFile(path);
+        }
 
-	}
+    }
 
-	@Nested
-	class TestLoadFileUsingGUI {
+    @Nested
+    class TestLoadFileUsingGUI {
 
-		@Test
-		void loadFileUsingGUILogicShouldBeCalled() {
+        @Test
+        void loadFileUsingGUILogicShouldBeCalled() {
 
-			// execute
-			presentationLogic.loadFileUsingGUI();
+            // execute
+            presentationLogic.loadFileUsingGUI();
 
-			verify(mainFrameFilePresentationLogic).loadFileUsingGUI();
+            verify(mainFrameFilePresentationLogic).loadFileUsingGUI();
 
-		}
-	}
+        }
+    }
 
-	@Nested
-	class TestImportFileUsingGUI {
+    @Nested
+    class TestImportFileUsingGUI {
 
-		@Test
-		void importFileUsingGUILogicShouldBeCalled() {
-			Runnable stateAction = mock();
+        @Test
+        void importFileUsingGUILogicShouldBeCalled() {
+            Runnable stateAction = mock();
 
-			// execute
-			presentationLogic.importFileUsingGUI(stateAction);
+            // execute
+            presentationLogic.importFileUsingGUI(stateAction);
 
-			var inOrder = inOrder(mainFrameFilePresentationLogic, stateAction);
+            var inOrder = inOrder(mainFrameFilePresentationLogic, stateAction);
 
-			inOrder.verify(mainFrameFilePresentationLogic).importFileUsingGUI();
-			inOrder.verify(stateAction).run();
-		}
-	}
+            inOrder.verify(mainFrameFilePresentationLogic).importFileUsingGUI();
+            inOrder.verify(stateAction).run();
+        }
+    }
 
-	@Nested
-	class TestLoadIniFile {
+    @Nested
+    class TestLoadIniFile {
 
-		@Test
-		void iniFileShouldBeLoaded() {
+        @Test
+        void iniFileShouldBeLoaded() {
 
-			presentationLogic.loadIniFile();
+            presentationLogic.loadIniFile();
 
-			verify(iniFileAccessPresentationLogic).loadIniFile();
+            verify(iniFileAccessPresentationLogic).loadIniFile();
 
-		}
-	}
+        }
+    }
 
-	@Nested
-	class TestSetEstimationResultSaveColors {
-		@Captor
-		ArgumentCaptor<BiConsumer<Color, Color>> listenerCaptor;
+    @Nested
+    class TestSetEstimationResultSaveColors {
+        @Captor
+        ArgumentCaptor<BiConsumer<Color, Color>> listenerCaptor;
 
-		@Test
-		void putColorCodeLogicShouldBeCalled() {
+        @Test
+        void putColorCodeLogicShouldBeCalled() {
 
-			Property property = mock();
-			when(project.getProperty()).thenReturn(property);
+            Property property = mock();
+            when(project.getProperty()).thenReturn(property);
 
-			Color front = mock();
-			Color back = mock();
+            Color front = mock();
+            Color back = mock();
 
-			presentationLogic.setEstimationResultSaveColors(front, back);
+            presentationLogic.setEstimationResultSaveColors(front, back);
 
-			verify(property).putFrontColorCode(anyString());
-			verify(property).putBackColorCode(anyString());
-		}
-	}
+            verify(property).putFrontColorCode(anyString());
+            verify(property).putBackColorCode(anyString());
+        }
+    }
 
 }

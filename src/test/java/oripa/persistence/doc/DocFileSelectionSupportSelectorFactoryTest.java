@@ -39,29 +39,29 @@ import oripa.util.file.FileFactory;
 @ExtendWith(MockitoExtension.class)
 class DocFileSelectionSupportSelectorFactoryTest {
 
-	@InjectMocks
-	DocFileSelectionSupportSelectorFactory selectorFactory;
+    @InjectMocks
+    DocFileSelectionSupportSelectorFactory selectorFactory;
 
-	@Mock
-	FileSelectionSupportFactory selectionSupportFactory;
+    @Mock
+    FileSelectionSupportFactory selectionSupportFactory;
 
-	@Mock
-	FileAccessSupportFactory accessSupportFactory;
+    @Mock
+    FileAccessSupportFactory accessSupportFactory;
 
-	@Test
-	void selectorContainsAllTypes() {
-		FileFactory fileFactory = mock();
+    @Test
+    void selectorContainsAllTypes() {
+        FileFactory fileFactory = mock();
 
-		for (var key : CreasePatternFileTypeKey.values()) {
-			var type = new FileType<>(key);
+        for (var key : CreasePatternFileTypeKey.values()) {
+            var type = new FileType<>(key);
 
-			when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
-					.thenReturn(mock());
+            when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
+                    .thenReturn(mock());
 
-			when(selectionSupportFactory.create(any())).thenReturn(mock());
-		}
+            when(selectionSupportFactory.create(any())).thenReturn(mock());
+        }
 
-		selectorFactory.create(fileFactory);
-	}
+        selectorFactory.create(fileFactory);
+    }
 
 }

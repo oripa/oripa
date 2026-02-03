@@ -33,101 +33,101 @@ import oripa.vecmath.Vector2d;
  */
 class LineInputStatesTest extends InputStatesTestBase {
 
-	@BeforeEach
-	void setUp() {
-		setUp(SelectingFirstVertexForLine.class);
-	}
+    @BeforeEach
+    void setUp() {
+        setUp(SelectingFirstVertexForLine.class);
+    }
 
-	private <T> void assertCurrentState(final int expectedVertexCount, final Class<T> expectedClass) {
-		assertEquals(expectedVertexCount, context.getVertexCount());
-		assertInstanceOf(expectedClass, state);
-	}
+    private <T> void assertCurrentState(final int expectedVertexCount, final Class<T> expectedClass) {
+        assertEquals(expectedVertexCount, context.getVertexCount());
+        assertInstanceOf(expectedClass, state);
+    }
 
-	@Test
-	void testUndo_firstPointState() {
-		state = state.undo(context);
-		assertCurrentState(0, SelectingFirstVertexForLine.class);
-	}
+    @Test
+    void testUndo_firstPointState() {
+        state = state.undo(context);
+        assertCurrentState(0, SelectingFirstVertexForLine.class);
+    }
 
-	@Nested
-	class FirstPointIsSelected {
-		Vector2d candidate1 = new Vector2d(1, 1);
+    @Nested
+    class FirstPointIsSelected {
+        Vector2d candidate1 = new Vector2d(1, 1);
 
-		@BeforeEach
-		void doAction() {
-			LineInputStatesTest.this.doAction(candidate1);
-		}
+        @BeforeEach
+        void doAction() {
+            LineInputStatesTest.this.doAction(candidate1);
+        }
 
-		@Test
-		void testAfterDoAction() {
-			assertCurrentState(1, SelectingSecondVertexForLine.class);
-		}
+        @Test
+        void testAfterDoAction() {
+            assertCurrentState(1, SelectingSecondVertexForLine.class);
+        }
 
-		@Test
-		void testUndo_secondPointState() {
-			state = state.undo(context);
-			assertCurrentState(0, SelectingFirstVertexForLine.class);
-		}
+        @Test
+        void testUndo_secondPointState() {
+            state = state.undo(context);
+            assertCurrentState(0, SelectingFirstVertexForLine.class);
+        }
 
-		@Nested
-		class SecondPointIsSelected {
-			Vector2d candidate2 = new Vector2d(2, 2);
+        @Nested
+        class SecondPointIsSelected {
+            Vector2d candidate2 = new Vector2d(2, 2);
 
-			@BeforeEach
-			void doAction() {
-				LineInputStatesTest.this.doAction(candidate2);
-			}
+            @BeforeEach
+            void doAction() {
+                LineInputStatesTest.this.doAction(candidate2);
+            }
 
-			@Test
-			void testAfterDoAction() {
-				assertCurrentState(2, SelectingFirstEndPoint.class);
-				assertSnapPointExists();
-			}
+            @Test
+            void testAfterDoAction() {
+                assertCurrentState(2, SelectingFirstEndPoint.class);
+                assertSnapPointExists();
+            }
 
-			@Test
-			void testUndo_firstSnapState() {
-				state = state.undo(context);
-				assertCurrentState(1, SelectingSecondVertexForLine.class);
-			}
+            @Test
+            void testUndo_firstSnapState() {
+                state = state.undo(context);
+                assertCurrentState(1, SelectingSecondVertexForLine.class);
+            }
 
-			@Nested
-			class FirstSnapIsSelected {
-				Vector2d candidate3 = new Vector2d(3, 3);
+            @Nested
+            class FirstSnapIsSelected {
+                Vector2d candidate3 = new Vector2d(3, 3);
 
-				@BeforeEach
-				void doAction() {
-					LineInputStatesTest.this.doAction(candidate3);
-				}
+                @BeforeEach
+                void doAction() {
+                    LineInputStatesTest.this.doAction(candidate3);
+                }
 
-				@Test
-				void testAfterDoAction() {
-					assertCurrentState(3, SelectingSecondEndPoint.class);
-				}
+                @Test
+                void testAfterDoAction() {
+                    assertCurrentState(3, SelectingSecondEndPoint.class);
+                }
 
-				@Test
-				void testUndo_firstSnapState() {
-					state = state.undo(context);
-					assertCurrentState(2, SelectingFirstEndPoint.class);
-				}
+                @Test
+                void testUndo_firstSnapState() {
+                    state = state.undo(context);
+                    assertCurrentState(2, SelectingFirstEndPoint.class);
+                }
 
-				@Nested
-				class SecondSnapIsSelected {
-					Vector2d candidate4 = new Vector2d(4, 4);
+                @Nested
+                class SecondSnapIsSelected {
+                    Vector2d candidate4 = new Vector2d(4, 4);
 
-					@BeforeEach
-					void doAction() {
-						LineInputStatesTest.this.doAction(candidate4);
-					}
+                    @BeforeEach
+                    void doAction() {
+                        LineInputStatesTest.this.doAction(candidate4);
+                    }
 
-					@Test
-					void testAfterDoAction() {
-						assertCurrentState(0, SelectingFirstVertexForLine.class);
-						assertNewLineInput();
-					}
-				}
+                    @Test
+                    void testAfterDoAction() {
+                        assertCurrentState(0, SelectingFirstVertexForLine.class);
+                        assertNewLineInput();
+                    }
+                }
 
-			}
+            }
 
-		}
-	}
+        }
+    }
 }

@@ -21,73 +21,73 @@ import oripa.util.file.FileFactory;
  *
  */
 public class DocFileSelectionSupportSelectorFactory {
-	private final FileSelectionSupportFactory selectionSupportFactory;
-	private final FileAccessSupportFactory accessSupportFactory;
+    private final FileSelectionSupportFactory selectionSupportFactory;
+    private final FileAccessSupportFactory accessSupportFactory;
 
-	@Inject
-	public DocFileSelectionSupportSelectorFactory(
-			final FileSelectionSupportFactory selectionSupportFactory,
-			final FileAccessSupportFactory accessSupportFactory
+    @Inject
+    public DocFileSelectionSupportSelectorFactory(
+            final FileSelectionSupportFactory selectionSupportFactory,
+            final FileAccessSupportFactory accessSupportFactory
 
-	) {
-		this.selectionSupportFactory = selectionSupportFactory;
-		this.accessSupportFactory = accessSupportFactory;
-	}
+    ) {
+        this.selectionSupportFactory = selectionSupportFactory;
+        this.accessSupportFactory = accessSupportFactory;
+    }
 
-	public FileSelectionSupportSelector<Doc> create(final FileFactory fileFactory) {
-		var supports = new HashMap<FileType<Doc>, FileSelectionSupport<Doc>>();
+    public FileSelectionSupportSelector<Doc> create(final FileFactory fileFactory) {
+        var supports = new HashMap<FileType<Doc>, FileSelectionSupport<Doc>>();
 
-		CreasePatternFileTypeKey key = CreasePatternFileTypeKey.OPX;
-		put(
-				supports,
-				key,
-				accessSupportFactory.createFileAccessSupport(key, StringID.Main.ORIPA_FILE_ID));
+        CreasePatternFileTypeKey key = CreasePatternFileTypeKey.OPX;
+        put(
+                supports,
+                key,
+                accessSupportFactory.createFileAccessSupport(key, StringID.Main.ORIPA_FILE_ID));
 
-		key = CreasePatternFileTypeKey.PICT;
-		put(
-				supports,
-				key,
-				accessSupportFactory.createFileAccessSupport(key, StringID.Main.PICTURE_FILE_ID));
+        key = CreasePatternFileTypeKey.PICT;
+        put(
+                supports,
+                key,
+                accessSupportFactory.createFileAccessSupport(key, StringID.Main.PICTURE_FILE_ID));
 
-		key = CreasePatternFileTypeKey.FOLD;
-		put(
-				supports,
-				key,
-				accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
+        key = CreasePatternFileTypeKey.FOLD;
+        put(
+                supports,
+                key,
+                accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
 
-		key = CreasePatternFileTypeKey.DXF;
-		put(
-				supports,
-				key,
-				accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
+        key = CreasePatternFileTypeKey.DXF;
+        put(
+                supports,
+                key,
+                accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
 
-		key = CreasePatternFileTypeKey.CP;
-		put(
-				supports,
-				key,
-				accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
+        key = CreasePatternFileTypeKey.CP;
+        put(
+                supports,
+                key,
+                accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
 
-		key = CreasePatternFileTypeKey.SVG;
-		put(
-				supports,
-				key,
-				accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
+        key = CreasePatternFileTypeKey.SVG;
+        put(
+                supports,
+                key,
+                accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
 
-		key = CreasePatternFileTypeKey.PDF;
-		put(
-				supports,
-				key,
-				accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
+        key = CreasePatternFileTypeKey.PDF;
+        put(
+                supports,
+                key,
+                accessSupportFactory.createFileAccessSupport(key, StringID.Main.FILE_ID));
 
-		return new FileSelectionSupportSelector<Doc>(supports, selectionSupportFactory, accessSupportFactory,
-				fileFactory);
-	}
+        return new FileSelectionSupportSelector<Doc>(supports, selectionSupportFactory, accessSupportFactory,
+                fileFactory);
+    }
 
-	private void put(final Map<FileType<Doc>, FileSelectionSupport<Doc>> supports,
-			final FileTypeProperty<Doc> key, final FileAccessSupport<Doc> accessSupport) {
-		supports.put(
-				new FileType<>(key),
-				selectionSupportFactory.create(accessSupport));
+    private void put(final Map<FileType<Doc>, FileSelectionSupport<Doc>> supports,
+            final FileTypeProperty<Doc> key, final FileAccessSupport<Doc> accessSupport) {
+        supports.put(
+                new FileType<>(key),
+                selectionSupportFactory.create(accessSupport));
 
-	}
+    }
 }

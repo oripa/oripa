@@ -4,25 +4,25 @@ import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewchange.ChangeViewSetting;
 
 public class ChangeOnOtherCommandButtonSelected implements ChangeViewSetting {
-	private final UIPanelSetting setting;
+    private final UIPanelSetting setting;
 
-	/**
-	 * UIPanel settings for buttons without any tool settings
-	 */
-	public ChangeOnOtherCommandButtonSelected(final UIPanelSetting uiPanelSetting) {
-		setting = uiPanelSetting;
-	}
+    /**
+     * UIPanel settings for buttons without any tool settings
+     */
+    public ChangeOnOtherCommandButtonSelected(final UIPanelSetting uiPanelSetting) {
+        setting = uiPanelSetting;
+    }
 
-	@Override
-	public void changeViewSetting() {
-		setting.setByValuePanelVisible(false);
+    @Override
+    public void changeViewSetting() {
+        setting.setByValuePanelVisible(false);
 
-		setting.setLineSelectionPanelVisible(false);
-		setting.setLineInputPanelVisible(false);
+        setting.setLineSelectionPanelVisible(false);
+        setting.setLineInputPanelVisible(false);
 
-		setting.setAngleStepPanelVisible(false);
+        setting.setAngleStepPanelVisible(false);
 
-		setting.setAlterLineTypePanelVisible(false);
-	}
+        setting.setAlterLineTypePanelVisible(false);
+    }
 
 }

@@ -28,47 +28,47 @@ package oripa.resource;
  *
  */
 public enum ButtonIcon implements ButtonIconResource {
-	SELECT("select"),
-	ENLARGE("enlarge"),
-	DIRECT_V("segment"),
-	ON_V("line"),
-	PERPENDICULAR_BISECTOR("pbisector"),
-	BISECTOR("bisector"),
-	LINE_TO_LINE("linetoline"),
-	POINT_TO_LINE_POINT_TO_LINE("p2lp2l"),
-	POINT_TO_LINE_THROUGH_POINT("p2ltp"),
-	POINT_TO_LINE_LINE_PERPENDICULAR("p2ll"),
-	TRIANGLE("incenter"),
-	VERTICAL("vertical"),
-	SYMMETRIC("symmetry"),
-	MIRROR("mirror"),
-	BY_VALUE("by_value"),
-	ANGLE_SNAP("angle"),
-	SUGGESTION("suggestion");
+    SELECT("select"),
+    ENLARGE("enlarge"),
+    DIRECT_V("segment"),
+    ON_V("line"),
+    PERPENDICULAR_BISECTOR("pbisector"),
+    BISECTOR("bisector"),
+    LINE_TO_LINE("linetoline"),
+    POINT_TO_LINE_POINT_TO_LINE("p2lp2l"),
+    POINT_TO_LINE_THROUGH_POINT("p2ltp"),
+    POINT_TO_LINE_LINE_PERPENDICULAR("p2ll"),
+    TRIANGLE("incenter"),
+    VERTICAL("vertical"),
+    SYMMETRIC("symmetry"),
+    MIRROR("mirror"),
+    BY_VALUE("by_value"),
+    ANGLE_SNAP("angle"),
+    SUGGESTION("suggestion");
 
-	private static final String DIRECTORY = "icon/";
+    private static final String DIRECTORY = "icon/";
 
-	private final String fileName;
+    private final String fileName;
 
-	private ButtonIcon(final String fileName) {
-		this.fileName = fileName;
-	}
+    private ButtonIcon(final String fileName) {
+        this.fileName = fileName;
+    }
 
-	private String getPath() {
-		return getPath("");
-	}
+    private String getPath() {
+        return getPath("");
+    }
 
-	private String getPath(final String fileNameSuffix) {
-		return DIRECTORY + fileName + fileNameSuffix + ".gif";
-	}
+    private String getPath(final String fileNameSuffix) {
+        return DIRECTORY + fileName + fileNameSuffix + ".gif";
+    }
 
-	@Override
-	public String getIconResourcePath() {
-		return getPath();
-	}
+    @Override
+    public String getIconResourcePath() {
+        return getPath();
+    }
 
-	@Override
-	public String getSelectedIconResourcePath() {
-		return getPath("_p");
-	}
+    @Override
+    public String getSelectedIconResourcePath() {
+        return getPath("_p");
+    }
 }

@@ -32,15 +32,15 @@ import oripa.value.OriLine;
  */
 public interface FoldabilityCheckFrameView extends FrameView {
 
-	FoldabilityScreenView getFoldabilityScreenView();
+    FoldabilityScreenView getFoldabilityScreenView();
 
-	void setModel(
-			OrigamiModel origamiModel,
-			EstimationResultRules estimationRules,
-			Collection<OriLine> creasePattern,
-			boolean zeroLineWidth,
-			double pointEps);
+    void setModel(
+            OrigamiModel origamiModel,
+            EstimationResultRules estimationRules,
+            Collection<OriLine> creasePattern,
+            boolean zeroLineWidth,
+            double pointEps);
 
-	void setOnCloseListener(Consumer<FrameView> listener);
+    void setOnCloseListener(Consumer<FrameView> listener);
 
 }

@@ -34,58 +34,58 @@ import oripa.vecmath.Vector2d;
  */
 @ExtendWith(MockitoExtension.class)
 class OriFaceTest {
-	OriFace face;
+    OriFace face;
 
-	@BeforeEach
-	void setupFace() {
-		face = new OriFace();
-		var he1 = createHalfEdgeSpy(0, 0, face);
-		var he2 = createHalfEdgeSpy(10, 0, face);
-		var he3 = createHalfEdgeSpy(5, 10, face);
+    @BeforeEach
+    void setupFace() {
+        face = new OriFace();
+        var he1 = createHalfEdgeSpy(0, 0, face);
+        var he2 = createHalfEdgeSpy(10, 0, face);
+        var he3 = createHalfEdgeSpy(5, 10, face);
 
-		he1.setNext(he2);
-		he2.setNext(he3);
-		he3.setNext(he1);
+        he1.setNext(he2);
+        he2.setNext(he3);
+        he3.setNext(he1);
 
-		face.addHalfedge(he1);
-		face.addHalfedge(he2);
-		face.addHalfedge(he3);
+        face.addHalfedge(he1);
+        face.addHalfedge(he2);
+        face.addHalfedge(he3);
 
-		face.makeHalfedgeLoop(1e-6);
-	}
+        face.makeHalfedgeLoop(1e-6);
+    }
 
-	private OriHalfedge createHalfEdgeSpy(final double x, final double y, final OriFace face) {
-		var position = new Vector2d(x, y);
-		var he = spy(new OriHalfedge(new OriVertex(position), face));
+    private OriHalfedge createHalfEdgeSpy(final double x, final double y, final OriFace face) {
+        var position = new Vector2d(x, y);
+        var he = spy(new OriHalfedge(new OriVertex(position), face));
 
-		lenient().doReturn(position).when(he).getPosition();
-		lenient().doReturn(position).when(he).getPosition();
+        lenient().doReturn(position).when(he).getPosition();
+        lenient().doReturn(position).when(he).getPosition();
 
-		return he;
-	}
+        return he;
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceInclusively(oripa.vecmath.Vector2d)}.
-	 */
-	@Test
-	void testIncludesInclusively_vertex() {
-		assertTrue(face.includesInclusively(new Vector2d(5, 5), 1e-6));
-		assertTrue(face.includesInclusively(new Vector2d(5, 10 + 1e-8), 1e-6));
-		assertFalse(face.includesInclusively(new Vector2d(5, 10.1), 1e-6));
-	}
+    /**
+     * Test method for
+     * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceInclusively(oripa.vecmath.Vector2d)}.
+     */
+    @Test
+    void testIncludesInclusively_vertex() {
+        assertTrue(face.includesInclusively(new Vector2d(5, 5), 1e-6));
+        assertTrue(face.includesInclusively(new Vector2d(5, 10 + 1e-8), 1e-6));
+        assertFalse(face.includesInclusively(new Vector2d(5, 10.1), 1e-6));
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.halfedge.OriFace#includesExclusively(oripa.vecmath.Vector2d, double)}.
-	 */
-	@Test
-	void testIncludesExclusively() {
-		final double EPS = 1e-6;
-		assertTrue(face.includesExclusively(new Vector2d(5, 5), EPS));
-		assertTrue(face.includesExclusively(new Vector2d(5, 9.9999), EPS));
-		assertFalse(face.includesExclusively(new Vector2d(5, 10 + 1e-8), EPS));
-		assertFalse(face.includesExclusively(new Vector2d(5, 10), EPS));
-	}
+    /**
+     * Test method for
+     * {@link oripa.domain.fold.halfedge.OriFace#includesExclusively(oripa.vecmath.Vector2d, double)}.
+     */
+    @Test
+    void testIncludesExclusively() {
+        final double EPS = 1e-6;
+        assertTrue(face.includesExclusively(new Vector2d(5, 5), EPS));
+        assertTrue(face.includesExclusively(new Vector2d(5, 9.9999), EPS));
+        assertFalse(face.includesExclusively(new Vector2d(5, 10 + 1e-8), EPS));
+        assertFalse(face.includesExclusively(new Vector2d(5, 10), EPS));
+    }
 
 }

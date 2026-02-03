@@ -6,19 +6,19 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class DeleteVertexAction extends AbstractGraphicMouseAction {
 
-	public DeleteVertexAction() {
-		setEditMode(EditMode.VERTEX);
+    public DeleteVertexAction() {
+        setEditMode(EditMode.VERTEX);
 
-		setActionState(new DeletingVertex());
+        setActionState(new DeletingVertex());
 
-	}
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		super.onDraw(drawer, viewContext, paintContext);
+        super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(drawer, viewContext, paintContext);
-	}
+        drawPickCandidateVertex(drawer, viewContext, paintContext);
+    }
 }

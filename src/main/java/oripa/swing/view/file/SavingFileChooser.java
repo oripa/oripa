@@ -39,52 +39,52 @@ import oripa.swing.view.util.Dialogs;
  */
 public class SavingFileChooser extends JFileChooser implements SavingFileChooserView {
 
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	public SavingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties,
-			final ResourceHolder resourceHolder) {
-		super(path);
+    public SavingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties,
+            final ResourceHolder resourceHolder) {
+        super(path);
 
-		this.resourceHolder = resourceHolder;
+        this.resourceHolder = resourceHolder;
 
-		if (path != null) {
-			File file = new File(path);
-			this.setSelectedFile(file);
-		}
+        if (path != null) {
+            File file = new File(path);
+            this.setSelectedFile(file);
+        }
 
-		filterProperties.forEach(property -> {
-			addChoosableFileFilter(new FileNameExtensionFilter(property.getDescription(), property.getExtensions()));
-		});
+        filterProperties.forEach(property -> {
+            addChoosableFileFilter(new FileNameExtensionFilter(property.getDescription(), property.getExtensions()));
+        });
 
-		setAcceptAllFileFilterUsed(false);
-	}
+        setAcceptAllFileFilterUsed(false);
+    }
 
-	@Override
-	public boolean showDialog(final FrameView parent) {
-		return showSaveDialog((JFrame) parent) == JFileChooser.APPROVE_OPTION;
-	}
+    @Override
+    public boolean showDialog(final FrameView parent) {
+        return showSaveDialog((JFrame) parent) == JFileChooser.APPROVE_OPTION;
+    }
 
-	@Override
-	public String[] getSelectedFilterExtensions() {
-		return ((FileNameExtensionFilter) this.getFileFilter()).getExtensions();
-	}
+    @Override
+    public String[] getSelectedFilterExtensions() {
+        return ((FileNameExtensionFilter) this.getFileFilter()).getExtensions();
+    }
 
-	@Override
-	public String getSelectedFilterDescription() {
-		return ((FileNameExtensionFilter) this.getFileFilter()).getDescription();
-	}
+    @Override
+    public String getSelectedFilterDescription() {
+        return ((FileNameExtensionFilter) this.getFileFilter()).getDescription();
+    }
 
-	@Override
-	public boolean showOverwriteConfirmMessage() {
-		return Dialogs.showYesNoConfirmDialog(this,
-				resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.SAVE_TITLE_ID),
-				resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.SAME_FILE_EXISTS_ID));
-	}
+    @Override
+    public boolean showOverwriteConfirmMessage() {
+        return Dialogs.showYesNoConfirmDialog(this,
+                resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.SAVE_TITLE_ID),
+                resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.SAME_FILE_EXISTS_ID));
+    }
 
-	@Override
-	public void showErrorMessage(final Exception e) {
-		Dialogs.showErrorDialog(this,
-				resourceHolder.getString(ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
-	}
+    @Override
+    public void showErrorMessage(final Exception e) {
+        Dialogs.showErrorDialog(this,
+                resourceHolder.getString(ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+    }
 
 }

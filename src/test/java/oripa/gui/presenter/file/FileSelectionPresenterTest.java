@@ -49,269 +49,269 @@ import oripa.util.file.FileFactory;
  */
 @ExtendWith(MockitoExtension.class)
 class FileSelectionPresenterTest {
-	@InjectMocks
-	FileSelectionPresenter<Doc> presenter;
+    @InjectMocks
+    FileSelectionPresenter<Doc> presenter;
 
-	@Mock
-	FrameView parent;
-	@Mock
-	FileChooserFactory chooserFactory;
-	@Mock
-	FileFactory fileFactory;
-	@Mock
-	FileSelectionService<Doc> fileSelectionService;
-	@Mock
-	ExtensionCorrector extensionCorrector;
+    @Mock
+    FrameView parent;
+    @Mock
+    FileChooserFactory chooserFactory;
+    @Mock
+    FileFactory fileFactory;
+    @Mock
+    FileSelectionService<Doc> fileSelectionService;
+    @Mock
+    ExtensionCorrector extensionCorrector;
 
-	@Nested
-	class TestSaveUsingGUI_NoType {
+    @Nested
+    class TestSaveUsingGUI_NoType {
 
-		@Test
-		void returnsCorrectedPathWhenUserSelected() {
-			var path = "dummy/path.ext";
-			var correctedPath = "dummy/path.opx";
+        @Test
+        void returnsCorrectedPathWhenUserSelected() {
+            var path = "dummy/path.ext";
+            var correctedPath = "dummy/path.opx";
 
-			when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
+            when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
 
-			var view = setupChooserFactoryForSaving(path);
+            var view = setupChooserFactoryForSaving(path);
 
-			File file = mock();
-			when(file.getPath()).thenReturn(path);
+            File file = mock();
+            when(file.getPath()).thenReturn(path);
 
-			when(view.showDialog(any())).thenReturn(true);
-			when(view.getSelectedFile()).thenReturn(file);
-			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
-			when(view.getSelectedFilterDescription()).thenReturn("description");
+            when(view.showDialog(any())).thenReturn(true);
+            when(view.getSelectedFile()).thenReturn(file);
+            when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
+            when(view.getSelectedFilterDescription()).thenReturn("description");
 
-			FileType<Doc> type = mock();
+            FileType<Doc> type = mock();
 
-			setupFileSelectionServiceForSaving("opx", type);
+            setupFileSelectionServiceForSaving("opx", type);
 
-			setupFileFactoryForSaving(correctedPath, false);
+            setupFileFactoryForSaving(correctedPath, false);
 
-			var result = presenter.saveUsingGUI(path);
+            var result = presenter.saveUsingGUI(path);
 
-			assertEquals(UserAction.SELECTED, result.action());
-			assertEquals(correctedPath, result.path());
-			assertEquals(type, result.type());
-		}
+            assertEquals(UserAction.SELECTED, result.action());
+            assertEquals(correctedPath, result.path());
+            assertEquals(type, result.type());
+        }
 
-		@Test
-		void returnsGivenPathWhenUserSelected() {
-			var path = "dummy/path.opx";
-			var correctedPath = "dummy/path.opx";
+        @Test
+        void returnsGivenPathWhenUserSelected() {
+            var path = "dummy/path.opx";
+            var correctedPath = "dummy/path.opx";
 
-			when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
+            when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
 
-			var view = setupChooserFactoryForSaving(path);
+            var view = setupChooserFactoryForSaving(path);
 
-			File file = mock();
-			when(file.getPath()).thenReturn(path);
+            File file = mock();
+            when(file.getPath()).thenReturn(path);
 
-			when(view.showDialog(any())).thenReturn(true);
-			when(view.getSelectedFile()).thenReturn(file);
-			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
-			when(view.getSelectedFilterDescription()).thenReturn("description");
+            when(view.showDialog(any())).thenReturn(true);
+            when(view.getSelectedFile()).thenReturn(file);
+            when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
+            when(view.getSelectedFilterDescription()).thenReturn("description");
 
-			FileType<Doc> type = mock();
+            FileType<Doc> type = mock();
 
-			setupFileSelectionServiceForSaving("opx", type);
+            setupFileSelectionServiceForSaving("opx", type);
 
-			setupFileFactoryForSaving(correctedPath, false);
+            setupFileFactoryForSaving(correctedPath, false);
 
-			var result = presenter.saveUsingGUI(path);
+            var result = presenter.saveUsingGUI(path);
 
-			assertEquals(UserAction.SELECTED, result.action());
-			assertEquals(correctedPath, result.path());
-			assertEquals(type, result.type());
-		}
+            assertEquals(UserAction.SELECTED, result.action());
+            assertEquals(correctedPath, result.path());
+            assertEquals(type, result.type());
+        }
 
-		@Test
-		void returnsPathWhenOverwriting() {
-			var path = "dummy/path.opx";
-			var correctedPath = "dummy/path.opx";
+        @Test
+        void returnsPathWhenOverwriting() {
+            var path = "dummy/path.opx";
+            var correctedPath = "dummy/path.opx";
 
-			when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
+            when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
 
-			var view = setupChooserFactoryForSaving(path);
+            var view = setupChooserFactoryForSaving(path);
 
-			File file = mock();
-			when(file.getPath()).thenReturn(path);
+            File file = mock();
+            when(file.getPath()).thenReturn(path);
 
-			when(view.showDialog(any())).thenReturn(true);
-			when(view.getSelectedFile()).thenReturn(file);
-			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
-			when(view.getSelectedFilterDescription()).thenReturn("description");
-			when(view.showOverwriteConfirmMessage()).thenReturn(true);
+            when(view.showDialog(any())).thenReturn(true);
+            when(view.getSelectedFile()).thenReturn(file);
+            when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
+            when(view.getSelectedFilterDescription()).thenReturn("description");
+            when(view.showOverwriteConfirmMessage()).thenReturn(true);
 
-			FileType<Doc> type = mock();
+            FileType<Doc> type = mock();
 
-			setupFileSelectionServiceForSaving("opx", type);
+            setupFileSelectionServiceForSaving("opx", type);
 
-			setupFileFactoryForSaving(correctedPath, true);
+            setupFileFactoryForSaving(correctedPath, true);
 
-			var result = presenter.saveUsingGUI(path);
+            var result = presenter.saveUsingGUI(path);
 
-			assertEquals(UserAction.SELECTED, result.action());
-			assertEquals(correctedPath, result.path());
-			assertEquals(type, result.type());
-		}
+            assertEquals(UserAction.SELECTED, result.action());
+            assertEquals(correctedPath, result.path());
+            assertEquals(type, result.type());
+        }
 
-		@Test
-		void returnsCancelWhenUserCanceled() {
-			var path = "dummy/path.opx";
+        @Test
+        void returnsCancelWhenUserCanceled() {
+            var path = "dummy/path.opx";
 
-			var view = setupChooserFactoryForSaving(path);
+            var view = setupChooserFactoryForSaving(path);
 
-			when(view.showDialog(any())).thenReturn(false);
+            when(view.showDialog(any())).thenReturn(false);
 
-			var result = presenter.saveUsingGUI(path);
+            var result = presenter.saveUsingGUI(path);
 
-			assertEquals(UserAction.CANCELED, result.action());
-		}
+            assertEquals(UserAction.CANCELED, result.action());
+        }
 
-		@Test
-		void returnsCancelWhenOverwritingCanceled() {
-			var path = "dummy/path.opx";
-			var correctedPath = "dummy/path.opx";
-			when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
+        @Test
+        void returnsCancelWhenOverwritingCanceled() {
+            var path = "dummy/path.opx";
+            var correctedPath = "dummy/path.opx";
+            when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
 
-			var view = setupChooserFactoryForSaving(path);
+            var view = setupChooserFactoryForSaving(path);
 
-			File file = mock();
-			when(file.getPath()).thenReturn(path);
+            File file = mock();
+            when(file.getPath()).thenReturn(path);
 
-			when(view.showDialog(any())).thenReturn(true);
-			when(view.getSelectedFile()).thenReturn(file);
-			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
-			when(view.showOverwriteConfirmMessage()).thenReturn(false);
+            when(view.showDialog(any())).thenReturn(true);
+            when(view.getSelectedFile()).thenReturn(file);
+            when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
+            when(view.showOverwriteConfirmMessage()).thenReturn(false);
 
-			setupFileFactoryForSaving(correctedPath, true);
+            setupFileFactoryForSaving(correctedPath, true);
 
-			var result = presenter.saveUsingGUI(path);
+            var result = presenter.saveUsingGUI(path);
 
-			assertEquals(UserAction.CANCELED, result.action());
-		}
+            assertEquals(UserAction.CANCELED, result.action());
+        }
 
-		void setupFileSelectionServiceForSaving(final String extension, final FileType<Doc> type) {
-			FileSelectionSupport<Doc> support = mock();
-			when(support.getExtensions()).thenReturn(new String[] { "opx" });
+        void setupFileSelectionServiceForSaving(final String extension, final FileType<Doc> type) {
+            FileSelectionSupport<Doc> support = mock();
+            when(support.getExtensions()).thenReturn(new String[] { "opx" });
 
-			when(fileSelectionService.getSavableSupports()).thenReturn(List.of(support));
-			when(fileSelectionService.getSavableTypeByDescription(anyString())).thenReturn(type);
-		}
-	}
+            when(fileSelectionService.getSavableSupports()).thenReturn(List.of(support));
+            when(fileSelectionService.getSavableTypeByDescription(anyString())).thenReturn(type);
+        }
+    }
 
-	@Nested
-	class TestSaveUsingGUI_WithTypes {
-		// Not necessary to test exhaustively because the target method is a
-		// thin wrapper method.
-		@Test
-		void returnsPathWhenUserSelected() {
-			var path = "dummy/path.fold";
-			var correctedPath = "dummy/path.fold";
+    @Nested
+    class TestSaveUsingGUI_WithTypes {
+        // Not necessary to test exhaustively because the target method is a
+        // thin wrapper method.
+        @Test
+        void returnsPathWhenUserSelected() {
+            var path = "dummy/path.fold";
+            var correctedPath = "dummy/path.fold";
 
-			when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
+            when(extensionCorrector.correct(eq(path), any())).thenReturn(correctedPath);
 
-			var view = setupChooserFactoryForSaving(path);
+            var view = setupChooserFactoryForSaving(path);
 
-			File file = mock();
-			when(file.getPath()).thenReturn(path);
+            File file = mock();
+            when(file.getPath()).thenReturn(path);
 
-			when(view.showDialog(any())).thenReturn(true);
-			when(view.getSelectedFile()).thenReturn(file);
-			when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
-			when(view.getSelectedFilterDescription()).thenReturn("description");
+            when(view.showDialog(any())).thenReturn(true);
+            when(view.getSelectedFile()).thenReturn(file);
+            when(view.getSelectedFilterExtensions()).thenReturn(new String[] { "opx" });
+            when(view.getSelectedFilterDescription()).thenReturn("description");
 
-			FileType<Doc> type1 = mock();
-			FileSelectionSupport<Doc> support1 = mock();
-			when(support1.getExtensions()).thenReturn(new String[] { "opx" });
+            FileType<Doc> type1 = mock();
+            FileSelectionSupport<Doc> support1 = mock();
+            when(support1.getExtensions()).thenReturn(new String[] { "opx" });
 
-			FileType<Doc> type2 = mock();
-			FileSelectionSupport<Doc> support2 = mock();
-			when(support2.getExtensions()).thenReturn(new String[] { "fold" });
+            FileType<Doc> type2 = mock();
+            FileSelectionSupport<Doc> support2 = mock();
+            when(support2.getExtensions()).thenReturn(new String[] { "fold" });
 
-			when(fileSelectionService.getSavableSupportsOf(any())).thenReturn(List.of(support1, support2));
+            when(fileSelectionService.getSavableSupportsOf(any())).thenReturn(List.of(support1, support2));
 
-			when(fileSelectionService.getSavableTypeByDescription(anyString())).thenReturn(type2);
+            when(fileSelectionService.getSavableTypeByDescription(anyString())).thenReturn(type2);
 
-			setupFileFactoryForSaving(correctedPath, false);
+            setupFileFactoryForSaving(correctedPath, false);
 
-			// assume that several types are given.
-			var result = presenter.saveUsingGUI(path, List.of(type1, type2));
+            // assume that several types are given.
+            var result = presenter.saveUsingGUI(path, List.of(type1, type2));
 
-			assertEquals(UserAction.SELECTED, result.action());
-			assertEquals(correctedPath, result.path());
-			assertEquals(type2, result.type());
-		}
+            assertEquals(UserAction.SELECTED, result.action());
+            assertEquals(correctedPath, result.path());
+            assertEquals(type2, result.type());
+        }
 
-	}
+    }
 
-	SavingFileChooserView setupChooserFactoryForSaving(final String path) {
-		SavingFileChooserView view = mock();
+    SavingFileChooserView setupChooserFactoryForSaving(final String path) {
+        SavingFileChooserView view = mock();
 
-		when(chooserFactory.createForSaving(eq(path), any())).thenReturn(view);
+        when(chooserFactory.createForSaving(eq(path), any())).thenReturn(view);
 
-		return view;
-	}
+        return view;
+    }
 
-	void setupFileFactoryForSaving(final String path, final boolean exists) {
-		File file = mock();
-		when(file.exists()).thenReturn(exists);
+    void setupFileFactoryForSaving(final String path, final boolean exists) {
+        File file = mock();
+        when(file.exists()).thenReturn(exists);
 
-		when(fileFactory.create(eq(path))).thenReturn(file);
+        when(fileFactory.create(eq(path))).thenReturn(file);
 
-	}
+    }
 
-	@Nested
-	class TestLoadUsingGUI {
-		@Test
-		void returnsSelectedPathWhenUserSelected() {
-			var lastPath = "last/path.opx";
+    @Nested
+    class TestLoadUsingGUI {
+        @Test
+        void returnsSelectedPathWhenUserSelected() {
+            var lastPath = "last/path.opx";
 
-			var view = setupChooserFactoryForLoading(lastPath);
-			when(view.showDialog(any())).thenReturn(true);
+            var view = setupChooserFactoryForLoading(lastPath);
+            when(view.showDialog(any())).thenReturn(true);
 
-			File selectedFile = mock();
-			var selectedPath = "selected/path.opx";
-			when(selectedFile.getPath()).thenReturn(selectedPath);
-			when(view.getSelectedFile()).thenReturn(selectedFile);
+            File selectedFile = mock();
+            var selectedPath = "selected/path.opx";
+            when(selectedFile.getPath()).thenReturn(selectedPath);
+            when(view.getSelectedFile()).thenReturn(selectedFile);
 
-			FileSelectionSupport<Doc> support = mock();
-			when(fileSelectionService.getLoadableSupportsWithMultiType()).thenReturn(List.of(support));
+            FileSelectionSupport<Doc> support = mock();
+            when(fileSelectionService.getLoadableSupportsWithMultiType()).thenReturn(List.of(support));
 
-			var result = presenter.loadUsingGUI(lastPath);
+            var result = presenter.loadUsingGUI(lastPath);
 
-			assertEquals(UserAction.SELECTED, result.action());
-			assertEquals(selectedPath, result.path());
-		}
+            assertEquals(UserAction.SELECTED, result.action());
+            assertEquals(selectedPath, result.path());
+        }
 
-		@Test
-		void returnsCanceledWhenUserCanceled() {
-			var lastPath = "last/path.opx";
+        @Test
+        void returnsCanceledWhenUserCanceled() {
+            var lastPath = "last/path.opx";
 
-			var view = setupChooserFactoryForLoading(lastPath);
-			when(view.showDialog(any())).thenReturn(false);
+            var view = setupChooserFactoryForLoading(lastPath);
+            when(view.showDialog(any())).thenReturn(false);
 
-			var result = presenter.loadUsingGUI(lastPath);
+            var result = presenter.loadUsingGUI(lastPath);
 
-			assertEquals(UserAction.CANCELED, result.action());
-		}
+            assertEquals(UserAction.CANCELED, result.action());
+        }
 
-	}
+    }
 
-	LoadingFileChooserView setupChooserFactoryForLoading(final String path) {
-		LoadingFileChooserView view = mock();
+    LoadingFileChooserView setupChooserFactoryForLoading(final String path) {
+        LoadingFileChooserView view = mock();
 
-		when(chooserFactory.createForLoading(eq(path), any())).thenReturn(view);
+        when(chooserFactory.createForLoading(eq(path), any())).thenReturn(view);
 
-		return view;
-	}
+        return view;
+    }
 
-	void setupFileFactoryForLoading(final String path) {
-		File file = mock();
-		when(fileFactory.create(eq(path))).thenReturn(file);
+    void setupFileFactoryForLoading(final String path) {
+        File file = mock();
+        when(fileFactory.create(eq(path))).thenReturn(file);
 
-	}
+    }
 
 }

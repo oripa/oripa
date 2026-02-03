@@ -29,16 +29,16 @@ import oripa.value.OriLine;
  *
  */
 public class CreasePatternUndoFactory implements
-		UndoInfoFactory<Collection<OriLine>> {
+        UndoInfoFactory<Collection<OriLine>> {
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.util.history.UndoInfoFactory#create(java.lang.Object)
-	 */
-	@Override
-	public UndoInfo<Collection<OriLine>> create(final Collection<OriLine> info) {
-		return new CreasePatternUndoInfoImpl(info);
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.util.history.UndoInfoFactory#create(java.lang.Object)
+     */
+    @Override
+    public UndoInfo<Collection<OriLine>> create(final Collection<OriLine> info) {
+        return new CreasePatternUndoInfoImpl(info);
+    }
 
 }

@@ -47,37 +47,37 @@ import oripa.gui.viewsetting.main.UIPanelSettingImpl;
  */
 public class MainViewOripaModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bind(MainFrameSetting.class).to(MainFrameSettingImpl.class);
-		bind(PainterScreenSetting.class).to(PainterScreenSettingImpl.class);
-		bind(UIPanelSetting.class).to(UIPanelSettingImpl.class);
-		bind(KeyProcessing.class).to(KeyProcessingImpl.class);
+    @Override
+    protected void configure() {
+        bind(MainFrameSetting.class).to(MainFrameSettingImpl.class);
+        bind(PainterScreenSetting.class).to(PainterScreenSettingImpl.class);
+        bind(UIPanelSetting.class).to(UIPanelSettingImpl.class);
+        bind(KeyProcessing.class).to(KeyProcessingImpl.class);
 
-	}
+    }
 
-	@Provides
-	@Singleton
-	ViewScreenUpdater createViewScreenUpdater() {
-		return new ViewScreenUpdaterFactory().create();
-	}
+    @Provides
+    @Singleton
+    ViewScreenUpdater createViewScreenUpdater() {
+        return new ViewScreenUpdaterFactory().create();
+    }
 
-	@Provides
-	@KeyOnOffListener
-	Consumer<Boolean> provideKeyOnOffListener(final MouseActionHolder mouseActionHolder) {
-		return new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
-	}
+    @Provides
+    @KeyOnOffListener
+    Consumer<Boolean> provideKeyOnOffListener(final MouseActionHolder mouseActionHolder) {
+        return new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
+    }
 
-	// assuming that main frame is singleton.
+    // assuming that main frame is singleton.
 
-	@Provides
-	PainterScreenView getPainterScreenView(final MainFrameView mainFrame) {
-		return mainFrame.getPainterScreenView();
-	}
+    @Provides
+    PainterScreenView getPainterScreenView(final MainFrameView mainFrame) {
+        return mainFrame.getPainterScreenView();
+    }
 
-	@Provides
-	UIPanelView getUIPanelView(final MainFrameView mainFrame) {
-		return mainFrame.getUIPanelView();
-	}
+    @Provides
+    UIPanelView getUIPanelView(final MainFrameView mainFrame) {
+        return mainFrame.getUIPanelView();
+    }
 
 }

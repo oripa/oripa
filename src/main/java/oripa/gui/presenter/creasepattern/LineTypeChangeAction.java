@@ -11,36 +11,36 @@ import oripa.util.Command;
 import oripa.value.OriLine;
 
 public class LineTypeChangeAction extends RectangularSelectableAction {
-	private final TypeForChangeGettable setting;
+    private final TypeForChangeGettable setting;
 
-	public LineTypeChangeAction(final TypeForChangeGettable setting) {
-		this.setting = setting;
-		setEditMode(EditMode.CHANGE_TYPE);
-		setActionState(new SelectingLineForLineType(setting));
-	}
+    public LineTypeChangeAction(final TypeForChangeGettable setting) {
+        this.setting = setting;
+        setEditMode(EditMode.CHANGE_TYPE);
+        setActionState(new SelectingLineForLineType(setting));
+    }
 
-	@Override
-	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
+    @Override
+    protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
+            final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
 
-		if (selectedLines.isEmpty()) {
-			return;
-		}
+        if (selectedLines.isEmpty()) {
+            return;
+        }
 
-		selectedLines.forEach(paintContext::pushLine);
+        selectedLines.forEach(paintContext::pushLine);
 
-		Command command = new LineTypeChangerCommand(paintContext, setting);
-		command.execute();
-	}
+        Command command = new LineTypeChangerCommand(paintContext, setting);
+        command.execute();
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		super.onDraw(drawer, viewContext, paintContext);
+        super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateLine(drawer, viewContext, paintContext);
-	}
+        drawPickCandidateLine(drawer, viewContext, paintContext);
+    }
 
 }

@@ -26,35 +26,35 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
  *
  */
 public class PaintDomainContext {
-	private final PaintContext paintContext;
-	private final SelectionOriginHolder selectionOriginHolder;
-	private final ByValueContext valueContext;
+    private final PaintContext paintContext;
+    private final SelectionOriginHolder selectionOriginHolder;
+    private final ByValueContext valueContext;
 
-	public PaintDomainContext(final PaintContext paintContext, final SelectionOriginHolder originHolder,
-			final ByValueContext valueContext) {
-		this.paintContext = paintContext;
-		this.selectionOriginHolder = originHolder;
-		this.valueContext = valueContext;
-	}
+    public PaintDomainContext(final PaintContext paintContext, final SelectionOriginHolder originHolder,
+            final ByValueContext valueContext) {
+        this.paintContext = paintContext;
+        this.selectionOriginHolder = originHolder;
+        this.valueContext = valueContext;
+    }
 
-	/**
-	 * @return paintContext
-	 */
-	public PaintContext getPaintContext() {
-		return paintContext;
-	}
+    /**
+     * @return paintContext
+     */
+    public PaintContext getPaintContext() {
+        return paintContext;
+    }
 
-	/**
-	 * @return selectionOriginHolder
-	 */
-	public SelectionOriginHolder getSelectionOriginHolder() {
-		return selectionOriginHolder;
-	}
+    /**
+     * @return selectionOriginHolder
+     */
+    public SelectionOriginHolder getSelectionOriginHolder() {
+        return selectionOriginHolder;
+    }
 
-	/**
-	 * @return valueSetting
-	 */
-	public ByValueContext getByValueContext() {
-		return valueContext;
-	}
+    /**
+     * @return valueSetting
+     */
+    public ByValueContext getByValueContext() {
+        return valueContext;
+    }
 }

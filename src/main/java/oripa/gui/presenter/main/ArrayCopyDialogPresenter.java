@@ -31,62 +31,62 @@ import oripa.util.Command;
  */
 public class ArrayCopyDialogPresenter {
 
-	private final ArrayCopyDialogView view;
-	private final PaintContext paintContext;
-	private final ViewScreenUpdater screenUpdater;
+    private final ArrayCopyDialogView view;
+    private final PaintContext paintContext;
+    private final ViewScreenUpdater screenUpdater;
 
-	public ArrayCopyDialogPresenter(final ArrayCopyDialogView view,
-			final PaintContext paintContext,
-			final ViewScreenUpdater screenUpdater) {
+    public ArrayCopyDialogPresenter(final ArrayCopyDialogView view,
+            final PaintContext paintContext,
+            final ViewScreenUpdater screenUpdater) {
 
-		this.view = view;
-		this.paintContext = paintContext;
-		this.screenUpdater = screenUpdater;
+        this.view = view;
+        this.paintContext = paintContext;
+        this.screenUpdater = screenUpdater;
 
-		setParameterToView();
+        setParameterToView();
 
-		view.setOKButtonListener(this::doArrayCopy);
-	}
+        view.setOKButtonListener(this::doArrayCopy);
+    }
 
-	private void setParameterToView() {
-		var parameter = paintContext.getArrayCopyParameter();
+    private void setParameterToView() {
+        var parameter = paintContext.getArrayCopyParameter();
 
-		if (parameter == null) {
-			return;
-		}
+        if (parameter == null) {
+            return;
+        }
 
-		view.setFillUp(parameter.fillUp());
-		view.setRowCount(parameter.rowCount());
-		view.setColumnCount(parameter.columnCount());
-		view.setIntervalX(parameter.intervalX());
-		view.setIntervalY(parameter.intervalY());
-	}
+        view.setFillUp(parameter.fillUp());
+        view.setRowCount(parameter.rowCount());
+        view.setColumnCount(parameter.columnCount());
+        view.setIntervalX(parameter.intervalX());
+        view.setIntervalY(parameter.intervalY());
+    }
 
-	private boolean doArrayCopy() {
+    private boolean doArrayCopy() {
 
-		boolean shouldFillUp = view.shouldFillUp();
-		int rowCount = view.getRowCount();
-		int columnCount = view.getColumnCount();
-		double intervalX = view.getIntervalX();
-		double intervalY = view.getIntervalY();
+        boolean shouldFillUp = view.shouldFillUp();
+        int rowCount = view.getRowCount();
+        int columnCount = view.getColumnCount();
+        double intervalX = view.getIntervalX();
+        double intervalY = view.getIntervalY();
 
-		if (!shouldFillUp && (rowCount == 0 || columnCount == 0)) {
-			view.showWrongInputMessage();
-			return false;
-		}
+        if (!shouldFillUp && (rowCount == 0 || columnCount == 0)) {
+            view.showWrongInputMessage();
+            return false;
+        }
 
-		paintContext.setArrayCopyParameter(
-				new ArrayCopyParameter(shouldFillUp, rowCount, columnCount, intervalX, intervalY));
+        paintContext.setArrayCopyParameter(
+                new ArrayCopyParameter(shouldFillUp, rowCount, columnCount, intervalX, intervalY));
 
-		Command command = new ArrayCopyCommand(paintContext);
-		command.execute();
+        Command command = new ArrayCopyCommand(paintContext);
+        command.execute();
 
-		screenUpdater.updateScreen();
+        screenUpdater.updateScreen();
 
-		return true;
-	}
+        return true;
+    }
 
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
-	}
+    public void setViewVisible(final boolean visible) {
+        view.setVisible(visible);
+    }
 }

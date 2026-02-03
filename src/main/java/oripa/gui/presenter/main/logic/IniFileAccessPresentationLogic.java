@@ -35,56 +35,56 @@ import oripa.gui.view.main.PainterScreenSetting;
  *
  */
 public class IniFileAccessPresentationLogic {
-	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final MainFrameView view;
-	private final PainterScreenSetting screenSetting;
+    private final MainFrameView view;
+    private final PainterScreenSetting screenSetting;
 
-	private final CreasePatternViewContext creasePatternViewContext;
+    private final CreasePatternViewContext creasePatternViewContext;
 
-	private final IniFileAccess iniFileAccess;
+    private final IniFileAccess iniFileAccess;
 
-	private final FileHistory fileHistory;
+    private final FileHistory fileHistory;
 
-	@Inject
-	public IniFileAccessPresentationLogic(
-			final MainFrameView view,
-			final PainterScreenSetting screenSetting,
-			final CreasePatternViewContext creasePatternViewContext,
-			final IniFileAccess iniFileAccess,
-			final FileHistory fileHistory
+    @Inject
+    public IniFileAccessPresentationLogic(
+            final MainFrameView view,
+            final PainterScreenSetting screenSetting,
+            final CreasePatternViewContext creasePatternViewContext,
+            final IniFileAccess iniFileAccess,
+            final FileHistory fileHistory
 
-	) {
-		this.view = view;
-		this.screenSetting = screenSetting;
-		this.creasePatternViewContext = creasePatternViewContext;
-		this.iniFileAccess = iniFileAccess;
-		this.fileHistory = fileHistory;
-	}
+    ) {
+        this.view = view;
+        this.screenSetting = screenSetting;
+        this.creasePatternViewContext = creasePatternViewContext;
+        this.iniFileAccess = iniFileAccess;
+        this.fileHistory = fileHistory;
+    }
 
-	public void saveIniFile() {
-		try {
-			iniFileAccess.save(fileHistory, creasePatternViewContext);
-		} catch (IllegalStateException e) {
-			logger.error("error when building ini file data", e);
-			view.showSaveIniFileFailureErrorMessage(e);
-		}
-	}
+    public void saveIniFile() {
+        try {
+            iniFileAccess.save(fileHistory, creasePatternViewContext);
+        } catch (IllegalStateException e) {
+            logger.error("error when building ini file data", e);
+            view.showSaveIniFileFailureErrorMessage(e);
+        }
+    }
 
-	public void loadIniFile() {
-		var ini = iniFileAccess.load();
+    public void loadIniFile() {
+        var ini = iniFileAccess.load();
 
-		fileHistory.loadFromInitData(ini);
-		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
+        fileHistory.loadFromInitData(ini);
+        screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
 
-		logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
-		screenSetting.setMVLineVisible(ini.isMvLineVisible());
+        logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
+        screenSetting.setMVLineVisible(ini.isMvLineVisible());
 
-		logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
-		screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
+        logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
+        screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
 
-		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
-		screenSetting.setVertexVisible(ini.isVertexVisible());
-	}
+        logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
+        screenSetting.setVertexVisible(ini.isVertexVisible());
+    }
 
 }

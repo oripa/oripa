@@ -11,16 +11,16 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
  */
 public class ImportAction extends PasteAction {
 
-	public ImportAction(
-			final SelectionOriginHolder originHolder) {
+    public ImportAction(
+            final SelectionOriginHolder originHolder) {
 
-		super(originHolder);
-	}
+        super(originHolder);
+    }
 
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		context.loadFromImportedLines();
-		context.clearImportedLines();
-		context.startPasting();
-	}
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        context.loadFromImportedLines();
+        context.clearImportedLines();
+        context.startPasting();
+    }
 }

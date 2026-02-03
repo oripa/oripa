@@ -37,106 +37,106 @@ import oripa.vecmath.Vector2d;
  */
 public class OverlappingLineDivider {
 
-	private final SequentialLineFactory sequentialLineFactory = new SequentialLineFactory();
+    private final SequentialLineFactory sequentialLineFactory = new SequentialLineFactory();
 
-	private final PointSorter pointSorter = new PointSorter();
+    private final PointSorter pointSorter = new PointSorter();
 
-	/**
-	 * Divides each element of {@code lines} at end point of
-	 * {@code dividerLines}'s element if the lines overlap.
-	 *
-	 * @param dividerLines
-	 *            lines dividing elements of {@code lines}
-	 * @param lines
-	 *            lines to be divided
-	 * @return division result.
-	 */
-	public Collection<OriLine> divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines,
-			final double pointEps) {
-		var extractor = new OverlappingLineExtractor();
+    /**
+     * Divides each element of {@code lines} at end point of
+     * {@code dividerLines}'s element if the lines overlap.
+     *
+     * @param dividerLines
+     *            lines dividing elements of {@code lines}
+     * @param lines
+     *            lines to be divided
+     * @return division result.
+     */
+    public Collection<OriLine> divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines,
+            final double pointEps) {
+        var extractor = new OverlappingLineExtractor();
 
-		var allLines = new HashSet<OriLine>(dividerLines);
-		allLines.addAll(lines);
+        var allLines = new HashSet<OriLine>(dividerLines);
+        allLines.addAll(lines);
 
-		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
+        var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
-		Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
-		Set<OriLine> lineSet = CollectionUtil.newConcurrentHashSet(lines);
+        Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
+        Set<OriLine> lineSet = CollectionUtil.newConcurrentHashSet(lines);
 
-		overlapGroups.parallelStream().forEach(overlaps -> {
-			var dividerOverlaps = overlaps.stream()
-					.filter(ov -> dividerLineSet.contains(ov))
-					.collect(Collectors.toCollection(HashSet::new));
+        overlapGroups.parallelStream().forEach(overlaps -> {
+            var dividerOverlaps = overlaps.stream()
+                    .filter(ov -> dividerLineSet.contains(ov))
+                    .collect(Collectors.toCollection(HashSet::new));
 
-			var lineOverlaps = overlaps.stream()
-					.filter(ov -> !dividerOverlaps.contains(ov))
-					.collect(Collectors.toCollection(HashSet::new));
+            var lineOverlaps = overlaps.stream()
+                    .filter(ov -> !dividerOverlaps.contains(ov))
+                    .collect(Collectors.toCollection(HashSet::new));
 
-			lineSet.removeAll(lineOverlaps);
+            lineSet.removeAll(lineOverlaps);
 
-			// Cannot be done in parallel since two or more dividers might
-			// divides the same line.
-			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps, pointEps));
+            // Cannot be done in parallel since two or more dividers might
+            // divides the same line.
+            dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps, pointEps));
 
-			lineSet.addAll(lineOverlaps);
-		});
+            lineSet.addAll(lineOverlaps);
+        });
 
-		return lineSet;
-	}
+        return lineSet;
+    }
 
-	/**
-	 *
-	 * @param dividerLine
-	 * @param lines
-	 *            will be updated as each line is divided by the end point(s) of
-	 *            {@code dividerLine}
-	 * @param pointEps
-	 */
-	private void divideLinesIfOverlap(final OriLine dividerLine, final Set<OriLine> lines,
-			final double pointEps) {
+    /**
+     *
+     * @param dividerLine
+     * @param lines
+     *            will be updated as each line is divided by the end point(s) of
+     *            {@code dividerLine}
+     * @param pointEps
+     */
+    private void divideLinesIfOverlap(final OriLine dividerLine, final Set<OriLine> lines,
+            final double pointEps) {
 
-		Set<OriLine> targettedLines = CollectionUtil.newConcurrentHashSet();
-		Set<OriLine> splitLines = CollectionUtil.newConcurrentHashSet();
+        Set<OriLine> targettedLines = CollectionUtil.newConcurrentHashSet();
+        Set<OriLine> splitLines = CollectionUtil.newConcurrentHashSet();
 
-		lines.parallelStream()
-				.forEach(line -> {
-					var splitPoints = new ArrayList<Vector2d>();
+        lines.parallelStream()
+                .forEach(line -> {
+                    var splitPoints = new ArrayList<Vector2d>();
 
-					int overlapCount = GeomUtil.distinguishSegmentsOverlap(dividerLine, line, pointEps);
+                    int overlapCount = GeomUtil.distinguishSegmentsOverlap(dividerLine, line, pointEps);
 
-					switch (overlapCount) {
-					case 2, 3:
-						splitPoints.addAll(createSplitPoints(line, dividerLine.getP0(), pointEps));
-						splitPoints.addAll(createSplitPoints(line, dividerLine.getP1(), pointEps));
-						break;
-					default:
-						return;
-					}
+                    switch (overlapCount) {
+                    case 2, 3:
+                        splitPoints.addAll(createSplitPoints(line, dividerLine.getP0(), pointEps));
+                        splitPoints.addAll(createSplitPoints(line, dividerLine.getP1(), pointEps));
+                        break;
+                    default:
+                        return;
+                    }
 
-					var sortedPoints = pointSorter.sortPointsOnLine(splitPoints, line);
+                    var sortedPoints = pointSorter.sortPointsOnLine(splitPoints, line);
 
-					targettedLines.add(line);
-					splitLines.addAll(
-							sequentialLineFactory.createSequentialLines(sortedPoints, line.getType(), pointEps));
-				});
+                    targettedLines.add(line);
+                    splitLines.addAll(
+                            sequentialLineFactory.createSequentialLines(sortedPoints, line.getType(), pointEps));
+                });
 
-		lines.removeAll(targettedLines);
-		lines.addAll(splitLines);
-	}
+        lines.removeAll(targettedLines);
+        lines.addAll(splitLines);
+    }
 
-	private List<Vector2d> createSplitPoints(final OriLine line, final Vector2d p, final double pointEps) {
-		var points = List.of(line.getP0(), line.getP1());
+    private List<Vector2d> createSplitPoints(final OriLine line, final Vector2d p, final double pointEps) {
+        var points = List.of(line.getP0(), line.getP1());
 
-		// don't split if the point is far from the segment.
-		if (GeomUtil.distancePointToSegment(p, line) > pointEps) {
-			return points;
-		}
+        // don't split if the point is far from the segment.
+        if (GeomUtil.distancePointToSegment(p, line) > pointEps) {
+            return points;
+        }
 
-		if (points.stream().allMatch(q -> !p.equals(q, pointEps))) {
-			return Stream.concat(points.stream(), Stream.of(p)).toList();
-		}
+        if (points.stream().allMatch(q -> !p.equals(q, pointEps))) {
+            return Stream.concat(points.stream(), Stream.of(p)).toList();
+        }
 
-		return points;
-	}
+        return points;
+    }
 
 }

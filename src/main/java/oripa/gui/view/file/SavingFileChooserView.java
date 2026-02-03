@@ -24,6 +24,6 @@ package oripa.gui.view.file;
  */
 public interface SavingFileChooserView extends FileChooserView {
 
-	boolean showOverwriteConfirmMessage();
+    boolean showOverwriteConfirmMessage();
 
 }

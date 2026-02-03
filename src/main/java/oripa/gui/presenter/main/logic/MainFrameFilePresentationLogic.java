@@ -44,158 +44,158 @@ import oripa.util.file.FileFactory;
  *
  */
 public class MainFrameFilePresentationLogic {
-	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final MainFrameView view;
+    private final MainFrameView view;
 
-	private final MainDialogPresenterFactory dialogPresenterFactory;
-	private final FileAccessPresentationLogic fileAccessPresentationLogic;
-	private final Project project;
+    private final MainDialogPresenterFactory dialogPresenterFactory;
+    private final FileAccessPresentationLogic fileAccessPresentationLogic;
+    private final Project project;
 
-	private final DocFileAccess dataFileAccess;
-	private final FileHistory fileHistory;
-	private final FileFactory fileFactory;
+    private final DocFileAccess dataFileAccess;
+    private final FileHistory fileHistory;
+    private final FileFactory fileFactory;
 
-	@Inject
-	public MainFrameFilePresentationLogic(
-			final MainFrameView view,
-			final MainDialogPresenterFactory dialogPresenterFactory,
-			final FileAccessPresentationLogic fileAccessPresentationLogic,
-			final Project project,
-			final DocFileAccess dataFileAccess,
-			final FileHistory fileHistory,
-			final FileFactory fileFactory) {
-		this.view = view;
-		this.dialogPresenterFactory = dialogPresenterFactory;
-		this.fileAccessPresentationLogic = fileAccessPresentationLogic;
-		this.project = project;
-		this.dataFileAccess = dataFileAccess;
-		this.fileHistory = fileHistory;
-		this.fileFactory = fileFactory;
-	}
+    @Inject
+    public MainFrameFilePresentationLogic(
+            final MainFrameView view,
+            final MainDialogPresenterFactory dialogPresenterFactory,
+            final FileAccessPresentationLogic fileAccessPresentationLogic,
+            final Project project,
+            final DocFileAccess dataFileAccess,
+            final FileHistory fileHistory,
+            final FileFactory fileFactory) {
+        this.view = view;
+        this.dialogPresenterFactory = dialogPresenterFactory;
+        this.fileAccessPresentationLogic = fileAccessPresentationLogic;
+        this.project = project;
+        this.dataFileAccess = dataFileAccess;
+        this.fileHistory = fileHistory;
+        this.fileFactory = fileFactory;
+    }
 
-	public void modifySavingActions() {
-		dataFileAccess.setupFOLDConfigForSaving();
-	}
+    public void modifySavingActions() {
+        dataFileAccess.setupFOLDConfigForSaving();
+    }
 
-	/**
-	 * saves project without opening a dialog
-	 */
-	public String saveFileToCurrentPath(final FileType<Doc> type) {
-		var filePath = project.getDataFilePath();
+    /**
+     * saves project without opening a dialog
+     */
+    public String saveFileToCurrentPath(final FileType<Doc> type) {
+        var filePath = project.getDataFilePath();
 
-		try {
-			return fileAccessPresentationLogic.saveFile(filePath, type);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			return filePath;
-		}
+        try {
+            return fileAccessPresentationLogic.saveFile(filePath, type);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            return filePath;
+        }
 
-	}
+    }
 
-	/**
-	 * save file without origami model check
-	 */
-	public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
-		var directory = fileHistory.getLastDirectory();
-		var fileName = project.getDataFileName().orElse("newFile.opx");
+    /**
+     * save file without origami model check
+     */
+    public String saveFileUsingGUI(@SuppressWarnings("unchecked") final FileType<Doc>... types) {
+        var directory = fileHistory.getLastDirectory();
+        var fileName = project.getDataFileName().orElse("newFile.opx");
 
-		logger.debug("saveFilelUsingGUI at {}, {}", directory, fileName);
+        logger.debug("saveFilelUsingGUI at {}, {}", directory, fileName);
 
-		File defaultFile = fileFactory.create(
-				directory,
-				fileName);
+        File defaultFile = fileFactory.create(
+                directory,
+                fileName);
 
-		var filePath = defaultFile.getPath();
+        var filePath = defaultFile.getPath();
 
-		var presenter = dialogPresenterFactory.createDocFileSelectionPresenter(
-				view, dataFileAccess.getFileSelectionService());
+        var presenter = dialogPresenterFactory.createDocFileSelectionPresenter(
+                view, dataFileAccess.getFileSelectionService());
 
-		var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
-				: presenter.saveUsingGUI(filePath, List.of(types));
+        var selection = (types == null || types.length == 0) ? presenter.saveUsingGUI(filePath)
+                : presenter.saveUsingGUI(filePath, List.of(types));
 
-		if (selection.action() == UserAction.CANCELED) {
-			return project.getDataFilePath();
-		}
+        if (selection.action() == UserAction.CANCELED) {
+            return project.getDataFilePath();
+        }
 
-		try {
-			return fileAccessPresentationLogic.saveFile(selection.path(), selection.type());
-		} catch (DataAccessException | IllegalArgumentException e) {
-			return project.getDataFilePath();
-		}
+        try {
+            return fileAccessPresentationLogic.saveFile(selection.path(), selection.type());
+        } catch (DataAccessException | IllegalArgumentException e) {
+            return project.getDataFilePath();
+        }
 
-	}
+    }
 
-	/**
-	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
-	 * model check before saving.
-	 */
-	public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
-		var presenter = dialogPresenterFactory.createDocFileSelectionPresenter(
-				view,
-				dataFileAccess.getFileSelectionService());
+    /**
+     * Open Save File As Dialogue for specific file types {@code type}. Runs a
+     * model check before saving.
+     */
+    public void exportFileUsingGUIWithModelCheck(final FileType<Doc> type) {
+        var presenter = dialogPresenterFactory.createDocFileSelectionPresenter(
+                view,
+                dataFileAccess.getFileSelectionService());
 
-		FileSelectionResult<Doc> selection;
-		try {
-			selection = presenter.saveFileWithModelCheck(
-					fileHistory.getLastDirectory(),
-					type, view::showModelBuildFailureDialog);
-		} catch (IOException e) {
-			logger.error("error", e);
-			view.showSaveFailureErrorMessage(e);
-			return;
-		}
+        FileSelectionResult<Doc> selection;
+        try {
+            selection = presenter.saveFileWithModelCheck(
+                    fileHistory.getLastDirectory(),
+                    type, view::showModelBuildFailureDialog);
+        } catch (IOException e) {
+            logger.error("error", e);
+            view.showSaveFailureErrorMessage(e);
+            return;
+        }
 
-		if (selection.action() == UserAction.CANCELED) {
-			return;
-		}
+        if (selection.action() == UserAction.CANCELED) {
+            return;
+        }
 
-		fileAccessPresentationLogic.saveFile(selection.path(), type);
+        fileAccessPresentationLogic.saveFile(selection.path(), type);
 
-	}
+    }
 
-	/**
-	 * This method opens the file dialog and load the selected file.
-	 */
-	public void loadFileUsingGUI() {
-		var selection = dialogPresenterFactory.createDocFileSelectionPresenter(
-				view,
-				dataFileAccess.getFileSelectionService())
-				.loadUsingGUI(fileHistory.getLastPath());
+    /**
+     * This method opens the file dialog and load the selected file.
+     */
+    public void loadFileUsingGUI() {
+        var selection = dialogPresenterFactory.createDocFileSelectionPresenter(
+                view,
+                dataFileAccess.getFileSelectionService())
+                .loadUsingGUI(fileHistory.getLastPath());
 
-		if (selection.action() == UserAction.CANCELED) {
-			return;
-		}
+        if (selection.action() == UserAction.CANCELED) {
+            return;
+        }
 
-		fileAccessPresentationLogic.loadFile(selection.path());
-	}
+        fileAccessPresentationLogic.loadFile(selection.path());
+    }
 
-	/**
-	 * This method tries to read data from the path.
-	 *
-	 * @param filePath
-	 * @return file path for loaded file. {@code null} if loading is not done.
-	 */
-	public String loadFile(final String filePath) {
-		return fileAccessPresentationLogic.loadFile(filePath);
-	}
+    /**
+     * This method tries to read data from the path.
+     *
+     * @param filePath
+     * @return file path for loaded file. {@code null} if loading is not done.
+     */
+    public String loadFile(final String filePath) {
+        return fileAccessPresentationLogic.loadFile(filePath);
+    }
 
-	public void importFileUsingGUI() {
-		try {
-			var selection = dialogPresenterFactory.createDocFileSelectionPresenter(
-					view,
-					dataFileAccess.getFileSelectionService())
-					.loadUsingGUI(fileHistory.getLastPath());
+    public void importFileUsingGUI() {
+        try {
+            var selection = dialogPresenterFactory.createDocFileSelectionPresenter(
+                    view,
+                    dataFileAccess.getFileSelectionService())
+                    .loadUsingGUI(fileHistory.getLastPath());
 
-			if (selection.action() == UserAction.CANCELED) {
-				return;
-			}
+            if (selection.action() == UserAction.CANCELED) {
+                return;
+            }
 
-			fileAccessPresentationLogic.importFile(selection.path());
+            fileAccessPresentationLogic.importFile(selection.path());
 
-		} catch (DataAccessException | IllegalArgumentException e) {
-			view.showLoadFailureErrorMessage(e);
-		}
+        } catch (DataAccessException | IllegalArgumentException e) {
+            view.showLoadFailureErrorMessage(e);
+        }
 
-	}
+    }
 
 }

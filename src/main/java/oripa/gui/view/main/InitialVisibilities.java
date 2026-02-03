@@ -27,10 +27,10 @@ package oripa.gui.view.main;
  *
  */
 public class InitialVisibilities {
-	public static final boolean ZERO_LINE_WIDTH = false;
-	public static final boolean MVU = true;
-	public static final boolean AUX = true;
-	public static final boolean VERTEX = true;
-	public static final boolean CROSS = false;
-	public static final boolean GRID = true;
+    public static final boolean ZERO_LINE_WIDTH = false;
+    public static final boolean MVU = true;
+    public static final boolean AUX = true;
+    public static final boolean VERTEX = true;
+    public static final boolean CROSS = false;
+    public static final boolean GRID = true;
 }

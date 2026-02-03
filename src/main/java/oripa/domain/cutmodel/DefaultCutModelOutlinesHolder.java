@@ -31,16 +31,16 @@ import oripa.value.OriLine;
 @Singleton
 public class DefaultCutModelOutlinesHolder implements CutModelOutlinesHolder {
 
-	private Collection<OriLine> outlines = new ArrayList<OriLine>();
+    private Collection<OriLine> outlines = new ArrayList<OriLine>();
 
-	@Override
-	public void setOutlines(final Collection<OriLine> outlines) {
-		this.outlines = outlines;
-	}
+    @Override
+    public void setOutlines(final Collection<OriLine> outlines) {
+        this.outlines = outlines;
+    }
 
-	@Override
-	public Collection<OriLine> getOutlines() {
-		return outlines;
-	}
+    @Override
+    public Collection<OriLine> getOutlines() {
+        return outlines;
+    }
 
 }

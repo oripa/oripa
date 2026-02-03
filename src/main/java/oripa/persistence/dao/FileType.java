@@ -28,30 +28,30 @@ import oripa.persistence.filetool.FileTypeProperty;
  *
  */
 public class FileType<Data> {
-	private final FileTypeProperty<Data> property;
+    private final FileTypeProperty<Data> property;
 
-	public FileType(final FileTypeProperty<Data> property) {
-		this.property = property;
-	}
+    public FileType(final FileTypeProperty<Data> property) {
+        this.property = property;
+    }
 
-	public String[] getExtensions() {
-		return property.getExtensions();
-	}
+    public String[] getExtensions() {
+        return property.getExtensions();
+    }
 
-	public boolean extensionsMatch(final String path) {
-		return property.extensionsMatch(path);
-	}
+    public boolean extensionsMatch(final String path) {
+        return property.extensionsMatch(path);
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof FileType f) {
-			return property.equals(f.property);
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof FileType f) {
+            return property.equals(f.property);
+        }
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		return property.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return property.hashCode();
+    }
 }

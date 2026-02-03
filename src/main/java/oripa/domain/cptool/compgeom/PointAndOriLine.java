@@ -31,109 +31,109 @@ import oripa.value.OriPoint;
  *
  */
 public class PointAndOriLine {
-	private final OriPoint point;
-	private OriPoint keyPoint;
-	private OriPoint oppositeKeyPoint;
-	private final OriLine line;
+    private final OriPoint point;
+    private OriPoint keyPoint;
+    private OriPoint oppositeKeyPoint;
+    private final OriLine line;
 
-	public PointAndOriLine(final OriPoint point, final OriLine line) {
-		this.point = point;
-		this.line = line;
+    public PointAndOriLine(final OriPoint point, final OriLine line) {
+        this.point = point;
+        this.line = line;
 
-		if (line.pointStream().noneMatch(point::equals)) {
-			throw new IllegalArgumentException(
-					"point " + point + " should be equal to the one of the segment " + line + " end point.");
-		}
-	}
+        if (line.pointStream().noneMatch(point::equals)) {
+            throw new IllegalArgumentException(
+                    "point " + point + " should be equal to the one of the segment " + line + " end point.");
+        }
+    }
 
-	/**
-	 * @return point
-	 */
-	public OriPoint getPoint() {
-		return point;
-	}
+    /**
+     * @return point
+     */
+    public OriPoint getPoint() {
+        return point;
+    }
 
-	public OriPoint getOppsitePoint(final OriPoint p, final double eps) {
-		return p.equals(line.getOriPoint0(), eps) ? line.getOriPoint1() : line.getOriPoint0();
-	}
+    public OriPoint getOppsitePoint(final OriPoint p, final double eps) {
+        return p.equals(line.getOriPoint0(), eps) ? line.getOriPoint1() : line.getOriPoint0();
+    }
 
-	/**
-	 * @return line
-	 */
-	public OriLine getLine() {
-		return line;
-	}
+    /**
+     * @return line
+     */
+    public OriLine getLine() {
+        return line;
+    }
 
-	public double getX() {
-		return point.getX();
-	}
+    public double getX() {
+        return point.getX();
+    }
 
-	public double getY() {
-		return point.getY();
-	}
+    public double getY() {
+        return point.getY();
+    }
 
-	/**
-	 * @return keyPoint
-	 */
-	public OriPoint getKeyPoint() {
-		return keyPoint;
-	}
+    /**
+     * @return keyPoint
+     */
+    public OriPoint getKeyPoint() {
+        return keyPoint;
+    }
 
-	/**
-	 * @param keyPoint
-	 *            Sets keyPoint
-	 */
-	public void setKeyPoint(final OriPoint keyPoint) {
-		this.keyPoint = keyPoint;
-	}
+    /**
+     * @param keyPoint
+     *            Sets keyPoint
+     */
+    public void setKeyPoint(final OriPoint keyPoint) {
+        this.keyPoint = keyPoint;
+    }
 
-	/**
-	 * @return keyPoint
-	 */
-	public OriPoint getOppositeKeyPoint() {
-		return oppositeKeyPoint;
-	}
+    /**
+     * @return keyPoint
+     */
+    public OriPoint getOppositeKeyPoint() {
+        return oppositeKeyPoint;
+    }
 
-	/**
-	 * @param keyPoint
-	 *            Sets keyPoint
-	 */
-	public void setOppositeKeyPoint(final OriPoint keyPoint) {
-		this.oppositeKeyPoint = keyPoint;
-	}
+    /**
+     * @param keyPoint
+     *            Sets keyPoint
+     */
+    public void setOppositeKeyPoint(final OriPoint keyPoint) {
+        this.oppositeKeyPoint = keyPoint;
+    }
 
-	public boolean lineEquals(final PointAndOriLine other) {
-		return line.equals(other.line);
-	}
+    public boolean lineEquals(final PointAndOriLine other) {
+        return line.equals(other.line);
+    }
 
-	@Override
-	public int hashCode() {
-		return line.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return line.hashCode();
+    }
 
-	/**
-	 * This comparison cares the {@link OriLine} equality only.
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
+    /**
+     * This comparison cares the {@link OriLine} equality only.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
 
-		if (obj instanceof PointAndOriLine other) {
-			if (line == null) {
-				if (other.line != null) {
-					return false;
-				}
-			} else if (!line.equals(other.line)) {
-				return false;
-			}
+        if (obj instanceof PointAndOriLine other) {
+            if (line == null) {
+                if (other.line != null) {
+                    return false;
+                }
+            } else if (!line.equals(other.line)) {
+                return false;
+            }
 
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
 }

@@ -26,12 +26,12 @@ import java.util.List;
  */
 public class CreasePatternFOLDFormat extends FOLDFormat {
 
-	public CreasePatternFOLDFormat() {
-		setFileClasses(List.of(FileClass.SINGLE_MODEL));
+    public CreasePatternFOLDFormat() {
+        setFileClasses(List.of(FileClass.SINGLE_MODEL));
 
-		setFrameClasses(List.of(FrameClass.CREASE_PATTERN));
+        setFrameClasses(List.of(FrameClass.CREASE_PATTERN));
 
-		setFrameAttributes(List.of(FrameAttribute.TWO_DIMENSION));
-	}
+        setFrameAttributes(List.of(FrameAttribute.TWO_DIMENSION));
+    }
 
 }

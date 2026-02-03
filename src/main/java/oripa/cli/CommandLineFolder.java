@@ -39,62 +39,62 @@ import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
  *
  */
 public class CommandLineFolder {
-	private static final Logger logger = LoggerFactory.getLogger(CommandLineFolder.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommandLineFolder.class);
 
-	private final FileAccessService<Doc> creasePatternFileAccess;
+    private final FileAccessService<Doc> creasePatternFileAccess;
 
-	@Inject
-	public CommandLineFolder(
-			final FileAccessService<Doc> creasePatternFileAccess) {
-		this.creasePatternFileAccess = creasePatternFileAccess;
-	}
+    @Inject
+    public CommandLineFolder(
+            final FileAccessService<Doc> creasePatternFileAccess) {
+        this.creasePatternFileAccess = creasePatternFileAccess;
+    }
 
-	public void fold(final String inputFilePath, final boolean any, final boolean split, final String outputFilePath,
-			final double pointEps) {
+    public void fold(final String inputFilePath, final boolean any, final boolean split, final String outputFilePath,
+            final double pointEps) {
 
-		if (!outputFilePath.endsWith(".fold")) {
-			throw new IllegalArgumentException("Output format is not supported. acceptable format: fold");
-		}
+        if (!outputFilePath.endsWith(".fold")) {
+            throw new IllegalArgumentException("Output format is not supported. acceptable format: fold");
+        }
 
-		try {
-			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();
-			var modelFactory = new TestedOrigamiModelFactory();
+        try {
+            var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();
+            var modelFactory = new TestedOrigamiModelFactory();
 
-			List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern, pointEps);
+            List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern, pointEps);
 
-			if (origamiModels.size() > 1) {
-				throw new IllegalArgumentException("Input should be a single model.");
-			}
+            if (origamiModels.size() > 1) {
+                throw new IllegalArgumentException("Input should be a single model.");
+            }
 
-			var origamiModel = origamiModels.get(0);
+            var origamiModel = origamiModels.get(0);
 
-			if (!origamiModel.isLocallyFlatFoldable()) {
-				throw new IllegalArgumentException("Input crease pattern is not locally flat foldable.");
-			}
+            if (!origamiModel.isLocallyFlatFoldable()) {
+                throw new IllegalArgumentException("Input crease pattern is not locally flat foldable.");
+            }
 
-			var folder = new FolderFactory().create(origamiModel.getModelType());
-			var foldedModel = any
-					? folder.fold(origamiModel, pointEps, Folder.EstimationType.FIRST_ONLY).foldedModel()
-					: folder.fold(origamiModel, pointEps, Folder.EstimationType.FULL).foldedModel();
+            var folder = new FolderFactory().create(origamiModel.getModelType());
+            var foldedModel = any
+                    ? folder.fold(origamiModel, pointEps, Folder.EstimationType.FIRST_ONLY).foldedModel()
+                    : folder.fold(origamiModel, pointEps, Folder.EstimationType.FULL).foldedModel();
 
-			if (split) {
-				var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();
-				for (int i = 0; i < foldedModel.getFoldablePatternCount(); i++) {
-					var paddedNumber = "0".repeat(digitLength - Integer.toString(i).length()) + i;
-					var outputName = outputFilePath.replaceFirst("[.]fold$", "." + paddedNumber + ".fold");
+            if (split) {
+                var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();
+                for (int i = 0; i < foldedModel.getFoldablePatternCount(); i++) {
+                    var paddedNumber = "0".repeat(digitLength - Integer.toString(i).length()) + i;
+                    var outputName = outputFilePath.replaceFirst("[.]fold$", "." + paddedNumber + ".fold");
 
-					var foldedModelExporter = new FoldedModelSingleExporterFOLD();
-					foldedModelExporter.export(
-							new FoldedModelEntity(foldedModel, i), outputName, null);
-				}
-			} else {
-				var foldedModelExporter = new FoldedModelAllExporterFOLD();
-				foldedModelExporter.export(
-						new FoldedModelEntity(foldedModel), outputFilePath, null);
-			}
+                    var foldedModelExporter = new FoldedModelSingleExporterFOLD();
+                    foldedModelExporter.export(
+                            new FoldedModelEntity(foldedModel, i), outputName, null);
+                }
+            } else {
+                var foldedModelExporter = new FoldedModelAllExporterFOLD();
+                foldedModelExporter.export(
+                        new FoldedModelEntity(foldedModel), outputFilePath, null);
+            }
 
-		} catch (Exception e) {
-			logger.error("folding error", e);
-		}
-	}
+        } catch (Exception e) {
+            logger.error("folding error", e);
+        }
+    }
 }

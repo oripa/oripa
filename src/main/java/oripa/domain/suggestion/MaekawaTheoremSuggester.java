@@ -29,40 +29,40 @@ import oripa.value.OriLine;
  *
  */
 public class MaekawaTheoremSuggester {
-	/**
-	 *
-	 * @param vertex
-	 * @return type to be used for new line. empty if {@code vertex} is not at
-	 *         inside of paper or the lines can't be interpolated to satisfy the
-	 *         theorem.
-	 */
-	public Optional<OriLine.Type> suggest(final OriVertex vertex) {
-		double edgeCount = vertex.edgeCount();
+    /**
+     *
+     * @param vertex
+     * @return type to be used for new line. empty if {@code vertex} is not at
+     *         inside of paper or the lines can't be interpolated to satisfy the
+     *         theorem.
+     */
+    public Optional<OriLine.Type> suggest(final OriVertex vertex) {
+        double edgeCount = vertex.edgeCount();
 
-		if (edgeCount % 2 == 0) {
-			return Optional.empty();
-		}
+        if (edgeCount % 2 == 0) {
+            return Optional.empty();
+        }
 
-		if (!vertex.isInsideOfPaper()) {
-			return Optional.empty();
-		}
+        if (!vertex.isInsideOfPaper()) {
+            return Optional.empty();
+        }
 
-		if (vertex.hasUnassignedEdge()) {
-			return Optional.empty();
-		}
+        if (vertex.hasUnassignedEdge()) {
+            return Optional.empty();
+        }
 
-		int mountainCount = (int) vertex.edgeStream().filter(OriEdge::isMountain).count();
-		int valleyCount = (int) vertex.edgeStream().filter(OriEdge::isValley).count();
+        int mountainCount = (int) vertex.edgeStream().filter(OriEdge::isMountain).count();
+        int valleyCount = (int) vertex.edgeStream().filter(OriEdge::isValley).count();
 
-		int diff = mountainCount - valleyCount;
+        int diff = mountainCount - valleyCount;
 
-		var type = switch (diff) {
-		case 3, -1 -> OriLine.Type.VALLEY;
-		case 1, -3 -> OriLine.Type.MOUNTAIN;
-		default -> null;
-		};
+        var type = switch (diff) {
+        case 3, -1 -> OriLine.Type.VALLEY;
+        case 1, -3 -> OriLine.Type.MOUNTAIN;
+        default -> null;
+        };
 
-		return Optional.ofNullable(type);
-	}
+        return Optional.ofNullable(type);
+    }
 
 }

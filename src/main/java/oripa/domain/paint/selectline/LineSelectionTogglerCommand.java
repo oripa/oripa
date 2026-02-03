@@ -27,34 +27,34 @@ import oripa.value.OriLine;
  *
  */
 public class LineSelectionTogglerCommand implements Command {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public LineSelectionTogglerCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public LineSelectionTogglerCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		context.creasePatternUndo().pushUndoInfo();
+    @Override
+    public void execute() {
+        context.creasePatternUndo().pushUndoInfo();
 
-		var lineOpt = context.peekLine();
+        var lineOpt = context.peekLine();
 
-		lineOpt.ifPresent(this::toggleSelection);
-	}
+        lineOpt.ifPresent(this::toggleSelection);
+    }
 
-	private void toggleSelection(final OriLine line) {
-		if (line.isSelected()) {
-			// in this case, the context has two reference to the selected
-			// line:
-			// at the last position and other somewhere.
+    private void toggleSelection(final OriLine line) {
+        if (line.isSelected()) {
+            // in this case, the context has two reference to the selected
+            // line:
+            // at the last position and other somewhere.
 
-			// clear the selection done by onAct().
-			context.popLine();
-			// remove the line which has been already stored.
-			context.removeLine(line);
-		} else {
-			line.setSelected(true);
-		}
-	}
+            // clear the selection done by onAct().
+            context.popLine();
+            // remove the line which has been already stored.
+            context.removeLine(line);
+        } else {
+            line.setSelected(true);
+        }
+    }
 
 }

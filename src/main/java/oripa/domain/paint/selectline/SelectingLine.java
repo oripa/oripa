@@ -6,18 +6,18 @@ import oripa.util.Command;
 
 public class SelectingLine extends PickingLine {
 
-	public SelectingLine() {
-		super();
-	}
+    public SelectingLine() {
+        super();
+    }
 
-	@Override
-	protected void initialize() {
-	}
+    @Override
+    protected void initialize() {
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		Command command = new LineSelectionTogglerCommand(context);
-		command.execute();
-	}
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        Command command = new LineSelectionTogglerCommand(context);
+        command.execute();
+    }
 
 }

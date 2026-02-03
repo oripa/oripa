@@ -52,291 +52,291 @@ import oripa.swing.view.util.ListItemSelectionPanel;
  *
  */
 public class ModelViewFrame extends JFrame
-		implements ModelViewFrameView, AdjustmentListener, WindowListener, ComponentListener {
-
-	private final ResourceHolder resourceHolder;
-
-	private ModelViewScreen screen;
-	private final JMenu menuDisp;
-	private final JMenu menuFile;
-	private final JMenuItem menuItemExportDXF;
-	private final JMenuItem menuItemExportOBJ;
-	private final JMenuItem menuItemExportSVG;
-	private final JMenuItem menuItemFlip;
-	private final JCheckBoxMenuItem menuItemCrossLine;
-	private final JLabel hintLabel;
-	private final JMenu dispSubMenu;
-	private final JRadioButtonMenuItem menuItemFillAlpha;
-	private final JRadioButtonMenuItem menuItemFillNone;
-	private final JScrollBar scrollBarAngle = new JScrollBar(
-			Adjustable.HORIZONTAL, 90, 5, 0, 185);
-	private final JScrollBar scrollBarPosition = new JScrollBar(
-			Adjustable.VERTICAL, 0, 5, -150, 150);
-
-	private final PainterScreenSetting mainScreenSetting;
-
-	private final ListItemSelectionPanel modelSelectionPanel;
-
-	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
-
-	private Consumer<FrameView> onCloseListener;
-
-	public ModelViewFrame(
-			final int width, final int height,
-			final PainterScreenSetting mainScreenSetting,
-			final ResourceHolder resourceHolder) {
-
-		this.resourceHolder = resourceHolder;
-
-		menuDisp = new JMenu(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_ID));
-		menuFile = new JMenu(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILE_ID));
-		menuItemExportDXF = new JMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_DXF_ID));
-		menuItemExportOBJ = new JMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_OBJ_ID));
-		menuItemExportSVG = new JMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_SVG_ID));
-		menuItemFlip = new JMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.INVERT_ID));
-		menuItemCrossLine = new JCheckBoxMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.SHOW_CROSS_LINE_ID), false);
-		hintLabel = new JLabel(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DIRECTION_BASIC_ID));
-		dispSubMenu = new JMenu(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_TYPE_ID));
-		menuItemFillAlpha = new JRadioButtonMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILL_ALPHA_ID));
-		menuItemFillNone = new JRadioButtonMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DRAW_LINES_ID));
-		modelSelectionPanel = new ListItemSelectionPanel(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID), resourceHolder);
-
-		this.mainScreenSetting = mainScreenSetting;
-
-		initialize();
-		this.setBounds(0, 0, width, height);
-
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-	}
-
-	private void initialize() {
-
-		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.TITLE_ID));
-		screen = new ModelViewScreen(mainScreenSetting);
-
-		setLayout(new BorderLayout());
-		add(screen, BorderLayout.CENTER);
-
-		var southPanel = new JPanel();
-		southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
-		southPanel.add(modelSelectionPanel);
-		southPanel.add(hintLabel);
-
-		add(southPanel, BorderLayout.SOUTH);
-
-		add(scrollBarAngle, BorderLayout.NORTH);
-		add(scrollBarPosition, BorderLayout.WEST);
-
-		// Construct menu bar
-		JMenuBar menuBar = new JMenuBar();
-
-		menuFile.add(menuItemExportDXF);
-		menuFile.add(menuItemExportOBJ);
-		menuFile.add(menuItemExportSVG);
-		menuDisp.add(menuItemFlip);
-
-		menuDisp.add(dispSubMenu);
-		menuDisp.add(menuItemCrossLine);
-		ButtonGroup dispGroup = new ButtonGroup();
-		dispGroup.add(menuItemFillAlpha);
-		dispSubMenu.add(menuItemFillAlpha);
-		dispGroup.add(menuItemFillNone);
-		dispSubMenu.add(menuItemFillNone);
+        implements ModelViewFrameView, AdjustmentListener, WindowListener, ComponentListener {
+
+    private final ResourceHolder resourceHolder;
+
+    private ModelViewScreen screen;
+    private final JMenu menuDisp;
+    private final JMenu menuFile;
+    private final JMenuItem menuItemExportDXF;
+    private final JMenuItem menuItemExportOBJ;
+    private final JMenuItem menuItemExportSVG;
+    private final JMenuItem menuItemFlip;
+    private final JCheckBoxMenuItem menuItemCrossLine;
+    private final JLabel hintLabel;
+    private final JMenu dispSubMenu;
+    private final JRadioButtonMenuItem menuItemFillAlpha;
+    private final JRadioButtonMenuItem menuItemFillNone;
+    private final JScrollBar scrollBarAngle = new JScrollBar(
+            Adjustable.HORIZONTAL, 90, 5, 0, 185);
+    private final JScrollBar scrollBarPosition = new JScrollBar(
+            Adjustable.VERTICAL, 0, 5, -150, 150);
+
+    private final PainterScreenSetting mainScreenSetting;
+
+    private final ListItemSelectionPanel modelSelectionPanel;
+
+    private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
+
+    private Consumer<FrameView> onCloseListener;
+
+    public ModelViewFrame(
+            final int width, final int height,
+            final PainterScreenSetting mainScreenSetting,
+            final ResourceHolder resourceHolder) {
+
+        this.resourceHolder = resourceHolder;
+
+        menuDisp = new JMenu(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_ID));
+        menuFile = new JMenu(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILE_ID));
+        menuItemExportDXF = new JMenuItem(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_DXF_ID));
+        menuItemExportOBJ = new JMenuItem(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_OBJ_ID));
+        menuItemExportSVG = new JMenuItem(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_SVG_ID));
+        menuItemFlip = new JMenuItem(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.INVERT_ID));
+        menuItemCrossLine = new JCheckBoxMenuItem(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.SHOW_CROSS_LINE_ID), false);
+        hintLabel = new JLabel(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DIRECTION_BASIC_ID));
+        dispSubMenu = new JMenu(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_TYPE_ID));
+        menuItemFillAlpha = new JRadioButtonMenuItem(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILL_ALPHA_ID));
+        menuItemFillNone = new JRadioButtonMenuItem(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DRAW_LINES_ID));
+        modelSelectionPanel = new ListItemSelectionPanel(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID), resourceHolder);
+
+        this.mainScreenSetting = mainScreenSetting;
+
+        initialize();
+        this.setBounds(0, 0, width, height);
+
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    private void initialize() {
+
+        setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.TITLE_ID));
+        screen = new ModelViewScreen(mainScreenSetting);
+
+        setLayout(new BorderLayout());
+        add(screen, BorderLayout.CENTER);
+
+        var southPanel = new JPanel();
+        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
+        southPanel.add(modelSelectionPanel);
+        southPanel.add(hintLabel);
+
+        add(southPanel, BorderLayout.SOUTH);
+
+        add(scrollBarAngle, BorderLayout.NORTH);
+        add(scrollBarPosition, BorderLayout.WEST);
+
+        // Construct menu bar
+        JMenuBar menuBar = new JMenuBar();
+
+        menuFile.add(menuItemExportDXF);
+        menuFile.add(menuItemExportOBJ);
+        menuFile.add(menuItemExportSVG);
+        menuDisp.add(menuItemFlip);
+
+        menuDisp.add(dispSubMenu);
+        menuDisp.add(menuItemCrossLine);
+        ButtonGroup dispGroup = new ButtonGroup();
+        dispGroup.add(menuItemFillAlpha);
+        dispSubMenu.add(menuItemFillAlpha);
+        dispGroup.add(menuItemFillNone);
+        dispSubMenu.add(menuItemFillNone);
 
-		menuItemFillAlpha.setSelected(true);
+        menuItemFillAlpha.setSelected(true);
 
-		menuBar.add(menuFile);
-		menuBar.add(menuDisp);
+        menuBar.add(menuFile);
+        menuBar.add(menuDisp);
 
-		setJMenuBar(menuBar);
+        setJMenuBar(menuBar);
 
-		scrollBarAngle.addAdjustmentListener(this);
-		scrollBarPosition.addAdjustmentListener(this);
+        scrollBarAngle.addAdjustmentListener(this);
+        scrollBarPosition.addAdjustmentListener(this);
 
-		addWindowListener(this);
-		addComponentListener(this);
-	}
+        addWindowListener(this);
+        addComponentListener(this);
+    }
 
-	@Override
-	public ModelViewScreenView getModelScreenView() {
-		return screen;
-	}
+    @Override
+    public ModelViewScreenView getModelScreenView() {
+        return screen;
+    }
 
-	@Override
-	public void addModelSwitchListener(final Consumer<Integer> listener) {
-		modelSelectionPanel.addPropertyChangeListener(
-				ListItemSelectionPanel.INDEX,
-				e -> listener.accept((Integer) e.getNewValue()));
-	}
+    @Override
+    public void addModelSwitchListener(final Consumer<Integer> listener) {
+        modelSelectionPanel.addPropertyChangeListener(
+                ListItemSelectionPanel.INDEX,
+                e -> listener.accept((Integer) e.getNewValue()));
+    }
 
-	@Override
-	public void setModelCount(final int count) {
-		modelSelectionPanel.setItemCount(count);
-	}
+    @Override
+    public void setModelCount(final int count) {
+        modelSelectionPanel.setItemCount(count);
+    }
 
-	@Override
-	public void setModel(final OrigamiModel origamiModel) {
-		int boundSize = Math.min(getWidth(), getHeight()
-				- getJMenuBar().getHeight() - 100);
-		screen.setModel(origamiModel, boundSize);
-	}
+    @Override
+    public void setModel(final OrigamiModel origamiModel) {
+        int boundSize = Math.min(getWidth(), getHeight()
+                - getJMenuBar().getHeight() - 100);
+        screen.setModel(origamiModel, boundSize);
+    }
 
-	@Override
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
-		var oldListener = modelIndexChangeListenerMap.get(parentOfListener);
-		modelSelectionPanel.removePropertyChangeListener(oldListener);
+    @Override
+    public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
+        var oldListener = modelIndexChangeListenerMap.get(parentOfListener);
+        modelSelectionPanel.removePropertyChangeListener(oldListener);
 
-		modelIndexChangeListenerMap.put(parentOfListener, listener);
-		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
-	}
+        modelIndexChangeListenerMap.put(parentOfListener, listener);
+        modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
+    }
 
-	@Override
-	public void removeModelIndexChangeListeners() {
-		modelIndexChangeListenerMap.clear();
-		modelSelectionPanel.removePropertyChangeListeners(ListItemSelectionPanel.INDEX);
-	}
+    @Override
+    public void removeModelIndexChangeListeners() {
+        modelIndexChangeListenerMap.clear();
+        modelSelectionPanel.removePropertyChangeListeners(ListItemSelectionPanel.INDEX);
+    }
 
-	@Override
-	public void selectModel(final int index) {
-		modelSelectionPanel.selectItem(index);
+    @Override
+    public void selectModel(final int index) {
+        modelSelectionPanel.selectItem(index);
 
-	}
+    }
 
-	@Override
-	public void adjustmentValueChanged(final AdjustmentEvent e) {
-		if (e.getSource() == scrollBarAngle) {
-			screen.setScissorsLineAngle(e.getValue());
-		} else if (e.getSource() == scrollBarPosition) {
-			screen.setScissorsLinePosition(e.getValue());
-		}
+    @Override
+    public void adjustmentValueChanged(final AdjustmentEvent e) {
+        if (e.getSource() == scrollBarAngle) {
+            screen.setScissorsLineAngle(e.getValue());
+        } else if (e.getSource() == scrollBarPosition) {
+            screen.setScissorsLinePosition(e.getValue());
+        }
 
-	}
+    }
 
-	@Override
-	public void setOnCloseListener(final Consumer<FrameView> listener) {
-		onCloseListener = listener;
-	}
+    @Override
+    public void setOnCloseListener(final Consumer<FrameView> listener) {
+        onCloseListener = listener;
+    }
 
-	@Override
-	public void windowOpened(final WindowEvent e) {
+    @Override
+    public void windowOpened(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowClosing(final WindowEvent e) {
-	}
+    @Override
+    public void windowClosing(final WindowEvent e) {
+    }
 
-	@Override
-	public void windowClosed(final WindowEvent e) {
-		onCloseListener.accept(this);
-		mainScreenSetting.setCrossLineVisible(false);
+    @Override
+    public void windowClosed(final WindowEvent e) {
+        onCloseListener.accept(this);
+        mainScreenSetting.setCrossLineVisible(false);
 
-		removeModelIndexChangeListeners();
-	}
+        removeModelIndexChangeListeners();
+    }
 
-	@Override
-	public void windowIconified(final WindowEvent e) {
+    @Override
+    public void windowIconified(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowDeiconified(final WindowEvent e) {
+    @Override
+    public void windowDeiconified(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowActivated(final WindowEvent e) {
+    @Override
+    public void windowActivated(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowDeactivated(final WindowEvent e) {
+    @Override
+    public void windowDeactivated(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void componentResized(final ComponentEvent e) {
+    @Override
+    public void componentResized(final ComponentEvent e) {
 
-	}
+    }
 
-	@Override
-	public void componentMoved(final ComponentEvent e) {
+    @Override
+    public void componentMoved(final ComponentEvent e) {
 
-	}
+    }
 
-	@Override
-	public void componentShown(final ComponentEvent e) {
+    @Override
+    public void componentShown(final ComponentEvent e) {
 
-	}
+    }
 
-	@Override
-	public void componentHidden(final ComponentEvent e) {
-	}
+    @Override
+    public void componentHidden(final ComponentEvent e) {
+    }
 
-	@Override
-	public void addFlipModelButtonListener(final Runnable listener) {
-		addButtonListener(menuItemFlip, listener);
-	}
+    @Override
+    public void addFlipModelButtonListener(final Runnable listener) {
+        addButtonListener(menuItemFlip, listener);
+    }
 
-	@Override
-	public void addCrossLineButtonListener(final Runnable listener) {
-		addButtonListener(menuItemCrossLine, listener);
-	}
+    @Override
+    public void addCrossLineButtonListener(final Runnable listener) {
+        addButtonListener(menuItemCrossLine, listener);
+    }
 
-	@Override
-	public void addExportDXFButtonListener(final Runnable listener) {
-		addButtonListener(menuItemExportDXF, listener);
-	}
+    @Override
+    public void addExportDXFButtonListener(final Runnable listener) {
+        addButtonListener(menuItemExportDXF, listener);
+    }
 
-	@Override
-	public void addExportOBJButtonListener(final Runnable listener) {
-		addButtonListener(menuItemExportOBJ, listener);
-	}
+    @Override
+    public void addExportOBJButtonListener(final Runnable listener) {
+        addButtonListener(menuItemExportOBJ, listener);
+    }
 
-	@Override
-	public void addExportSVGButtonListener(final Runnable listener) {
-		addButtonListener(menuItemExportSVG, listener);
-	}
+    @Override
+    public void addExportSVGButtonListener(final Runnable listener) {
+        addButtonListener(menuItemExportSVG, listener);
+    }
 
-	@Override
-	public void addFillAlphaButtonListener(final Runnable listener) {
-		addButtonListener(menuItemFillAlpha, listener);
-	}
+    @Override
+    public void addFillAlphaButtonListener(final Runnable listener) {
+        addButtonListener(menuItemFillAlpha, listener);
+    }
 
-	@Override
-	public void addFillNoneButtonListener(final Runnable listener) {
-		addButtonListener(menuItemFillNone, listener);
-	}
+    @Override
+    public void addFillNoneButtonListener(final Runnable listener) {
+        addButtonListener(menuItemFillNone, listener);
+    }
 
-	private void addButtonListener(final AbstractButton button, final Runnable listener) {
-		button.addActionListener(e -> listener.run());
-	}
+    private void addButtonListener(final AbstractButton button, final Runnable listener) {
+        button.addActionListener(e -> listener.run());
+    }
 
-	@Override
-	public boolean isCrossLineVisible() {
-		return menuItemCrossLine.isSelected();
-	}
+    @Override
+    public boolean isCrossLineVisible() {
+        return menuItemCrossLine.isSelected();
+    }
 
-	@Override
-	public void setModelDisplayMode(final ModelDisplayMode mode) {
-		screen.setModelDisplayMode(mode);
-	}
+    @Override
+    public void setModelDisplayMode(final ModelDisplayMode mode) {
+        screen.setModelDisplayMode(mode);
+    }
 
-	@Override
-	public void showExportErrorMessage(final Exception e) {
-		Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
-				e);
+    @Override
+    public void showExportErrorMessage(final Exception e) {
+        Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
+                e);
 
-	}
+    }
 }

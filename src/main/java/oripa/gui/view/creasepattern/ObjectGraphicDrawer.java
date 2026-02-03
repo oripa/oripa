@@ -33,64 +33,64 @@ import oripa.vecmath.Vector2d;
  *
  */
 public interface ObjectGraphicDrawer {
-	void selectColor(final OriLine.Type lineType);
+    void selectColor(final OriLine.Type lineType);
 
-	void selectStroke(final OriLine.Type lineType, final double scale,
-			final boolean zeroWidth);
+    void selectStroke(final OriLine.Type lineType, final double scale,
+            final boolean zeroWidth);
 
-	void selectSelectedItemColor();
+    void selectSelectedItemColor();
 
-	void selectSelectedLineStroke(final double scale, final boolean zeroWidth);
+    void selectSelectedLineStroke(final double scale, final boolean zeroWidth);
 
-	void selectCandidateItemColor();
+    void selectCandidateItemColor();
 
-	void selectCandidateLineStroke(final double scale, final boolean zeroWidth);
+    void selectCandidateLineStroke(final double scale, final boolean zeroWidth);
 
-	void selectEditingOutlineColor();
+    void selectEditingOutlineColor();
 
-	void selectEditingOutlineStroke(final double scale);
+    void selectEditingOutlineStroke(final double scale);
 
-	void selectAssistLineColor();
+    void selectAssistLineColor();
 
-	void selectAreaSelectionColor();
+    void selectAreaSelectionColor();
 
-	void selectAreaSelectionStroke(final double scale);
+    void selectAreaSelectionStroke(final double scale);
 
-	void selectOverlappingLineHighlightColor();
+    void selectOverlappingLineHighlightColor();
 
-	void selectOverlappingLineHighlightStroke(final double scale);
+    void selectOverlappingLineHighlightStroke(final double scale);
 
-	void selectNormalVertexColor();
+    void selectNormalVertexColor();
 
-	void selectViolatingVertexColor();
+    void selectViolatingVertexColor();
 
-	void selectNormalFaceColor();
+    void selectNormalFaceColor();
 
-	void selectViolatingFaceColor();
+    void selectViolatingFaceColor();
 
-	void selectNormalVertexSize(final double scale);
+    void selectNormalVertexSize(final double scale);
 
-	void selectViolatingVertexSize(final double scale);
+    void selectViolatingVertexSize(final double scale);
 
-	void selectMouseActionVertexSize(final double scale);
+    void selectMouseActionVertexSize(final double scale);
 
-	void drawVertex(Vector2d p);
+    void drawVertex(Vector2d p);
 
-	void drawLine(OriLine line);
+    void drawLine(OriLine line);
 
-	void drawLine(Vector2d p0, Vector2d p1);
+    void drawLine(Vector2d p0, Vector2d p1);
 
-	void drawLine(double x0, double y0, double x1, double y1);
+    void drawLine(double x0, double y0, double x1, double y1);
 
-	void drawLine(Line line);
+    void drawLine(Line line);
 
-	void drawRectangle(final Vector2d p0, final Vector2d p1);
+    void drawRectangle(final Vector2d p0, final Vector2d p1);
 
-	void fillFace(final List<Vector2d> vertices);
+    void fillFace(final List<Vector2d> vertices);
 
-	void drawString(String text, float x, float y);
+    void drawString(String text, float x, float y);
 
-	void drawString(String text, float x, float y, double scale);
+    void drawString(String text, float x, float y, double scale);
 
-	void setAntiAlias(boolean antiAlias);
+    void setAntiAlias(boolean antiAlias);
 }

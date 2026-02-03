@@ -31,40 +31,40 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class InputStatesTestBase {
-	protected PaintContext context;
-	protected int cpLineCount;
-	protected ActionState state;
+    protected PaintContext context;
+    protected int cpLineCount;
+    protected ActionState state;
 
-	protected <FirstState extends ActionState> void setUp(final Class<FirstState> stateClass) {
-		context = new PaintContextFactory().createContext();
-		context.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN);
+    protected <FirstState extends ActionState> void setUp(final Class<FirstState> stateClass) {
+        context = new PaintContextFactory().createContext();
+        context.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN);
 
-		try {
-			state = stateClass.getDeclaredConstructor().newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+        try {
+            state = stateClass.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	protected void doAction(final Vector2d candidate) {
-		cpLineCount = context.getCreasePattern().size();
-		context.setCandidateVertexToPick(candidate);
-		state = state.doAction(context, false);
-	}
+    protected void doAction(final Vector2d candidate) {
+        cpLineCount = context.getCreasePattern().size();
+        context.setCandidateVertexToPick(candidate);
+        state = state.doAction(context, false);
+    }
 
-	protected void doAction(final OriLine candidate) {
-		cpLineCount = context.getCreasePattern().size();
-		context.setCandidateLineToPick(candidate);
-		state = state.doAction(context, false);
+    protected void doAction(final OriLine candidate) {
+        cpLineCount = context.getCreasePattern().size();
+        context.setCandidateLineToPick(candidate);
+        state = state.doAction(context, false);
 
-	}
+    }
 
-	protected void assertSnapPointExists() {
-		assertTrue(context.getSnapPoints().size() > 0);
-	}
+    protected void assertSnapPointExists() {
+        assertTrue(context.getSnapPoints().size() > 0);
+    }
 
-	protected void assertNewLineInput() {
-		assertTrue(context.getCreasePattern().size() > cpLineCount);
-	}
+    protected void assertNewLineInput() {
+        assertTrue(context.getCreasePattern().size() > cpLineCount);
+    }
 
 }

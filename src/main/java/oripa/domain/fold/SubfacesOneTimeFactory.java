@@ -34,25 +34,25 @@ import oripa.domain.fold.subface.SubFacesFactory;
  */
 class SubfacesOneTimeFactory extends SubFacesFactory {
 
-	private List<SubFace> subfaces = null;
+    private List<SubFace> subfaces = null;
 
-	public SubfacesOneTimeFactory(
-			final FacesToCreasePatternConverter facesToCPConverter,
-			final OrigamiModelFactory modelFactory,
-			final SplitFacesToSubFacesConverter facesToSubFacesConverter,
-			final ParentFacesCollector parentCollector) {
-		super(facesToCPConverter, modelFactory, facesToSubFacesConverter, parentCollector);
-	}
+    public SubfacesOneTimeFactory(
+            final FacesToCreasePatternConverter facesToCPConverter,
+            final OrigamiModelFactory modelFactory,
+            final SplitFacesToSubFacesConverter facesToSubFacesConverter,
+            final ParentFacesCollector parentCollector) {
+        super(facesToCPConverter, modelFactory, facesToSubFacesConverter, parentCollector);
+    }
 
-	@Override
-	public List<SubFace> createSubFaces(final List<OriFace> faces, final double paperSize, final double eps) {
-		if (subfaces != null) {
-			subfaces.forEach(SubFace::clearStackConditions);
-			return subfaces;
-		}
+    @Override
+    public List<SubFace> createSubFaces(final List<OriFace> faces, final double paperSize, final double eps) {
+        if (subfaces != null) {
+            subfaces.forEach(SubFace::clearStackConditions);
+            return subfaces;
+        }
 
-		subfaces = super.createSubFaces(faces, paperSize, eps);
+        subfaces = super.createSubFaces(faces, paperSize, eps);
 
-		return subfaces;
-	}
+        return subfaces;
+    }
 }

@@ -6,26 +6,26 @@ import oripa.util.Command;
 
 public class SelectingLineForLineType extends PickingLine {
 
-	private final TypeForChangeGettable setting;
+    private final TypeForChangeGettable setting;
 
-	public SelectingLineForLineType(final TypeForChangeGettable setting) {
-		super();
-		this.setting = setting;
-	}
+    public SelectingLineForLineType(final TypeForChangeGettable setting) {
+        super();
+        this.setting = setting;
+    }
 
-	@Override
-	protected void initialize() {
-	}
+    @Override
+    protected void initialize() {
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		super.undoAction(context);
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        super.undoAction(context);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		Command command = new LineTypeChangerCommand(context, setting);
-		command.execute();
-	}
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        Command command = new LineTypeChangerCommand(context, setting);
+        command.execute();
+    }
 
 }

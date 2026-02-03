@@ -30,296 +30,296 @@ import oripa.util.ByteSparseMatrix;
  *
  */
 public class OverlapRelation {
-	private ByteMatrix overlapRelation;
+    private ByteMatrix overlapRelation;
 
-	private static final byte NO_OVERLAP = 0;
-	private static final byte UPPER = 1;
-	private static final byte LOWER = 2;
-	private static final byte UNDEFINED = 3;
+    private static final byte NO_OVERLAP = 0;
+    private static final byte UPPER = 1;
+    private static final byte LOWER = 2;
+    private static final byte UNDEFINED = 3;
 
-	private byte toInternal(final byte value) {
-		return switch (value) {
-		case OverlapRelationValues.NO_OVERLAP -> NO_OVERLAP;
-		case OverlapRelationValues.UPPER -> UPPER;
-		case OverlapRelationValues.LOWER -> LOWER;
-		case OverlapRelationValues.UNDEFINED -> UNDEFINED;
-		default -> throw new IllegalArgumentException("Unexpected value: " + value);
-		};
-	}
+    private byte toInternal(final byte value) {
+        return switch (value) {
+        case OverlapRelationValues.NO_OVERLAP -> NO_OVERLAP;
+        case OverlapRelationValues.UPPER -> UPPER;
+        case OverlapRelationValues.LOWER -> LOWER;
+        case OverlapRelationValues.UNDEFINED -> UNDEFINED;
+        default -> throw new IllegalArgumentException("Unexpected value: " + value);
+        };
+    }
 
-	private byte toExternal(final byte value) {
-		return switch (value) {
-		case NO_OVERLAP -> OverlapRelationValues.NO_OVERLAP;
-		case UPPER -> OverlapRelationValues.UPPER;
-		case LOWER -> OverlapRelationValues.LOWER;
-		case UNDEFINED -> OverlapRelationValues.UNDEFINED;
-		default -> throw new IllegalArgumentException("Unexpected value: " + value);
-		};
+    private byte toExternal(final byte value) {
+        return switch (value) {
+        case NO_OVERLAP -> OverlapRelationValues.NO_OVERLAP;
+        case UPPER -> OverlapRelationValues.UPPER;
+        case LOWER -> OverlapRelationValues.LOWER;
+        case UNDEFINED -> OverlapRelationValues.UNDEFINED;
+        default -> throw new IllegalArgumentException("Unexpected value: " + value);
+        };
 
-	}
+    }
 
-	/**
-	 * Internally creates a n x n matrix where n is the given {@code faceCount}.
-	 *
-	 * @param faceCount
-	 *            the number of faces of the model.
-	 */
-	public OverlapRelation(final int faceCount) {
-		overlapRelation = new BitBlockByteMatrix(faceCount, faceCount, 2);
+    /**
+     * Internally creates a n x n matrix where n is the given {@code faceCount}.
+     *
+     * @param faceCount
+     *            the number of faces of the model.
+     */
+    public OverlapRelation(final int faceCount) {
+        overlapRelation = new BitBlockByteMatrix(faceCount, faceCount, 2);
 //		overlapRelation = new ByteDenseMatrix(faceCount, faceCount);
-	}
+    }
 
-	private OverlapRelation(final ByteMatrix mat) {
-		overlapRelation = mat.clone();
-	}
+    private OverlapRelation(final ByteMatrix mat) {
+        overlapRelation = mat.clone();
+    }
 
-	private OverlapRelation() {
+    private OverlapRelation() {
 
-	}
+    }
 
-	/**
-	 * @return deep copy of this instance.
-	 */
-	@Override
-	public OverlapRelation clone() {
-		return new OverlapRelation(overlapRelation);
-	}
+    /**
+     * @return deep copy of this instance.
+     */
+    @Override
+    public OverlapRelation clone() {
+        return new OverlapRelation(overlapRelation);
+    }
 
-	/**
-	 * Returns clone for parallel computing. Incomplete implementation so far:
-	 * returned object doesn't have atomicity for setXXX().
-	 *
-	 * @return
-	 */
-	@Deprecated
-	public OverlapRelation cloneAtomic() {
-		var cloned = new OverlapRelation();
+    /**
+     * Returns clone for parallel computing. Incomplete implementation so far:
+     * returned object doesn't have atomicity for setXXX().
+     *
+     * @return
+     */
+    @Deprecated
+    public OverlapRelation cloneAtomic() {
+        var cloned = new OverlapRelation();
 
-		cloned.overlapRelation = new AtomicByteDenseMatrix(getSize(), getSize());
+        cloned.overlapRelation = new AtomicByteDenseMatrix(getSize(), getSize());
 
-		copyTo(cloned);
+        copyTo(cloned);
 
-		return cloned;
-	}
+        return cloned;
+    }
 
-	public void copyTo(final OverlapRelation o) {
-		for (int i = 0; i < getSize(); i++) {
-			for (int j = i; j < getSize(); j++) {
-				o.set(i, j, get(i, j));
-			}
-		}
-	}
+    public void copyTo(final OverlapRelation o) {
+        for (int i = 0; i < getSize(); i++) {
+            for (int j = i; j < getSize(); j++) {
+                o.set(i, j, get(i, j));
+            }
+        }
+    }
 
-	public void switchToSparseMatrix() {
-		var sparse = new ByteSparseMatrix(overlapRelation.rowCount(), overlapRelation.columnCount());
-		for (int i = 0; i < overlapRelation.rowCount(); i++) {
-			for (int j = 0; j < overlapRelation.columnCount(); j++) {
-				sparse.set(i, j, overlapRelation.get(i, j));
-			}
-		}
-		overlapRelation = sparse;
-	}
+    public void switchToSparseMatrix() {
+        var sparse = new ByteSparseMatrix(overlapRelation.rowCount(), overlapRelation.columnCount());
+        for (int i = 0; i < overlapRelation.rowCount(); i++) {
+            for (int j = 0; j < overlapRelation.columnCount(); j++) {
+                sparse.set(i, j, overlapRelation.get(i, j));
+            }
+        }
+        overlapRelation = sparse;
+    }
 
-	/**
-	 *
-	 * @param i
-	 *            row index
-	 * @param j
-	 *            column index
-	 * @return [i][j] value.
-	 */
-	public byte get(final int i, final int j) {
-		return toExternal(overlapRelation.get(i, j));
-	}
+    /**
+     *
+     * @param i
+     *            row index
+     * @param j
+     *            column index
+     * @return [i][j] value.
+     */
+    public byte get(final int i, final int j) {
+        return toExternal(overlapRelation.get(i, j));
+    }
 
-	/**
-	 * @return the n of n x n matrix.
-	 */
-	public int getSize() {
-		return overlapRelation.rowCount();
-	}
+    /**
+     * @return the n of n x n matrix.
+     */
+    public int getSize() {
+        return overlapRelation.rowCount();
+    }
 
-	/**
-	 * Sets {@code value} to {@code overlapRelation[i][j]}. This method sets
-	 * inversion of {@code value} to {@code overlapRelation[j][i]}.
-	 *
-	 * @param i
-	 *            row index
-	 * @param j
-	 *            column index
-	 * @param value
-	 *            a value of {@link OverlapRelationValues}
-	 * @throws IllegalArgumentException
-	 *             when {@code value} is not of {@link OverlapRelationValues}.
-	 */
-	public void set(final int i, final int j, final byte value) throws IllegalArgumentException {
-		var internalValue = toInternal(value);
-		overlapRelation.set(i, j, internalValue);
+    /**
+     * Sets {@code value} to {@code overlapRelation[i][j]}. This method sets
+     * inversion of {@code value} to {@code overlapRelation[j][i]}.
+     *
+     * @param i
+     *            row index
+     * @param j
+     *            column index
+     * @param value
+     *            a value of {@link OverlapRelationValues}
+     * @throws IllegalArgumentException
+     *             when {@code value} is not of {@link OverlapRelationValues}.
+     */
+    public void set(final int i, final int j, final byte value) throws IllegalArgumentException {
+        var internalValue = toInternal(value);
+        overlapRelation.set(i, j, internalValue);
 
-		switch (internalValue) {
-		case LOWER:
-			overlapRelation.set(j, i, UPPER);
-			break;
-		case UPPER:
-			overlapRelation.set(j, i, LOWER);
-			break;
-		case UNDEFINED, NO_OVERLAP:
-			overlapRelation.set(j, i, internalValue);
-			break;
+        switch (internalValue) {
+        case LOWER:
+            overlapRelation.set(j, i, UPPER);
+            break;
+        case UPPER:
+            overlapRelation.set(j, i, LOWER);
+            break;
+        case UNDEFINED, NO_OVERLAP:
+            overlapRelation.set(j, i, internalValue);
+            break;
 
-		default:
-			throw new IllegalArgumentException("value argument is wrong.");
-		}
-	}
+        default:
+            throw new IllegalArgumentException("value argument is wrong.");
+        }
+    }
 
-	/**
-	 * Sets {@link OverlapRelationValues#LOWER} to
-	 * {@code overlapRelation[i][j]}. This method sets
-	 * {@link OverlapRelationValues#UPPER} to {@code overlapRelation[j][i]}.
-	 *
-	 * @param i
-	 *            row index
-	 * @param j
-	 *            column index
-	 */
-	public void setLower(final int i, final int j) {
-		set(i, j, OverlapRelationValues.LOWER);
-	}
+    /**
+     * Sets {@link OverlapRelationValues#LOWER} to
+     * {@code overlapRelation[i][j]}. This method sets
+     * {@link OverlapRelationValues#UPPER} to {@code overlapRelation[j][i]}.
+     *
+     * @param i
+     *            row index
+     * @param j
+     *            column index
+     */
+    public void setLower(final int i, final int j) {
+        set(i, j, OverlapRelationValues.LOWER);
+    }
 
-	/**
-	 * Sets {@link OverlapRelationValues#UPPER} to
-	 * {@code overlapRelation[i][j]}. This method sets
-	 * {@link OverlapRelationValues#LOWER} to {@code overlapRelation[j][i]}.
-	 *
-	 * @param i
-	 *            row index
-	 * @param j
-	 *            column index
-	 */
-	public void setUpper(final int i, final int j) {
-		set(i, j, OverlapRelationValues.UPPER);
-	}
+    /**
+     * Sets {@link OverlapRelationValues#UPPER} to
+     * {@code overlapRelation[i][j]}. This method sets
+     * {@link OverlapRelationValues#LOWER} to {@code overlapRelation[j][i]}.
+     *
+     * @param i
+     *            row index
+     * @param j
+     *            column index
+     */
+    public void setUpper(final int i, final int j) {
+        set(i, j, OverlapRelationValues.UPPER);
+    }
 
-	/**
-	 * Sets {@link OverlapRelationValues#UNDEFINED} to
-	 * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
-	 *
-	 * @param i
-	 *            row index
-	 * @param j
-	 *            column index
-	 */
-	public void setUndefined(final int i, final int j) {
-		set(i, j, OverlapRelationValues.UNDEFINED);
-	}
+    /**
+     * Sets {@link OverlapRelationValues#UNDEFINED} to
+     * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
+     *
+     * @param i
+     *            row index
+     * @param j
+     *            column index
+     */
+    public void setUndefined(final int i, final int j) {
+        set(i, j, OverlapRelationValues.UNDEFINED);
+    }
 
-	/**
-	 * Sets {@link OverlapRelationValues#NO_OVERLAP} to
-	 * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
-	 *
-	 * @param i
-	 *            row index
-	 * @param j
-	 *            column index
-	 */
-	public void setNoOverlap(final int i, final int j) {
-		set(i, j, OverlapRelationValues.NO_OVERLAP);
-	}
+    /**
+     * Sets {@link OverlapRelationValues#NO_OVERLAP} to
+     * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
+     *
+     * @param i
+     *            row index
+     * @param j
+     *            column index
+     */
+    public void setNoOverlap(final int i, final int j) {
+        set(i, j, OverlapRelationValues.NO_OVERLAP);
+    }
 
-	/**
-	 *
-	 * @return true if LOWER and UPPER are set to [i][j] and [j][i]
-	 *         respectively.
-	 */
-	public boolean setLowerIfUndefined(final int i, final int j) {
-		return setIfUndefined(i, j, OverlapRelationValues.LOWER);
-	}
+    /**
+     *
+     * @return true if LOWER and UPPER are set to [i][j] and [j][i]
+     *         respectively.
+     */
+    public boolean setLowerIfUndefined(final int i, final int j) {
+        return setIfUndefined(i, j, OverlapRelationValues.LOWER);
+    }
 
-	public boolean setUpperIfUndefined(final int i, final int j) {
-		return setIfUndefined(i, j, OverlapRelationValues.UPPER);
-	}
+    public boolean setUpperIfUndefined(final int i, final int j) {
+        return setIfUndefined(i, j, OverlapRelationValues.UPPER);
+    }
 
-	public boolean setIfUndefined(final int i, final int j, final byte value) {
-		if (!isUndefined(i, j)) {
-			return false;
-		}
+    public boolean setIfUndefined(final int i, final int j, final byte value) {
+        if (!isUndefined(i, j)) {
+            return false;
+        }
 
-		set(i, j, value);
-		return true;
-	}
+        set(i, j, value);
+        return true;
+    }
 
-	/**
-	 *
-	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
-	 *         {@link OverlapRelationValues#LOWER}.
-	 */
-	public boolean isLower(final int i, final int j) {
-		return overlapRelation.get(i, j) == LOWER;
-	}
+    /**
+     *
+     * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+     *         {@link OverlapRelationValues#LOWER}.
+     */
+    public boolean isLower(final int i, final int j) {
+        return overlapRelation.get(i, j) == LOWER;
+    }
 
-	/**
-	 *
-	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
-	 *         {@link OverlapRelationValues#UPPER}.
-	 */
-	public boolean isUpper(final int i, final int j) {
-		return overlapRelation.get(i, j) == UPPER;
-	}
+    /**
+     *
+     * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+     *         {@link OverlapRelationValues#UPPER}.
+     */
+    public boolean isUpper(final int i, final int j) {
+        return overlapRelation.get(i, j) == UPPER;
+    }
 
-	/**
-	 *
-	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
-	 *         {@link OverlapRelationValues#UNDEFINED}.
-	 */
-	public boolean isUndefined(final int i, final int j) {
-		return overlapRelation.get(i, j) == UNDEFINED;
-	}
+    /**
+     *
+     * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+     *         {@link OverlapRelationValues#UNDEFINED}.
+     */
+    public boolean isUndefined(final int i, final int j) {
+        return overlapRelation.get(i, j) == UNDEFINED;
+    }
 
-	/**
-	 *
-	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
-	 *         {@link OverlapRelationValues#NO_OVERLAP}.
-	 */
-	public boolean isNoOverlap(final int i, final int j) {
-		return overlapRelation.get(i, j) == NO_OVERLAP;
-	}
+    /**
+     *
+     * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+     *         {@link OverlapRelationValues#NO_OVERLAP}.
+     */
+    public boolean isNoOverlap(final int i, final int j) {
+        return overlapRelation.get(i, j) == NO_OVERLAP;
+    }
 
-	public EstimationResult setLowerIfPossible(final int i, final int j) {
+    public EstimationResult setLowerIfPossible(final int i, final int j) {
 
-		return setIfPossible(i, j, OverlapRelationValues.LOWER);
-	}
+        return setIfPossible(i, j, OverlapRelationValues.LOWER);
+    }
 
-	public EstimationResult setUpperIfPossible(final int i, final int j) {
-		return setIfPossible(i, j, OverlapRelationValues.UPPER);
-	}
+    public EstimationResult setUpperIfPossible(final int i, final int j) {
+        return setIfPossible(i, j, OverlapRelationValues.UPPER);
+    }
 
-	public EstimationResult setIfPossible(final int i, final int j, final byte value) {
+    public EstimationResult setIfPossible(final int i, final int j, final byte value) {
 
-		if (setIfUndefined(i, j, value)) {
-			return EstimationResult.CHANGED;
-		}
-		if (get(i, j) != value) {
-			// conflict.
-			return EstimationResult.UNFOLDABLE;
-		}
+        if (setIfUndefined(i, j, value)) {
+            return EstimationResult.CHANGED;
+        }
+        if (get(i, j) != value) {
+            // conflict.
+            return EstimationResult.UNFOLDABLE;
+        }
 
-		return EstimationResult.NOT_CHANGED;
-	}
+        return EstimationResult.NOT_CHANGED;
+    }
 
-	@Override
-	public String toString() {
-		var builder = new StringBuilder();
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
 
-		for (int i = 0; i < getSize(); i++) {
-			var line = String.join(" ",
-					overlapRelation.getRow(i).stream()
-							.map(b -> b.toString())
-							.toList());
-			builder.append(line);
-			builder.append(System.lineSeparator());
-		}
+        for (int i = 0; i < getSize(); i++) {
+            var line = String.join(" ",
+                    overlapRelation.getRow(i).stream()
+                            .map(b -> b.toString())
+                            .toList());
+            builder.append(line);
+            builder.append(System.lineSeparator());
+        }
 
-		return builder.toString();
-	}
+        return builder.toString();
+    }
 
 }

@@ -40,66 +40,66 @@ import oripa.persistence.filetool.Loader;
  *
  */
 enum CreasePatternFileTypeKey implements FileTypePropertyWithAccessor<Doc> {
-	OPX("opx", 1, new LoaderXML(), new ExporterXML(), "opx", "xml"),
-	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), "fold"),
-	PICT("pict", 3, null, new PictureExporter(), "png", "jpg"),
-	DXF("dxf", 4, new LoaderDXF(), ExporterDXFFactory.createCreasePatternExporter(), "dxf"),
-	CP("cp", 5, new LoaderCP(), new ExporterCP(), "cp"),
-	SVG("svg", 6, null, ExporterSVGFactory.createCreasePatternExporter(), "svg"),
-	PDF("pdf", 7, new LoaderPDF(), null, "pdf");
+    OPX("opx", 1, new LoaderXML(), new ExporterXML(), "opx", "xml"),
+    FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), "fold"),
+    PICT("pict", 3, null, new PictureExporter(), "png", "jpg"),
+    DXF("dxf", 4, new LoaderDXF(), ExporterDXFFactory.createCreasePatternExporter(), "dxf"),
+    CP("cp", 5, new LoaderCP(), new ExporterCP(), "cp"),
+    SVG("svg", 6, null, ExporterSVGFactory.createCreasePatternExporter(), "svg"),
+    PDF("pdf", 7, new LoaderPDF(), null, "pdf");
 
-	private final String keyText;
-	private final Integer order;
-	private final String[] extensions;
-	private final Loader<Doc> loader;
-	private final Exporter<Doc> exporter;
+    private final String keyText;
+    private final Integer order;
+    private final String[] extensions;
+    private final Loader<Doc> loader;
+    private final Exporter<Doc> exporter;
 
-	/**
-	 *
-	 * Constructor
-	 *
-	 * @param key
-	 *            key string
-	 * @param order
-	 *            defines the order of members.
-	 * @param loader
-	 * @param exporter
-	 * @param extensions
-	 *            which should be managed as that file type.
-	 */
-	private CreasePatternFileTypeKey(final String key, final Integer order,
-			final Loader<Doc> loader,
-			final Exporter<Doc> exporter,
-			final String... extensions) {
-		this.keyText = key;
-		this.order = order;
-		this.loader = loader;
-		this.exporter = exporter;
-		this.extensions = extensions;
-	}
+    /**
+     *
+     * Constructor
+     *
+     * @param key
+     *            key string
+     * @param order
+     *            defines the order of members.
+     * @param loader
+     * @param exporter
+     * @param extensions
+     *            which should be managed as that file type.
+     */
+    private CreasePatternFileTypeKey(final String key, final Integer order,
+            final Loader<Doc> loader,
+            final Exporter<Doc> exporter,
+            final String... extensions) {
+        this.keyText = key;
+        this.order = order;
+        this.loader = loader;
+        this.exporter = exporter;
+        this.extensions = extensions;
+    }
 
-	@Override
-	public String getKeyText() {
-		return keyText;
-	}
+    @Override
+    public String getKeyText() {
+        return keyText;
+    }
 
-	@Override
-	public String[] getExtensions() {
-		return extensions;
-	}
+    @Override
+    public String[] getExtensions() {
+        return extensions;
+    }
 
-	@Override
-	public Integer getOrder() {
-		return order;
-	}
+    @Override
+    public Integer getOrder() {
+        return order;
+    }
 
-	@Override
-	public Loader<Doc> getLoader() {
-		return loader;
-	}
+    @Override
+    public Loader<Doc> getLoader() {
+        return loader;
+    }
 
-	@Override
-	public Exporter<Doc> getExporter() {
-		return exporter;
-	}
+    @Override
+    public Exporter<Doc> getExporter() {
+        return exporter;
+    }
 }

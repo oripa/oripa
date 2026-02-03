@@ -27,33 +27,33 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class ArrayCopyCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public ArrayCopyCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public ArrayCopyCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+    @Override
+    public void execute() {
+        validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Painter painter = context.getPainter();
+        Painter painter = context.getPainter();
 
-		var parameter = context.getArrayCopyParameter();
+        var parameter = context.getArrayCopyParameter();
 
-		if (parameter.fillUp()) {
-			painter.fillUp(context.getPickedLines());
-		} else {
-			int row = parameter.rowCount();
-			int col = parameter.columnCount();
+        if (parameter.fillUp()) {
+            painter.fillUp(context.getPickedLines());
+        } else {
+            int row = parameter.rowCount();
+            int col = parameter.columnCount();
 
-			double interX = parameter.intervalX();
-			double interY = parameter.intervalY();
+            double interX = parameter.intervalX();
+            double interY = parameter.intervalY();
 
-			painter.copyWithTiling(row, col, interX, interY, context.getPickedLines());
-		}
-	}
+            painter.copyWithTiling(row, col, interX, interY, context.getPickedLines());
+        }
+    }
 
 }

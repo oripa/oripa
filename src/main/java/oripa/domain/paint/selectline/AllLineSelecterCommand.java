@@ -27,18 +27,18 @@ import oripa.value.OriLine;
  *
  */
 public class AllLineSelecterCommand implements Command {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public AllLineSelecterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public AllLineSelecterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		context.creasePatternUndo().pushUndoInfo();
-		context.getPainter().selectAllOriLines();
-		context.getCreasePattern().stream()
-				.filter(OriLine::isSelected)
-				.forEach(context::pushLine);
-	}
+    @Override
+    public void execute() {
+        context.creasePatternUndo().pushUndoInfo();
+        context.getPainter().selectAllOriLines();
+        context.getCreasePattern().stream()
+                .filter(OriLine::isSelected)
+                .forEach(context::pushLine);
+    }
 }

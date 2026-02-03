@@ -32,30 +32,30 @@ import org.junit.jupiter.api.Test;
  */
 class MathUtilTest {
 
-	@Test
-	void testNewtonMethod_XCubicMinus2Eq0() {
-		Function<Double, Double> f = (x) -> x * x * x - 2;
+    @Test
+    void testNewtonMethod_XCubicMinus2Eq0() {
+        Function<Double, Double> f = (x) -> x * x * x - 2;
 
-		var xAnswer = MathUtil.newtonMethod(f, 2, 1e-4, 1e-6);
+        var xAnswer = MathUtil.newtonMethod(f, 2, 1e-4, 1e-6);
 
-		assertEquals(Math.pow(2, 1.0 / 3), xAnswer, 1e-6);
-	}
+        assertEquals(Math.pow(2, 1.0 / 3), xAnswer, 1e-6);
+    }
 
-	@Test
-	void testPreciseSum() {
-		var values = new ArrayList<Double>();
-		for (int i = 0; i < 10; i++) {
-			values.add(0.1);
-		}
+    @Test
+    void testPreciseSum() {
+        var values = new ArrayList<Double>();
+        for (int i = 0; i < 10; i++) {
+            values.add(0.1);
+        }
 
-		var sum = MathUtil.preciseSum(values);
-		assertEquals(1, sum);
-	}
+        var sum = MathUtil.preciseSum(values);
+        assertEquals(1, sum);
+    }
 
-	@Test
-	void testPreciseSum_BigMagnitudeDifference() {
-		var sum = MathUtil.preciseSum(List.of(1.0, 1e100, 1.0, -1e100));
-		assertEquals(2.0, sum);
-	}
+    @Test
+    void testPreciseSum_BigMagnitudeDifference() {
+        var sum = MathUtil.preciseSum(List.of(1.0, 1e100, 1.0, -1e100));
+        assertEquals(2.0, sum);
+    }
 
 }

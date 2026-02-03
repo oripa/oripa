@@ -32,45 +32,45 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class LinePasterCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final SelectionOriginHolder originHolder;
-	private final ShiftedLineFactory factory;
+    private final PaintContext context;
+    private final SelectionOriginHolder originHolder;
+    private final ShiftedLineFactory factory;
 
-	public LinePasterCommand(final PaintContext context, final SelectionOriginHolder originHolder,
-			final ShiftedLineFactory factory) {
-		this.context = context;
-		this.originHolder = originHolder;
-		this.factory = factory;
-	}
+    public LinePasterCommand(final PaintContext context, final SelectionOriginHolder originHolder,
+            final ShiftedLineFactory factory) {
+        this.context = context;
+        this.originHolder = originHolder;
+        this.factory = factory;
+    }
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getVertexCount() == 1, "Wrong state. There should be 1 pickedVertices.");
+    @Override
+    public void execute() {
+        validateThat(() -> context.getVertexCount() == 1, "Wrong state. There should be 1 pickedVertices.");
 
-		Vector2d v = context.popVertex().get();
+        Vector2d v = context.popVertex().get();
 
-		if (context.getLineCount() == 0) {
-			return;
-		}
+        if (context.getLineCount() == 0) {
+            return;
+        }
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Vector2d origin = originHolder.getOrigin(context).orElseThrow();
+        Vector2d origin = originHolder.getOrigin(context).orElseThrow();
 
-		var offset = factory.createOffset(origin, v);
+        var offset = factory.createOffset(origin, v);
 
-		Painter painter = context.getPainter();
-		painter.addLines(
-				shiftLines(context.getPickedLines(), offset));
+        Painter painter = context.getPainter();
+        painter.addLines(
+                shiftLines(context.getPickedLines(), offset));
 
-		context.refreshCreasePattern();
-	}
+        context.refreshCreasePattern();
+    }
 
-	private List<OriLine> shiftLines(final Collection<OriLine> lines,
-			final Vector2d offset) {
+    private List<OriLine> shiftLines(final Collection<OriLine> lines,
+            final Vector2d offset) {
 
-		return lines.stream()
-				.map(l -> factory.createShiftedLine(l, offset))
-				.toList();
-	}
+        return lines.stream()
+                .map(l -> factory.createShiftedLine(l, offset))
+                .toList();
+    }
 }

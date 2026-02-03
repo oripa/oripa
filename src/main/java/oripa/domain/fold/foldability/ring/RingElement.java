@@ -19,38 +19,38 @@
 package oripa.domain.fold.foldability.ring;
 
 public class RingElement<V> {
-	private RingElement<V> next;
-	private RingElement<V> previous;
+    private RingElement<V> next;
+    private RingElement<V> previous;
 
-	private final int index;
-	private final V value;
+    private final int index;
+    private final V value;
 
-	RingElement(final int index, final V value) {
-		this.index = index;
-		this.value = value;
-	}
+    RingElement(final int index, final V value) {
+        this.index = index;
+        this.value = value;
+    }
 
-	public RingElement<V> getNext() {
-		return next;
-	}
+    public RingElement<V> getNext() {
+        return next;
+    }
 
-	void setNext(final RingElement<V> next) {
-		this.next = next;
-	}
+    void setNext(final RingElement<V> next) {
+        this.next = next;
+    }
 
-	public RingElement<V> getPrevious() {
-		return previous;
-	}
+    public RingElement<V> getPrevious() {
+        return previous;
+    }
 
-	void setPrevious(final RingElement<V> previous) {
-		this.previous = previous;
-	}
+    void setPrevious(final RingElement<V> previous) {
+        this.previous = previous;
+    }
 
-	public int getRingIndex() {
-		return index;
-	}
+    public int getRingIndex() {
+        return index;
+    }
 
-	public V getValue() {
-		return value;
-	}
+    public V getValue() {
+        return value;
+    }
 }

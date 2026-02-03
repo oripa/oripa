@@ -28,36 +28,36 @@ import oripa.domain.paint.core.SnapPointFactory;
  */
 public class SelectingSolutionLine extends AbstractActionState {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingSecondLine.class);
-		setNextClass(SelectingFirstVertexForFoldLine.class);
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingSecondLine.class);
+        setNextClass(SelectingFirstVertexForFoldLine.class);
 
-	}
+    }
 
-	@Override
-	protected boolean onAct(final PaintContext context, final boolean doSpecial) {
-		var solutionOpt = context.getSolutionLineToPick();
-		if (solutionOpt.isPresent()) {
-			return true;
-		}
+    @Override
+    protected boolean onAct(final PaintContext context, final boolean doSpecial) {
+        var solutionOpt = context.getSolutionLineToPick();
+        if (solutionOpt.isPresent()) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var snapPoints = new SnapPointFactory().createSnapPoints(context.getCreasePattern(),
-				context.getSolutionLineToPick().orElseThrow(), context.getPointEps());
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        var snapPoints = new SnapPointFactory().createSnapPoints(context.getCreasePattern(),
+                context.getSolutionLineToPick().orElseThrow(), context.getPointEps());
 
-		context.setSnapPoints(snapPoints);
-	}
+        context.setSnapPoints(snapPoints);
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.clearSolutionLines();
-		context.setSolutionLineToPick(null);
-		context.popLine();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.clearSolutionLines();
+        context.setSolutionLineToPick(null);
+        context.popLine();
+    }
 
 }

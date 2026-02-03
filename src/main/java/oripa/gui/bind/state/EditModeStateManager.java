@@ -18,52 +18,52 @@ import oripa.gui.presenter.creasepattern.EditMode;
  */
 public class EditModeStateManager implements StateManager<EditMode> {
 
-	private ApplicationState<EditMode> current, previous;
-	private final Map<EditMode, ApplicationState<EditMode>> lastCommands = new HashMap<>();
+    private ApplicationState<EditMode> current, previous;
+    private final Map<EditMode, ApplicationState<EditMode>> lastCommands = new HashMap<>();
 
-	@Override
-	public ApplicationState<EditMode> getCurrent() {
-		return current;
-	}
+    @Override
+    public ApplicationState<EditMode> getCurrent() {
+        return current;
+    }
 
-	@Override
-	public void push(final ApplicationState<EditMode> s) {
-		lastCommands.put(s.getGroup(), s);
+    @Override
+    public void push(final ApplicationState<EditMode> s) {
+        lastCommands.put(s.getGroup(), s);
 
-		if (current != null) {
-			// pushing copy or cut causes empty pasting
-			if (current.getGroup() != EditMode.COPY &&
-					current.getGroup() != EditMode.CUT) {
-				previous = current;
-			}
-		}
-		current = s;
-	}
+        if (current != null) {
+            // pushing copy or cut causes empty pasting
+            if (current.getGroup() != EditMode.COPY &&
+                    current.getGroup() != EditMode.CUT) {
+                previous = current;
+            }
+        }
+        current = s;
+    }
 
-	@Override
-	public Optional<ApplicationState<EditMode>> pop() {
-		if (current == previous) {
-			return Optional.empty();
-		}
+    @Override
+    public Optional<ApplicationState<EditMode>> pop() {
+        if (current == previous) {
+            return Optional.empty();
+        }
 
-		current = previous;
-		return Optional.of(current);
-	}
+        current = previous;
+        return Optional.of(current);
+    }
 
-	@Override
-	public Optional<ApplicationState<EditMode>> popLastOf(final EditMode group) {
-		if (!lastCommands.containsKey(group)) {
-			return Optional.empty();
-		}
+    @Override
+    public Optional<ApplicationState<EditMode>> popLastOf(final EditMode group) {
+        if (!lastCommands.containsKey(group)) {
+            return Optional.empty();
+        }
 
-		var lastCommand = lastCommands.get(group);
-		if (current == lastCommand) {
-			return Optional.empty();
-		}
+        var lastCommand = lastCommands.get(group);
+        if (current == lastCommand) {
+            return Optional.empty();
+        }
 
-		previous = current;
-		current = lastCommand;
+        previous = current;
+        current = lastCommand;
 
-		return Optional.of(current);
-	}
+        return Optional.of(current);
+    }
 }

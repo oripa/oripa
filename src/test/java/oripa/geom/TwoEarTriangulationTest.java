@@ -32,23 +32,23 @@ import oripa.vecmath.Vector2d;
  */
 class TwoEarTriangulationTest {
 
-	@Test
-	void testNonConvex() {
-		var polygon = new Polygon(List.of(
-				new Vector2d(0, 0),
-				new Vector2d(2, 0),
-				new Vector2d(2, 2),
-				new Vector2d(1, 2),
-				new Vector2d(1, 1),
-				new Vector2d(0, 1)));
+    @Test
+    void testNonConvex() {
+        var polygon = new Polygon(List.of(
+                new Vector2d(0, 0),
+                new Vector2d(2, 0),
+                new Vector2d(2, 2),
+                new Vector2d(1, 2),
+                new Vector2d(1, 1),
+                new Vector2d(0, 1)));
 
-		var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
+        var triangles = new TwoEarTriangulation().triangulate(polygon, 1e-6);
 
-		assertEquals(4, triangles.size());
-		for (var t : triangles) {
-			assertEquals(3, t.verticesCount());
-		}
-	}
+        assertEquals(4, triangles.size());
+        for (var t : triangles) {
+            assertEquals(3, t.verticesCount());
+        }
+    }
 
 //	@Test
 //	void testPointsOnOneEdge() {

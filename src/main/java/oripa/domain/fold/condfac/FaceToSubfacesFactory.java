@@ -32,17 +32,17 @@ import oripa.domain.fold.subface.SubFace;
  *
  */
 public class FaceToSubfacesFactory {
-	public Map<OriFace, Set<SubFace>> create(final List<OriFace> faces, final List<SubFace> subfaces) {
-		Map<OriFace, Set<SubFace>> subFacesOfEachFace = new HashMap<>();
+    public Map<OriFace, Set<SubFace>> create(final List<OriFace> faces, final List<SubFace> subfaces) {
+        Map<OriFace, Set<SubFace>> subFacesOfEachFace = new HashMap<>();
 
-		faces.forEach(face -> subFacesOfEachFace.put(face, new HashSet<>()));
+        faces.forEach(face -> subFacesOfEachFace.put(face, new HashSet<>()));
 
-		for (var subFace : subfaces) {
-			for (var face : subFace.ParentFacesIterable()) {
-				subFacesOfEachFace.get(face).add(subFace);
-			}
-		}
+        for (var subFace : subfaces) {
+            for (var face : subFace.ParentFacesIterable()) {
+                subFacesOfEachFace.get(face).add(subFace);
+            }
+        }
 
-		return subFacesOfEachFace;
-	}
+        return subFacesOfEachFace;
+    }
 }

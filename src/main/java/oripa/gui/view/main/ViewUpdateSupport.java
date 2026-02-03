@@ -25,19 +25,19 @@ import oripa.gui.view.ViewScreenUpdater;
  *
  */
 public class ViewUpdateSupport {
-	private final ViewScreenUpdater screenUpdater;
-	private final KeyProcessing keyProcessing;
+    private final ViewScreenUpdater screenUpdater;
+    private final KeyProcessing keyProcessing;
 
-	public ViewUpdateSupport(final ViewScreenUpdater screenUpdater, final KeyProcessing keyProcessing) {
-		this.screenUpdater = screenUpdater;
-		this.keyProcessing = keyProcessing;
-	}
+    public ViewUpdateSupport(final ViewScreenUpdater screenUpdater, final KeyProcessing keyProcessing) {
+        this.screenUpdater = screenUpdater;
+        this.keyProcessing = keyProcessing;
+    }
 
-	public ViewScreenUpdater getViewScreenUpdater() {
-		return screenUpdater;
-	}
+    public ViewScreenUpdater getViewScreenUpdater() {
+        return screenUpdater;
+    }
 
-	public KeyProcessing getKeyProcessing() {
-		return keyProcessing;
-	}
+    public KeyProcessing getKeyProcessing() {
+        return keyProcessing;
+    }
 }

@@ -15,46 +15,46 @@ import oripa.value.OriPoint;
  */
 public class TestCreasePatternFactory {
 
-	/**
-	 * creates a X shape composed by four lines.
-	 *
-	 * @param size
-	 * @param center
-	 * @return
-	 */
-	public Collection<OriLine> createCrossedLines(final double size, final OriPoint center) {
-		LinkedList<OriLine> creasePattern = new LinkedList<>();
+    /**
+     * creates a X shape composed by four lines.
+     *
+     * @param size
+     * @param center
+     * @return
+     */
+    public Collection<OriLine> createCrossedLines(final double size, final OriPoint center) {
+        LinkedList<OriLine> creasePattern = new LinkedList<>();
 
-		double partSize = size / 2;
+        double partSize = size / 2;
 
-		OriLine slashLeftTop = new OriLine(
-				new OriPoint(center.getX() - partSize, center.getY() - partSize),
-				center,
-				OriLine.Type.MOUNTAIN);
+        OriLine slashLeftTop = new OriLine(
+                new OriPoint(center.getX() - partSize, center.getY() - partSize),
+                center,
+                OriLine.Type.MOUNTAIN);
 
-		OriLine slashRightTop = new OriLine(
-				new OriPoint(center.getX() + partSize, center.getY() - partSize),
-				center,
-				OriLine.Type.MOUNTAIN);
+        OriLine slashRightTop = new OriLine(
+                new OriPoint(center.getX() + partSize, center.getY() - partSize),
+                center,
+                OriLine.Type.MOUNTAIN);
 
-		OriLine slashRightBottom = new OriLine(
-				new OriPoint(center.getX() + partSize, center.getY() + partSize),
-				center,
-				OriLine.Type.MOUNTAIN);
+        OriLine slashRightBottom = new OriLine(
+                new OriPoint(center.getX() + partSize, center.getY() + partSize),
+                center,
+                OriLine.Type.MOUNTAIN);
 
-		OriLine slashLeftBottom = new OriLine(
-				new OriPoint(center.getX() - partSize, center.getY() + partSize),
-				center,
-				OriLine.Type.MOUNTAIN);
+        OriLine slashLeftBottom = new OriLine(
+                new OriPoint(center.getX() - partSize, center.getY() + partSize),
+                center,
+                OriLine.Type.MOUNTAIN);
 
-		LineAdder adder = new LineAdder();
+        LineAdder adder = new LineAdder();
 
-		final double pointEps = 1e-7;
-		adder.addLine(slashLeftTop, creasePattern, pointEps);
-		adder.addLine(slashRightTop, creasePattern, pointEps);
-		adder.addLine(slashRightBottom, creasePattern, pointEps);
-		adder.addLine(slashLeftBottom, creasePattern, pointEps);
+        final double pointEps = 1e-7;
+        adder.addLine(slashLeftTop, creasePattern, pointEps);
+        adder.addLine(slashRightTop, creasePattern, pointEps);
+        adder.addLine(slashRightBottom, creasePattern, pointEps);
+        adder.addLine(slashLeftBottom, creasePattern, pointEps);
 
-		return creasePattern;
-	}
+        return creasePattern;
+    }
 }

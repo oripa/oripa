@@ -36,67 +36,67 @@ import oripa.persistence.entity.loader.FoldedModelLoaderFOLD;
  *
  */
 public class FoldedModelImageExporter {
-	private static final Logger logger = LoggerFactory.getLogger(FoldedModelImageExporter.class);
+    private static final Logger logger = LoggerFactory.getLogger(FoldedModelImageExporter.class);
 
-	static final String SVG_EXTENSION = ".svg";
-	static final String JPG_EXTENSION = ".jpg";
-	static final String PNG_EXTENSION = ".png";
+    static final String SVG_EXTENSION = ".svg";
+    static final String JPG_EXTENSION = ".jpg";
+    static final String PNG_EXTENSION = ".png";
 
-	static final List<String> AVAILABLE_EXTENSIONS = List.of(SVG_EXTENSION, JPG_EXTENSION, PNG_EXTENSION);
+    static final List<String> AVAILABLE_EXTENSIONS = List.of(SVG_EXTENSION, JPG_EXTENSION, PNG_EXTENSION);
 
-	public void export(final String inputFilePath, final int index, final boolean reverse,
-			final String outputFilePath, final double eps) {
+    public void export(final String inputFilePath, final int index, final boolean reverse,
+            final String outputFilePath, final double eps) {
 
-		final var lowerInputFilePath = inputFilePath.toLowerCase();
-		final var lowerOutputFilePath = outputFilePath.toLowerCase();
+        final var lowerInputFilePath = inputFilePath.toLowerCase();
+        final var lowerOutputFilePath = outputFilePath.toLowerCase();
 
-		if (!lowerInputFilePath.endsWith(".fold")) {
-			throw new IllegalArgumentException("Input format is not supported. acceptable format: .fold");
-		}
+        if (!lowerInputFilePath.endsWith(".fold")) {
+            throw new IllegalArgumentException("Input format is not supported. acceptable format: .fold");
+        }
 
-		if (AVAILABLE_EXTENSIONS.stream().noneMatch(lowerOutputFilePath::endsWith)) {
-			throw new IllegalArgumentException("Output format is not supported. acceptable format: "
-					+ String.join(",", AVAILABLE_EXTENSIONS));
-		}
+        if (AVAILABLE_EXTENSIONS.stream().noneMatch(lowerOutputFilePath::endsWith)) {
+            throw new IllegalArgumentException("Output format is not supported. acceptable format: "
+                    + String.join(",", AVAILABLE_EXTENSIONS));
+        }
 
-		var inputFileLoader = new FoldedModelLoaderFOLD();
+        var inputFileLoader = new FoldedModelLoaderFOLD();
 
-		var outputExtension = findExtension(outputFilePath);
+        var outputExtension = findExtension(outputFilePath);
 
-		var outputFileExporter = switch (outputExtension) {
-		case (SVG_EXTENSION) -> new FoldedModelExporterSVG(reverse);
-		default -> new FoldedModelPictureExporter();
-		};
+        var outputFileExporter = switch (outputExtension) {
+        case (SVG_EXTENSION) -> new FoldedModelExporterSVG(reverse);
+        default -> new FoldedModelPictureExporter();
+        };
 
-		try {
-			var inputModelEntityOpt = inputFileLoader.load(inputFilePath);
+        try {
+            var inputModelEntityOpt = inputFileLoader.load(inputFilePath);
 
-			var entity = new FoldedModelEntity(inputModelEntityOpt.orElseThrow().toFoldedModel(), index);
+            var entity = new FoldedModelEntity(inputModelEntityOpt.orElseThrow().toFoldedModel(), index);
 
-			Object config = switch (outputExtension) {
-			case (SVG_EXTENSION) -> null;
-			default -> new FoldedModelPictureConfig()
-					.setAmbientOcclusion(false)
-					.setColors(Color.GRAY.brighter(), Color.WHITE)
-					.setDrawEdges(true)
-					.setFaceOrderFlipped(reverse)
-					.setFillFaces(true)
-					.setEps(eps);
-			};
-			outputFileExporter.export(entity, outputFilePath, config);
+            Object config = switch (outputExtension) {
+            case (SVG_EXTENSION) -> null;
+            default -> new FoldedModelPictureConfig()
+                    .setAmbientOcclusion(false)
+                    .setColors(Color.GRAY.brighter(), Color.WHITE)
+                    .setDrawEdges(true)
+                    .setFaceOrderFlipped(reverse)
+                    .setFillFaces(true)
+                    .setEps(eps);
+            };
+            outputFileExporter.export(entity, outputFilePath, config);
 
-		} catch (Exception e) {
-			logger.error("image error", e);
-		}
-	}
+        } catch (Exception e) {
+            logger.error("image error", e);
+        }
+    }
 
-	private String findExtension(final String filePath) {
-		var regex = Pattern.compile("[.][\\w]+$");
-		var matcher = regex.matcher(filePath);
-		if (!matcher.find()) {
-			throw new RuntimeException("Wrong implementation.");
-		}
+    private String findExtension(final String filePath) {
+        var regex = Pattern.compile("[.][\\w]+$");
+        var matcher = regex.matcher(filePath);
+        if (!matcher.find()) {
+            throw new RuntimeException("Wrong implementation.");
+        }
 
-		return matcher.toMatchResult().group().toLowerCase();
-	}
+        return matcher.toMatchResult().group().toLowerCase();
+    }
 }

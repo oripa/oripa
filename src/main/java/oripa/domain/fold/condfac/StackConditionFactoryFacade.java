@@ -39,56 +39,56 @@ import oripa.util.StopWatch;
  *
  */
 public class StackConditionFactoryFacade {
-	private static final Logger logger = LoggerFactory.getLogger(StackConditionFactoryFacade.class);
+    private static final Logger logger = LoggerFactory.getLogger(StackConditionFactoryFacade.class);
 
-	private final Map<OriFace, Set<SubFace>> subFacesOfEachFace;
-	private final List<Integer>[][] overlappingFaceIndexIntersections;
-	private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge;
+    private final Map<OriFace, Set<SubFace>> subFacesOfEachFace;
+    private final List<Integer>[][] overlappingFaceIndexIntersections;
+    private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge;
 
-	private final List<OriFace> faces;
-	private final List<OriEdge> edges;
-	private final OverlapRelation overlapRelation;
-	private final double eps;
+    private final List<OriFace> faces;
+    private final List<OriEdge> edges;
+    private final OverlapRelation overlapRelation;
+    private final double eps;
 
-	public StackConditionFactoryFacade(final List<OriFace> faces, final List<OriEdge> edges,
-			final OverlapRelation overlapRelation,
-			final List<SubFace> subfaces, final double eps) {
+    public StackConditionFactoryFacade(final List<OriFace> faces, final List<OriEdge> edges,
+            final OverlapRelation overlapRelation,
+            final List<SubFace> subfaces, final double eps) {
 
-		this.faces = faces;
-		this.edges = edges;
-		this.overlapRelation = overlapRelation;
-		this.eps = eps;
+        this.faces = faces;
+        this.edges = edges;
+        this.overlapRelation = overlapRelation;
+        this.eps = eps;
 
-		var watch = new StopWatch(true);
-		subFacesOfEachFace = new FaceToSubfacesFactory().create(faces, subfaces);
-		logger.debug("create subfacesOfEachFace {}[ms]", watch.getMilliSec());
+        var watch = new StopWatch(true);
+        subFacesOfEachFace = new FaceToSubfacesFactory().create(faces, subfaces);
+        logger.debug("create subfacesOfEachFace {}[ms]", watch.getMilliSec());
 
-		watch.start();
-		overlappingFaceIndexIntersections = new OverlappingFaceIndexIntersectionFactory().create(
-				faces, overlapRelation);
-		logger.debug("create overlappingFaceIndexIntersections {}[ms]", watch.getMilliSec());
+        watch.start();
+        overlappingFaceIndexIntersections = new OverlappingFaceIndexIntersectionFactory().create(
+                faces, overlapRelation);
+        logger.debug("create overlappingFaceIndexIntersections {}[ms]", watch.getMilliSec());
 
-		watch.start();
-		faceIndicesOnHalfedge = new FaceIndicesOnHalfEdgeFactory().create(faces, eps);
-		logger.debug("create faceIndicesOnHalfedge {}[ms]", watch.getMilliSec());
+        watch.start();
+        faceIndicesOnHalfedge = new FaceIndicesOnHalfEdgeFactory().create(faces, eps);
+        logger.debug("create faceIndicesOnHalfedge {}[ms]", watch.getMilliSec());
 
-	}
+    }
 
-	public List<StackConditionOf3Faces> create3FaceConditions() {
-		return new StackConditionOf3FaceFactory().createAll(
-				faces, overlapRelation, overlappingFaceIndexIntersections, faceIndicesOnHalfedge);
-	}
+    public List<StackConditionOf3Faces> create3FaceConditions() {
+        return new StackConditionOf3FaceFactory().createAll(
+                faces, overlapRelation, overlappingFaceIndexIntersections, faceIndicesOnHalfedge);
+    }
 
-	public List<StackConditionOf4Faces> create4FaceCondtions() {
-		return new StackConditionOf4FaceFactory().createAll(
-				faces, edges, overlapRelation, subFacesOfEachFace, eps);
-	}
+    public List<StackConditionOf4Faces> create4FaceCondtions() {
+        return new StackConditionOf4FaceFactory().createAll(
+                faces, edges, overlapRelation, subFacesOfEachFace, eps);
+    }
 
-	public List<Integer>[][] getOverlappingFaceIndexIntersections() {
-		return overlappingFaceIndexIntersections;
-	}
+    public List<Integer>[][] getOverlappingFaceIndexIntersections() {
+        return overlappingFaceIndexIntersections;
+    }
 
-	public Map<OriHalfedge, Set<Integer>> getFaceIndicesOnHalfedge() {
-		return faceIndicesOnHalfedge;
-	}
+    public Map<OriHalfedge, Set<Integer>> getFaceIndicesOnHalfedge() {
+        return faceIndicesOnHalfedge;
+    }
 }

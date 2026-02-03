@@ -25,37 +25,37 @@ import static java.lang.Math.sqrt;
  *
  */
 public class Vector3d {
-	private final double x;
-	private final double y;
-	private final double z;
+    private final double x;
+    private final double y;
+    private final double z;
 
-	public Vector3d(final double x, final double y, final double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+    public Vector3d(final double x, final double y, final double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
-	public double getX() {
-		return x;
-	}
+    public double getX() {
+        return x;
+    }
 
-	public double getY() {
-		return y;
-	}
+    public double getY() {
+        return y;
+    }
 
-	public double getZ() {
-		return z;
-	}
+    public double getZ() {
+        return z;
+    }
 
-	public double length() {
-		return sqrt(x * x + y * y + z * z);
-	}
+    public double length() {
+        return sqrt(x * x + y * y + z * z);
+    }
 
-	public Vector3d multiply(final double a) {
-		return new Vector3d(a * x, a * y, a * z);
-	}
+    public Vector3d multiply(final double a) {
+        return new Vector3d(a * x, a * y, a * z);
+    }
 
-	public Vector3d normalization() {
-		return multiply(1.0 / length());
-	}
+    public Vector3d normalization() {
+        return multiply(1.0 / length());
+    }
 }

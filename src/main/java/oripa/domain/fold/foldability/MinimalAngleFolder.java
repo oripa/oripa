@@ -26,35 +26,35 @@ import oripa.domain.fold.foldability.ring.RingArrayList;
  */
 class MinimalAngleFolder {
 
-	/**
-	 * fold the minimal angle and remove the related indices.
-	 *
-	 * @param ring
-	 * @param index
-	 *            of minimal angle
-	 * @param indices
-	 * @return index of the angle after fold
-	 */
-	public int foldPartially(final RingArrayList<LineGap> ring, final int index,
-			final MinimalAngleIndexManager indices) {
-		var previousElement = ring.getPrevious(index);
-		var targetElement = ring.getElement(index);
-		var nextElement = ring.getNext(index);
+    /**
+     * fold the minimal angle and remove the related indices.
+     *
+     * @param ring
+     * @param index
+     *            of minimal angle
+     * @param indices
+     * @return index of the angle after fold
+     */
+    public int foldPartially(final RingArrayList<LineGap> ring, final int index,
+            final MinimalAngleIndexManager indices) {
+        var previousElement = ring.getPrevious(index);
+        var targetElement = ring.getElement(index);
+        var nextElement = ring.getNext(index);
 
-		var previous = previousElement.getValue();
-		var target = targetElement.getValue();
-		var next = nextElement.getValue();
+        var previous = previousElement.getValue();
+        var target = targetElement.getValue();
+        var next = nextElement.getValue();
 
-		previous.setAngleGap(previous.getAngleGap() + next.getAngleGap() - target.getAngleGap());
+        previous.setAngleGap(previous.getAngleGap() + next.getAngleGap() - target.getAngleGap());
 
-		indices.remove(previousElement.getRingIndex());
-		indices.remove(targetElement.getRingIndex());
-		indices.remove(nextElement.getRingIndex());
+        indices.remove(previousElement.getRingIndex());
+        indices.remove(targetElement.getRingIndex());
+        indices.remove(nextElement.getRingIndex());
 
-		ring.dropConnection(nextElement.getRingIndex());
-		ring.dropConnection(targetElement.getRingIndex());
+        ring.dropConnection(nextElement.getRingIndex());
+        ring.dropConnection(targetElement.getRingIndex());
 
-		return previousElement.getRingIndex();
-	}
+        return previousElement.getRingIndex();
+    }
 
 }

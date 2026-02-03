@@ -32,33 +32,33 @@ import oripa.domain.fold.subface.SubFace;
  *
  */
 public record FoldedModel(
-		OrigamiModel origamiModel,
-		List<OverlapRelation> overlapRelations,
-		List<SubFace> subfaces) {
+        OrigamiModel origamiModel,
+        List<OverlapRelation> overlapRelations,
+        List<SubFace> subfaces) {
 
-	/**
-	 * Constructor
-	 */
-	public FoldedModel(final OrigamiModel origamiModel, final List<OverlapRelation> overlapRelations,
-			final List<SubFace> subfaces) {
-		this.origamiModel = origamiModel;
-		this.overlapRelations = Collections.unmodifiableList(overlapRelations);
-		this.subfaces = Collections.unmodifiableList(subfaces);
-	}
+    /**
+     * Constructor
+     */
+    public FoldedModel(final OrigamiModel origamiModel, final List<OverlapRelation> overlapRelations,
+            final List<SubFace> subfaces) {
+        this.origamiModel = origamiModel;
+        this.overlapRelations = Collections.unmodifiableList(overlapRelations);
+        this.subfaces = Collections.unmodifiableList(subfaces);
+    }
 
-	/**
-	 *
-	 * @return the number of foldable patterns.
-	 */
-	public int getFoldablePatternCount() {
-		return overlapRelations.size();
-	}
+    /**
+     *
+     * @return the number of foldable patterns.
+     */
+    public int getFoldablePatternCount() {
+        return overlapRelations.size();
+    }
 
-	/**
-	 *
-	 * @return whether the model is after fold or not.
-	 */
-	public boolean isFolded() {
-		return origamiModel.isFolded();
-	}
+    /**
+     *
+     * @return whether the model is after fold or not.
+     */
+    public boolean isFolded() {
+        return origamiModel.isFolded();
+    }
 }

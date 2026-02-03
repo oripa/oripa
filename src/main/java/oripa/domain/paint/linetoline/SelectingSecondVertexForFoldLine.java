@@ -8,24 +8,24 @@ import oripa.domain.paint.core.PickingVertex;
 
 public class SelectingSecondVertexForFoldLine extends PickingVertex {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingFirstVertexForFoldLine.class);
-		setNextClass(SelectingFirstLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingFirstVertexForFoldLine.class);
+        setNextClass(SelectingFirstLine.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var vertices = List.of(context.getVertex(0), context.getVertex(1));
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        var vertices = List.of(context.getVertex(0), context.getVertex(1));
 
-		context.clear(false);
+        context.clear(false);
 
-		context.pushVertex(vertices.get(0));
-		context.pushVertex(vertices.get(1));
+        context.pushVertex(vertices.get(0));
+        context.pushVertex(vertices.get(1));
 
-		var command = new PickedVerticesConnectionLineAdderCommand(context);
+        var command = new PickedVerticesConnectionLineAdderCommand(context);
 
-		command.execute();
-	}
+        command.execute();
+    }
 
 }

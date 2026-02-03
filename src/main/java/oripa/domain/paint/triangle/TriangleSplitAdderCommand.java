@@ -27,29 +27,29 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class TriangleSplitAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public TriangleSplitAdderCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public TriangleSplitAdderCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 3;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 3;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		var first = context.getVertex(0);
-		var second = context.getVertex(1);
-		var third = context.getVertex(2);
+        var first = context.getVertex(0);
+        var second = context.getVertex(1);
+        var third = context.getVertex(2);
 
-		context.clear(false);
+        context.clear(false);
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Painter painter = context.getPainter();
-		painter.addTriangleDivideLines(
-				first, second, third, context.getLineTypeOfNewLines());
-	}
+        Painter painter = context.getPainter();
+        painter.addTriangleDivideLines(
+                first, second, third, context.getLineTypeOfNewLines());
+    }
 
 }

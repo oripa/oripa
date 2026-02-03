@@ -29,47 +29,47 @@ import oripa.vecmath.Vector2d;
 
 class GeomUtilTest {
 
-	@Test
-	void test_getCrossPoint_Line_Line() {
-		var l0 = new Line(new Vector2d(1, 0), new Vector2d(-1, 1));
-		var l1 = new Line(new Vector2d(0, 0), new Vector2d(1, 1));
+    @Test
+    void test_getCrossPoint_Line_Line() {
+        var l0 = new Line(new Vector2d(1, 0), new Vector2d(-1, 1));
+        var l1 = new Line(new Vector2d(0, 0), new Vector2d(1, 1));
 
-		var cp = GeomUtil.getCrossPoint(l0, l1).get();
+        var cp = GeomUtil.getCrossPoint(l0, l1).get();
 
-		assertEquals(0.5, cp.getX(), 1e-8);
-		assertEquals(0.5, cp.getY(), 1e-8);
+        assertEquals(0.5, cp.getX(), 1e-8);
+        assertEquals(0.5, cp.getY(), 1e-8);
 
-	}
+    }
 
-	@Test
-	void test_getBisectorLine() {
-		var v0 = new Vector2d(1, 0);
-		var v1 = new Vector2d(0, 0);
-		var v2 = new Vector2d(0, 1);
+    @Test
+    void test_getBisectorLine() {
+        var v0 = new Vector2d(1, 0);
+        var v1 = new Vector2d(0, 0);
+        var v2 = new Vector2d(0, 1);
 
-		var bisector = GeomUtil.getBisectorLine(v0, v1, v2);
+        var bisector = GeomUtil.getBisectorLine(v0, v1, v2);
 
-		var point = bisector.getPoint();
-		var direction = bisector.getDirection();
+        var point = bisector.getPoint();
+        var direction = bisector.getDirection();
 
-		assertEquals(v1.getX(), point.getX(), 1e-8);
-		assertEquals(v1.getY(), point.getY(), 1e-8);
+        assertEquals(v1.getX(), point.getX(), 1e-8);
+        assertEquals(v1.getY(), point.getY(), 1e-8);
 
-		assertEquals(Math.sqrt(2) / 2, direction.getX(), 1e-8);
-		assertEquals(Math.sqrt(2) / 2, direction.getY(), 1e-8);
-	}
+        assertEquals(Math.sqrt(2) / 2, direction.getX(), 1e-8);
+        assertEquals(Math.sqrt(2) / 2, direction.getY(), 1e-8);
+    }
 
-	@ParameterizedTest
-	@CsvSource({
-			"1,1, 0,0, 2,0, 1,0",
-	})
-	void testGetNearestPointToSegment(final double px, final double py, final double sx, final double sy,
-			final double ex, final double ey, final double nx, final double ny) {
-		var p = new Vector2d(px, py);
-		var segment = new Segment(sx, sy, ex, ey);
-		var nearest = GeomUtil.getNearestPointToSegment(p, segment);
+    @ParameterizedTest
+    @CsvSource({
+            "1,1, 0,0, 2,0, 1,0",
+    })
+    void testGetNearestPointToSegment(final double px, final double py, final double sx, final double sy,
+            final double ex, final double ey, final double nx, final double ny) {
+        var p = new Vector2d(px, py);
+        var segment = new Segment(sx, sy, ex, ey);
+        var nearest = GeomUtil.getNearestPointToSegment(p, segment);
 
-		assertEquals(nx, nearest.getX(), 1e-8);
-		assertEquals(ny, nearest.getY(), 1e-8);
-	}
+        assertEquals(nx, nearest.getX(), 1e-8);
+        assertEquals(ny, nearest.getY(), 1e-8);
+    }
 }

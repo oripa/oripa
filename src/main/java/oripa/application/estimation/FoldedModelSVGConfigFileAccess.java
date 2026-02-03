@@ -32,19 +32,19 @@ import oripa.resource.Constants;
  *
  */
 public class FoldedModelSVGConfigFileAccess {
-	public void save(final FoldedModelSVGConfig config) throws IOException {
-		var writer = new FoldedModelSVGConfigWriter();
-		writer.write(config, Constants.FOLDED_SVG_CONFIG_PATH);
-	}
+    public void save(final FoldedModelSVGConfig config) throws IOException {
+        var writer = new FoldedModelSVGConfigWriter();
+        writer.write(config, Constants.FOLDED_SVG_CONFIG_PATH);
+    }
 
-	public Optional<FoldedModelSVGConfig> load() throws WrongDataFormatException {
-		var reader = new FoldedModelSVGConfigReader();
+    public Optional<FoldedModelSVGConfig> load() throws WrongDataFormatException {
+        var reader = new FoldedModelSVGConfigReader();
 
-		try {
-			return Optional.of(reader.read(Constants.FOLDED_SVG_CONFIG_PATH));
-		} catch (IOException e) {
-			return Optional.empty();
-		}
-	}
+        try {
+            return Optional.of(reader.read(Constants.FOLDED_SVG_CONFIG_PATH));
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
 
 }

@@ -8,31 +8,31 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
 public class ChangeHint implements ChangeViewSetting {
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	private final MainFrameSetting frameSetting;
+    private final MainFrameSetting frameSetting;
 
-	private final String id;
+    private final String id;
 
-	public ChangeHint(final MainFrameSetting mainFrameSetting, final String resourceID,
-			final ResourceHolder resourceHolder) {
-		frameSetting = mainFrameSetting;
-		this.id = resourceID;
-		this.resourceHolder = resourceHolder;
-	}
+    public ChangeHint(final MainFrameSetting mainFrameSetting, final String resourceID,
+            final ResourceHolder resourceHolder) {
+        frameSetting = mainFrameSetting;
+        this.id = resourceID;
+        this.resourceHolder = resourceHolder;
+    }
 
-	@Override
-	public void changeViewSetting() {
+    @Override
+    public void changeViewSetting() {
 
-		ResourceBundle resource = resourceHolder.getResource(ResourceKey.EXPLANATION);
+        ResourceBundle resource = resourceHolder.getResource(ResourceKey.EXPLANATION);
 
-		String hint = null;
-		try {
-			hint = resource.getString(id);
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
-		frameSetting.setHint(hint);
-	}
+        String hint = null;
+        try {
+            hint = resource.getString(id);
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
+        frameSetting.setHint(hint);
+    }
 
 }

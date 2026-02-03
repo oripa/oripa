@@ -28,46 +28,46 @@ import oripa.util.Command;
  *
  */
 public class UnselectAllItemsActionListener implements Runnable {
-	private final MouseActionHolder actionHolder;
-	private final PaintContext context;
-	private final StatePopper<EditMode> statePopper;
-	private final ScreenUpdater screenUpdater;
+    private final MouseActionHolder actionHolder;
+    private final PaintContext context;
+    private final StatePopper<EditMode> statePopper;
+    private final ScreenUpdater screenUpdater;
 
-	/**
-	 * Constructor
-	 */
-	public UnselectAllItemsActionListener(
-			final MouseActionHolder actionHolder,
-			final PaintContext aContext,
-			final StatePopper<EditMode> statePopper,
-			final ScreenUpdater updater) {
-		this.actionHolder = actionHolder;
-		context = aContext;
-		this.statePopper = statePopper;
-		screenUpdater = updater;
-	}
+    /**
+     * Constructor
+     */
+    public UnselectAllItemsActionListener(
+            final MouseActionHolder actionHolder,
+            final PaintContext aContext,
+            final StatePopper<EditMode> statePopper,
+            final ScreenUpdater updater) {
+        this.actionHolder = actionHolder;
+        context = aContext;
+        this.statePopper = statePopper;
+        screenUpdater = updater;
+    }
 
-	@Override
-	public void run() {
-		Command command = new AllItemUnselecterCommand(context);
+    @Override
+    public void run() {
+        Command command = new AllItemUnselecterCommand(context);
 
-		command.execute();
+        command.execute();
 
-		var currentActionOpt = actionHolder.getMouseAction();
+        var currentActionOpt = actionHolder.getMouseAction();
 
-		currentActionOpt.ifPresent(currentAction -> unselectAll(currentAction));
-	}
+        currentActionOpt.ifPresent(currentAction -> unselectAll(currentAction));
+    }
 
-	private void unselectAll(final GraphicMouseAction currentAction) {
-		currentAction.destroy(context);
-		currentAction.recover(context);
+    private void unselectAll(final GraphicMouseAction currentAction) {
+        currentAction.destroy(context);
+        currentAction.recover(context);
 
-		if (currentAction.getEditMode() == EditMode.COPY ||
-				currentAction.getEditMode() == EditMode.CUT) {
-			statePopper.run();
-		}
+        if (currentAction.getEditMode() == EditMode.COPY ||
+                currentAction.getEditMode() == EditMode.CUT) {
+            statePopper.run();
+        }
 
-		screenUpdater.updateScreen();
-	}
+        screenUpdater.updateScreen();
+    }
 
 }

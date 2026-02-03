@@ -34,31 +34,31 @@ import oripa.vecmath.Vector2d;
  *
  */
 class RoratedLineFactoryTest {
-	RotatedLineFactory factory = new RotatedLineFactory();
-	static final double EPS = 1e-8;
+    RotatedLineFactory factory = new RotatedLineFactory();
+    static final double EPS = 1e-8;
 
-	@Test
-	void test() {
-		var creasePattern = new DefaultPaperFactory().create();
+    @Test
+    void test() {
+        var creasePattern = new DefaultPaperFactory().create();
 
-		// a line on 45 degree steps touching the boundary.
-		var p0 = new Vector2d(-200, -100);
-		var p1 = new Vector2d(-100, -200);
-		var line = new OriLine(p0, p1, Type.MOUNTAIN);
+        // a line on 45 degree steps touching the boundary.
+        var p0 = new Vector2d(-200, -100);
+        var p1 = new Vector2d(-100, -200);
+        var line = new OriLine(p0, p1, Type.MOUNTAIN);
 
-		creasePattern.add(line);
+        creasePattern.add(line);
 
-		// rotates around the end point
-		var center = p1;
-		var rotatedLines = factory.createRotatedLines(
-				center.getX(), center.getY(), 45, 8,
-				List.of(line), creasePattern,
-				EPS);
+        // rotates around the end point
+        var center = p1;
+        var rotatedLines = factory.createRotatedLines(
+                center.getX(), center.getY(), 45, 8,
+                List.of(line), creasePattern,
+                EPS);
 
-		assertEquals(3, rotatedLines.stream()
-				.filter(rl -> rl.length() > EPS)
-				.filter(rl -> rl.pointStream().anyMatch(p -> center.equals(p, EPS)))
-				.count());
-	}
+        assertEquals(3, rotatedLines.stream()
+                .filter(rl -> rl.length() > EPS)
+                .filter(rl -> rl.pointStream().anyMatch(p -> center.equals(p, EPS)))
+                .count());
+    }
 
 }

@@ -27,22 +27,22 @@ import oripa.domain.paint.core.PickingVertex;
  */
 public class SelectingSecondVertex extends PickingVertex {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingLine.class);
-		setNextClass(SelectingSolutionLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingLine.class);
+        setNextClass(SelectingSolutionLine.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var command = new PointToLineThroughPointAxiomLineSetterCommand(context);
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        var command = new PointToLineThroughPointAxiomLineSetterCommand(context);
 
-		command.execute();
-	}
+        command.execute();
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popLine();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popLine();
+    }
 
 }

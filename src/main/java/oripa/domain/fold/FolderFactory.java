@@ -39,62 +39,62 @@ import oripa.domain.fold.subface.SubFacesFactory;
  */
 public class FolderFactory {
 
-	/**
-	 *
-	 * @param type
-	 * @return Instance of {@link Folder}. Note that the instance for
-	 *         {@link ModelType#UNASSIGNED} can be used repeatedly only for the
-	 *         same {@link OrigamiModel} instance since the folder creates
-	 *         subfaces only once to reduce computation time.
-	 */
-	public Folder create(final ModelType type) {
-		return switch (type) {
-		case ASSIGNED -> createAssigned();
+    /**
+     *
+     * @param type
+     * @return Instance of {@link Folder}. Note that the instance for
+     *         {@link ModelType#UNASSIGNED} can be used repeatedly only for the
+     *         same {@link OrigamiModel} instance since the folder creates
+     *         subfaces only once to reduce computation time.
+     */
+    public Folder create(final ModelType type) {
+        return switch (type) {
+        case ASSIGNED -> createAssigned();
 
-		case UNASSIGNED -> createUnassigned();
+        case UNASSIGNED -> createUnassigned();
 
-		case ERROR_CONTAINING -> createErrorContaining();
+        case ERROR_CONTAINING -> createErrorContaining();
 
-		default -> throw new IllegalArgumentException();
-		};
-	}
+        default -> throw new IllegalArgumentException();
+        };
+    }
 
-	private Folder createAssigned() {
-		var subfacesFactory = new SubFacesFactory(
-				new FacesToCreasePatternConverter(
-						new CreasePatternFactory(),
+    private Folder createAssigned() {
+        var subfacesFactory = new SubFacesFactory(
+                new FacesToCreasePatternConverter(
+                        new CreasePatternFactory(),
 //						new CrossingLineSplitterSweepLineAlgorithm(),
-						new CrossingLineSplitterNaiveAlgorithm(new LineDivider()),
-						new PointsMerger(),
-						new AnalyticOverlappingLineMerger()),
-				new OrigamiModelFactory(),
-				new SplitFacesToSubFacesConverter(),
-				new ParentFacesCollector());
+                        new CrossingLineSplitterNaiveAlgorithm(new LineDivider()),
+                        new PointsMerger(),
+                        new AnalyticOverlappingLineMerger()),
+                new OrigamiModelFactory(),
+                new SplitFacesToSubFacesConverter(),
+                new ParentFacesCollector());
 
-		return new AssignedModelFolder(
-				new SimpleFolder(),
-				new LayerOrderEnumerator(subfacesFactory, true));
-	}
+        return new AssignedModelFolder(
+                new SimpleFolder(),
+                new LayerOrderEnumerator(subfacesFactory, true));
+    }
 
-	private Folder createUnassigned() {
-		var subfacesFactory = new SubfacesOneTimeFactory(
-				new FacesToCreasePatternConverter(
-						new CreasePatternFactory(),
+    private Folder createUnassigned() {
+        var subfacesFactory = new SubfacesOneTimeFactory(
+                new FacesToCreasePatternConverter(
+                        new CreasePatternFactory(),
 //						new CrossingLineSplitterSweepLineAlgorithm(),
-						new CrossingLineSplitterNaiveAlgorithm(new LineDivider()),
-						new PointsMerger(),
-						new AnalyticOverlappingLineMerger()),
-				new OrigamiModelFactory(),
-				new SplitFacesToSubFacesConverter(),
-				new ParentFacesCollector());
+                        new CrossingLineSplitterNaiveAlgorithm(new LineDivider()),
+                        new PointsMerger(),
+                        new AnalyticOverlappingLineMerger()),
+                new OrigamiModelFactory(),
+                new SplitFacesToSubFacesConverter(),
+                new ParentFacesCollector());
 
-		return new UnassignedModelFolder(
-				new SimpleFolder(),
-				new LayerOrderEnumerator(subfacesFactory, false));
-	}
+        return new UnassignedModelFolder(
+                new SimpleFolder(),
+                new LayerOrderEnumerator(subfacesFactory, false));
+    }
 
-	private Folder createErrorContaining() {
-		return new ErrorAllowedFolder(new SimpleFolder());
-	}
+    private Folder createErrorContaining() {
+        return new ErrorAllowedFolder(new SimpleFolder());
+    }
 
 }

@@ -29,22 +29,22 @@ import oripa.gui.view.View;
  */
 public interface FileChooserView extends View {
 
-	@Override
-	default View getTopLevelView() {
-		return null;
-	}
+    @Override
+    default View getTopLevelView() {
+        return null;
+    }
 
-	/**
-	 *
-	 * @return true if user selected a file. false if user canceled.
-	 */
-	boolean showDialog(FrameView parent);
+    /**
+     *
+     * @return true if user selected a file. false if user canceled.
+     */
+    boolean showDialog(FrameView parent);
 
-	File getSelectedFile();
+    File getSelectedFile();
 
-	String[] getSelectedFilterExtensions();
+    String[] getSelectedFilterExtensions();
 
-	String getSelectedFilterDescription();
+    String getSelectedFilterDescription();
 
-	void showErrorMessage(Exception e);
+    void showErrorMessage(Exception e);
 }

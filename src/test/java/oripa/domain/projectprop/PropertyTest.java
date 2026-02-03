@@ -31,102 +31,102 @@ import org.junit.jupiter.api.Test;
  *
  */
 class PropertyTest {
-	Property property;
+    Property property;
 
-	@BeforeEach
-	void setup() {
-		property = new Property();
-	}
+    @BeforeEach
+    void setup() {
+        property = new Property();
+    }
 
-	@Test
-	void testExtractFrontColorCode() {
-		testExtraction(OptionParser.Keys.FRONT_COLOR, property::extractFrontColorCode);
-	}
+    @Test
+    void testExtractFrontColorCode() {
+        testExtraction(OptionParser.Keys.FRONT_COLOR, property::extractFrontColorCode);
+    }
 
-	@Test
-	void testExtractBackColorCode() {
-		testExtraction(OptionParser.Keys.BACK_COLOR, property::extractBackColorCode);
-	}
+    @Test
+    void testExtractBackColorCode() {
+        testExtraction(OptionParser.Keys.BACK_COLOR, property::extractBackColorCode);
+    }
 
-	void testExtraction(final String key, final Supplier<String> extractor) {
-		final String VALUE = "#123456";
+    void testExtraction(final String key, final Supplier<String> extractor) {
+        final String VALUE = "#123456";
 
-		var memo = "//" + key + ":" + VALUE + System.lineSeparator()
-				+ "memo12345";
-		property.setMemo(memo);
+        var memo = "//" + key + ":" + VALUE + System.lineSeparator()
+                + "memo12345";
+        property.setMemo(memo);
 
-		assertEquals(VALUE, extractor.get());
-	}
+        assertEquals(VALUE, extractor.get());
+    }
 
-	@Test
-	void testExtractFrontColorCode_notExistInMemo() {
-		testExtraction_notExistInMemo(property::extractFrontColorCode);
-	}
+    @Test
+    void testExtractFrontColorCode_notExistInMemo() {
+        testExtraction_notExistInMemo(property::extractFrontColorCode);
+    }
 
-	@Test
-	void testExtractBackColorCode_notExistInMemo() {
-		testExtraction_notExistInMemo(property::extractBackColorCode);
-	}
+    @Test
+    void testExtractBackColorCode_notExistInMemo() {
+        testExtraction_notExistInMemo(property::extractBackColorCode);
+    }
 
-	void testExtraction_notExistInMemo(final Supplier<String> extractor) {
-		var memo = "memo12345";
-		property.setMemo(memo);
+    void testExtraction_notExistInMemo(final Supplier<String> extractor) {
+        var memo = "memo12345";
+        property.setMemo(memo);
 
-		assertNull(extractor.get());
-	}
+        assertNull(extractor.get());
+    }
 
-	@Test
-	void testPutFrontColorCode_update() {
-		testPut_update(OptionParser.Keys.FRONT_COLOR, property::putFrontColorCode);
-	}
+    @Test
+    void testPutFrontColorCode_update() {
+        testPut_update(OptionParser.Keys.FRONT_COLOR, property::putFrontColorCode);
+    }
 
-	@Test
-	void testPutBackColorCode_update() {
-		testPut_update(OptionParser.Keys.BACK_COLOR, property::putBackColorCode);
-	}
+    @Test
+    void testPutBackColorCode_update() {
+        testPut_update(OptionParser.Keys.BACK_COLOR, property::putBackColorCode);
+    }
 
-	void testPut_update(final String key, final Consumer<String> put) {
-		final String OLD_VALUE = "#987654";
-		final String VALUE = "#123456";
+    void testPut_update(final String key, final Consumer<String> put) {
+        final String OLD_VALUE = "#987654";
+        final String VALUE = "#123456";
 
-		var memo = "//" + key + ":" + OLD_VALUE + System.lineSeparator()
-				+ "memo12345";
+        var memo = "//" + key + ":" + OLD_VALUE + System.lineSeparator()
+                + "memo12345";
 
-		var updatedMemo = OptionParser.HEAD_COMMENT + System.lineSeparator()
-				+ "//" + key + ":" + VALUE + System.lineSeparator()
-				+ "memo12345";
+        var updatedMemo = OptionParser.HEAD_COMMENT + System.lineSeparator()
+                + "//" + key + ":" + VALUE + System.lineSeparator()
+                + "memo12345";
 
-		property.setMemo(memo);
+        property.setMemo(memo);
 
-		put.accept(VALUE);
+        put.accept(VALUE);
 
-		assertEquals(updatedMemo, property.getMemo());
-	}
+        assertEquals(updatedMemo, property.getMemo());
+    }
 
-	@Test
-	void testPutFrontColorCode_insert() {
-		testPut_insert(OptionParser.Keys.FRONT_COLOR, property::putFrontColorCode);
-	}
+    @Test
+    void testPutFrontColorCode_insert() {
+        testPut_insert(OptionParser.Keys.FRONT_COLOR, property::putFrontColorCode);
+    }
 
-	@Test
-	void testPutBackColorCode_insert() {
-		testPut_insert(OptionParser.Keys.BACK_COLOR, property::putBackColorCode);
-	}
+    @Test
+    void testPutBackColorCode_insert() {
+        testPut_insert(OptionParser.Keys.BACK_COLOR, property::putBackColorCode);
+    }
 
-	void testPut_insert(final String key, final Consumer<String> put) {
-		final String VALUE = "#123456";
+    void testPut_insert(final String key, final Consumer<String> put) {
+        final String VALUE = "#123456";
 
-		var memo = "memo12345";
+        var memo = "memo12345";
 
-		var updatedMemo = OptionParser.HEAD_COMMENT + System.lineSeparator()
-				+ "//" + key + ":" + VALUE + System.lineSeparator()
-				+ "memo12345";
+        var updatedMemo = OptionParser.HEAD_COMMENT + System.lineSeparator()
+                + "//" + key + ":" + VALUE + System.lineSeparator()
+                + "memo12345";
 
-		property.setMemo(memo);
+        property.setMemo(memo);
 
-		put.accept(VALUE);
+        put.accept(VALUE);
 
-		assertEquals(updatedMemo, property.getMemo());
-	}
+        assertEquals(updatedMemo, property.getMemo());
+    }
 
 }

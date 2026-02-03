@@ -30,24 +30,24 @@ import org.junit.jupiter.api.Test;
  */
 class GeometryTest {
 
-	@Test
-	void testSortByAngle() {
-		var coords = List.of(
-				List.of(0.0, 0.0),
-				List.of(1.0, 0.0),
-				List.of(1.0, 1.0),
-				List.of(0.0, 1.0),
-				List.of(2.0, 1.0));
+    @Test
+    void testSortByAngle() {
+        var coords = List.of(
+                List.of(0.0, 0.0),
+                List.of(1.0, 0.0),
+                List.of(1.0, 1.0),
+                List.of(0.0, 1.0),
+                List.of(2.0, 1.0));
 
-		var v = 2;
-		var verticesAround = List.of(0, 1, 3, 4); // around v
+        var v = 2;
+        var verticesAround = List.of(0, 1, 3, 4); // around v
 
-		var sorted = Geometry.sortByAngle(v, verticesAround, coords);
+        var sorted = Geometry.sortByAngle(v, verticesAround, coords);
 
-		assertEquals(0, sorted.get(0));
-		assertEquals(1, sorted.get(1));
-		assertEquals(4, sorted.get(2));
-		assertEquals(3, sorted.get(3));
-	}
+        assertEquals(0, sorted.get(0));
+        assertEquals(1, sorted.get(1));
+        assertEquals(4, sorted.get(2));
+        assertEquals(3, sorted.get(3));
+    }
 
 }

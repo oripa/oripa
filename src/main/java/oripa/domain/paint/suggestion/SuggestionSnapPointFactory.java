@@ -29,20 +29,20 @@ import oripa.vecmath.Vector2d;
  *
  */
 class SuggestionSnapPointFactory {
-	/**
-	 * Ignores the end points of the lines incident to {@code sp}.
-	 *
-	 * @param context
-	 * @param sp
-	 *            the end point of suggested ray.
-	 * @param angles
-	 * @return snap points for suggestions.
-	 */
-	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Vector2d sp,
-			final Collection<Double> angles) {
+    /**
+     * Ignores the end points of the lines incident to {@code sp}.
+     *
+     * @param context
+     * @param sp
+     *            the end point of suggested ray.
+     * @param angles
+     * @return snap points for suggestions.
+     */
+    public Collection<Vector2d> createSnapPoints(final PaintContext context, final Vector2d sp,
+            final Collection<Double> angles) {
 
-		return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles,
-				context.getPointEps());
-	}
+        return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles,
+                context.getPointEps());
+    }
 
 }

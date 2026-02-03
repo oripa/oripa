@@ -23,58 +23,58 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Node;
 
 class ValueNodeParser {
-	private final TypedXPath xpath;
-	private static final String INT_NODE_NAME = "int";
-	private static final String DOUBLE_NODE_NAME = "double";
-	private static final String STRING_NODE_NAME = "string";
+    private final TypedXPath xpath;
+    private static final String INT_NODE_NAME = "int";
+    private static final String DOUBLE_NODE_NAME = "double";
+    private static final String STRING_NODE_NAME = "string";
 
-	public ValueNodeParser(final TypedXPath xpath) {
-		this.xpath = xpath;
-	}
+    public ValueNodeParser(final TypedXPath xpath) {
+        this.xpath = xpath;
+    }
 
-	private String createIntExpression(final String propertyName) {
-		return createObjectPropertyExpression(propertyName, INT_NODE_NAME);
-	}
+    private String createIntExpression(final String propertyName) {
+        return createObjectPropertyExpression(propertyName, INT_NODE_NAME);
+    }
 
-	private String createDoubleExpression(final String propertyName) {
-		return createObjectPropertyExpression(propertyName, DOUBLE_NODE_NAME);
-	}
+    private String createDoubleExpression(final String propertyName) {
+        return createObjectPropertyExpression(propertyName, DOUBLE_NODE_NAME);
+    }
 
-	private String createObjectPropertyExpression(final String propertyName, final String type) {
-		return "void[@property='" + propertyName + "']/" + type;
-	}
+    private String createObjectPropertyExpression(final String propertyName, final String type) {
+        return "void[@property='" + propertyName + "']/" + type;
+    }
 
-	private String parseString(final String expression, final Node ancestorNode) throws XPathExpressionException {
-		var node = xpath.evaluateAsNode(expression, ancestorNode);
-		if (node == null) {
-			return "";
-		}
-		return node.getTextContent();
-	}
+    private String parseString(final String expression, final Node ancestorNode) throws XPathExpressionException {
+        var node = xpath.evaluateAsNode(expression, ancestorNode);
+        if (node == null) {
+            return "";
+        }
+        return node.getTextContent();
+    }
 
-	public String parseObjectName(final Node objectNode) throws XPathExpressionException {
-		return parseString(STRING_NODE_NAME, objectNode);
-	}
+    public String parseObjectName(final Node objectNode) throws XPathExpressionException {
+        return parseString(STRING_NODE_NAME, objectNode);
+    }
 
-	public String parseStringValue(final Node objectNode) throws XPathExpressionException {
-		return parseString("void[@method='set']/" + STRING_NODE_NAME, objectNode);
-	}
+    public String parseStringValue(final Node objectNode) throws XPathExpressionException {
+        return parseString("void[@method='set']/" + STRING_NODE_NAME, objectNode);
+    }
 
-	public int parseIntProperty(final String propertyName, final Node parentNode) throws XPathExpressionException {
-		var node = xpath.evaluateAsNode(createIntExpression(propertyName), parentNode);
-		if (node == null) {
-			return 0;
-		}
-		return Integer.parseInt(node.getTextContent());
-	}
+    public int parseIntProperty(final String propertyName, final Node parentNode) throws XPathExpressionException {
+        var node = xpath.evaluateAsNode(createIntExpression(propertyName), parentNode);
+        if (node == null) {
+            return 0;
+        }
+        return Integer.parseInt(node.getTextContent());
+    }
 
-	public double parseDoubleProperty(final String propertyName, final Node parentNode)
-			throws XPathExpressionException {
-		var node = xpath.evaluateAsNode(createDoubleExpression(propertyName), parentNode);
-		if (node == null) {
-			return 0;
-		}
-		return Double.parseDouble(node.getTextContent());
-	}
+    public double parseDoubleProperty(final String propertyName, final Node parentNode)
+            throws XPathExpressionException {
+        var node = xpath.evaluateAsNode(createDoubleExpression(propertyName), parentNode);
+        if (node == null) {
+            return 0;
+        }
+        return Double.parseDouble(node.getTextContent());
+    }
 
 }

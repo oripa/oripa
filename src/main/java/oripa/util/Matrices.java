@@ -28,75 +28,75 @@ import java.util.function.Supplier;
  */
 public class Matrices {
 
-	public static <T> void fill(final T[][] matrix, final Supplier<T> initialValueFactory) {
-		for (int row = 0; row < matrix.length; row++) {
-			for (int column = 0; column < matrix[row].length; column++) {
-				matrix[row][column] = initialValueFactory.get();
-			}
-		}
-	}
+    public static <T> void fill(final T[][] matrix, final Supplier<T> initialValueFactory) {
+        for (int row = 0; row < matrix.length; row++) {
+            for (int column = 0; column < matrix[row].length; column++) {
+                matrix[row][column] = initialValueFactory.get();
+            }
+        }
+    }
 
-	/**
-	 * copies {@code from} matrix to {@code to} matrix.
-	 *
-	 * @param from
-	 * @param to
-	 */
-	public static void copy(final int[][] from, final int[][] to) {
-		for (int i = 0; i < from.length; i++) {
-			System.arraycopy(from[i], 0, to[i], 0, from[i].length);
-		}
-	}
+    /**
+     * copies {@code from} matrix to {@code to} matrix.
+     *
+     * @param from
+     * @param to
+     */
+    public static void copy(final int[][] from, final int[][] to) {
+        for (int i = 0; i < from.length; i++) {
+            System.arraycopy(from[i], 0, to[i], 0, from[i].length);
+        }
+    }
 
-	/**
-	 * copies {@code from} matrix to {@code to} matrix.
-	 *
-	 * @param from
-	 * @param to
-	 */
-	public static void copy(final byte[][] from, final byte[][] to) {
-		for (int i = 0; i < from.length; i++) {
-			System.arraycopy(from[i], 0, to[i], 0, from[i].length);
-		}
-	}
+    /**
+     * copies {@code from} matrix to {@code to} matrix.
+     *
+     * @param from
+     * @param to
+     */
+    public static void copy(final byte[][] from, final byte[][] to) {
+        for (int i = 0; i < from.length; i++) {
+            System.arraycopy(from[i], 0, to[i], 0, from[i].length);
+        }
+    }
 
-	public static void copy(final long[][] from, final long[][] to) {
-		for (int i = 0; i < from.length; i++) {
-			System.arraycopy(from[i], 0, to[i], 0, from[i].length);
-		}
-	}
+    public static void copy(final long[][] from, final long[][] to) {
+        for (int i = 0; i < from.length; i++) {
+            System.arraycopy(from[i], 0, to[i], 0, from[i].length);
+        }
+    }
 
-	/**
-	 * creates a new matrix and copy the values of {@code from} to the new one.
-	 *
-	 * @param from
-	 *            is assume to be a m x n matrix.
-	 * @return deep copy of {@code from}.
-	 */
-	public static int[][] clone(final int[][] from) {
-		var to = new int[from.length][from[0].length];
-		copy(from, to);
-		return to;
-	}
+    /**
+     * creates a new matrix and copy the values of {@code from} to the new one.
+     *
+     * @param from
+     *            is assume to be a m x n matrix.
+     * @return deep copy of {@code from}.
+     */
+    public static int[][] clone(final int[][] from) {
+        var to = new int[from.length][from[0].length];
+        copy(from, to);
+        return to;
+    }
 
-	/**
-	 * creates a new matrix and copy the values of {@code from} to the new one.
-	 *
-	 * @param from
-	 *            is assume to be a m x n matrix.
-	 * @return deep copy of {@code from}.
-	 */
-	public static byte[][] clone(final byte[][] from) {
-		var to = new byte[from.length][from[0].length];
-		copy(from, to);
-		return to;
-	}
+    /**
+     * creates a new matrix and copy the values of {@code from} to the new one.
+     *
+     * @param from
+     *            is assume to be a m x n matrix.
+     * @return deep copy of {@code from}.
+     */
+    public static byte[][] clone(final byte[][] from) {
+        var to = new byte[from.length][from[0].length];
+        copy(from, to);
+        return to;
+    }
 
-	public static String toString(final int[][] mat) {
-		var strings = List.of(mat).stream()
-				.map(a -> String.join(",", Arrays.toString(a)))
-				.toList();
+    public static String toString(final int[][] mat) {
+        var strings = List.of(mat).stream()
+                .map(a -> String.join(",", Arrays.toString(a)))
+                .toList();
 
-		return String.join(",", strings);
-	}
+        return String.join(",", strings);
+    }
 }

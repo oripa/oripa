@@ -10,31 +10,31 @@ import oripa.domain.paint.PaintContext;
  */
 public abstract class PickingLine extends AbstractActionState {
 
-	public PickingLine() {
-		super();
-	}
+    public PickingLine() {
+        super();
+    }
 
-	/**
-	 * Picks the nearest line and push it into context.
-	 *
-	 * @return true if the action succeed, false otherwise.
-	 */
+    /**
+     * Picks the nearest line and push it into context.
+     *
+     * @return true if the action succeed, false otherwise.
+     */
 
-	@Override
-	protected boolean onAct(final PaintContext context, final boolean doSpecial) {
-		var pickedOpt = context.getCandidateLineToPick();
+    @Override
+    protected boolean onAct(final PaintContext context, final boolean doSpecial) {
+        var pickedOpt = context.getCandidateLineToPick();
 
-		pickedOpt.ifPresent(context::pushLine);
+        pickedOpt.ifPresent(context::pushLine);
 
-		return pickedOpt.isPresent();
-	}
+        return pickedOpt.isPresent();
+    }
 
-	/**
-	 * delete from context the latest picked line.
-	 */
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popLine();
-	}
+    /**
+     * delete from context the latest picked line.
+     */
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popLine();
+    }
 
 }

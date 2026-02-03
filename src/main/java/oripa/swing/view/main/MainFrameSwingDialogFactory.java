@@ -31,32 +31,32 @@ import oripa.gui.view.main.PropertyDialogView;
  */
 public class MainFrameSwingDialogFactory implements MainFrameDialogFactory {
 
-	private final ArrayCopyDialogFactory arrayCopyDialogFactory;
-	private final CircleCopyDialogFactory circleCopyDialogFactory;
-	private final PropertyDialogFactory propertyDialogFactory;
+    private final ArrayCopyDialogFactory arrayCopyDialogFactory;
+    private final CircleCopyDialogFactory circleCopyDialogFactory;
+    private final PropertyDialogFactory propertyDialogFactory;
 
-	@Inject
-	public MainFrameSwingDialogFactory(final ArrayCopyDialogFactory arrayCopyDialogFactory,
-			final CircleCopyDialogFactory circleCopyDialogFactory,
-			final PropertyDialogFactory propertyDialogFactory) {
-		this.arrayCopyDialogFactory = arrayCopyDialogFactory;
-		this.circleCopyDialogFactory = circleCopyDialogFactory;
-		this.propertyDialogFactory = propertyDialogFactory;
-	}
+    @Inject
+    public MainFrameSwingDialogFactory(final ArrayCopyDialogFactory arrayCopyDialogFactory,
+            final CircleCopyDialogFactory circleCopyDialogFactory,
+            final PropertyDialogFactory propertyDialogFactory) {
+        this.arrayCopyDialogFactory = arrayCopyDialogFactory;
+        this.circleCopyDialogFactory = circleCopyDialogFactory;
+        this.propertyDialogFactory = propertyDialogFactory;
+    }
 
-	@Override
-	public ArrayCopyDialogView createArrayCopyDialog(final FrameView owner) {
-		return arrayCopyDialogFactory.create(owner);
-	}
+    @Override
+    public ArrayCopyDialogView createArrayCopyDialog(final FrameView owner) {
+        return arrayCopyDialogFactory.create(owner);
+    }
 
-	@Override
-	public CircleCopyDialogView createCircleCopyDialog(final FrameView owner) {
-		return circleCopyDialogFactory.create(owner);
-	}
+    @Override
+    public CircleCopyDialogView createCircleCopyDialog(final FrameView owner) {
+        return circleCopyDialogFactory.create(owner);
+    }
 
-	@Override
-	public PropertyDialogView createPropertyDialog(final FrameView parent) {
-		return propertyDialogFactory.create(parent);
-	}
+    @Override
+    public PropertyDialogView createPropertyDialog(final FrameView parent) {
+        return propertyDialogFactory.create(parent);
+    }
 
 }

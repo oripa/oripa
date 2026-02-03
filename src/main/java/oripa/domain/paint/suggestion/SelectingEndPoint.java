@@ -29,33 +29,33 @@ import oripa.util.Command;
  *
  */
 public class SelectingEndPoint extends PickingVertex {
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingStartPoint.class);
-		setNextClass(SelectingStartPoint.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingStartPoint.class);
+        setNextClass(SelectingStartPoint.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
 
-		if (context.getVertexCount() != 2) {
-			throw new IllegalStateException("wrong state: impossible vertex selection.");
-		}
+        if (context.getVertexCount() != 2) {
+            throw new IllegalStateException("wrong state: impossible vertex selection.");
+        }
 
-		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
-				context.getPointEps());
-		var typeOpt = new MaekawaTheoremSuggester().suggest(vertex);
+        var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
+                context.getPointEps());
+        var typeOpt = new MaekawaTheoremSuggester().suggest(vertex);
 
-		typeOpt.ifPresentOrElse(type -> {
-			Command command = new PickedVerticesConnectionLineAdderCommand(context, type);
-			command.execute();
-		}, () -> context.clear(false));
-	}
+        typeOpt.ifPresentOrElse(type -> {
+            Command command = new PickedVerticesConnectionLineAdderCommand(context, type);
+            command.execute();
+        }, () -> context.clear(false));
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-		context.clearSnapPoints();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popVertex();
+        context.clearSnapPoints();
+    }
 
 }

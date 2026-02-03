@@ -6,22 +6,22 @@ import oripa.util.Command;
 
 public class SelectingVertexForSymmetric extends PickingVertex {
 
-	public SelectingVertexForSymmetric() {
-		super();
-	}
+    public SelectingVertexForSymmetric() {
+        super();
+    }
 
-	@Override
-	protected void initialize() {
-	}
+    @Override
+    protected void initialize() {
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		if (context.getVertexCount() < 3) {
-			return;
-		}
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        if (context.getVertexCount() < 3) {
+            return;
+        }
 
-		Command command = new SymmetricLineAdderCommand(context, doSpecial);
-		command.execute();
-	}
+        Command command = new SymmetricLineAdderCommand(context, doSpecial);
+        command.execute();
+    }
 
 }

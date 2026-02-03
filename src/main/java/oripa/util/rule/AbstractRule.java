@@ -24,76 +24,76 @@ package oripa.util.rule;
  */
 public abstract class AbstractRule<Variable> implements Rule<Variable> {
 
-	private class Denied implements Rule<Variable> {
-		Rule<Variable> rule;
+    private class Denied implements Rule<Variable> {
+        Rule<Variable> rule;
 
-		/**
-		 * Constructor
-		 */
-		public Denied(final Rule<Variable> rule) {
-			this.rule = rule;
-		}
+        /**
+         * Constructor
+         */
+        public Denied(final Rule<Variable> rule) {
+            this.rule = rule;
+        }
 
-		/*
-		 * (non Javadoc)
-		 *
-		 * @see oripa.domain.fold.rule.Rule#asDenied()
-		 */
-		@Override
-		public Rule<Variable> asDenied() {
-			return rule;
-		}
+        /*
+         * (non Javadoc)
+         *
+         * @see oripa.domain.fold.rule.Rule#asDenied()
+         */
+        @Override
+        public Rule<Variable> asDenied() {
+            return rule;
+        }
 
-		/*
-		 * (non Javadoc)
-		 *
-		 * @see oripa.domain.fold.rule.Rule#holds(java.lang.Object)
-		 */
-		@Override
-		public boolean holds(final Variable var) {
-			return rule.violates(var);
-		}
+        /*
+         * (non Javadoc)
+         *
+         * @see oripa.domain.fold.rule.Rule#holds(java.lang.Object)
+         */
+        @Override
+        public boolean holds(final Variable var) {
+            return rule.violates(var);
+        }
 
-		/*
-		 * (non Javadoc)
-		 *
-		 * @see oripa.domain.fold.rule.Rule#violates(java.lang.Object)
-		 */
-		@Override
-		public boolean violates(final Variable var) {
-			return rule.holds(var);
-		}
+        /*
+         * (non Javadoc)
+         *
+         * @see oripa.domain.fold.rule.Rule#violates(java.lang.Object)
+         */
+        @Override
+        public boolean violates(final Variable var) {
+            return rule.holds(var);
+        }
 
-		@Override
-		public String getName() {
-			return rule.getName();
-		}
-	}
+        @Override
+        public String getName() {
+            return rule.getName();
+        }
+    }
 
-	private final String name;
-	private final Denied deniedRule = new Denied(this);
+    private final String name;
+    private final Denied deniedRule = new Denied(this);
 
-	public AbstractRule(final String name) {
-		this.name = name;
-	}
+    public AbstractRule(final String name) {
+        this.name = name;
+    }
 
-	@Override
-	public boolean violates(final Variable var) {
-		return holds(var) == false;
-	}
+    @Override
+    public boolean violates(final Variable var) {
+        return holds(var) == false;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.fold.rule.Rule#asDenied()
-	 */
-	@Override
-	public Rule<Variable> asDenied() {
-		return deniedRule;
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.domain.fold.rule.Rule#asDenied()
+     */
+    @Override
+    public Rule<Variable> asDenied() {
+        return deniedRule;
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 }

@@ -28,140 +28,140 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 public class Frame {
-	@SerializedName("frame_title")
-	@Expose
-	private String frameTitle;
+    @SerializedName("frame_title")
+    @Expose
+    private String frameTitle;
 
-	@SerializedName("frame_classes")
-	@Expose
-	private List<String> frameClasses;
+    @SerializedName("frame_classes")
+    @Expose
+    private List<String> frameClasses;
 
-	@SerializedName("frame_attributes")
-	@Expose
-	private List<String> frameAttributes;
+    @SerializedName("frame_attributes")
+    @Expose
+    private List<String> frameAttributes;
 
-	@SerializedName("frame_description")
-	@Expose
-	private String frameDescription;
+    @SerializedName("frame_description")
+    @Expose
+    private String frameDescription;
 
-	@SerializedName("vertices_coords")
-	@Expose
-	private List<List<Double>> verticesCoords = null;
+    @SerializedName("vertices_coords")
+    @Expose
+    private List<List<Double>> verticesCoords = null;
 
-	@SerializedName("faces_vertices")
-	@Expose
-	private List<List<Integer>> facesVertices = null;
+    @SerializedName("faces_vertices")
+    @Expose
+    private List<List<Integer>> facesVertices = null;
 
-	@SerializedName("edges_vertices")
-	@Expose
-	private List<List<Integer>> edgesVertices = null;
+    @SerializedName("edges_vertices")
+    @Expose
+    private List<List<Integer>> edgesVertices = null;
 
-	@SerializedName("edges_assignment")
-	@Expose
-	private List<String> edgesAssignment = null;
+    @SerializedName("edges_assignment")
+    @Expose
+    private List<String> edgesAssignment = null;
 
-	@SerializedName("faceOrders")
-	@Expose
-	private List<List<Integer>> faceOrders = null;
+    @SerializedName("faceOrders")
+    @Expose
+    private List<List<Integer>> faceOrders = null;
 
-	@SerializedName("frame_parent")
-	@Expose
-	private Integer frameParent = null;
+    @SerializedName("frame_parent")
+    @Expose
+    private Integer frameParent = null;
 
-	@SerializedName("frame_inherit")
-	@Expose
-	private Boolean frameInherit = null;
+    @SerializedName("frame_inherit")
+    @Expose
+    private Boolean frameInherit = null;
 
-	public String getFrameTitle() {
-		return frameTitle;
-	}
+    public String getFrameTitle() {
+        return frameTitle;
+    }
 
-	public void setFrameTitle(final String frameTitle) {
-		this.frameTitle = frameTitle;
-	}
+    public void setFrameTitle(final String frameTitle) {
+        this.frameTitle = frameTitle;
+    }
 
-	public List<String> getFrameClasses() {
-		return frameClasses;
-	}
+    public List<String> getFrameClasses() {
+        return frameClasses;
+    }
 
-	public void setFrameClasses(final List<String> frameClasses) {
-		this.frameClasses = frameClasses;
-	}
+    public void setFrameClasses(final List<String> frameClasses) {
+        this.frameClasses = frameClasses;
+    }
 
-	public List<String> getFrameAttributes() {
-		return frameAttributes;
-	}
+    public List<String> getFrameAttributes() {
+        return frameAttributes;
+    }
 
-	public void setFrameAttributes(final List<String> frameAttributes) {
-		this.frameAttributes = frameAttributes;
-	}
+    public void setFrameAttributes(final List<String> frameAttributes) {
+        this.frameAttributes = frameAttributes;
+    }
 
-	public String getFrameDescription() {
-		return frameDescription;
-	}
+    public String getFrameDescription() {
+        return frameDescription;
+    }
 
-	public void setFrameDescription(final String frameDescription) {
-		this.frameDescription = frameDescription;
-	}
+    public void setFrameDescription(final String frameDescription) {
+        this.frameDescription = frameDescription;
+    }
 
-	public List<List<Double>> getVerticesCoords() {
-		return verticesCoords;
-	}
+    public List<List<Double>> getVerticesCoords() {
+        return verticesCoords;
+    }
 
-	public void setVerticesCoords(final List<List<Double>> verticesCoords) {
-		this.verticesCoords = verticesCoords;
-	}
+    public void setVerticesCoords(final List<List<Double>> verticesCoords) {
+        this.verticesCoords = verticesCoords;
+    }
 
-	public List<List<Integer>> getFacesVertices() {
-		return facesVertices;
-	}
+    public List<List<Integer>> getFacesVertices() {
+        return facesVertices;
+    }
 
-	public void setFacesVertices(final List<List<Integer>> facesVertices) {
-		this.facesVertices = facesVertices;
-	}
+    public void setFacesVertices(final List<List<Integer>> facesVertices) {
+        this.facesVertices = facesVertices;
+    }
 
-	public List<List<Integer>> getEdgesVertices() {
-		return edgesVertices;
-	}
+    public List<List<Integer>> getEdgesVertices() {
+        return edgesVertices;
+    }
 
-	public void setEdgesVertices(final List<List<Integer>> edgesVertices) {
-		this.edgesVertices = edgesVertices;
-	}
+    public void setEdgesVertices(final List<List<Integer>> edgesVertices) {
+        this.edgesVertices = edgesVertices;
+    }
 
-	public List<String> getEdgesAssignment() {
-		return edgesAssignment;
-	}
+    public List<String> getEdgesAssignment() {
+        return edgesAssignment;
+    }
 
-	public void setEdgesAssignment(final List<String> edgesAssignment) {
-		this.edgesAssignment = edgesAssignment;
-	}
+    public void setEdgesAssignment(final List<String> edgesAssignment) {
+        this.edgesAssignment = edgesAssignment;
+    }
 
-	public List<List<Integer>> getFaceOrders() {
-		return faceOrders;
-	}
+    public List<List<Integer>> getFaceOrders() {
+        return faceOrders;
+    }
 
-	public void setFaceOrders(final List<List<Integer>> faceOrders) {
-		this.faceOrders = faceOrders;
-	}
+    public void setFaceOrders(final List<List<Integer>> faceOrders) {
+        this.faceOrders = faceOrders;
+    }
 
-	public Integer getFrameParent() {
-		return frameParent;
-	}
+    public Integer getFrameParent() {
+        return frameParent;
+    }
 
-	public void setFrameParent(final Integer frameParent) {
-		this.frameParent = frameParent;
-	}
+    public void setFrameParent(final Integer frameParent) {
+        this.frameParent = frameParent;
+    }
 
-	public Boolean getFrameInherit() {
-		return frameInherit;
-	}
+    public Boolean getFrameInherit() {
+        return frameInherit;
+    }
 
-	public void setFrameInherit(final Boolean frameInherit) {
-		this.frameInherit = frameInherit;
-	}
+    public void setFrameInherit(final Boolean frameInherit) {
+        this.frameInherit = frameInherit;
+    }
 
-	public boolean frameClassesContains(final String frameClass) {
-		return getFrameClasses() == null || getFrameClasses().contains(frameClass);
-	}
+    public boolean frameClassesContains(final String frameClass) {
+        return getFrameClasses() == null || getFrameClasses().contains(frameClass);
+    }
 
 }

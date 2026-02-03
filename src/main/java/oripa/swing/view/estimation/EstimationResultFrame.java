@@ -45,144 +45,144 @@ import oripa.swing.view.util.ListItemSelectionPanel;
 
 public class EstimationResultFrame extends JFrame implements EstimationResultFrameView, WindowListener {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final ListItemSelectionPanel modelSelectionPanel;
-	private final FoldedModelScreen screen;
-	private final EstimationResultUI ui;
-	private final JLabel hintLabel;
+    private final ListItemSelectionPanel modelSelectionPanel;
+    private final FoldedModelScreen screen;
+    private final EstimationResultUI ui;
+    private final JLabel hintLabel;
 
-	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
+    private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
 
-	private Consumer<FrameView> onCloseListener;
+    private Consumer<FrameView> onCloseListener;
 
-	public EstimationResultFrame(final ResourceHolder resourceHolder) {
-		setBounds(0, 0, 850, 750);
-		setLayout(new BorderLayout());
+    public EstimationResultFrame(final ResourceHolder resourceHolder) {
+        setBounds(0, 0, 850, 750);
+        setLayout(new BorderLayout());
 
-		screen = new FoldedModelScreen();
-		ui = new EstimationResultUI(resourceHolder);
+        screen = new FoldedModelScreen();
+        ui = new EstimationResultUI(resourceHolder);
 
-		modelSelectionPanel = new ListItemSelectionPanel(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID), resourceHolder);
-		hintLabel = new JLabel(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.HINT_LABEL_ID));
-		;
+        modelSelectionPanel = new ListItemSelectionPanel(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID), resourceHolder);
+        hintLabel = new JLabel(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.HINT_LABEL_ID));
+        ;
 
-		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
+        setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
 
-		ui.setScreen(screen);
+        ui.setScreen(screen);
 
-		JScrollPane uiScroll = new JScrollPane(ui, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		uiScroll.setPreferredSize(new Dimension(235, 800));
-		uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+        JScrollPane uiScroll = new JScrollPane(ui, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        uiScroll.setPreferredSize(new Dimension(235, 800));
+        uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 
-		add(modelSelectionPanel, BorderLayout.NORTH);
-		add(uiScroll, BorderLayout.WEST);
-		add(screen, BorderLayout.CENTER);
-		add(hintLabel, BorderLayout.SOUTH);
+        add(modelSelectionPanel, BorderLayout.NORTH);
+        add(uiScroll, BorderLayout.WEST);
+        add(screen, BorderLayout.CENTER);
+        add(hintLabel, BorderLayout.SOUTH);
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		addWindowListener(this);
-	}
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        addWindowListener(this);
+    }
 
-	@Override
-	public EstimationResultUIView getUI() {
-		return ui;
-	}
+    @Override
+    public EstimationResultUIView getUI() {
+        return ui;
+    }
 
-	@Override
-	public void addModelSwitchListener(final Consumer<Integer> listener) {
-		modelSelectionPanel.addPropertyChangeListener(
-				ListItemSelectionPanel.INDEX,
-				e -> listener.accept((Integer) e.getNewValue()));
-	}
+    @Override
+    public void addModelSwitchListener(final Consumer<Integer> listener) {
+        modelSelectionPanel.addPropertyChangeListener(
+                ListItemSelectionPanel.INDEX,
+                e -> listener.accept((Integer) e.getNewValue()));
+    }
 
-	@Override
-	public void setModelCount(final int count) {
-		modelSelectionPanel.setItemCount(count);
-	}
+    @Override
+    public void setModelCount(final int count) {
+        modelSelectionPanel.setItemCount(count);
+    }
 
-	@Override
-	public void setModel(final FoldedModel foldedModel, final double eps) {
-		if (foldedModel.getFoldablePatternCount() == 0) {
-			screen.setModel(null, 0, eps);
-			ui.setModel(null);
-			return;
-		}
-		screen.setModel(foldedModel, 0, eps);
-		ui.setModel(foldedModel);
-	}
+    @Override
+    public void setModel(final FoldedModel foldedModel, final double eps) {
+        if (foldedModel.getFoldablePatternCount() == 0) {
+            screen.setModel(null, 0, eps);
+            ui.setModel(null);
+            return;
+        }
+        screen.setModel(foldedModel, 0, eps);
+        ui.setModel(foldedModel);
+    }
 
-	@Override
-	public void setColors(final Color front, final Color back) {
-		ui.setColors(front, back);
-	}
+    @Override
+    public void setColors(final Color front, final Color back) {
+        ui.setColors(front, back);
+    }
 
-	@Override
-	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
-		ui.setSaveColorsListener(listener);
-	}
+    @Override
+    public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
+        ui.setSaveColorsListener(listener);
+    }
 
-	@Override
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
-		var oldListener = modelIndexChangeListenerMap.get(parentOfListener);
-		modelSelectionPanel.removePropertyChangeListener(oldListener);
+    @Override
+    public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
+        var oldListener = modelIndexChangeListenerMap.get(parentOfListener);
+        modelSelectionPanel.removePropertyChangeListener(oldListener);
 
-		modelIndexChangeListenerMap.put(parentOfListener, listener);
-		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
-	}
+        modelIndexChangeListenerMap.put(parentOfListener, listener);
+        modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
+    }
 
-	@Override
-	public void removeModelIndexChangeListeners() {
-		modelIndexChangeListenerMap.clear();
-		modelSelectionPanel.removePropertyChangeListeners(ListItemSelectionPanel.INDEX);
-	}
+    @Override
+    public void removeModelIndexChangeListeners() {
+        modelIndexChangeListenerMap.clear();
+        modelSelectionPanel.removePropertyChangeListeners(ListItemSelectionPanel.INDEX);
+    }
 
-	@Override
-	public void selectModel(final int index) {
-		modelSelectionPanel.selectItem(index);
-	}
+    @Override
+    public void selectModel(final int index) {
+        modelSelectionPanel.selectItem(index);
+    }
 
-	@Override
-	public void setOnCloseListener(final Consumer<FrameView> listener) {
-		onCloseListener = listener;
-	}
+    @Override
+    public void setOnCloseListener(final Consumer<FrameView> listener) {
+        onCloseListener = listener;
+    }
 
-	@Override
-	public void windowOpened(final WindowEvent e) {
+    @Override
+    public void windowOpened(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowClosing(final WindowEvent e) {
-	}
+    @Override
+    public void windowClosing(final WindowEvent e) {
+    }
 
-	@Override
-	public void windowClosed(final WindowEvent e) {
-		onCloseListener.accept(this);
+    @Override
+    public void windowClosed(final WindowEvent e) {
+        onCloseListener.accept(this);
 
-		removeModelIndexChangeListeners();
-	}
+        removeModelIndexChangeListeners();
+    }
 
-	@Override
-	public void windowIconified(final WindowEvent e) {
+    @Override
+    public void windowIconified(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowDeiconified(final WindowEvent e) {
+    @Override
+    public void windowDeiconified(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowActivated(final WindowEvent e) {
+    @Override
+    public void windowActivated(final WindowEvent e) {
 
-	}
+    }
 
-	@Override
-	public void windowDeactivated(final WindowEvent e) {
+    @Override
+    public void windowDeactivated(final WindowEvent e) {
 
-	}
+    }
 }

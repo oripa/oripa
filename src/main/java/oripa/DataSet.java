@@ -31,146 +31,146 @@ import oripa.value.OriLine;
 // This change disables to read old opx file since serialization target becomes different.
 public class DataSet {
 
-	private int mainVersion;
-	private int subVersion;
-	public OriLineProxy[] lines;
+    private int mainVersion;
+    private int subVersion;
+    public OriLineProxy[] lines;
 
-	// meaningless since ORIPA ver. 1.25 but kept for compatibility
-	private double paperSize;
+    // meaningless since ORIPA ver. 1.25 but kept for compatibility
+    private double paperSize;
 
-	public String title;
-	public String editorName;
-	public String originalAuthorName;
-	public String reference;
-	public String memo;
+    public String title;
+    public String editorName;
+    public String originalAuthorName;
+    public String reference;
+    public String memo;
 
-	public DataSet() {
-	}
+    public DataSet() {
+    }
 
-	public DataSet(final Doc doc) {
-		mainVersion = Version.FILE_MAJOR_VERSION;
-		subVersion = Version.FILE_MINOR_VERSION;
+    public DataSet(final Doc doc) {
+        mainVersion = Version.FILE_MAJOR_VERSION;
+        subVersion = Version.FILE_MINOR_VERSION;
 
-		// reconstruct CP to refresh the paper size
-		var factory = new CreasePatternFactory();
-		CreasePattern creasePattern = factory
-				.createCreasePattern(doc.getCreasePattern());
+        // reconstruct CP to refresh the paper size
+        var factory = new CreasePatternFactory();
+        CreasePattern creasePattern = factory
+                .createCreasePattern(doc.getCreasePattern());
 
-		Property property = doc.getProperty();
+        Property property = doc.getProperty();
 
-		int lineNum = creasePattern.size();
+        int lineNum = creasePattern.size();
 
-		lines = new OriLineProxy[lineNum];
+        lines = new OriLineProxy[lineNum];
 
-		OriLine[] docLines = new OriLine[lineNum];
-		creasePattern.toArray(docLines);
+        OriLine[] docLines = new OriLine[lineNum];
+        creasePattern.toArray(docLines);
 
-		for (int i = 0; i < lineNum; i++) {
-			lines[i] = new OriLineProxy(docLines[i]);
-		}
+        for (int i = 0; i < lineNum; i++) {
+            lines[i] = new OriLineProxy(docLines[i]);
+        }
 
-		paperSize = creasePattern.getPaperSize();
+        paperSize = creasePattern.getPaperSize();
 
-		title = property.getTitle();
-		editorName = property.getEditorName();
-		originalAuthorName = property.getOriginalAuthorName();
-		reference = property.getReference();
-		memo = property.getMemo();
-	}
+        title = property.getTitle();
+        editorName = property.getEditorName();
+        originalAuthorName = property.getOriginalAuthorName();
+        reference = property.getReference();
+        memo = property.getMemo();
+    }
 
-	public Doc recover(final String filePath) {
+    public Doc recover(final String filePath) {
 
-		var oriLines = new ArrayList<OriLine>();
+        var oriLines = new ArrayList<OriLine>();
 
-		for (int i = 0; i < lines.length; i++) {
-			oriLines.add(lines[i].getLine());
-		}
+        for (int i = 0; i < lines.length; i++) {
+            oriLines.add(lines[i].getLine());
+        }
 
-		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePattern creasePattern = factory
-				.createCreasePattern(oriLines);
+        CreasePatternFactory factory = new CreasePatternFactory();
+        CreasePattern creasePattern = factory
+                .createCreasePattern(oriLines);
 
-		return Doc.forLoading(creasePattern, createProperty());
-	}
+        return Doc.forLoading(creasePattern, createProperty());
+    }
 
-	private Property createProperty() {
-		return new Property()
-				.setTitle(title)
-				.setEditorName(editorName)
-				.setOriginalAuthorName(originalAuthorName)
-				.setReference(reference)
-				.setMemo(memo);
-	}
+    private Property createProperty() {
+        return new Property()
+                .setTitle(title)
+                .setEditorName(editorName)
+                .setOriginalAuthorName(originalAuthorName)
+                .setReference(reference)
+                .setMemo(memo);
+    }
 
-	public void setPaperSize(final double d) {
-		paperSize = d;
-	}
+    public void setPaperSize(final double d) {
+        paperSize = d;
+    }
 
-	public double getPaperSize() {
-		return paperSize;
-	}
+    public double getPaperSize() {
+        return paperSize;
+    }
 
-	public void setMainVersion(final int i) {
-		mainVersion = i;
-	}
+    public void setMainVersion(final int i) {
+        mainVersion = i;
+    }
 
-	public int getMainVersion() {
-		return mainVersion;
-	}
+    public int getMainVersion() {
+        return mainVersion;
+    }
 
-	public void setSubVersion(final int i) {
-		subVersion = i;
-	}
+    public void setSubVersion(final int i) {
+        subVersion = i;
+    }
 
-	public int getSubVersion() {
-		return subVersion;
-	}
+    public int getSubVersion() {
+        return subVersion;
+    }
 
-	public void setLines(final OriLineProxy[] l) {
-		lines = l;
-	}
+    public void setLines(final OriLineProxy[] l) {
+        lines = l;
+    }
 
-	public OriLineProxy[] getLines() {
-		return lines;
-	}
+    public OriLineProxy[] getLines() {
+        return lines;
+    }
 
-	public void setTitle(final String s) {
-		title = s;
-	}
+    public void setTitle(final String s) {
+        title = s;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setEditorName(final String s) {
-		editorName = s;
-	}
+    public void setEditorName(final String s) {
+        editorName = s;
+    }
 
-	public String getEditorName() {
-		return editorName;
-	}
+    public String getEditorName() {
+        return editorName;
+    }
 
-	public void setOriginalAuthorName(final String s) {
-		originalAuthorName = s;
-	}
+    public void setOriginalAuthorName(final String s) {
+        originalAuthorName = s;
+    }
 
-	public String getOriginalAuthorName() {
-		return originalAuthorName;
-	}
+    public String getOriginalAuthorName() {
+        return originalAuthorName;
+    }
 
-	public void setReference(final String s) {
-		reference = s;
-	}
+    public void setReference(final String s) {
+        reference = s;
+    }
 
-	public String getReference() {
-		return reference;
-	}
+    public String getReference() {
+        return reference;
+    }
 
-	public void setMemo(final String s) {
-		memo = s;
-	}
+    public void setMemo(final String s) {
+        memo = s;
+    }
 
-	public String getMemo() {
-		return memo;
-	}
+    public String getMemo() {
+        return memo;
+    }
 }

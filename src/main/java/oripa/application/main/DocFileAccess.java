@@ -31,24 +31,24 @@ import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
  *
  */
 public class DocFileAccess extends FileAccessService<Doc> {
-	private final PaintContext paintContext;
+    private final PaintContext paintContext;
 
-	@Inject
-	public DocFileAccess(final FileDAO<Doc> dao, final PaintContext paintContext) {
-		super(dao);
-		this.paintContext = paintContext;
-	}
+    @Inject
+    public DocFileAccess(final FileDAO<Doc> dao, final PaintContext paintContext) {
+        super(dao);
+        this.paintContext = paintContext;
+    }
 
-	public void setupFOLDConfigForSaving() {
+    public void setupFOLDConfigForSaving() {
 
-		setConfigToSavingAction(DocFileTypes.fold(), () -> createFOLDConfig());
-	}
+        setConfigToSavingAction(DocFileTypes.fold(), () -> createFOLDConfig());
+    }
 
-	private CreasePatternFOLDConfig createFOLDConfig() {
-		var config = new CreasePatternFOLDConfig();
-		config.setEps(paintContext.getPointEps());
+    private CreasePatternFOLDConfig createFOLDConfig() {
+        var config = new CreasePatternFOLDConfig();
+        config.setEps(paintContext.getPointEps());
 
-		return config;
-	}
+        return config;
+    }
 
 }

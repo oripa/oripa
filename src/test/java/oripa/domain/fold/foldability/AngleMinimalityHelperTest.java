@@ -11,41 +11,41 @@ import oripa.value.OriLine;
 
 class AngleMinimalityHelperTest {
 
-	private final double UNIT_ANGLE = Math.PI / 8;
+    private final double UNIT_ANGLE = Math.PI / 8;
 
-	@Test
-	void test_differentAngle_foldable() {
-		var ring = new RingArrayList<>(List.of(
-				new LineGap(2 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
-				new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt()),
-				new LineGap(2 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt())));
+    @Test
+    void test_differentAngle_foldable() {
+        var ring = new RingArrayList<>(List.of(
+                new LineGap(2 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
+                new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt()),
+                new LineGap(2 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt())));
 
-		var helper = new AngleMinimalityHelper();
+        var helper = new AngleMinimalityHelper();
 
-		assertTrue(helper.isMinimal(ring, 1));
-	}
+        assertTrue(helper.isMinimal(ring, 1));
+    }
 
-	@Test
-	void test_sameAngle_foldable() {
-		var ring = new RingArrayList<>(List.of(
-				new LineGap(1 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
-				new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt()),
-				new LineGap(1 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt())));
+    @Test
+    void test_sameAngle_foldable() {
+        var ring = new RingArrayList<>(List.of(
+                new LineGap(1 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
+                new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt()),
+                new LineGap(1 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt())));
 
-		var helper = new AngleMinimalityHelper();
+        var helper = new AngleMinimalityHelper();
 
-		assertTrue(helper.isMinimal(ring, 1));
-	}
+        assertTrue(helper.isMinimal(ring, 1));
+    }
 
-	@Test
-	void test_sameAngle_unfoldable() {
-		var ring = new RingArrayList<>(List.of(
-				new LineGap(1 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
-				new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt()),
-				new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt())));
+    @Test
+    void test_sameAngle_unfoldable() {
+        var ring = new RingArrayList<>(List.of(
+                new LineGap(1 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
+                new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt()),
+                new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt())));
 
-		var helper = new AngleMinimalityHelper();
+        var helper = new AngleMinimalityHelper();
 
-		assertFalse(helper.isMinimal(ring, 1));
-	}
+        assertFalse(helper.isMinimal(ring, 1));
+    }
 }

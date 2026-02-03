@@ -26,19 +26,19 @@ import oripa.util.MathUtil;
  *
  */
 class AngleMinimalityHelper {
-	public static final double EPS = MathUtil.angleRadianEps();
+    public static final double EPS = MathUtil.angleRadianEps();
 
-	public boolean isMinimal(final RingArrayList<LineGap> ring, final int index) {
-		var previous = ring.getPrevious(index).getValue();
-		var target = ring.getElement(index).getValue();
-		var next = ring.getNext(index).getValue();
+    public boolean isMinimal(final RingArrayList<LineGap> ring, final int index) {
+        var previous = ring.getPrevious(index).getValue();
+        var target = ring.getElement(index).getValue();
+        var next = ring.getNext(index).getValue();
 
-		if (target.getLineType() == next.getLineType()) {
-			return false;
-		}
+        if (target.getLineType() == next.getLineType()) {
+            return false;
+        }
 
-		return previous.getAngleGap() - target.getAngleGap() > -EPS &&
-				next.getAngleGap() - target.getAngleGap() > -EPS;
-	}
+        return previous.getAngleGap() - target.getAngleGap() > -EPS &&
+                next.getAngleGap() - target.getAngleGap() > -EPS;
+    }
 
 }

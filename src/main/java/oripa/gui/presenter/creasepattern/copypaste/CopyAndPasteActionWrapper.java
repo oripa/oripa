@@ -8,26 +8,26 @@ import oripa.gui.presenter.creasepattern.EditMode;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 
-	private final StatePopper<EditMode> statePopper;
+    private final StatePopper<EditMode> statePopper;
 
-	public CopyAndPasteActionWrapper(
-			final StatePopper<EditMode> statePopper,
-			final SelectionOriginHolder originHolder) {
+    public CopyAndPasteActionWrapper(
+            final StatePopper<EditMode> statePopper,
+            final SelectionOriginHolder originHolder) {
 
-		super(originHolder, new PasteAction(originHolder));
+        super(originHolder, new PasteAction(originHolder));
 
-		this.statePopper = statePopper;
-	}
+        this.statePopper = statePopper;
+    }
 
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		super.recoverImpl(context);
-	}
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        super.recoverImpl(context);
+    }
 
-	@Override
-	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		statePopper.run();
-	}
+    @Override
+    public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
+        statePopper.run();
+    }
 
 }

@@ -28,29 +28,29 @@ import oripa.gui.view.DialogView;
  */
 public interface CircleCopyDialogView extends DialogView {
 
-	void showWrongCopyCountMessage();
+    void showWrongCopyCountMessage();
 
-	/**
-	 *
-	 * @param listener
-	 *            returns true if the action completes, which suggests this view
-	 *            to dispose.
-	 */
-	void setOKButtonListener(final Supplier<Boolean> listener);
+    /**
+     *
+     * @param listener
+     *            returns true if the action completes, which suggests this view
+     *            to dispose.
+     */
+    void setOKButtonListener(final Supplier<Boolean> listener);
 
-	int getCopyCount();
+    int getCopyCount();
 
-	void setCopyCount(int copyCount);
+    void setCopyCount(int copyCount);
 
-	double getAngleDegree();
+    double getAngleDegree();
 
-	void setAngleDegree(double angleDegree);
+    void setAngleDegree(double angleDegree);
 
-	double getCenterY();
+    double getCenterY();
 
-	void setCenterY(double centerY);
+    void setCenterY(double centerY);
 
-	double getCenterX();
+    double getCenterX();
 
-	void setCenterX(double centerX);
+    void setCenterX(double centerX);
 }

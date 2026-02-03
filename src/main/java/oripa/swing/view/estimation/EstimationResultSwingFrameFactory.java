@@ -9,40 +9,40 @@ import oripa.resource.ResourceHolder;
 
 public class EstimationResultSwingFrameFactory implements EstimationResultFrameFactory {
 
-	private final ChildFrameManager childFrameManager;
+    private final ChildFrameManager childFrameManager;
 
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public EstimationResultSwingFrameFactory(final ChildFrameManager childFrameManager,
-			final ResourceHolder resourceHolder) {
-		this.childFrameManager = childFrameManager;
-		this.resourceHolder = resourceHolder;
-	}
+    @Inject
+    public EstimationResultSwingFrameFactory(final ChildFrameManager childFrameManager,
+            final ResourceHolder resourceHolder) {
+        this.childFrameManager = childFrameManager;
+        this.resourceHolder = resourceHolder;
+    }
 
-	@Override
-	public EstimationResultFrameView createFrame(
-			final FrameView parent) {
+    @Override
+    public EstimationResultFrameView createFrame(
+            final FrameView parent) {
 
-		var frameOpt = childFrameManager.find(parent,
-				EstimationResultFrame.class);
+        var frameOpt = childFrameManager.find(parent,
+                EstimationResultFrame.class);
 
-		frameOpt.ifPresent(frame -> {
-			removeFromChildFrameManager(frame);
-			frame.dispose();
-		});
+        frameOpt.ifPresent(frame -> {
+            removeFromChildFrameManager(frame);
+            frame.dispose();
+        });
 
-		var frame = new EstimationResultFrame(resourceHolder);
+        var frame = new EstimationResultFrame(resourceHolder);
 
-		frame.setOnCloseListener(this::removeFromChildFrameManager);
-		childFrameManager.putChild(parent, frame);
+        frame.setOnCloseListener(this::removeFromChildFrameManager);
+        childFrameManager.putChild(parent, frame);
 
-		return frame;
-	}
+        return frame;
+    }
 
-	private void removeFromChildFrameManager(final FrameView frame) {
-		childFrameManager.closeAll(frame);
-		childFrameManager.removeFromChildren(frame);
-	}
+    private void removeFromChildFrameManager(final FrameView frame) {
+        childFrameManager.closeAll(frame);
+        childFrameManager.removeFromChildren(frame);
+    }
 
 }

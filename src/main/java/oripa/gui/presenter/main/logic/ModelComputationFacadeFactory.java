@@ -28,28 +28,28 @@ import oripa.gui.view.main.UIPanelView;
  *
  */
 public class ModelComputationFacadeFactory {
-	private final TestedOrigamiModelFactory modelFactory;
-	private final FolderFactory folderFactory;
+    private final TestedOrigamiModelFactory modelFactory;
+    private final FolderFactory folderFactory;
 
-	@Inject
-	public ModelComputationFacadeFactory(final TestedOrigamiModelFactory modelFactory,
-			final FolderFactory folderFactory) {
-		this.modelFactory = modelFactory;
-		this.folderFactory = folderFactory;
-	}
+    @Inject
+    public ModelComputationFacadeFactory(final TestedOrigamiModelFactory modelFactory,
+            final FolderFactory folderFactory) {
+        this.modelFactory = modelFactory;
+        this.folderFactory = folderFactory;
+    }
 
-	public ModelComputationFacade createModelComputationFacade(
-			final UIPanelView view,
-			final double eps) {
-		return new ModelComputationFacade(
-				modelFactory,
-				folderFactory,
-				// ask if ORIPA should try to remove duplication.
-				view::showCleaningUpDuplicationDialog,
-				// clean up the crease pattern
-				view::showCleaningUpMessage,
-				// folding failed.
-				view::showFoldFailureMessage,
-				eps);
-	}
+    public ModelComputationFacade createModelComputationFacade(
+            final UIPanelView view,
+            final double eps) {
+        return new ModelComputationFacade(
+                modelFactory,
+                folderFactory,
+                // ask if ORIPA should try to remove duplication.
+                view::showCleaningUpDuplicationDialog,
+                // clean up the crease pattern
+                view::showCleaningUpMessage,
+                // folding failed.
+                view::showFoldFailureMessage,
+                eps);
+    }
 }

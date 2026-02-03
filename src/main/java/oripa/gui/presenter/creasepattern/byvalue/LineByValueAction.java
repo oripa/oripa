@@ -12,47 +12,47 @@ import oripa.vecmath.Vector2d;
 
 public class LineByValueAction extends AbstractGraphicMouseAction {
 
-	private final ByValueContext byValueContext;
+    private final ByValueContext byValueContext;
 
-	public LineByValueAction(final ByValueContext byValueContext) {
-		super();
-		setActionState(new SelectingVertexToDrawLine(byValueContext));
+    public LineByValueAction(final ByValueContext byValueContext) {
+        super();
+        setActionState(new SelectingVertexToDrawLine(byValueContext));
 
-		this.byValueContext = byValueContext;
-	}
+        this.byValueContext = byValueContext;
+    }
 
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		context.clear(true);
-	}
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        context.clear(true);
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		drawPickCandidateVertex(drawer, viewContext, paintContext);
+        drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-		super.onDraw(drawer, viewContext, paintContext);
+        super.onDraw(drawer, viewContext, paintContext);
 
-		var vOpt = paintContext.getCandidateVertexToPick();
-		if (vOpt.isEmpty()) {
-			return;
-		}
+        var vOpt = paintContext.getCandidateVertexToPick();
+        if (vOpt.isEmpty()) {
+            return;
+        }
 
-		var v = vOpt.get();
+        var v = vOpt.get();
 
-		double angle = byValueContext.getAngle();
-		double length = byValueContext.getLength();
+        double angle = byValueContext.getAngle();
+        double length = byValueContext.getLength();
 
-		double radianAngle = toRadians(angle);
+        double radianAngle = toRadians(angle);
 
-		drawer.selectColor(paintContext.getLineTypeOfNewLines());
-		drawer.selectStroke(
-				paintContext.getLineTypeOfNewLines(),
-				viewContext.getScale(), viewContext.isZeroLineWidth());
+        drawer.selectColor(paintContext.getLineTypeOfNewLines());
+        drawer.selectStroke(
+                paintContext.getLineTypeOfNewLines(),
+                viewContext.getScale(), viewContext.isZeroLineWidth());
 
-		var dir = new Vector2d(cos(radianAngle), -sin(radianAngle)).multiply(length);
-		var w = v.add(dir);
-		drawer.drawLine(v, w);
-	}
+        var dir = new Vector2d(cos(radianAngle), -sin(radianAngle)).multiply(length);
+        var w = v.add(dir);
+        drawer.drawLine(v, w);
+    }
 }

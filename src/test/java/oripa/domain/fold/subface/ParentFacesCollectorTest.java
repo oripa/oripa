@@ -38,34 +38,34 @@ import oripa.vecmath.Vector2d;
  */
 @ExtendWith(MockitoExtension.class)
 class ParentFacesCollectorTest {
-	@InjectMocks
-	private ParentFacesCollector collector;
+    @InjectMocks
+    private ParentFacesCollector collector;
 
-	/**
-	 */
-	@Test
-	void testCollect() {
-		var face1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
-		var face2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
-		var face3 = OriFaceFactoryForTest.create10PxSquareMock(0, 10);
-		var face4 = OriFaceFactoryForTest.create10PxSquareMock(5, 5); // overlap
+    /**
+     */
+    @Test
+    void testCollect() {
+        var face1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
+        var face2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
+        var face3 = OriFaceFactoryForTest.create10PxSquareMock(0, 10);
+        var face4 = OriFaceFactoryForTest.create10PxSquareMock(5, 5); // overlap
 
-		var faces = List.of(face1, face2, face3, face4);
+        var faces = List.of(face1, face2, face3, face4);
 
-		var subface = mock(SubFace.class);
-		var innerPoint = new Vector2d(8, 8);
-		when(subface.getInnerPoints(1e-6)).thenReturn(List.of(innerPoint));
+        var subface = mock(SubFace.class);
+        var innerPoint = new Vector2d(8, 8);
+        when(subface.getInnerPoints(1e-6)).thenReturn(List.of(innerPoint));
 
-		when(face1.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
-		when(face2.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
-		when(face3.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
-		when(face4.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
+        when(face1.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
+        when(face2.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
+        when(face3.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
+        when(face4.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
 
-		var parents = collector.collect(faces, subface, 1e-6);
+        var parents = collector.collect(faces, subface, 1e-6);
 
-		assertEquals(2, parents.size());
-		assertTrue(parents.contains(face1));
-		assertTrue(parents.contains(face4));
-	}
+        assertEquals(2, parents.size());
+        assertTrue(parents.contains(face1));
+        assertTrue(parents.contains(face4));
+    }
 
 }

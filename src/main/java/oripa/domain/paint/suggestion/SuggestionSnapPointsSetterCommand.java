@@ -28,28 +28,28 @@ import oripa.domain.suggestion.FoldableLineAngleSuggester;
  */
 public class SuggestionSnapPointsSetterCommand extends ValidatablePaintCommand {
 
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public SuggestionSnapPointsSetterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public SuggestionSnapPointsSetterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 1;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 1;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
-				context.getPointEps());
+        var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
+                context.getPointEps());
 
-		var suggester = new FoldableLineAngleSuggester();
-		var suggestedAngles = suggester.suggest(vertex);
+        var suggester = new FoldableLineAngleSuggester();
+        var suggestedAngles = suggester.suggest(vertex);
 
-		var snapPoints = new SuggestionSnapPointFactory().createSnapPoints(context, vertex.getPositionBeforeFolding(),
-				suggestedAngles);
+        var snapPoints = new SuggestionSnapPointFactory().createSnapPoints(context, vertex.getPositionBeforeFolding(),
+                suggestedAngles);
 
-		context.setSnapPoints(snapPoints);
-	}
+        context.setSnapPoints(snapPoints);
+    }
 
 }

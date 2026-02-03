@@ -33,19 +33,19 @@ import oripa.vecmath.Vector2d;
  */
 public class AssertionUtil {
 
-	public static <T> void assertAnyMatch(final T expected, final Collection<T> actuals,
-			final BiFunction<T, T, Boolean> equalityComparer) {
-		assertTrue(
-				actuals.stream()
-						.anyMatch(actual -> equalityComparer.apply(expected, actual)),
-				() -> "expected: " + expected + ", no match on actuals: " + actuals.toString());
+    public static <T> void assertAnyMatch(final T expected, final Collection<T> actuals,
+            final BiFunction<T, T, Boolean> equalityComparer) {
+        assertTrue(
+                actuals.stream()
+                        .anyMatch(actual -> equalityComparer.apply(expected, actual)),
+                () -> "expected: " + expected + ", no match on actuals: " + actuals.toString());
 
-	}
+    }
 
-	public static void assertSegmentEquals(final Segment expected, final Segment actual,
-			final BiFunction<Vector2d, Vector2d, Boolean> equalityComparer) {
-		var actuals = List.of(actual.getP0(), actual.getP1());
-		assertAnyMatch(expected.getP0(), actuals, equalityComparer);
-		assertAnyMatch(expected.getP1(), actuals, equalityComparer);
-	}
+    public static void assertSegmentEquals(final Segment expected, final Segment actual,
+            final BiFunction<Vector2d, Vector2d, Boolean> equalityComparer) {
+        var actuals = List.of(actual.getP0(), actual.getP1());
+        assertAnyMatch(expected.getP0(), actuals, equalityComparer);
+        assertAnyMatch(expected.getP1(), actuals, equalityComparer);
+    }
 }

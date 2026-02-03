@@ -30,69 +30,69 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MultiTypeAcceptableFileLoadingSupport<Data>
-		extends FileAccessSupport<Data> {
+        extends FileAccessSupport<Data> {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(MultiTypeAcceptableFileLoadingSupport.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(MultiTypeAcceptableFileLoadingSupport.class);
 
-	private final Collection<FileAccessSupport<Data>> fileAccessSupports;
+    private final Collection<FileAccessSupport<Data>> fileAccessSupports;
 
-	/**
-	 *
-	 * Constructor.
-	 *
-	 * @param supports
-	 *            filters whose loading action objects are not null. Filters
-	 *            will be copied to this object.
-	 * @param message
-	 *            message in filter box
-	 * @throws IllegalArgumentException
-	 *             if a loading action of a filter is null.
-	 */
-	public MultiTypeAcceptableFileLoadingSupport(
-			final Collection<FileAccessSupport<Data>> supports,
-			final String message) throws IllegalArgumentException {
+    /**
+     *
+     * Constructor.
+     *
+     * @param supports
+     *            filters whose loading action objects are not null. Filters
+     *            will be copied to this object.
+     * @param message
+     *            message in filter box
+     * @throws IllegalArgumentException
+     *             if a loading action of a filter is null.
+     */
+    public MultiTypeAcceptableFileLoadingSupport(
+            final Collection<FileAccessSupport<Data>> supports,
+            final String message) throws IllegalArgumentException {
 
-		super(new MultiTypeProperty<Data>(
-				supports.stream()
-						.map(support -> support.getTargetType())
-						.toList()),
-				message);
+        super(new MultiTypeProperty<Data>(
+                supports.stream()
+                        .map(support -> support.getTargetType())
+                        .toList()),
+                message);
 
-		if (supports.isEmpty()) {
-			throw new IllegalArgumentException("suppports should not be empty.");
-		}
+        if (supports.isEmpty()) {
+            throw new IllegalArgumentException("suppports should not be empty.");
+        }
 
-		supports.forEach(support -> {
-			if (support.getLoadingAction() == null) {
-				throw new IllegalArgumentException("file access support should have a loadingAction.");
-			}
-		});
+        supports.forEach(support -> {
+            if (support.getLoadingAction() == null) {
+                throw new IllegalArgumentException("file access support should have a loadingAction.");
+            }
+        });
 
-		fileAccessSupports = new ArrayList<>(supports);
-	}
+        fileAccessSupports = new ArrayList<>(supports);
+    }
 
-	@Deprecated
-	@Override
-	public LoadingAction<Data> getLoadingAction() {
-		return null;
-	}
+    @Deprecated
+    @Override
+    public LoadingAction<Data> getLoadingAction() {
+        return null;
+    }
 
-	@Deprecated
-	@Override
-	public SavingAction<Data> getSavingAction() {
-		return null;
-	}
+    @Deprecated
+    @Override
+    public SavingAction<Data> getSavingAction() {
+        return null;
+    }
 
-	/**
-	 *
-	 * @return acceptable extensions
-	 */
-	@Override
-	public String[] getExtensions() {
-		return fileAccessSupports.stream()
-				.flatMap(support -> Stream.of(support.getExtensions()))
-				.toList()
-				.toArray(new String[0]);
-	}
+    /**
+     *
+     * @return acceptable extensions
+     */
+    @Override
+    public String[] getExtensions() {
+        return fileAccessSupports.stream()
+                .flatMap(support -> Stream.of(support.getExtensions()))
+                .toList()
+                .toArray(new String[0]);
+    }
 }

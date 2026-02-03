@@ -32,37 +32,37 @@ import oripa.util.file.FileFactory;
  *
  */
 public class DocFileSelectionPresenterFactory {
-	private final FileChooserFactory fileChooserFactory;
+    private final FileChooserFactory fileChooserFactory;
 
-	private final FileModelCheckService fileModelCheckService;
-	private final FileFactory fileFactory;
-	private final ExtensionCorrector extensionCorrector;
+    private final FileModelCheckService fileModelCheckService;
+    private final FileFactory fileFactory;
+    private final ExtensionCorrector extensionCorrector;
 
-	@Inject
-	public DocFileSelectionPresenterFactory(
-			final FileChooserFactory fileChooserFactory,
-			final FileModelCheckService fileModelCheckService,
-			final FileFactory fileFactory,
-			final ExtensionCorrector extensionCorrector) {
+    @Inject
+    public DocFileSelectionPresenterFactory(
+            final FileChooserFactory fileChooserFactory,
+            final FileModelCheckService fileModelCheckService,
+            final FileFactory fileFactory,
+            final ExtensionCorrector extensionCorrector) {
 
-		this.fileChooserFactory = fileChooserFactory;
+        this.fileChooserFactory = fileChooserFactory;
 
-		this.fileModelCheckService = fileModelCheckService;
-		this.fileFactory = fileFactory;
+        this.fileModelCheckService = fileModelCheckService;
+        this.fileFactory = fileFactory;
 
-		this.extensionCorrector = extensionCorrector;
+        this.extensionCorrector = extensionCorrector;
 
-	}
+    }
 
-	public DocFileSelectionPresenter create(
-			final FrameView parent, final FileSelectionService<Doc> fileSelectionService) {
-		return new DocFileSelectionPresenter(
-				parent,
-				fileChooserFactory,
-				fileModelCheckService,
-				fileFactory,
-				fileSelectionService,
-				extensionCorrector);
-	}
+    public DocFileSelectionPresenter create(
+            final FrameView parent, final FileSelectionService<Doc> fileSelectionService) {
+        return new DocFileSelectionPresenter(
+                parent,
+                fileChooserFactory,
+                fileModelCheckService,
+                fileFactory,
+                fileSelectionService,
+                extensionCorrector);
+    }
 
 }

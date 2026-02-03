@@ -34,25 +34,25 @@ import java.awt.image.WritableRaster;
  */
 public class PixelDrawer {
 
-	public PixelDrawer() {
-	}
+    public PixelDrawer() {
+    }
 
-	public void draw(final Graphics2D g2d, final int[] pixels, final int width, final int height) {
-		var renderImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    public void draw(final Graphics2D g2d, final int[] pixels, final int width, final int height) {
+        var renderImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-		renderImage = fromPixelIntArray(pixels, width, height);
-		g2d.drawImage(renderImage, 0, 0, null);
+        renderImage = fromPixelIntArray(pixels, width, height);
+        g2d.drawImage(renderImage, 0, 0, null);
 
-	}
+    }
 
-	private BufferedImage fromPixelIntArray(final int[] pixels, final int width, final int height) {
-		int[] bitMasks = new int[] { 0xFF0000, 0xFF00, 0xFF, 0xFF000000 };
-		SinglePixelPackedSampleModel sm = new SinglePixelPackedSampleModel(
-				DataBuffer.TYPE_INT, width, height, bitMasks);
-		DataBufferInt db = new DataBufferInt(pixels, pixels.length);
-		WritableRaster wr = Raster.createWritableRaster(sm, db, new Point());
+    private BufferedImage fromPixelIntArray(final int[] pixels, final int width, final int height) {
+        int[] bitMasks = new int[] { 0xFF0000, 0xFF00, 0xFF, 0xFF000000 };
+        SinglePixelPackedSampleModel sm = new SinglePixelPackedSampleModel(
+                DataBuffer.TYPE_INT, width, height, bitMasks);
+        DataBufferInt db = new DataBufferInt(pixels, pixels.length);
+        WritableRaster wr = Raster.createWritableRaster(sm, db, new Point());
 
-		return new BufferedImage(ColorModel.getRGBdefault(), wr, false, null);
-	}
+        return new BufferedImage(ColorModel.getRGBdefault(), wr, false, null);
+    }
 
 }

@@ -35,71 +35,71 @@ import oripa.gui.view.FrameView;
  */
 @Singleton
 public class ChildFrameManager {
-	private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
 
-	private final HashMap<FrameView, Collection<FrameView>> relationMap = new HashMap<>();
+    private final HashMap<FrameView, Collection<FrameView>> relationMap = new HashMap<>();
 
-	public ChildFrameManager() {
-	}
+    public ChildFrameManager() {
+    }
 
-	public Collection<FrameView> getChildren(final FrameView parentFrame) {
-		relationMap.putIfAbsent(parentFrame, new HashSet<>());
-		var children = relationMap.get(parentFrame);
+    public Collection<FrameView> getChildren(final FrameView parentFrame) {
+        relationMap.putIfAbsent(parentFrame, new HashSet<>());
+        var children = relationMap.get(parentFrame);
 
-		return children;
-	}
+        return children;
+    }
 
-	public void putChild(final FrameView parentFrame, final FrameView childFrame) {
-		var children = getChildren(parentFrame);
-		children.add(childFrame);
-		logger.info("{} is put.", childFrame);
-		logger.info("There are {} children.", children.size());
-	}
+    public void putChild(final FrameView parentFrame, final FrameView childFrame) {
+        var children = getChildren(parentFrame);
+        children.add(childFrame);
+        logger.info("{} is put.", childFrame);
+        logger.info("There are {} children.", children.size());
+    }
 
-	public void removeChild(final FrameView parentFrame, final FrameView childFrame) {
-		var children = getChildren(parentFrame);
-		if (children.remove(childFrame)) {
-			logger.info("{} is removed.", childFrame);
-			logger.info("There are {} children.", children.size());
-		}
-	}
+    public void removeChild(final FrameView parentFrame, final FrameView childFrame) {
+        var children = getChildren(parentFrame);
+        if (children.remove(childFrame)) {
+            logger.info("{} is removed.", childFrame);
+            logger.info("There are {} children.", children.size());
+        }
+    }
 
-	public void removeFromChildren(final FrameView childFrame) {
-		relationMap.keySet().forEach(parentFrame -> removeChild(parentFrame, childFrame));
-	}
+    public void removeFromChildren(final FrameView childFrame) {
+        relationMap.keySet().forEach(parentFrame -> removeChild(parentFrame, childFrame));
+    }
 
-	public <TFrame extends FrameView> Optional<TFrame> find(final FrameView parentFrame, final Class<TFrame> clazz) {
-		var children = getChildren(parentFrame);
-		logger.info("{} children of  {}: {}", children.size(), parentFrame, children);
-		for (var child : children) {
-			if (clazz.isInstance(child)) {
-				logger.info("child(class = " + clazz.getName() + ") is found.");
-				return Optional.of(clazz.cast(child));
-			}
-		}
+    public <TFrame extends FrameView> Optional<TFrame> find(final FrameView parentFrame, final Class<TFrame> clazz) {
+        var children = getChildren(parentFrame);
+        logger.info("{} children of  {}: {}", children.size(), parentFrame, children);
+        for (var child : children) {
+            if (clazz.isInstance(child)) {
+                logger.info("child(class = " + clazz.getName() + ") is found.");
+                return Optional.of(clazz.cast(child));
+            }
+        }
 
-		return Optional.empty();
-	}
+        return Optional.empty();
+    }
 
-	/**
-	 * Disposes all descendants of {@code parentFrame}.
-	 *
-	 * @param parentFrame
-	 */
-	public void closeAll(final FrameView parentFrame) {
-		if (parentFrame == null) {
-			return;
-		}
+    /**
+     * Disposes all descendants of {@code parentFrame}.
+     *
+     * @param parentFrame
+     */
+    public void closeAll(final FrameView parentFrame) {
+        if (parentFrame == null) {
+            return;
+        }
 
-		var children = getChildren(parentFrame);
+        var children = getChildren(parentFrame);
 
-		var iterator = children.iterator();
-		while (iterator.hasNext()) {
-			var child = iterator.next();
-			closeAll(child);
-			iterator.remove();
-			child.dispose();
-		}
-	}
+        var iterator = children.iterator();
+        while (iterator.hasNext()) {
+            var child = iterator.next();
+            closeAll(child);
+            iterator.remove();
+            child.dispose();
+        }
+    }
 
 }

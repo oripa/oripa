@@ -28,28 +28,28 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class LineTypeChangerCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final TypeForChangeGettable setting;
+    private final PaintContext context;
+    private final TypeForChangeGettable setting;
 
-	public LineTypeChangerCommand(final PaintContext context, final TypeForChangeGettable setting) {
-		this.context = context;
-		this.setting = setting;
-	}
+    public LineTypeChangerCommand(final PaintContext context, final TypeForChangeGettable setting) {
+        this.context = context;
+        this.setting = setting;
+    }
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+    @Override
+    public void execute() {
+        validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
 
-		var lines = List.copyOf(context.getPickedLines());
-		context.clear(false);
+        var lines = List.copyOf(context.getPickedLines());
+        context.clear(false);
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		var painter = context.getPainter();
-		painter.alterLineTypes(lines, setting.getTypeFrom(), setting.getTypeTo());
+        var painter = context.getPainter();
+        painter.alterLineTypes(lines, setting.getTypeFrom(), setting.getTypeTo());
 
-		context.refreshCreasePattern();
+        context.refreshCreasePattern();
 
-	}
+    }
 
 }

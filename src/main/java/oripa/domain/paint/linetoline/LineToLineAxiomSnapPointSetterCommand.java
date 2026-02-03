@@ -7,30 +7,30 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
 
 public class LineToLineAxiomSnapPointSetterCommand extends ValidatablePaintCommand {
 
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public LineToLineAxiomSnapPointSetterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public LineToLineAxiomSnapPointSetterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int lineCount = 2;
-		final int vertexCount = 0;
-		validateCounts(context, vertexCount, lineCount);
+    @Override
+    public void execute() {
+        final int lineCount = 2;
+        final int vertexCount = 0;
+        validateCounts(context, vertexCount, lineCount);
 
-		var axiom = new LineToLineAxiom();
+        var axiom = new LineToLineAxiom();
 
-		var foldLines = axiom.createFoldLines(context.getLine(0), context.getLine(1), context.getPointEps());
+        var foldLines = axiom.createFoldLines(context.getLine(0), context.getLine(1), context.getPointEps());
 
-		var snapPointFactory = new SnapPointFactory();
+        var snapPointFactory = new SnapPointFactory();
 
-		var snapPoints = foldLines.stream()
-				.flatMap(line -> snapPointFactory
-						.createSnapPoints(context.getCreasePattern(), line, context.getPointEps()).stream())
-				.toList();
+        var snapPoints = foldLines.stream()
+                .flatMap(line -> snapPointFactory
+                        .createSnapPoints(context.getCreasePattern(), line, context.getPointEps()).stream())
+                .toList();
 
-		context.setSnapPoints(snapPoints);
-	}
+        context.setSnapPoints(snapPoints);
+    }
 
 }

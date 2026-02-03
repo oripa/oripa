@@ -29,21 +29,21 @@ import oripa.value.OriLine;
  *
  */
 class OriEdgeFactoryForTest {
-	public static OriEdge createEdgeSpy(final double x0, final double y0,
-			final double x1, final double y1,
-			final OriLine.Type type) {
+    public static OriEdge createEdgeSpy(final double x0, final double y0,
+            final double x1, final double y1,
+            final OriLine.Type type) {
 
-		var sv = new OriVertex(x0, y0);
-		var ev = new OriVertex(x1, y1);
+        var sv = new OriVertex(x0, y0);
+        var ev = new OriVertex(x1, y1);
 
-		return createEdgeSpy(sv, ev, type);
-	}
+        return createEdgeSpy(sv, ev, type);
+    }
 
-	public static OriEdge createEdgeSpy(final OriVertex sv, final OriVertex ev,
-			final OriLine.Type type) {
+    public static OriEdge createEdgeSpy(final OriVertex sv, final OriVertex ev,
+            final OriLine.Type type) {
 
-		var spy = spy(new OriEdge(sv, ev, type.toInt()));
+        var spy = spy(new OriEdge(sv, ev, type.toInt()));
 
-		return spy;
-	}
+        return spy;
+    }
 }

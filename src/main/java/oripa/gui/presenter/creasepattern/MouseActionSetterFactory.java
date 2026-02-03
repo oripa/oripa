@@ -26,24 +26,24 @@ import oripa.domain.paint.PaintContext;
  *
  */
 public class MouseActionSetterFactory {
-	private final MouseActionHolder actionHolder;
-	private final ScreenUpdater screenUpdater;
-	private final PaintContext context;
+    private final MouseActionHolder actionHolder;
+    private final ScreenUpdater screenUpdater;
+    private final PaintContext context;
 
-	/**
-	 * Constructor
-	 */
-	@Inject
-	public MouseActionSetterFactory(
-			final MouseActionHolder actionHolder,
-			final ScreenUpdater screenUpdater,
-			final PaintContext context) {
-		this.actionHolder = actionHolder;
-		this.screenUpdater = screenUpdater;
-		this.context = context;
-	}
+    /**
+     * Constructor
+     */
+    @Inject
+    public MouseActionSetterFactory(
+            final MouseActionHolder actionHolder,
+            final ScreenUpdater screenUpdater,
+            final PaintContext context) {
+        this.actionHolder = actionHolder;
+        this.screenUpdater = screenUpdater;
+        this.context = context;
+    }
 
-	public MouseActionSetter create(final GraphicMouseAction mouseAction) {
-		return new MouseActionSetter(actionHolder, mouseAction, screenUpdater, context);
-	}
+    public MouseActionSetter create(final GraphicMouseAction mouseAction) {
+        return new MouseActionSetter(actionHolder, mouseAction, screenUpdater, context);
+    }
 }

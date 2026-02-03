@@ -34,75 +34,75 @@ import oripa.vecmath.Vector2d;
  */
 public class Distortion {
 
-	/**
-	 * The {@code faces} is a immutable list but note that the elements are
-	 * mutable. {@code interpolatedOverlapRelation} is also a mutable object.
-	 *
-	 * @author OUCHI Koji
-	 *
-	 */
-	public record Result(
-			List<Face> faces,
-			OverlapRelation interpolatedOverlapRelation) {
+    /**
+     * The {@code faces} is a immutable list but note that the elements are
+     * mutable. {@code interpolatedOverlapRelation} is also a mutable object.
+     *
+     * @author OUCHI Koji
+     *
+     */
+    public record Result(
+            List<Face> faces,
+            OverlapRelation interpolatedOverlapRelation) {
 
-		public Result(final List<Face> faces,
-				final OverlapRelation interpolatedOverlapRelation) {
-			this.faces = Collections.unmodifiableList(faces);
-			this.interpolatedOverlapRelation = interpolatedOverlapRelation;
+        public Result(final List<Face> faces,
+                final OverlapRelation interpolatedOverlapRelation) {
+            this.faces = Collections.unmodifiableList(faces);
+            this.interpolatedOverlapRelation = interpolatedOverlapRelation;
 
-		}
-	}
+        }
+    }
 
-	private final RectangleDomain modelDomain;
-	private final int width;
-	private final int height;
+    private final RectangleDomain modelDomain;
+    private final int width;
+    private final int height;
 
-	/**
-	 *
-	 * @param modelDomain
-	 * @param width
-	 *            of image
-	 * @param height
-	 *            of image
-	 */
-	public Distortion(final RectangleDomain modelDomain, final int width, final int height) {
-		this.modelDomain = modelDomain;
-		this.width = width;
-		this.height = height;
-	}
+    /**
+     *
+     * @param modelDomain
+     * @param width
+     *            of image
+     * @param height
+     *            of image
+     */
+    public Distortion(final RectangleDomain modelDomain, final int width, final int height) {
+        this.modelDomain = modelDomain;
+        this.width = width;
+        this.height = height;
+    }
 
-	public CoordinateConverter createCoordinateConverter(final DistortionMethod distortionMethod,
-			final Vector2d distortionParameter, final double scale) {
-		var converter = new CoordinateConverter(modelDomain, width, height);
+    public CoordinateConverter createCoordinateConverter(final DistortionMethod distortionMethod,
+            final Vector2d distortionParameter, final double scale) {
+        var converter = new CoordinateConverter(modelDomain, width, height);
 
-		converter.setDistortionMethod(distortionMethod);
-		converter.setDistortionParameter(distortionParameter);
-		converter.setScale(scale);
+        converter.setDistortionMethod(distortionMethod);
+        converter.setDistortionParameter(distortionParameter);
+        converter.setScale(scale);
 
-		return converter;
-	}
+        return converter;
+    }
 
-	/**
-	 *
-	 * @param origamiModel
-	 * @param overlapRelation
-	 * @param converter
-	 * @param vertexDepths
-	 *            can be empty map if converter does not use.
-	 * @param eps
-	 * @return
-	 */
-	public Result apply(final OrigamiModel origamiModel, final OverlapRelation overlapRelation,
-			final CoordinateConverter converter,
-			final Map<OriVertex, Integer> vertexDepths, final double eps) {
+    /**
+     *
+     * @param origamiModel
+     * @param overlapRelation
+     * @param converter
+     * @param vertexDepths
+     *            can be empty map if converter does not use.
+     * @param eps
+     * @return
+     */
+    public Result apply(final OrigamiModel origamiModel, final OverlapRelation overlapRelation,
+            final CoordinateConverter converter,
+            final Map<OriVertex, Integer> vertexDepths, final double eps) {
 
-		var factory = new FaceFactory(converter, vertexDepths, eps);
-		var faces = origamiModel.getFaces().stream()
-				.map(face -> factory.create(face, eps))
-				.toList();
+        var factory = new FaceFactory(converter, vertexDepths, eps);
+        var faces = origamiModel.getFaces().stream()
+                .map(face -> factory.create(face, eps))
+                .toList();
 
-		var interpolated = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);
+        var interpolated = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);
 
-		return new Result(Collections.unmodifiableList(faces), interpolated);
-	}
+        return new Result(Collections.unmodifiableList(faces), interpolated);
+    }
 }

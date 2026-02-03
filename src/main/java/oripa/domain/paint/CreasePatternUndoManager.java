@@ -30,10 +30,10 @@ import oripa.value.OriLine;
  */
 public class CreasePatternUndoManager extends BasicUndoManager<Collection<OriLine>> {
 
-	/**
-	 * Constructor
-	 */
-	public CreasePatternUndoManager() {
-		super(new CreasePatternUndoFactory());
-	}
+    /**
+     * Constructor
+     */
+    public CreasePatternUndoManager() {
+        super(new CreasePatternUndoFactory());
+    }
 }

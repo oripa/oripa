@@ -31,31 +31,31 @@ import oripa.domain.paint.PaintContext;
  */
 public class FileModelCheckService {
 
-	private final PaintContext paintContext;
-	private final TestedOrigamiModelFactory modelFactory;
+    private final PaintContext paintContext;
+    private final TestedOrigamiModelFactory modelFactory;
 
-	@Inject
-	public FileModelCheckService(
-			final PaintContext paintContext,
-			final TestedOrigamiModelFactory modelFactory) {
-		this.paintContext = paintContext;
-		this.modelFactory = modelFactory;
-	}
+    @Inject
+    public FileModelCheckService(
+            final PaintContext paintContext,
+            final TestedOrigamiModelFactory modelFactory) {
+        this.paintContext = paintContext;
+        this.modelFactory = modelFactory;
+    }
 
-	public boolean checkFoldability(
-			final Supplier<Boolean> acceptModelError)
-			throws IOException {
-		var creasePattern = paintContext.getCreasePattern();
-		double pointEps = paintContext.getPointEps();
+    public boolean checkFoldability(
+            final Supplier<Boolean> acceptModelError)
+            throws IOException {
+        var creasePattern = paintContext.getCreasePattern();
+        double pointEps = paintContext.getPointEps();
 
-		var origamiModel = modelFactory.createOrigamiModel(
-				creasePattern, pointEps);
+        var origamiModel = modelFactory.createOrigamiModel(
+                creasePattern, pointEps);
 
-		if (!origamiModel.isLocallyFlatFoldable()) {
-			return acceptModelError.get();
-		}
+        if (!origamiModel.isLocallyFlatFoldable()) {
+            return acceptModelError.get();
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

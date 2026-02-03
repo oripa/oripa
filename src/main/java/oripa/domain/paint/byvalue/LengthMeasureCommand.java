@@ -26,25 +26,25 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class LengthMeasureCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final ByValueContext valueSetting;
+    private final PaintContext context;
+    private final ByValueContext valueSetting;
 
-	public LengthMeasureCommand(final PaintContext context, final ByValueContext valueSetting) {
-		this.context = context;
-		this.valueSetting = valueSetting;
-	}
+    public LengthMeasureCommand(final PaintContext context, final ByValueContext valueSetting) {
+        this.context = context;
+        this.valueSetting = valueSetting;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 2;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 2;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		double length = context.getVertex(0).distance(context.getVertex(1));
+        double length = context.getVertex(0).distance(context.getVertex(1));
 
-		valueSetting.setLength(length);
+        valueSetting.setLength(length);
 
-		context.clear(false);
-	}
+        context.clear(false);
+    }
 
 }

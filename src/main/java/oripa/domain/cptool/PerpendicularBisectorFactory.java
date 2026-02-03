@@ -26,14 +26,14 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class PerpendicularBisectorFactory {
-	public Line create(
-			final Vector2d v0, final Vector2d v1) {
-		Vector2d cp = v0.add(v1).multiply(0.5);
+    public Line create(
+            final Vector2d v0, final Vector2d v1) {
+        Vector2d cp = v0.add(v1).multiply(0.5);
 
-		var dir = v0.subtract(v1);
-		var perpendicularDir = dir.getRightSidePerpendicular();
+        var dir = v0.subtract(v1);
+        var perpendicularDir = dir.getRightSidePerpendicular();
 
-		return new Line(cp, perpendicularDir);
-	}
+        return new Line(cp, perpendicularDir);
+    }
 
 }

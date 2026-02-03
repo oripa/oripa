@@ -29,119 +29,119 @@ import oripa.gui.view.FrameView;
  *
  */
 public interface MainFrameView extends FrameView {
-	// MainFrameSetting getMainFrameSetting();
+    // MainFrameSetting getMainFrameSetting();
 
-	UIPanelView getUIPanelView();
+    UIPanelView getUIPanelView();
 
-	PainterScreenView getPainterScreenView();
+    PainterScreenView getPainterScreenView();
 
-	void addNewButtonListener(Runnable listener);
+    void addNewButtonListener(Runnable listener);
 
-	void addClearButtonListener(Runnable listener);
+    void addClearButtonListener(Runnable listener);
 
-	void addOpenButtonListener(Runnable listener);
+    void addOpenButtonListener(Runnable listener);
 
-	void addImportButtonListener(Runnable listener);
+    void addImportButtonListener(Runnable listener);
 
-	void addSaveButtonListener(Runnable listener);
+    void addSaveButtonListener(Runnable listener);
 
-	void addSaveAsButtonListener(Runnable listener);
+    void addSaveAsButtonListener(Runnable listener);
 
-	void addSaveAsImageButtonListener(Runnable listener);
+    void addSaveAsImageButtonListener(Runnable listener);
 
-	void addExportFOLDButtonListener(Runnable listener);
+    void addExportFOLDButtonListener(Runnable listener);
 
-	void addExportDXFButtonListener(Runnable listener);
+    void addExportDXFButtonListener(Runnable listener);
 
-	void addExportCPButtonListener(Runnable listener);
+    void addExportCPButtonListener(Runnable listener);
 
-	void addExportSVGButtonListener(Runnable listener);
+    void addExportSVGButtonListener(Runnable listener);
 
-	void addPropertyButtonListener(Runnable listener);
+    void addPropertyButtonListener(Runnable listener);
 
-	void addChangeOutlineButtonListener(Runnable listener);
+    void addChangeOutlineButtonListener(Runnable listener);
 
-	void addSelectAllButtonListener(Runnable listener);
+    void addSelectAllButtonListener(Runnable listener);
 
-	void addCopyAndPasteButtonListener(Runnable listener);
+    void addCopyAndPasteButtonListener(Runnable listener);
 
-	void addCutAndPasteButtonListener(Runnable listener);
+    void addCutAndPasteButtonListener(Runnable listener);
 
-	void addUndoButtonListener(Runnable listener);
+    void addUndoButtonListener(Runnable listener);
 
-	void addRedoButtonListener(Runnable listener);
+    void addRedoButtonListener(Runnable listener);
 
-	void addRepeatCopyButtonListener(Runnable listener);
+    void addRepeatCopyButtonListener(Runnable listener);
 
-	void addCircleCopyButtonListener(Runnable listener);
+    void addCircleCopyButtonListener(Runnable listener);
 
-	void addUnselectAllButtonListener(Runnable listener);
+    void addUnselectAllButtonListener(Runnable listener);
 
-	void addDeleteSelectedLinesButtonListener(Runnable listener);
+    void addDeleteSelectedLinesButtonListener(Runnable listener);
 
-	void addAboutButtonListener(Runnable listener);
+    void addAboutButtonListener(Runnable listener);
 
-	void addExitButtonListener(Runnable listener);
+    void addExitButtonListener(Runnable listener);
 
-	void setEstimationResultSaveColorsListener(BiConsumer<Color, Color> listener);
+    void setEstimationResultSaveColorsListener(BiConsumer<Color, Color> listener);
 
-	default void setEstimationResultColors(final Color front, final Color back) {
-		getUIPanelView().setEstimationResultColors(front, back);
-	};
+    default void setEstimationResultColors(final Color front, final Color back) {
+        getUIPanelView().setEstimationResultColors(front, back);
+    };
 
-	/**
-	 * invoked when MRU file menu item is clicked.
-	 *
-	 * @param listener
-	 *            the parameter of this listener is the file path.
-	 */
-	void addMRUFileButtonListener(Consumer<String> listener);
+    /**
+     * invoked when MRU file menu item is clicked.
+     *
+     * @param listener
+     *            the parameter of this listener is the file path.
+     */
+    void addMRUFileButtonListener(Consumer<String> listener);
 
-	/**
-	 * invoked when the MRU file menu item changed.
-	 *
-	 * @param listener
-	 *            the parameter of this listener is the index of MRU list.
-	 */
-	void addMRUFilesMenuItemUpdateListener(Consumer<Integer> listener);
+    /**
+     * invoked when the MRU file menu item changed.
+     *
+     * @param listener
+     *            the parameter of this listener is the index of MRU list.
+     */
+    void addMRUFilesMenuItemUpdateListener(Consumer<Integer> listener);
 
-	void addWindowClosingListener(Runnable listener);
+    void addWindowClosingListener(Runnable listener);
 
-	// --------------------------------------------------------
+    // --------------------------------------------------------
 
-	void setMRUFilesMenuItem(int index, String path);
+    void setMRUFilesMenuItem(int index, String path);
 
-	void setFileNameToTitle(String fileName);
+    void setFileNameToTitle(String fileName);
 
-	void buildFileMenu();
+    void buildFileMenu();
 
-	void showCopyPasteErrorMessage();
+    void showCopyPasteErrorMessage();
 
-	void showNoSelectionMessageForArrayCopy();
+    void showNoSelectionMessageForArrayCopy();
 
-	void showNoSelectionMessageForCircleCopy();
+    void showNoSelectionMessageForCircleCopy();
 
-	void showAboutAppMessage();
+    void showAboutAppMessage();
 
-	/**
-	 *
-	 * @return true if OK button is selected.
-	 */
-	boolean showModelBuildFailureDialog();
+    /**
+     *
+     * @return true if OK button is selected.
+     */
+    boolean showModelBuildFailureDialog();
 
-	/**
-	 *
-	 * @return true if yes button is selected.
-	 */
-	boolean showSaveOnCloseDialog();
+    /**
+     *
+     * @return true if yes button is selected.
+     */
+    boolean showSaveOnCloseDialog();
 
-	void showLoadFailureErrorMessage(Exception e);
+    void showLoadFailureErrorMessage(Exception e);
 
-	void showSaveFailureErrorMessage(Exception e);
+    void showSaveFailureErrorMessage(Exception e);
 
-	void showSaveIniFileFailureErrorMessage(Exception e);
+    void showSaveIniFileFailureErrorMessage(Exception e);
 
-	void initializeFrameBounds();
+    void initializeFrameBounds();
 
-	int getFileMenuSize();
+    int getFileMenuSize();
 }

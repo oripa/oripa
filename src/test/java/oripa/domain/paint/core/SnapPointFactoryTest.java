@@ -13,30 +13,30 @@ import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 class SnapPointFactoryTest {
-	SnapPointFactory factory = new SnapPointFactory();
+    SnapPointFactory factory = new SnapPointFactory();
 
-	static final double EPS = 1e-6;
+    static final double EPS = 1e-6;
 
-	@Test
-	void test() {
-		var creases = List.of(
-				// cross
-				new OriLine(1, 1, 1, -1, OriLine.Type.VALLEY),
-				// overlap
-				new OriLine(2, 0, 3, 0, OriLine.Type.VALLEY));
+    @Test
+    void test() {
+        var creases = List.of(
+                // cross
+                new OriLine(1, 1, 1, -1, OriLine.Type.VALLEY),
+                // overlap
+                new OriLine(2, 0, 3, 0, OriLine.Type.VALLEY));
 
-		var creasePattern = new CreasePatternFactory().createCreasePattern(creases);
+        var creasePattern = new CreasePatternFactory().createCreasePattern(creases);
 
-		var line = new Line(new Vector2d(0, 0), new Vector2d(1, 0));
+        var line = new Line(new Vector2d(0, 0), new Vector2d(1, 0));
 
-		var points = factory.createSnapPoints(creasePattern, line, EPS);
+        var points = factory.createSnapPoints(creasePattern, line, EPS);
 
-		var expectedPoints = List.of(new Vector2d(1, 0), new Vector2d(2, 0), new Vector2d(3, 0));
+        var expectedPoints = List.of(new Vector2d(1, 0), new Vector2d(2, 0), new Vector2d(3, 0));
 
-		assertEquals(expectedPoints.size(), points.size());
+        assertEquals(expectedPoints.size(), points.size());
 
-		expectedPoints.forEach(
-				expected -> assertAnyMatch(expected, points, (p1, p2) -> p1.equals(p2, EPS)));
-	}
+        expectedPoints.forEach(
+                expected -> assertAnyMatch(expected, points, (p1, p2) -> p1.equals(p2, EPS)));
+    }
 
 }

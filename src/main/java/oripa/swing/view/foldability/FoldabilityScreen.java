@@ -60,266 +60,266 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class FoldabilityScreen extends JPanel
-		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ComponentListener, FoldabilityScreenView {
+        implements MouseListener, MouseMotionListener, MouseWheelListener,
+        ComponentListener, FoldabilityScreenView {
 
-	private Image bufferImage;
+    private Image bufferImage;
 
-	private final AffineCamera camera = new AffineCamera();
+    private final AffineCamera camera = new AffineCamera();
 
-	// Affine transformation information
-	private AffineTransform affineTransform = new AffineTransform();
+    // Affine transformation information
+    private AffineTransform affineTransform = new AffineTransform();
 
-	private Point2D preMousePoint; // Screen coordinates
+    private Point2D preMousePoint; // Screen coordinates
 
-	private Consumer<PaintComponentGraphics> paintComponentListener;
+    private Consumer<PaintComponentGraphics> paintComponentListener;
 
-	FoldabilityScreen() {
+    FoldabilityScreen() {
 
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		addMouseWheelListener(this);
-		addComponentListener(this);
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        addMouseWheelListener(this);
+        addComponentListener(this);
 
-		camera.updateScale(1.5);
-		setBackground(Color.WHITE);
-	}
+        camera.updateScale(1.5);
+        setBackground(Color.WHITE);
+    }
 
-	private Collection<OriVertex> violatingVertices = new ArrayList<>();
-	private Collection<OriFace> violatingFaces = new ArrayList<>();
-	private OriVertex pickedViolatingVertex;
-	private OriFace pickedViolatingFace;
+    private Collection<OriVertex> violatingVertices = new ArrayList<>();
+    private Collection<OriFace> violatingFaces = new ArrayList<>();
+    private OriVertex pickedViolatingVertex;
+    private OriFace pickedViolatingFace;
 
-	private void buildBufferImage() {
-		bufferImage = createImage(getWidth(), getHeight());
-		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
-	}
+    private void buildBufferImage() {
+        bufferImage = createImage(getWidth(), getHeight());
+        affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
+    }
 
-	private Graphics2D updateBufferImage() {
-		if (bufferImage == null) {
-			buildBufferImage();
-		}
-		var bufferg = (Graphics2D) bufferImage.getGraphics();
+    private Graphics2D updateBufferImage() {
+        if (bufferImage == null) {
+            buildBufferImage();
+        }
+        var bufferg = (Graphics2D) bufferImage.getGraphics();
 
-		bufferg.setTransform(new AffineTransform());
+        bufferg.setTransform(new AffineTransform());
 
-		bufferg.setColor(Color.WHITE);
-		bufferg.fillRect(0, 0, getWidth(), getHeight());
+        bufferg.setColor(Color.WHITE);
+        bufferg.fillRect(0, 0, getWidth(), getHeight());
 
-		bufferg.setTransform(affineTransform);
+        bufferg.setTransform(affineTransform);
 
-		return bufferg;
-	}
+        return bufferg;
+    }
 
-	@Override
-	public void paintComponent(final Graphics g) {
-		super.paintComponent(g);
+    @Override
+    public void paintComponent(final Graphics g) {
+        super.paintComponent(g);
 
-		paintComponentListener.accept(new CreasePatternGraphics(g, updateBufferImage(), bufferImage, this));
-	}
+        paintComponentListener.accept(new CreasePatternGraphics(g, updateBufferImage(), bufferImage, this));
+    }
 
-	@Override
-	public void componentResized(final ComponentEvent arg0) {
-		if (getWidth() <= 0 || getHeight() <= 0) {
-			return;
-		}
+    @Override
+    public void componentResized(final ComponentEvent arg0) {
+        if (getWidth() <= 0 || getHeight() <= 0) {
+            return;
+        }
 
-		// Updating the image buffer
-		buildBufferImage();
-		repaint();
-	}
+        // Updating the image buffer
+        buildBufferImage();
+        repaint();
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-	 */
-	@Override
-	public void mouseClicked(final MouseEvent e) {
+    /*
+     * (non Javadoc)
+     *
+     * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+     */
+    @Override
+    public void mouseClicked(final MouseEvent e) {
 
-	}
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-	 */
-	@Override
-	public void mouseEntered(final MouseEvent e) {
+    /*
+     * (non Javadoc)
+     *
+     * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+     */
+    @Override
+    public void mouseEntered(final MouseEvent e) {
 
-	}
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-	 */
-	@Override
-	public void mouseExited(final MouseEvent e) {
+    /*
+     * (non Javadoc)
+     *
+     * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+     */
+    @Override
+    public void mouseExited(final MouseEvent e) {
 
-	}
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-	 */
-	@Override
-	public void mousePressed(final MouseEvent e) {
-		preMousePoint = e.getPoint();
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+     */
+    @Override
+    public void mousePressed(final MouseEvent e) {
+        preMousePoint = e.getPoint();
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-	 */
-	@Override
-	public void mouseReleased(final MouseEvent e) {
+    /*
+     * (non Javadoc)
+     *
+     * @see
+     * java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+     */
+    @Override
+    public void mouseReleased(final MouseEvent e) {
 
-	}
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.
-	 * MouseEvent)
-	 */
-	@Override
-	public void mouseDragged(final MouseEvent e) {
+    /*
+     * (non Javadoc)
+     *
+     * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.
+     * MouseEvent)
+     */
+    @Override
+    public void mouseDragged(final MouseEvent e) {
 
-		if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
-			return;
-		}
+        if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
+            return;
+        }
 
-		if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
-			return;
-		}
-	}
+        if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
+            return;
+        }
+    }
 
-	private boolean doCameraDragAction(final MouseEvent e,
-			final BiFunction<MouseEvent, Point2D, Optional<AffineTransform>> onDrag) {
-		var affineOpt = onDrag.apply(e, preMousePoint);
-		if (affineOpt.isEmpty()) {
-			return false;
-		}
+    private boolean doCameraDragAction(final MouseEvent e,
+            final BiFunction<MouseEvent, Point2D, Optional<AffineTransform>> onDrag) {
+        var affineOpt = onDrag.apply(e, preMousePoint);
+        if (affineOpt.isEmpty()) {
+            return false;
+        }
 
-		var affine = affineOpt.get();
-		preMousePoint = e.getPoint();
-		affineTransform = affine;
-		repaint();
-		return true;
-	}
+        var affine = affineOpt.get();
+        preMousePoint = e.getPoint();
+        affineTransform = affine;
+        repaint();
+        return true;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
-	 */
-	@Override
-	public void mouseMoved(final MouseEvent e) {
-		var logicalPoint = MouseUtility.getLogicalPoint(affineTransform, e.getPoint());
-		var mousePoint = new Vector2d(logicalPoint.x, logicalPoint.y);
+    /*
+     * (non Javadoc)
+     *
+     * @see
+     * java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
+     */
+    @Override
+    public void mouseMoved(final MouseEvent e) {
+        var logicalPoint = MouseUtility.getLogicalPoint(affineTransform, e.getPoint());
+        var mousePoint = new Vector2d(logicalPoint.x, logicalPoint.y);
 
-		pickedViolatingFace = violatingFaces.stream()
-				.filter(face -> face.includesExclusivelyBeforeFolding(mousePoint, 1e-6))
-				.findFirst().orElse(null);
+        pickedViolatingFace = violatingFaces.stream()
+                .filter(face -> face.includesExclusivelyBeforeFolding(mousePoint, 1e-6))
+                .findFirst().orElse(null);
 
-		pickedViolatingVertex = pickViolatingVertex(mousePoint);
+        pickedViolatingVertex = pickViolatingVertex(mousePoint);
 
-		repaint();
-	}
+        repaint();
+    }
 
-	private OriVertex pickViolatingVertex(final Vector2d mousePoint) {
-		var nearestOpt = NearestVertexFinder.findNearestVertex(
-				mousePoint,
-				violatingVertices.stream()
-						.map(v -> v.getPositionBeforeFolding())
-						.toList());
+    private OriVertex pickViolatingVertex(final Vector2d mousePoint) {
+        var nearestOpt = NearestVertexFinder.findNearestVertex(
+                mousePoint,
+                violatingVertices.stream()
+                        .map(v -> v.getPositionBeforeFolding())
+                        .toList());
 
-		if (nearestOpt.isEmpty()) {
-			return null;
-		}
+        if (nearestOpt.isEmpty()) {
+            return null;
+        }
 
-		var nearest = nearestOpt.get();
+        var nearest = nearestOpt.get();
 
-		if (nearest.distance >= scaleDistanceThreshold()) {
-			pickedViolatingVertex = null;
-			repaint();
-			return null;
-		}
+        if (nearest.distance >= scaleDistanceThreshold()) {
+            pickedViolatingVertex = null;
+            repaint();
+            return null;
+        }
 
-		return violatingVertices.stream()
-				.filter(vertex -> vertex.getPositionBeforeFolding().equals(nearest.point))
-				.findFirst().get();
-	}
+        return violatingVertices.stream()
+                .filter(vertex -> vertex.getPositionBeforeFolding().equals(nearest.point))
+                .findFirst().get();
+    }
 
-	private double scaleDistanceThreshold() {
-		return CalculationResource.CLOSE_THRESHOLD / camera.getScale();
-	}
+    private double scaleDistanceThreshold() {
+        return CalculationResource.CLOSE_THRESHOLD / camera.getScale();
+    }
 
-	@Override
-	public void mouseWheelMoved(final MouseWheelEvent e) {
-		affineTransform = camera.updateScaleByMouseWheel(e);
-		repaint();
-	}
+    @Override
+    public void mouseWheelMoved(final MouseWheelEvent e) {
+        affineTransform = camera.updateScaleByMouseWheel(e);
+        repaint();
+    }
 
-	@Override
-	public void componentMoved(final ComponentEvent arg0) {
+    @Override
+    public void componentMoved(final ComponentEvent arg0) {
 
-	}
+    }
 
-	@Override
-	public void componentShown(final ComponentEvent arg0) {
+    @Override
+    public void componentShown(final ComponentEvent arg0) {
 
-	}
+    }
 
-	@Override
-	public void componentHidden(final ComponentEvent arg0) {
+    @Override
+    public void componentHidden(final ComponentEvent arg0) {
 
-	}
+    }
 
-	@Override
-	public View getTopLevelView() {
-		return (View) SwingUtilities.getWindowAncestor(this);
-	}
+    @Override
+    public View getTopLevelView() {
+        return (View) SwingUtilities.getWindowAncestor(this);
+    }
 
-	@Override
-	public void setViolatingVertices(final Collection<OriVertex> vertices) {
-		this.violatingVertices = vertices;
-	}
+    @Override
+    public void setViolatingVertices(final Collection<OriVertex> vertices) {
+        this.violatingVertices = vertices;
+    }
 
-	@Override
-	public Optional<OriVertex> getPickedViolatingVertex() {
-		return Optional.ofNullable(pickedViolatingVertex);
-	}
+    @Override
+    public Optional<OriVertex> getPickedViolatingVertex() {
+        return Optional.ofNullable(pickedViolatingVertex);
+    }
 
-	@Override
-	public void setViolatingFaces(final Collection<OriFace> faces) {
-		violatingFaces = faces;
-	}
+    @Override
+    public void setViolatingFaces(final Collection<OriFace> faces) {
+        violatingFaces = faces;
+    }
 
-	@Override
-	public Optional<OriFace> getPickedViolatingFace() {
+    @Override
+    public Optional<OriFace> getPickedViolatingFace() {
 
-		return Optional.ofNullable(pickedViolatingFace);
-	}
+        return Optional.ofNullable(pickedViolatingFace);
+    }
 
-	@Override
-	public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener) {
-		paintComponentListener = listener;
-	}
+    @Override
+    public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener) {
+        paintComponentListener = listener;
+    }
 
-	@Override
-	public void updateCenterOfPaper(final double x, final double y) {
-		camera.updateCenterOfPaper(x, y);
-	}
+    @Override
+    public void updateCenterOfPaper(final double x, final double y) {
+        camera.updateCenterOfPaper(x, y);
+    }
 
-	@Override
-	public double getScale() {
-		return camera.getScale();
-	}
+    @Override
+    public double getScale() {
+        return camera.getScale();
+    }
 
 }

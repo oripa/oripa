@@ -32,28 +32,28 @@ import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
  *
  */
 public class CreasePatternFileConverter {
-	private static final Logger logger = LoggerFactory.getLogger(CreasePatternFileConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreasePatternFileConverter.class);
 
-	private final FileAccessService<Doc> creasePatternFileAccess;
+    private final FileAccessService<Doc> creasePatternFileAccess;
 
-	@Inject
-	public CreasePatternFileConverter(final FileAccessService<Doc> creasePatternFileAccess) {
-		this.creasePatternFileAccess = creasePatternFileAccess;
-	}
+    @Inject
+    public CreasePatternFileConverter(final FileAccessService<Doc> creasePatternFileAccess) {
+        this.creasePatternFileAccess = creasePatternFileAccess;
+    }
 
-	public void convert(final String inputFilePath, final String outputFilePath, final double eps) {
+    public void convert(final String inputFilePath, final String outputFilePath, final double eps) {
 
-		try {
-			creasePatternFileAccess.setConfigToSavingAction(DocFileTypes.fold(),
-					() -> {
-						var config = new CreasePatternFOLDConfig();
-						config.setEps(eps);
-						return config;
-					});
-			var input = creasePatternFileAccess.loadFile(inputFilePath).get();
-			creasePatternFileAccess.saveFile(input, outputFilePath);
-		} catch (Exception e) {
-			logger.error("conversion error", e);
-		}
-	}
+        try {
+            creasePatternFileAccess.setConfigToSavingAction(DocFileTypes.fold(),
+                    () -> {
+                        var config = new CreasePatternFOLDConfig();
+                        config.setEps(eps);
+                        return config;
+                    });
+            var input = creasePatternFileAccess.loadFile(inputFilePath).get();
+            creasePatternFileAccess.saveFile(input, outputFilePath);
+        } catch (Exception e) {
+            logger.error("conversion error", e);
+        }
+    }
 }

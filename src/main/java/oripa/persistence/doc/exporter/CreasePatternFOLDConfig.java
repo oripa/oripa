@@ -23,14 +23,14 @@ package oripa.persistence.doc.exporter;
  *
  */
 public class CreasePatternFOLDConfig {
-	private double eps;
+    private double eps;
 
-	public double getEps() {
-		return eps;
-	}
+    public double getEps() {
+        return eps;
+    }
 
-	public void setEps(final double eps) {
-		this.eps = eps;
-	}
+    public void setEps(final double eps) {
+        this.eps = eps;
+    }
 
 }

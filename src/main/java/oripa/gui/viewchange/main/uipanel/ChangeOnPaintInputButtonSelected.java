@@ -7,30 +7,30 @@ import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewchange.ChangeViewSetting;
 
 public class ChangeOnPaintInputButtonSelected implements ChangeViewSetting {
-	private static final Logger logger = LoggerFactory.getLogger(ChangeOnPaintInputButtonSelected.class);
-	private final UIPanelSetting setting;
+    private static final Logger logger = LoggerFactory.getLogger(ChangeOnPaintInputButtonSelected.class);
+    private final UIPanelSetting setting;
 
-	/**
-	 * UIPanel view settings for lineInput edit mode selected
-	 */
-	public ChangeOnPaintInputButtonSelected(final UIPanelSetting uiPanelSetting) {
-		setting = uiPanelSetting;
-	}
+    /**
+     * UIPanel view settings for lineInput edit mode selected
+     */
+    public ChangeOnPaintInputButtonSelected(final UIPanelSetting uiPanelSetting) {
+        setting = uiPanelSetting;
+    }
 
-	@Override
-	public void changeViewSetting() {
-		logger.debug("change UI to input mode");
+    @Override
+    public void changeViewSetting() {
+        logger.debug("change UI to input mode");
 
-		setting.selectInputMode();
+        setting.selectInputMode();
 
-		setting.setByValuePanelVisible(false);
+        setting.setByValuePanelVisible(false);
 
-		setting.setLineSelectionPanelVisible(false);
-		setting.setLineInputPanelVisible(true);
+        setting.setLineSelectionPanelVisible(false);
+        setting.setLineInputPanelVisible(true);
 
-		setting.setAngleStepPanelVisible(false);
+        setting.setAngleStepPanelVisible(false);
 
-		setting.setAlterLineTypePanelVisible(false);
-	}
+        setting.setAlterLineTypePanelVisible(false);
+    }
 
 }

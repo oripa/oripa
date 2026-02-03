@@ -41,114 +41,114 @@ import oripa.project.Project;
  *
  */
 public class FileAccessPresentationLogic {
-	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final MainFrameView view;
+    private final MainFrameView view;
 
-	private final PainterScreenPresenter screenPresenter;
+    private final PainterScreenPresenter screenPresenter;
 
-	private final PainterScreenSetting screenSetting;
+    private final PainterScreenSetting screenSetting;
 
-	private final ChildFrameManager childFrameManager;
+    private final ChildFrameManager childFrameManager;
 
-	private final PaintContextService paintContextService;
+    private final PaintContextService paintContextService;
 
-	private final FileAccessService<Doc> dataFileAccess;
+    private final FileAccessService<Doc> dataFileAccess;
 
-	private final Project project;
+    private final Project project;
 
-	@Inject
-	public FileAccessPresentationLogic(
-			final MainFrameView view,
-			final ChildFrameManager childFrameManager,
-			final PainterScreenPresenter screenPresenter,
-			final PainterScreenSetting screenSetting,
-			final PaintContextService paintContextService,
-			final Project project,
-			final FileAccessService<Doc> dataFileAccess) {
-		this.view = view;
-		this.childFrameManager = childFrameManager;
+    @Inject
+    public FileAccessPresentationLogic(
+            final MainFrameView view,
+            final ChildFrameManager childFrameManager,
+            final PainterScreenPresenter screenPresenter,
+            final PainterScreenSetting screenSetting,
+            final PaintContextService paintContextService,
+            final Project project,
+            final FileAccessService<Doc> dataFileAccess) {
+        this.view = view;
+        this.childFrameManager = childFrameManager;
 
-		this.screenPresenter = screenPresenter;
-		this.screenSetting = screenSetting;
+        this.screenPresenter = screenPresenter;
+        this.screenSetting = screenSetting;
 
-		this.paintContextService = paintContextService;
+        this.paintContextService = paintContextService;
 
-		this.project = project;
+        this.project = project;
 
-		this.dataFileAccess = dataFileAccess;
+        this.dataFileAccess = dataFileAccess;
 
-	}
+    }
 
-	/**
-	 * Saves file. Shows dialog when error.
-	 *
-	 * @param path
-	 * @param type
-	 * @return
-	 * @throws DataAccessException
-	 * @throws IllegalArgumentException
-	 */
-	public String saveFile(final String path, final FileType<Doc> type)
-			throws DataAccessException, IllegalArgumentException {
-		try {
-			var doc = Doc.forSaving(paintContextService.getCreasePattern(), project.getProperty());
-			dataFileAccess.saveFile(doc, path, type);
+    /**
+     * Saves file. Shows dialog when error.
+     *
+     * @param path
+     * @param type
+     * @return
+     * @throws DataAccessException
+     * @throws IllegalArgumentException
+     */
+    public String saveFile(final String path, final FileType<Doc> type)
+            throws DataAccessException, IllegalArgumentException {
+        try {
+            var doc = Doc.forSaving(paintContextService.getCreasePattern(), project.getProperty());
+            dataFileAccess.saveFile(doc, path, type);
 
-		} catch (DataAccessException | IllegalArgumentException e) {
-			logger.error("Failed to save", e);
-			view.showSaveFailureErrorMessage(e);
-			throw e;
-		}
+        } catch (DataAccessException | IllegalArgumentException e) {
+            logger.error("Failed to save", e);
+            view.showSaveFailureErrorMessage(e);
+            throw e;
+        }
 
-		return path;
+        return path;
 
-	}
+    }
 
-	/**
-	 * This method tries to read data from the path.
-	 *
-	 * @param filePath
-	 * @return file path for loaded file. {@code null} if loading is not done.
-	 */
-	public String loadFile(final String filePath) {
+    /**
+     * This method tries to read data from the path.
+     *
+     * @param filePath
+     * @return file path for loaded file. {@code null} if loading is not done.
+     */
+    public String loadFile(final String filePath) {
 
-		childFrameManager.closeAll(view);
+        childFrameManager.closeAll(view);
 
-		try {
+        try {
 
-			var docOpt = dataFileAccess.loadFile(filePath);
-			return docOpt
-					.map(doc -> {
-						project.setProperty(doc.getProperty());
-						project.setDataFilePath(filePath);
+            var docOpt = dataFileAccess.loadFile(filePath);
+            return docOpt
+                    .map(doc -> {
+                        project.setProperty(doc.getProperty());
+                        project.setDataFilePath(filePath);
 
-						var property = project.getProperty();
-						view.setEstimationResultColors(
-								ColorUtil.convertCodeToColor(property.extractFrontColorCode()),
-								ColorUtil.convertCodeToColor(property.extractBackColorCode()));
+                        var property = project.getProperty();
+                        view.setEstimationResultColors(
+                                ColorUtil.convertCodeToColor(property.extractFrontColorCode()),
+                                ColorUtil.convertCodeToColor(property.extractBackColorCode()));
 
-						screenSetting.setGridVisible(false);
-						paintContextService
-								.setCreasePatternToPaintContext(
-										doc.getCreasePattern());
-						screenPresenter.updateCameraCenter();
-						screenPresenter.clearPaperDomainOfModel();
-						return filePath;
-					}).orElse(null);
-		} catch (DataAccessException | IllegalArgumentException e) {
-			logger.error("failed to load", e);
-			view.showLoadFailureErrorMessage(e);
-			return project.getDataFilePath();
-		}
-	}
+                        screenSetting.setGridVisible(false);
+                        paintContextService
+                                .setCreasePatternToPaintContext(
+                                        doc.getCreasePattern());
+                        screenPresenter.updateCameraCenter();
+                        screenPresenter.clearPaperDomainOfModel();
+                        return filePath;
+                    }).orElse(null);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            logger.error("failed to load", e);
+            view.showLoadFailureErrorMessage(e);
+            return project.getDataFilePath();
+        }
+    }
 
-	public void importFile(final String path) {
+    public void importFile(final String path) {
 
-		var docOpt = dataFileAccess.loadFile(path);
-		docOpt.ifPresent(
-				doc -> paintContextService.setToImportedLines(doc.getCreasePattern()));
+        var docOpt = dataFileAccess.loadFile(path);
+        docOpt.ifPresent(
+                doc -> paintContextService.setToImportedLines(doc.getCreasePattern()));
 
-	}
+    }
 
 }

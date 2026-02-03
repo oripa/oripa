@@ -46,48 +46,48 @@ import oripa.vecmath.Vector2d;
  */
 @ExtendWith(MockitoExtension.class)
 class OutsideLineRemoverTest {
-	@InjectMocks
-	private OutsideLineRemover remover;
-	@Mock
-	private IsOnTempOutlineLoop isOnTempOutlineLoop;
-	@Mock
-	private IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
-	@Mock
-	private Painter painter;
-	@Captor
-	private ArgumentCaptor<Collection<OriLine>> linesCaptor;
+    @InjectMocks
+    private OutsideLineRemover remover;
+    @Mock
+    private IsOnTempOutlineLoop isOnTempOutlineLoop;
+    @Mock
+    private IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
+    @Mock
+    private Painter painter;
+    @Captor
+    private ArgumentCaptor<Collection<OriLine>> linesCaptor;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.paint.outline.OutsideLineRemover#removeLinesOutsideOfOutlines(oripa.domain.cptool.Painter, java.util.Collection)}.
-	 */
-	@Test
-	void testRemoveLinesOutsideOfOutlines() {
-		var l0 = new OriLine(0, 0, 1, 0, OriLine.Type.MOUNTAIN);
-		var l1 = new OriLine(1, 0, 1, 1, OriLine.Type.MOUNTAIN);
-		var l2 = new OriLine(1, 1, 0, 1, OriLine.Type.MOUNTAIN);
-		var l3 = new OriLine(0, 1, 0, 0, OriLine.Type.MOUNTAIN);
-		var l4 = new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.MOUNTAIN);
+    /**
+     * Test method for
+     * {@link oripa.domain.paint.outline.OutsideLineRemover#removeLinesOutsideOfOutlines(oripa.domain.cptool.Painter, java.util.Collection)}.
+     */
+    @Test
+    void testRemoveLinesOutsideOfOutlines() {
+        var l0 = new OriLine(0, 0, 1, 0, OriLine.Type.MOUNTAIN);
+        var l1 = new OriLine(1, 0, 1, 1, OriLine.Type.MOUNTAIN);
+        var l2 = new OriLine(1, 1, 0, 1, OriLine.Type.MOUNTAIN);
+        var l3 = new OriLine(0, 1, 0, 0, OriLine.Type.MOUNTAIN);
+        var l4 = new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.MOUNTAIN);
 
-		var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
-				l0, l1, l2, l3, l4));
+        var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
+                l0, l1, l2, l3, l4));
 
-		when(painter.getCreasePattern()).thenReturn(creasePattern);
+        when(painter.getCreasePattern()).thenReturn(creasePattern);
 
-		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
+        var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
 
-		when(isOnTempOutlineLoop.execute(eq(outlineVertices), not(or(eq(l2.getP1()), eq(l4.getP1()))), anyDouble()))
-				.thenReturn(true);
-		when(isOnTempOutlineLoop.execute(eq(outlineVertices), or(eq(l2.getP1()), eq(l4.getP1())), anyDouble()))
-				.thenReturn(false);
+        when(isOnTempOutlineLoop.execute(eq(outlineVertices), not(or(eq(l2.getP1()), eq(l4.getP1()))), anyDouble()))
+                .thenReturn(true);
+        when(isOnTempOutlineLoop.execute(eq(outlineVertices), or(eq(l2.getP1()), eq(l4.getP1())), anyDouble()))
+                .thenReturn(false);
 
-		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), not(eq(l2.getP1())))).thenReturn(false);
-		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), eq(l2.getP1()))).thenReturn(true);
+        when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), not(eq(l2.getP1())))).thenReturn(false);
+        when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), eq(l2.getP1()))).thenReturn(true);
 
-		remover.removeLinesOutsideOfOutlines(painter, outlineVertices);
+        remover.removeLinesOutsideOfOutlines(painter, outlineVertices);
 
-		verify(painter).removeLines(linesCaptor.capture());
-		assertEquals(2, linesCaptor.getValue().size());
-	}
+        verify(painter).removeLines(linesCaptor.capture());
+        assertEquals(2, linesCaptor.getValue().size());
+    }
 
 }

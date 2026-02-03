@@ -23,7 +23,7 @@ package oripa.util;
  *
  */
 public record IntPair(
-		int v1,
-		int v2) {
+        int v1,
+        int v2) {
 
 }

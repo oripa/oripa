@@ -40,97 +40,97 @@ import oripa.util.StopWatch;
  *
  */
 public class StackConditionOf4FaceFactory {
-	private static final Logger logger = LoggerFactory.getLogger(StackConditionOf4FaceFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(StackConditionOf4FaceFactory.class);
 
-	/**
-	 * Creates 4-face condition.
-	 *
-	 * @param faces
-	 *            all faces of the model
-	 * @param edges
-	 *            all edges of the model
-	 * @param overlapRelation
-	 *            overlap relation matrix
-	 * @param subFacesOfEachFace
-	 *            mapping face to subface set
-	 */
-	public List<StackConditionOf4Faces> createAll(final List<OriFace> faces,
-			final List<OriEdge> edges, final OverlapRelation overlapRelation,
-			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
-			final double eps) {
-		var condition4s = new ConcurrentLinkedQueue<StackConditionOf4Faces>();
+    /**
+     * Creates 4-face condition.
+     *
+     * @param faces
+     *            all faces of the model
+     * @param edges
+     *            all edges of the model
+     * @param overlapRelation
+     *            overlap relation matrix
+     * @param subFacesOfEachFace
+     *            mapping face to subface set
+     */
+    public List<StackConditionOf4Faces> createAll(final List<OriFace> faces,
+            final List<OriEdge> edges, final OverlapRelation overlapRelation,
+            final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
+            final double eps) {
+        var condition4s = new ConcurrentLinkedQueue<StackConditionOf4Faces>();
 
-		int edgeNum = edges.size();
-		logger.debug("edgeNum = " + edgeNum);
+        int edgeNum = edges.size();
+        logger.debug("edgeNum = " + edgeNum);
 
-		var watch = new StopWatch(true);
+        var watch = new StopWatch(true);
 
-		IntStream.range(0, edgeNum).parallel().forEach(i -> {
-			OriEdge e0 = edges.get(i);
-			var e0LeftOpt = e0.getLeft();
-			var e0RightOpt = e0.getRight();
+        IntStream.range(0, edgeNum).parallel().forEach(i -> {
+            OriEdge e0 = edges.get(i);
+            var e0LeftOpt = e0.getLeft();
+            var e0RightOpt = e0.getRight();
 
-			if (e0LeftOpt.isEmpty() || e0RightOpt.isEmpty()) {
-				return;
-			}
+            if (e0LeftOpt.isEmpty() || e0RightOpt.isEmpty()) {
+                return;
+            }
 
-			for (int j = i + 1; j < edgeNum; j++) {
-				OriEdge e1 = edges.get(j);
-				var e1LeftOpt = e1.getLeft();
-				var e1RightOpt = e1.getRight();
-				if (e1LeftOpt.isEmpty() || e1RightOpt.isEmpty()) {
-					continue;
-				}
+            for (int j = i + 1; j < edgeNum; j++) {
+                OriEdge e1 = edges.get(j);
+                var e1LeftOpt = e1.getLeft();
+                var e1RightOpt = e1.getRight();
+                if (e1LeftOpt.isEmpty() || e1RightOpt.isEmpty()) {
+                    continue;
+                }
 
-				if (!GeomUtil.isOverlap(e0.toSegment(), e1.toSegment(), eps)) {
-					continue;
-				}
+                if (!GeomUtil.isOverlap(e0.toSegment(), e1.toSegment(), eps)) {
+                    continue;
+                }
 
-				var e0LeftFace = e0LeftOpt.get().getFace();
-				var e0RightFace = e0RightOpt.get().getFace();
-				var e1LeftFace = e1LeftOpt.get().getFace();
-				var e1RightFace = e1RightOpt.get().getFace();
+                var e0LeftFace = e0LeftOpt.get().getFace();
+                var e0RightFace = e0RightOpt.get().getFace();
+                var e1LeftFace = e1LeftOpt.get().getFace();
+                var e1RightFace = e1RightOpt.get().getFace();
 
-				var intersectionSubfaces = subFacesOfEachFace.get(e0LeftFace).stream()
-						.filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))
-						.filter(s -> subFacesOfEachFace.get(e1LeftFace).contains(s))
-						.filter(s -> subFacesOfEachFace.get(e1RightFace).contains(s))
-						.toList();
+                var intersectionSubfaces = subFacesOfEachFace.get(e0LeftFace).stream()
+                        .filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))
+                        .filter(s -> subFacesOfEachFace.get(e1LeftFace).contains(s))
+                        .filter(s -> subFacesOfEachFace.get(e1RightFace).contains(s))
+                        .toList();
 
-				if (intersectionSubfaces.isEmpty()) {
-					continue;
-				}
+                if (intersectionSubfaces.isEmpty()) {
+                    continue;
+                }
 
-				var e0LeftFaceID = e0LeftFace.getFaceID();
-				var e0RightFaceID = e0RightFace.getFaceID();
-				var e1LeftFaceID = e1LeftFace.getFaceID();
-				var e1RightFaceID = e1RightFace.getFaceID();
+                var e0LeftFaceID = e0LeftFace.getFaceID();
+                var e0RightFaceID = e0RightFace.getFaceID();
+                var e1LeftFaceID = e1LeftFace.getFaceID();
+                var e1RightFaceID = e1RightFace.getFaceID();
 
-				int upper1, lower1, upper2, lower2;
+                int upper1, lower1, upper2, lower2;
 
-				if (overlapRelation.isUpper(e0LeftFaceID, e0RightFaceID)) {
-					upper1 = e0RightFaceID;
-					lower1 = e0LeftFaceID;
-				} else {
-					upper1 = e0LeftFaceID;
-					lower1 = e0RightFaceID;
-				}
-				if (overlapRelation.isUpper(e1LeftFaceID, e1RightFaceID)) {
-					upper2 = e1RightFaceID;
-					lower2 = e1LeftFaceID;
-				} else {
-					upper2 = e1LeftFaceID;
-					lower2 = e1RightFaceID;
-				}
+                if (overlapRelation.isUpper(e0LeftFaceID, e0RightFaceID)) {
+                    upper1 = e0RightFaceID;
+                    lower1 = e0LeftFaceID;
+                } else {
+                    upper1 = e0LeftFaceID;
+                    lower1 = e0RightFaceID;
+                }
+                if (overlapRelation.isUpper(e1LeftFaceID, e1RightFaceID)) {
+                    upper2 = e1RightFaceID;
+                    lower2 = e1LeftFaceID;
+                } else {
+                    upper2 = e1LeftFaceID;
+                    lower2 = e1RightFaceID;
+                }
 
-				condition4s.add(new StackConditionOf4Faces(upper1, lower1, upper2, lower2));
-			}
-		});
+                condition4s.add(new StackConditionOf4Faces(upper1, lower1, upper2, lower2));
+            }
+        });
 
-		logger.debug("#condition4 = {}", condition4s.size());
-		logger.debug("condition4s computation time {}[ms]", watch.getMilliSec());
+        logger.debug("#condition4 = {}", condition4s.size());
+        logger.debug("condition4s computation time {}[ms]", watch.getMilliSec());
 
-		return condition4s.stream().toList();
-	}
+        return condition4s.stream().toList();
+    }
 
 }

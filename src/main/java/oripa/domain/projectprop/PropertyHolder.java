@@ -23,7 +23,7 @@ package oripa.domain.projectprop;
  *
  */
 public interface PropertyHolder {
-	Property getProperty();
+    Property getProperty();
 
-	void setProperty(Property property);
+    void setProperty(Property property);
 }

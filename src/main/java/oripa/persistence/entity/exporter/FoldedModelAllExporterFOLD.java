@@ -36,35 +36,35 @@ import oripa.persistence.foldformat.Frame;
  */
 public class FoldedModelAllExporterFOLD implements Exporter<FoldedModelEntity> {
 
-	@Override
-	public boolean export(final FoldedModelEntity entity, final String filePath, final Object configObj)
-			throws IOException, IllegalArgumentException {
-		var elementConverter = new FoldedModelElementConverter();
-		var factory = new FoldedModelFOLDFactory(elementConverter);
+    @Override
+    public boolean export(final FoldedModelEntity entity, final String filePath, final Object configObj)
+            throws IOException, IllegalArgumentException {
+        var elementConverter = new FoldedModelElementConverter();
+        var factory = new FoldedModelFOLDFactory(elementConverter);
 
-		var origamiModel = entity.getOrigamiModel();
-		var overlapRelations = entity.getOverlapRelations();
+        var origamiModel = entity.getOrigamiModel();
+        var overlapRelations = entity.getOverlapRelations();
 
-		var foldFormat = factory.createWithoutFaceOrders(origamiModel);
+        var foldFormat = factory.createWithoutFaceOrders(origamiModel);
 
-		var frames = new ArrayList<Frame>();
-		overlapRelations.forEach(relation -> {
-			var frame = new Frame();
-			frame.setFrameInherit(true);
-			frame.setFrameParent(0);
-			frame.setFaceOrders(elementConverter.toFaceOrders(origamiModel, relation));
-			frames.add(frame);
-		});
+        var frames = new ArrayList<Frame>();
+        overlapRelations.forEach(relation -> {
+            var frame = new Frame();
+            frame.setFrameInherit(true);
+            frame.setFrameParent(0);
+            frame.setFaceOrders(elementConverter.toFaceOrders(origamiModel, relation));
+            frames.add(frame);
+        });
 
-		foldFormat.setFileFrames(frames);
+        foldFormat.setFileFrames(frames);
 
-		try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
-			var gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.toJson(foldFormat, writer);
-			writer.flush();
-		}
+        try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
+            var gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(foldFormat, writer);
+            writer.flush();
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

@@ -31,14 +31,14 @@ import oripa.resource.ResourceHolder;
  */
 public class CircleCopyDialogFactory {
 
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public CircleCopyDialogFactory(final ResourceHolder resourceHolder) {
-		this.resourceHolder = resourceHolder;
-	}
+    @Inject
+    public CircleCopyDialogFactory(final ResourceHolder resourceHolder) {
+        this.resourceHolder = resourceHolder;
+    }
 
-	public CircleCopyDialogView create(final FrameView owner) {
-		return new CircleCopyDialog((JFrame) owner, resourceHolder);
-	}
+    public CircleCopyDialogView create(final FrameView owner) {
+        return new CircleCopyDialog((JFrame) owner, resourceHolder);
+    }
 }

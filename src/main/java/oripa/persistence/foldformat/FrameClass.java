@@ -19,6 +19,6 @@
 package oripa.persistence.foldformat;
 
 public class FrameClass {
-	public static final String FOLDED_FORM = "foldedForm";
-	public static final String CREASE_PATTERN = "creasePattern";
+    public static final String FOLDED_FORM = "foldedForm";
+    public static final String CREASE_PATTERN = "creasePattern";
 }

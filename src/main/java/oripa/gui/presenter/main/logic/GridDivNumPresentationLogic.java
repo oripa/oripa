@@ -28,50 +28,50 @@ import oripa.gui.view.main.UIPanelView;
  *
  */
 public class GridDivNumPresentationLogic {
-	private final UIPanelView view;
-	private final ViewScreenUpdater screenUpdater;
+    private final UIPanelView view;
+    private final ViewScreenUpdater screenUpdater;
 
-	private final PaintContext paintContext;
+    private final PaintContext paintContext;
 
-	@Inject
-	public GridDivNumPresentationLogic(
-			final UIPanelView view,
-			final ViewScreenUpdater screenUpdater,
-			final PaintContext paintContext) {
+    @Inject
+    public GridDivNumPresentationLogic(
+            final UIPanelView view,
+            final ViewScreenUpdater screenUpdater,
+            final PaintContext paintContext) {
 
-		this.view = view;
-		this.screenUpdater = screenUpdater;
-		this.paintContext = paintContext;
-	}
+        this.view = view;
+        this.screenUpdater = screenUpdater;
+        this.paintContext = paintContext;
+    }
 
-	public void makeGridSizeHalf() {
-		setGridDivNumIfValid(paintContext.getGridDivNum() * 2);
-	}
+    public void makeGridSizeHalf() {
+        setGridDivNumIfValid(paintContext.getGridDivNum() * 2);
+    }
 
-	public void makeGridSizeTwiceLarge() {
-		setGridDivNumIfValid(paintContext.getGridDivNum() / 2);
-	}
+    public void makeGridSizeTwiceLarge() {
+        setGridDivNumIfValid(paintContext.getGridDivNum() / 2);
+    }
 
-	public void updateGridDivNum(final int gridDivNum) {
-		setGridDivNumIfValid(gridDivNum);
-	}
+    public void updateGridDivNum(final int gridDivNum) {
+        setGridDivNumIfValid(gridDivNum);
+    }
 
-	private void setGridDivNumIfValid(final int gridDivNum) {
-		if (!isValidGridDivNum(gridDivNum)) {
-			return;
-		}
-		paintContext.setGridDivNum(gridDivNum);
-		view.setGridDivNum(gridDivNum);
+    private void setGridDivNumIfValid(final int gridDivNum) {
+        if (!isValidGridDivNum(gridDivNum)) {
+            return;
+        }
+        paintContext.setGridDivNum(gridDivNum);
+        view.setGridDivNum(gridDivNum);
 
-		screenUpdater.updateScreen();
-	}
+        screenUpdater.updateScreen();
+    }
 
-	private boolean isValidGridDivNum(final int gridDivNum) {
-		return gridDivNum >= 2 && gridDivNum <= 256;
-	}
+    private boolean isValidGridDivNum(final int gridDivNum) {
+        return gridDivNum >= 2 && gridDivNum <= 256;
+    }
 
-	public void setTriangularGridMode(boolean enabled) {
-		paintContext.setTriangularGridMode(enabled);
-		screenUpdater.updateScreen();
-	}
+    public void setTriangularGridMode(boolean enabled) {
+        paintContext.setTriangularGridMode(enabled);
+        screenUpdater.updateScreen();
+    }
 }

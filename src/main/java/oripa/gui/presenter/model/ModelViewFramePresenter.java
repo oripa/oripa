@@ -34,76 +34,76 @@ import oripa.persistence.entity.OrigamiModelFileTypes;
  */
 public class ModelViewFramePresenter {
 
-	private final ModelViewFrameView view;
-	private final ModelViewFilePresentationLogic filePresentationLogic;
+    private final ModelViewFrameView view;
+    private final ModelViewFilePresentationLogic filePresentationLogic;
 
-	private final List<OrigamiModel> origamiModels;
-	private OrigamiModel origamiModel;
-	private final PainterScreenSetting mainScreenSetting;
+    private final List<OrigamiModel> origamiModels;
+    private OrigamiModel origamiModel;
+    private final PainterScreenSetting mainScreenSetting;
 
-	public ModelViewFramePresenter(
-			final ModelViewFrameView view,
-			final ModelViewFilePresentationLogic filePresentationLogic,
-			final PainterScreenSetting mainScreenSetting,
-			final List<OrigamiModel> origamiModels,
-			final double eps) {
-		this.view = view;
-		this.filePresentationLogic = filePresentationLogic;
+    public ModelViewFramePresenter(
+            final ModelViewFrameView view,
+            final ModelViewFilePresentationLogic filePresentationLogic,
+            final PainterScreenSetting mainScreenSetting,
+            final List<OrigamiModel> origamiModels,
+            final double eps) {
+        this.view = view;
+        this.filePresentationLogic = filePresentationLogic;
 
-		this.mainScreenSetting = mainScreenSetting;
-		this.origamiModels = origamiModels;
+        this.mainScreenSetting = mainScreenSetting;
+        this.origamiModels = origamiModels;
 
-		addListenersToComponents();
+        addListenersToComponents();
 
-		setToView();
-	}
+        setToView();
+    }
 
-	private void setToView() {
-		view.setModelCount(origamiModels.size());
-	}
+    private void setToView() {
+        view.setModelCount(origamiModels.size());
+    }
 
-	private void addListenersToComponents() {
-		view.addFlipModelButtonListener(this::flipOrigamiModel);
+    private void addListenersToComponents() {
+        view.addFlipModelButtonListener(this::flipOrigamiModel);
 
-		view.addCrossLineButtonListener(() -> mainScreenSetting.setCrossLineVisible(view.isCrossLineVisible()));
+        view.addCrossLineButtonListener(() -> mainScreenSetting.setCrossLineVisible(view.isCrossLineVisible()));
 
-		view.addExportDXFButtonListener(() -> exportFile(OrigamiModelFileTypes.dxf()));
+        view.addExportDXFButtonListener(() -> exportFile(OrigamiModelFileTypes.dxf()));
 
-		view.addExportOBJButtonListener(() -> exportFile(OrigamiModelFileTypes.obj()));
+        view.addExportOBJButtonListener(() -> exportFile(OrigamiModelFileTypes.obj()));
 
-		view.addExportSVGButtonListener(() -> exportFile(OrigamiModelFileTypes.svg()));
+        view.addExportSVGButtonListener(() -> exportFile(OrigamiModelFileTypes.svg()));
 
-		view.addFillAlphaButtonListener(() -> {
-			view.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
-			view.repaint();
-		});
+        view.addFillAlphaButtonListener(() -> {
+            view.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
+            view.repaint();
+        });
 
-		view.addFillNoneButtonListener(() -> {
-			view.setModelDisplayMode(ModelDisplayMode.FILL_NONE);
-			view.repaint();
-		});
+        view.addFillNoneButtonListener(() -> {
+            view.setModelDisplayMode(ModelDisplayMode.FILL_NONE);
+            view.repaint();
+        });
 
-		view.addModelSwitchListener(index -> {
-			origamiModel = origamiModels.get(index);
-			view.setModel(origamiModel);
-		});
-	}
+        view.addModelSwitchListener(index -> {
+            origamiModel = origamiModels.get(index);
+            view.setModel(origamiModel);
+        });
+    }
 
-	private void flipOrigamiModel() {
-		origamiModel.flipXCoordinates();
-		view.repaint();
-	}
+    private void flipOrigamiModel() {
+        origamiModel.flipXCoordinates();
+        view.repaint();
+    }
 
-	private void exportFile(final FileType<OrigamiModel> type) {
+    private void exportFile(final FileType<OrigamiModel> type) {
 
-		try {
-			filePresentationLogic.exportFile(view, origamiModel, type);
-		} catch (Exception e) {
-			view.showExportErrorMessage(e);
-		}
-	}
+        try {
+            filePresentationLogic.exportFile(view, origamiModel, type);
+        } catch (Exception e) {
+            view.showExportErrorMessage(e);
+        }
+    }
 
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
-	}
+    public void setViewVisible(final boolean visible) {
+        view.setVisible(visible);
+    }
 }

@@ -24,8 +24,8 @@ package oripa.util.history;
  */
 public interface UndoInfo<Info> {
 
-	Info getInfo();
+    Info getInfo();
 
-	void setInfo(Info info);
+    void setInfo(Info info);
 
 }

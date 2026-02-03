@@ -28,47 +28,47 @@ import java.util.List;
  *
  */
 public class ModelIndexChangeSupport {
-	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-	private final HashMap<Object, PropertyChangeListener> map = new HashMap<>();
+    private final HashMap<Object, PropertyChangeListener> map = new HashMap<>();
 
-	private static final String INDEX = "INDEX";
+    private static final String INDEX = "INDEX";
 
-	private int index = -1;
+    private int index = -1;
 
-	public void putListener(final Object parentOfListener, final PropertyChangeListener listener) {
-		removeListener(parentOfListener);
+    public void putListener(final Object parentOfListener, final PropertyChangeListener listener) {
+        removeListener(parentOfListener);
 
-		map.put(parentOfListener, listener);
+        map.put(parentOfListener, listener);
 
-		support.addPropertyChangeListener(INDEX, listener);
-	}
+        support.addPropertyChangeListener(INDEX, listener);
+    }
 
-	public void removeListener(final Object parentOfListener) {
-		if (!map.containsKey(parentOfListener)) {
-			return;
-		}
+    public void removeListener(final Object parentOfListener) {
+        if (!map.containsKey(parentOfListener)) {
+            return;
+        }
 
-		support.removePropertyChangeListener(map.remove(parentOfListener));
-	}
+        support.removePropertyChangeListener(map.remove(parentOfListener));
+    }
 
-	public void removeListeners() {
-		List.of(support.getPropertyChangeListeners())
-				.forEach(listener -> support.removePropertyChangeListener(listener));
+    public void removeListeners() {
+        List.of(support.getPropertyChangeListeners())
+                .forEach(listener -> support.removePropertyChangeListener(listener));
 
-		map.clear();
+        map.clear();
 
-		setIndex(-1);
-	}
+        setIndex(-1);
+    }
 
-	public int getIndex() {
-		return index;
-	}
+    public int getIndex() {
+        return index;
+    }
 
-	public void setIndex(final int index) {
-		var old = this.index;
-		this.index = index;
+    public void setIndex(final int index) {
+        var old = this.index;
+        this.index = index;
 
-		support.firePropertyChange(INDEX, old, index);
-	}
+        support.firePropertyChange(INDEX, old, index);
+    }
 }

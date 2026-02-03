@@ -23,116 +23,116 @@ package oripa.file;
  *
  */
 public class InitData {
-	private String lastUsedFile = ""; // dead property, remaining for
-										// compatibility reasons with older init
-										// files
-	private String[] MRUFiles = new String[0];
+    private String lastUsedFile = ""; // dead property, remaining for
+                                      // compatibility reasons with older init
+                                      // files
+    private String[] MRUFiles = new String[0];
 
-	private boolean zeroLineWidth = false;
+    private boolean zeroLineWidth = false;
 
-	// actually unassigned line is also controlled by this property.
-	private boolean mvLineVisible = true;
+    // actually unassigned line is also controlled by this property.
+    private boolean mvLineVisible = true;
 
-	private boolean auxLineVisible = true;
-	private boolean vertexVisible = true;
+    private boolean auxLineVisible = true;
+    private boolean vertexVisible = true;
 
-	public InitData() {
-	}
+    public InitData() {
+    }
 
-	/**
-	 *
-	 * @param s
-	 *            set array of most recently used file paths
-	 */
-	public void setMRUFiles(final String[] s) {
-		MRUFiles = s;
-	}
+    /**
+     *
+     * @param s
+     *            set array of most recently used file paths
+     */
+    public void setMRUFiles(final String[] s) {
+        MRUFiles = s;
+    }
 
-	/**
-	 *
-	 * @return array of most recently used file paths
-	 */
-	public String[] getMRUFiles() {
-		return MRUFiles;
-	}
+    /**
+     *
+     * @return array of most recently used file paths
+     */
+    public String[] getMRUFiles() {
+        return MRUFiles;
+    }
 
-	/**
-	 *
-	 * @param s
-	 *            path string to file
-	 */
-	public void setLastUsedFile(final String s) {
-		lastUsedFile = s;
-	}
+    /**
+     *
+     * @param s
+     *            path string to file
+     */
+    public void setLastUsedFile(final String s) {
+        lastUsedFile = s;
+    }
 
-	/**
-	 *
-	 * @return last used file
-	 */
-	public String getLastUsedFile() {
-		return lastUsedFile;
-	}
+    /**
+     *
+     * @return last used file
+     */
+    public String getLastUsedFile() {
+        return lastUsedFile;
+    }
 
-	/**
-	 *
-	 * @param zeroLineWidth
-	 *            sets zeroLineWidth
-	 */
-	public void setZeroLineWidth(final boolean zeroLineWidth) {
-		this.zeroLineWidth = zeroLineWidth;
-	}
+    /**
+     *
+     * @param zeroLineWidth
+     *            sets zeroLineWidth
+     */
+    public void setZeroLineWidth(final boolean zeroLineWidth) {
+        this.zeroLineWidth = zeroLineWidth;
+    }
 
-	/**
-	 *
-	 * @return zeroLineWidth
-	 */
-	public boolean isZeroLineWidth() {
-		return zeroLineWidth;
-	}
+    /**
+     *
+     * @return zeroLineWidth
+     */
+    public boolean isZeroLineWidth() {
+        return zeroLineWidth;
+    }
 
-	/**
-	 * @return mvLineVisible
-	 */
-	public boolean isMvLineVisible() {
-		return mvLineVisible;
-	}
+    /**
+     * @return mvLineVisible
+     */
+    public boolean isMvLineVisible() {
+        return mvLineVisible;
+    }
 
-	/**
-	 * @param mvLineVisible
-	 *            Sets mvLineVisible
-	 */
-	public void setMvLineVisible(final boolean mvLineVisible) {
-		this.mvLineVisible = mvLineVisible;
-	}
+    /**
+     * @param mvLineVisible
+     *            Sets mvLineVisible
+     */
+    public void setMvLineVisible(final boolean mvLineVisible) {
+        this.mvLineVisible = mvLineVisible;
+    }
 
-	/**
-	 * @return auxLineVisible
-	 */
-	public boolean isAuxLineVisible() {
-		return auxLineVisible;
-	}
+    /**
+     * @return auxLineVisible
+     */
+    public boolean isAuxLineVisible() {
+        return auxLineVisible;
+    }
 
-	/**
-	 * @param auxLineVisible
-	 *            Sets auxLineVisible
-	 */
-	public void setAuxLineVisible(final boolean auxLineVisible) {
-		this.auxLineVisible = auxLineVisible;
-	}
+    /**
+     * @param auxLineVisible
+     *            Sets auxLineVisible
+     */
+    public void setAuxLineVisible(final boolean auxLineVisible) {
+        this.auxLineVisible = auxLineVisible;
+    }
 
-	/**
-	 * @return vertexVisible
-	 */
-	public boolean isVertexVisible() {
-		return vertexVisible;
-	}
+    /**
+     * @return vertexVisible
+     */
+    public boolean isVertexVisible() {
+        return vertexVisible;
+    }
 
-	/**
-	 * @param vertexVisible
-	 *            Sets vertexVisible
-	 */
-	public void setVertexVisible(final boolean vertexVisible) {
-		this.vertexVisible = vertexVisible;
-	}
+    /**
+     * @param vertexVisible
+     *            Sets vertexVisible
+     */
+    public void setVertexVisible(final boolean vertexVisible) {
+        this.vertexVisible = vertexVisible;
+    }
 
 }

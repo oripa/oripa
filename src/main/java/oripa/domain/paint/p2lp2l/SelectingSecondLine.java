@@ -27,21 +27,21 @@ import oripa.domain.paint.core.PickingLine;
  */
 public class SelectingSecondLine extends PickingLine {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingSecondVertex.class);
-		setNextClass(SelectingSolutionLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingSecondVertex.class);
+        setNextClass(SelectingSolutionLine.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var command = new PointToLinePointToLineAxiomLineSetterCommand(context);
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        var command = new PointToLinePointToLineAxiomLineSetterCommand(context);
 
-		command.execute();
-	}
+        command.execute();
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popVertex();
+    }
 }

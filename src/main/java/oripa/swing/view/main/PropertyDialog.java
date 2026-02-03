@@ -46,165 +46,165 @@ import oripa.swing.view.util.GridBagConstraintsBuilder;
  *
  */
 public class PropertyDialog extends JDialog implements
-		PropertyDialogView, ComponentListener {
+        PropertyDialogView, ComponentListener {
 
-	private static final long serialVersionUID = -5864700666603644379L;
+    private static final long serialVersionUID = -5864700666603644379L;
 
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	private final JTextField titleTextField = new JTextField();
-	private final JTextField editorNameTextField = new JTextField();
-	private final JTextField originalAuthorTextField = new JTextField();
-	private final JTextField referenceTextField = new JTextField();
-	private final JTextArea memoTextArea = new JTextArea();
+    private final JTextField titleTextField = new JTextField();
+    private final JTextField editorNameTextField = new JTextField();
+    private final JTextField originalAuthorTextField = new JTextField();
+    private final JTextField referenceTextField = new JTextField();
+    private final JTextArea memoTextArea = new JTextArea();
 
-	private final List<Runnable> okListeners = new ArrayList<>();
+    private final List<Runnable> okListeners = new ArrayList<>();
 
-	private final JButton okButton;
+    private final JButton okButton;
 
-	public PropertyDialog(final JFrame parent, final ResourceHolder resourceHolder) {
-		super(parent);
+    public PropertyDialog(final JFrame parent, final ResourceHolder resourceHolder) {
+        super(parent);
 
-		this.resourceHolder = resourceHolder;
-		okButton = new JButton(
-				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_OK_ID));
+        this.resourceHolder = resourceHolder;
+        okButton = new JButton(
+                resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_OK_ID));
 
-		build();
+        build();
 
-		okButton.addActionListener(e -> {
-			okListeners.forEach(listener -> listener.run());
-			dispose();
-		});
-	}
+        okButton.addActionListener(e -> {
+            okListeners.forEach(listener -> listener.run());
+            dispose();
+        });
+    }
 
-	private void build() {
-		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_TITLE_ID));
-		setSize(420, 278);
-		addComponentListener(this);
+    private void build() {
+        setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_TITLE_ID));
+        setSize(420, 278);
+        addComponentListener(this);
 
-		// setup ScrollPane and word wrapping in memoTextArea
-		memoTextArea.setLineWrap(true);
-		memoTextArea.setWrapStyleWord(true);
-		JScrollPane memoScrollPane = new JScrollPane(memoTextArea);
-		memoScrollPane.setVerticalScrollBarPolicy(
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		memoScrollPane.setPreferredSize(new Dimension(250, 250));
+        // setup ScrollPane and word wrapping in memoTextArea
+        memoTextArea.setLineWrap(true);
+        memoTextArea.setWrapStyleWord(true);
+        JScrollPane memoScrollPane = new JScrollPane(memoTextArea);
+        memoScrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        memoScrollPane.setPreferredSize(new Dimension(250, 250));
 
-		// Add Components to contentPane
-		var contentPane = getContentPane();
-		contentPane.setLayout(new GridBagLayout());
+        // Add Components to contentPane
+        var contentPane = getContentPane();
+        contentPane.setLayout(new GridBagLayout());
 
-		// left column should not take more space than needed
-		// remaining space given to input fields
-		var leftWeight = 0.0;
-		var rightWeight = 1.0;
-		var gbcBuilder = new GridBagConstraintsBuilder(2).setInsets(2, 5, 2, 5).setWeight(leftWeight, 0.0)
-				.setAnchor(GridBagConstraints.CENTER);
+        // left column should not take more space than needed
+        // remaining space given to input fields
+        var leftWeight = 0.0;
+        var rightWeight = 1.0;
+        var gbcBuilder = new GridBagConstraintsBuilder(2).setInsets(2, 5, 2, 5).setWeight(leftWeight, 0.0)
+                .setAnchor(GridBagConstraints.CENTER);
 
-		contentPane.add(
-				new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MODEL_TITLE_ID)),
-				gbcBuilder.getNextField());
-		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(titleTextField, gbcBuilder.getNextField());
+        contentPane.add(
+                new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MODEL_TITLE_ID)),
+                gbcBuilder.getNextField());
+        gbcBuilder.setWeight(rightWeight, 0.0);
+        contentPane.add(titleTextField, gbcBuilder.getNextField());
 
-		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_AUTHOR_ID)),
-				gbcBuilder.getNextField());
-		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(editorNameTextField, gbcBuilder.getNextField());
+        gbcBuilder.setWeight(leftWeight, 0.0);
+        contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_AUTHOR_ID)),
+                gbcBuilder.getNextField());
+        gbcBuilder.setWeight(rightWeight, 0.0);
+        contentPane.add(editorNameTextField, gbcBuilder.getNextField());
 
-		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_CREATOR_ID)),
-				gbcBuilder.getNextField());
-		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(originalAuthorTextField, gbcBuilder.getNextField());
+        gbcBuilder.setWeight(leftWeight, 0.0);
+        contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_CREATOR_ID)),
+                gbcBuilder.getNextField());
+        gbcBuilder.setWeight(rightWeight, 0.0);
+        contentPane.add(originalAuthorTextField, gbcBuilder.getNextField());
 
-		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_SOURCE_ID)),
-				gbcBuilder.getNextField());
-		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(referenceTextField, gbcBuilder.getNextField());
+        gbcBuilder.setWeight(leftWeight, 0.0);
+        contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_SOURCE_ID)),
+                gbcBuilder.getNextField());
+        gbcBuilder.setWeight(rightWeight, 0.0);
+        contentPane.add(referenceTextField, gbcBuilder.getNextField());
 
-		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MEMO_ID)),
-				gbcBuilder.getNextField());
-		gbcBuilder.setWeight(rightWeight, 1.0).setFill(GridBagConstraints.BOTH);
-		contentPane.add(memoScrollPane, gbcBuilder.getNextField());
+        gbcBuilder.setWeight(leftWeight, 0.0);
+        contentPane.add(new JLabel(resourceHolder.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MEMO_ID)),
+                gbcBuilder.getNextField());
+        gbcBuilder.setWeight(rightWeight, 1.0).setFill(GridBagConstraints.BOTH);
+        contentPane.add(memoScrollPane, gbcBuilder.getNextField());
 
-		gbcBuilder.setWeight(leftWeight, 0.0).setFill(GridBagConstraints.NONE);
-		contentPane.add(okButton, gbcBuilder.getLineField());
+        gbcBuilder.setWeight(leftWeight, 0.0).setFill(GridBagConstraints.NONE);
+        contentPane.add(okButton, gbcBuilder.getLineField());
 
-	}
+    }
 
-	@Override
-	public void addOKButtonListener(final Runnable listener) {
-		okButton.addActionListener(e -> listener.run());
-	}
+    @Override
+    public void addOKButtonListener(final Runnable listener) {
+        okButton.addActionListener(e -> listener.run());
+    }
 
-	@Override
-	public String getModelTitle() {
-		return titleTextField.getText();
-	}
+    @Override
+    public String getModelTitle() {
+        return titleTextField.getText();
+    }
 
-	@Override
-	public void setModelTitle(final String title) {
-		titleTextField.setText(title);
-	}
+    @Override
+    public void setModelTitle(final String title) {
+        titleTextField.setText(title);
+    }
 
-	@Override
-	public String getEditorName() {
-		return editorNameTextField.getText();
-	}
+    @Override
+    public String getEditorName() {
+        return editorNameTextField.getText();
+    }
 
-	@Override
-	public void setEditorName(final String editorName) {
-		editorNameTextField.setText(editorName);
-	}
+    @Override
+    public void setEditorName(final String editorName) {
+        editorNameTextField.setText(editorName);
+    }
 
-	@Override
-	public String getOriginalAuthor() {
-		return originalAuthorTextField.getText();
-	}
+    @Override
+    public String getOriginalAuthor() {
+        return originalAuthorTextField.getText();
+    }
 
-	@Override
-	public void setOriginalAutor(final String originalAuthor) {
-		originalAuthorTextField.setText(originalAuthor);
-	}
+    @Override
+    public void setOriginalAutor(final String originalAuthor) {
+        originalAuthorTextField.setText(originalAuthor);
+    }
 
-	@Override
-	public String getReference() {
-		return referenceTextField.getText();
-	}
+    @Override
+    public String getReference() {
+        return referenceTextField.getText();
+    }
 
-	@Override
-	public void setReference(final String reference) {
-		referenceTextField.setText(reference);
-	}
+    @Override
+    public void setReference(final String reference) {
+        referenceTextField.setText(reference);
+    }
 
-	@Override
-	public String getMemo() {
-		return memoTextArea.getText();
-	}
+    @Override
+    public String getMemo() {
+        return memoTextArea.getText();
+    }
 
-	@Override
-	public void setMemo(final String memo) {
-		memoTextArea.setText(memo);
-	}
+    @Override
+    public void setMemo(final String memo) {
+        memoTextArea.setText(memo);
+    }
 
-	@Override
-	public void componentResized(final ComponentEvent arg0) {
-	}
+    @Override
+    public void componentResized(final ComponentEvent arg0) {
+    }
 
-	@Override
-	public void componentMoved(final ComponentEvent arg0) {
-	}
+    @Override
+    public void componentMoved(final ComponentEvent arg0) {
+    }
 
-	@Override
-	public void componentShown(final ComponentEvent arg0) {
-		okButton.requestFocusInWindow();
-	}
+    @Override
+    public void componentShown(final ComponentEvent arg0) {
+        okButton.requestFocusInWindow();
+    }
 
-	@Override
-	public void componentHidden(final ComponentEvent arg0) {
-	}
+    @Override
+    public void componentHidden(final ComponentEvent arg0) {
+    }
 }

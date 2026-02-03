@@ -28,58 +28,58 @@ import org.junit.jupiter.api.Test;
  */
 class BitArrayTest {
 
-	@Test
-	void test32BitsGetSet() {
-		var bits = new BitArray(32);
+    @Test
+    void test32BitsGetSet() {
+        var bits = new BitArray(32);
 
-		bits.setOne(31);
-		assertEquals("80000000", bits.toString());
-		assertTrue(bits.get(31));
-		bits.setZero(31);
-		assertEquals("00000000", bits.toString());
+        bits.setOne(31);
+        assertEquals("80000000", bits.toString());
+        assertTrue(bits.get(31));
+        bits.setZero(31);
+        assertEquals("00000000", bits.toString());
 
-		bits.setOne(0);
-		assertTrue(bits.get(0));
-		assertEquals("00000001", bits.toString());
+        bits.setOne(0);
+        assertTrue(bits.get(0));
+        assertEquals("00000001", bits.toString());
 
-	}
+    }
 
-	@Test
-	void test23BitsGetSet() {
-		var bits = new BitArray(23);
+    @Test
+    void test23BitsGetSet() {
+        var bits = new BitArray(23);
 
-		bits.setOne(22);
-		assertTrue(bits.get(22));
-		assertEquals("00400000", bits.toString());
+        bits.setOne(22);
+        assertTrue(bits.get(22));
+        assertEquals("00400000", bits.toString());
 
-	}
+    }
 
-	@Test
-	void test33BitsGetSet() {
-		var bits = new BitArray(33);
+    @Test
+    void test33BitsGetSet() {
+        var bits = new BitArray(33);
 
-		bits.setOne(32);
-		assertTrue(bits.get(32));
+        bits.setOne(32);
+        assertTrue(bits.get(32));
 
-		bits.setZero(32);
-		bits.setOne(31);
-		assertTrue(bits.get(31));
-	}
+        bits.setZero(32);
+        bits.setOne(31);
+        assertTrue(bits.get(31));
+    }
 
-	@Test
-	void test33BitsNot() {
-		var bits = new BitArray(33);
+    @Test
+    void test33BitsNot() {
+        var bits = new BitArray(33);
 
-		bits.setOne(32);
-		var not = bits.not();
-		assertFalse(not.get(32));
+        bits.setOne(32);
+        var not = bits.not();
+        assertFalse(not.get(32));
 
-		var expected = new BitArray(33);
-		for (int i = 0; i < 32; i++) {
-			expected.setOne(i);
-		}
+        var expected = new BitArray(33);
+        for (int i = 0; i < 32; i++) {
+            expected.setOne(i);
+        }
 
-		assertTrue(expected.equals(not));
-	}
+        assertTrue(expected.equals(not));
+    }
 
 }

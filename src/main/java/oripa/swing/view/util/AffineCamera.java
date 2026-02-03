@@ -29,143 +29,143 @@ import java.util.Optional;
  *
  */
 public class AffineCamera {
-	private final AffineTransform affineTransform = new AffineTransform();
-	private double cameraX, cameraY;
-	private double transXOfPaper, transYOfPaper;
-	private double centerXOfPaper, centerYOfPaper;
-	private double scale;
-	private double rotateAngle;
+    private final AffineTransform affineTransform = new AffineTransform();
+    private double cameraX, cameraY;
+    private double transXOfPaper, transYOfPaper;
+    private double centerXOfPaper, centerYOfPaper;
+    private double scale;
+    private double rotateAngle;
 
-	public AffineCamera() {
+    public AffineCamera() {
 
-	}
+    }
 
-	private AffineTransform updateAffineTransform() {
-		affineTransform.setToIdentity();
-		affineTransform.translate(cameraX, cameraY);
-		affineTransform.scale(scale, scale);
-		affineTransform.translate(transXOfPaper, transYOfPaper);
-		affineTransform.rotate(rotateAngle);
-		affineTransform.translate(-centerXOfPaper, -centerYOfPaper);
+    private AffineTransform updateAffineTransform() {
+        affineTransform.setToIdentity();
+        affineTransform.translate(cameraX, cameraY);
+        affineTransform.scale(scale, scale);
+        affineTransform.translate(transXOfPaper, transYOfPaper);
+        affineTransform.rotate(rotateAngle);
+        affineTransform.translate(-centerXOfPaper, -centerYOfPaper);
 
-		return affineTransform;
-	}
+        return affineTransform;
+    }
 
-	public AffineTransform getAffineTransform() {
-		return affineTransform;
-	}
+    public AffineTransform getAffineTransform() {
+        return affineTransform;
+    }
 
-	public AffineTransform updateScale(final double scale) {
-		this.scale = scale;
+    public AffineTransform updateScale(final double scale) {
+        this.scale = scale;
 
-		return updateAffineTransform();
-	}
+        return updateAffineTransform();
+    }
 
-	public double getScale() {
-		return scale;
-	}
+    public double getScale() {
+        return scale;
+    }
 
-	public AffineTransform updateCameraPosition(final double x, final double y) {
-		cameraX = x;
-		cameraY = y;
+    public AffineTransform updateCameraPosition(final double x, final double y) {
+        cameraX = x;
+        cameraY = y;
 
-		return updateAffineTransform();
-	}
+        return updateAffineTransform();
+    }
 
-	public AffineTransform updateTranslateOfPaper(final double dx, final double dy) {
-		transXOfPaper = dx;
-		transYOfPaper = dy;
+    public AffineTransform updateTranslateOfPaper(final double dx, final double dy) {
+        transXOfPaper = dx;
+        transYOfPaper = dy;
 
-		return updateAffineTransform();
-	}
+        return updateAffineTransform();
+    }
 
-	public double getTranslateXOfPaper() {
-		return transXOfPaper;
-	}
+    public double getTranslateXOfPaper() {
+        return transXOfPaper;
+    }
 
-	public double getTranslateYOfPaper() {
-		return transYOfPaper;
-	}
+    public double getTranslateYOfPaper() {
+        return transYOfPaper;
+    }
 
-	public AffineTransform updateCenterOfPaper(final double cx, final double cy) {
-		centerXOfPaper = cx;
-		centerYOfPaper = cy;
+    public AffineTransform updateCenterOfPaper(final double cx, final double cy) {
+        centerXOfPaper = cx;
+        centerYOfPaper = cy;
 
-		return updateAffineTransform();
-	}
+        return updateAffineTransform();
+    }
 
-	public double getRotateAngle() {
-		return rotateAngle;
-	}
+    public double getRotateAngle() {
+        return rotateAngle;
+    }
 
-	public AffineTransform updateRotateAngle(final double angle) {
-		rotateAngle = angle;
+    public AffineTransform updateRotateAngle(final double angle) {
+        rotateAngle = angle;
 
-		return updateAffineTransform();
-	}
+        return updateAffineTransform();
+    }
 
-	/**
-	 *
-	 * @param e
-	 * @param preMousePoint
-	 * @return Affine transform for translating. {@code empty} if the mouse
-	 *         event is not for translating.
-	 */
-	public Optional<AffineTransform> updateTranslateByMouseDragged(
-			final MouseEvent e, final Point2D preMousePoint) {
+    /**
+     *
+     * @param e
+     * @param preMousePoint
+     * @return Affine transform for translating. {@code empty} if the mouse
+     *         event is not for translating.
+     */
+    public Optional<AffineTransform> updateTranslateByMouseDragged(
+            final MouseEvent e, final Point2D preMousePoint) {
 
-		// move camera
-		if (MouseUtility.isRightButtonEvent(e) ||
-				(MouseUtility.isLeftButtonEvent(e) && MouseUtility.isShiftKeyDown(e))) {
-			double transX = getTranslateXOfPaper()
-					+ (e.getX() - preMousePoint.getX()) / getScale();
-			double transY = getTranslateYOfPaper()
-					+ (e.getY() - preMousePoint.getY()) / getScale();
-			return Optional.of(updateTranslateOfPaper(transX, transY));
-		}
+        // move camera
+        if (MouseUtility.isRightButtonEvent(e) ||
+                (MouseUtility.isLeftButtonEvent(e) && MouseUtility.isShiftKeyDown(e))) {
+            double transX = getTranslateXOfPaper()
+                    + (e.getX() - preMousePoint.getX()) / getScale();
+            double transY = getTranslateYOfPaper()
+                    + (e.getY() - preMousePoint.getY()) / getScale();
+            return Optional.of(updateTranslateOfPaper(transX, transY));
+        }
 
-		return Optional.empty();
-	}
+        return Optional.empty();
+    }
 
-	/**
-	 *
-	 * @param e
-	 * @param preMousePoint
-	 * @return Affine transform for scaling. {@code empty} if the mouse event is
-	 *         not for scaling.
-	 */
-	public Optional<AffineTransform> updateScaleByMouseDragged(
-			final MouseEvent e, final Point2D preMousePoint) {
+    /**
+     *
+     * @param e
+     * @param preMousePoint
+     * @return Affine transform for scaling. {@code empty} if the mouse event is
+     *         not for scaling.
+     */
+    public Optional<AffineTransform> updateScaleByMouseDragged(
+            final MouseEvent e, final Point2D preMousePoint) {
 
-		// zoom
-		if (MouseUtility.isLeftButtonEvent(e) &&
-				MouseUtility.isControlKeyDown(e)) {
+        // zoom
+        if (MouseUtility.isLeftButtonEvent(e) &&
+                MouseUtility.isControlKeyDown(e)) {
 
-			double moved = e.getX() - preMousePoint.getX() + e.getY()
-					- preMousePoint.getY();
-			double scale = getScale() + moved / 150.0;
-			if (scale < 0.01) {
-				scale = 0.01;
-			}
-			return Optional.of(updateScale(scale));
-		}
+            double moved = e.getX() - preMousePoint.getX() + e.getY()
+                    - preMousePoint.getY();
+            double scale = getScale() + moved / 150.0;
+            if (scale < 0.01) {
+                scale = 0.01;
+            }
+            return Optional.of(updateScale(scale));
+        }
 
-		return Optional.empty();
-	}
+        return Optional.empty();
+    }
 
-	public Optional<AffineTransform> updateRotateByMouseDragged(final MouseEvent e, final Point2D preMousePoint) {
-		if (MouseUtility.isLeftButtonEvent(e)) {
+    public Optional<AffineTransform> updateRotateByMouseDragged(final MouseEvent e, final Point2D preMousePoint) {
+        if (MouseUtility.isLeftButtonEvent(e)) {
 
-			var rotateAngle = this.rotateAngle + (e.getX() - preMousePoint.getX()) / 100.0;
-			return Optional.of(updateRotateAngle(rotateAngle));
-		}
+            var rotateAngle = this.rotateAngle + (e.getX() - preMousePoint.getX()) / 100.0;
+            return Optional.of(updateRotateAngle(rotateAngle));
+        }
 
-		return Optional.empty();
-	}
+        return Optional.empty();
+    }
 
-	public AffineTransform updateScaleByMouseWheel(final MouseWheelEvent e) {
-		double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
-		return updateScale(getScale() * rate);
-	}
+    public AffineTransform updateScaleByMouseWheel(final MouseWheelEvent e) {
+        double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
+        return updateScale(getScale() * rate);
+    }
 
 }

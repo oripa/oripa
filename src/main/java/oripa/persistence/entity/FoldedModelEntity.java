@@ -29,36 +29,36 @@ import oripa.domain.fold.origeom.OverlapRelation;
  *
  */
 public class FoldedModelEntity {
-	private final OrigamiModel origamiModel;
-	private final List<OverlapRelation> overlapRelations;
-	private final int index;
+    private final OrigamiModel origamiModel;
+    private final List<OverlapRelation> overlapRelations;
+    private final int index;
 
-	public FoldedModelEntity(final FoldedModel foldedModel, final int index) {
-		this.origamiModel = foldedModel.origamiModel();
-		this.overlapRelations = foldedModel.overlapRelations();
-		this.index = index;
-	}
+    public FoldedModelEntity(final FoldedModel foldedModel, final int index) {
+        this.origamiModel = foldedModel.origamiModel();
+        this.overlapRelations = foldedModel.overlapRelations();
+        this.index = index;
+    }
 
-	public FoldedModelEntity(final FoldedModel foldedModel) {
-		this(foldedModel, -1);
-	}
+    public FoldedModelEntity(final FoldedModel foldedModel) {
+        this(foldedModel, -1);
+    }
 
-	public OrigamiModel getOrigamiModel() {
-		return origamiModel;
-	}
+    public OrigamiModel getOrigamiModel() {
+        return origamiModel;
+    }
 
-	public OverlapRelation getOverlapRelation() {
-		if (index < 0) {
-			throw new IllegalStateException("Index of overlap relation is not given.");
-		}
-		return overlapRelations.get(index);
-	}
+    public OverlapRelation getOverlapRelation() {
+        if (index < 0) {
+            throw new IllegalStateException("Index of overlap relation is not given.");
+        }
+        return overlapRelations.get(index);
+    }
 
-	public List<OverlapRelation> getOverlapRelations() {
-		return overlapRelations;
-	}
+    public List<OverlapRelation> getOverlapRelations() {
+        return overlapRelations;
+    }
 
-	public FoldedModel toFoldedModel() {
-		return new FoldedModel(origamiModel, overlapRelations, List.of());
-	}
+    public FoldedModel toFoldedModel() {
+        return new FoldedModel(origamiModel, overlapRelations, List.of());
+    }
 }

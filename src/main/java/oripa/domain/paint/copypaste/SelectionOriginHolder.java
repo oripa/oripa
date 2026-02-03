@@ -29,10 +29,10 @@ import oripa.vecmath.Vector2d;
  */
 public interface SelectionOriginHolder {
 
-	void setOrigin(Vector2d p);
+    void setOrigin(Vector2d p);
 
-	void resetOrigin(PaintContext context);
+    void resetOrigin(PaintContext context);
 
-	Optional<Vector2d> getOrigin(PaintContext context);
+    Optional<Vector2d> getOrigin(PaintContext context);
 
 }

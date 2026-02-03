@@ -36,48 +36,48 @@ import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
  *
  */
 public class BindingObjectFactoryFacade {
-	private final PaintBoundStateFactory stateFactory;
-	private final MouseActionSetterFactory setterFactory;
-	private final PluginPaintBoundStateFactory pluginFactory;
-	private final StatePopperFactory<EditMode> statePopperFactory;
+    private final PaintBoundStateFactory stateFactory;
+    private final MouseActionSetterFactory setterFactory;
+    private final PluginPaintBoundStateFactory pluginFactory;
+    private final StatePopperFactory<EditMode> statePopperFactory;
 
-	@Inject
-	public BindingObjectFactoryFacade(final PaintBoundStateFactory stateFactory,
-			final MouseActionSetterFactory setterFactory,
-			final StatePopperFactory<EditMode> statePopperFactory,
-			final PluginPaintBoundStateFactory pluginFactory) {
-		this.stateFactory = stateFactory;
-		this.setterFactory = setterFactory;
-		this.statePopperFactory = statePopperFactory;
-		this.pluginFactory = pluginFactory;
-	}
+    @Inject
+    public BindingObjectFactoryFacade(final PaintBoundStateFactory stateFactory,
+            final MouseActionSetterFactory setterFactory,
+            final StatePopperFactory<EditMode> statePopperFactory,
+            final PluginPaintBoundStateFactory pluginFactory) {
+        this.stateFactory = stateFactory;
+        this.setterFactory = setterFactory;
+        this.statePopperFactory = statePopperFactory;
+        this.pluginFactory = pluginFactory;
+    }
 
-	public ApplicationState<EditMode> createState(
-			final String id,
-			final Supplier<Boolean> errorDetecter,
-			final Runnable errorHandler) {
-		return stateFactory.create(id, errorDetecter, errorHandler);
-	}
+    public ApplicationState<EditMode> createState(
+            final String id,
+            final Supplier<Boolean> errorDetecter,
+            final Runnable errorHandler) {
+        return stateFactory.create(id, errorDetecter, errorHandler);
+    }
 
-	public ApplicationState<EditMode> createState(
-			final String id) {
-		return stateFactory.create(id, null, null);
-	}
+    public ApplicationState<EditMode> createState(
+            final String id) {
+        return stateFactory.create(id, null, null);
+    }
 
-	public ApplicationState<EditMode> createState(
-			final GraphicMouseActionPlugin plugin) {
-		return pluginFactory.create(plugin);
-	}
+    public ApplicationState<EditMode> createState(
+            final GraphicMouseActionPlugin plugin) {
+        return pluginFactory.create(plugin);
+    }
 
-	public MouseActionSetter createActionSetter(final GraphicMouseAction action) {
-		return setterFactory.create(action);
-	}
+    public MouseActionSetter createActionSetter(final GraphicMouseAction action) {
+        return setterFactory.create(action);
+    }
 
-	public StatePopper<EditMode> createStatePopperForState() {
-		return statePopperFactory.createForState();
-	}
+    public StatePopper<EditMode> createStatePopperForState() {
+        return statePopperFactory.createForState();
+    }
 
-	public CommandStatePopper<EditMode> createStatePopperForCommand(final EditMode editMode) {
-		return statePopperFactory.createForCommand(editMode);
-	}
+    public CommandStatePopper<EditMode> createStatePopperForCommand(final EditMode editMode) {
+        return statePopperFactory.createForCommand(editMode);
+    }
 }

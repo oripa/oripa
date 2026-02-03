@@ -23,53 +23,53 @@ package oripa.persistence.entity.exporter;
  *
  */
 public class FoldedModelSVGConfig {
-	private double faceStrokeWidth = 2;
-	private double precreaseStrokeWidth = 1;
+    private double faceStrokeWidth = 2;
+    private double precreaseStrokeWidth = 1;
 
-	// don't serialize these.
-	private transient String frontFillColorCode = "#B3B3B3";
-	private transient String backFillColorCode = "#FFFFFF";
+    // don't serialize these.
+    private transient String frontFillColorCode = "#B3B3B3";
+    private transient String backFillColorCode = "#FFFFFF";
 
-	public double getFaceStrokeWidth() {
-		return faceStrokeWidth;
-	}
+    public double getFaceStrokeWidth() {
+        return faceStrokeWidth;
+    }
 
-	/**
-	 *
-	 * @param faceStrokeWidth
-	 *            the unit is [px]
-	 */
-	public void setFaceStrokeWidth(final double faceStrokeWidth) {
-		this.faceStrokeWidth = faceStrokeWidth;
-	}
+    /**
+     *
+     * @param faceStrokeWidth
+     *            the unit is [px]
+     */
+    public void setFaceStrokeWidth(final double faceStrokeWidth) {
+        this.faceStrokeWidth = faceStrokeWidth;
+    }
 
-	public double getPrecreaseStrokeWidth() {
-		return precreaseStrokeWidth;
-	}
+    public double getPrecreaseStrokeWidth() {
+        return precreaseStrokeWidth;
+    }
 
-	/**
-	 *
-	 * @param precreaseStrokeWidth
-	 *            the unit is [px]
-	 */
-	public void setPrecreaseStrokeWidth(final double precreaseStrokeWidth) {
-		this.precreaseStrokeWidth = precreaseStrokeWidth;
-	}
+    /**
+     *
+     * @param precreaseStrokeWidth
+     *            the unit is [px]
+     */
+    public void setPrecreaseStrokeWidth(final double precreaseStrokeWidth) {
+        this.precreaseStrokeWidth = precreaseStrokeWidth;
+    }
 
-	public String getFrontFillColorCode() {
-		return frontFillColorCode;
-	}
+    public String getFrontFillColorCode() {
+        return frontFillColorCode;
+    }
 
-	public void setFrontFillColorCode(final String frontFillColorCode) {
-		this.frontFillColorCode = frontFillColorCode;
-	}
+    public void setFrontFillColorCode(final String frontFillColorCode) {
+        this.frontFillColorCode = frontFillColorCode;
+    }
 
-	public String getBackFillColorCode() {
-		return backFillColorCode;
-	}
+    public String getBackFillColorCode() {
+        return backFillColorCode;
+    }
 
-	public void setBackFillColorCode(final String backFillColorCode) {
-		this.backFillColorCode = backFillColorCode;
-	}
+    public void setBackFillColorCode(final String backFillColorCode) {
+        this.backFillColorCode = backFillColorCode;
+    }
 
 }

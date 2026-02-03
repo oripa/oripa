@@ -27,14 +27,14 @@ import oripa.domain.paint.core.PickingLine;
  */
 public class SelectingFirstLine extends PickingLine {
 
-	@Override
-	protected void initialize() {
-		setNextClass(SelectingSecondLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setNextClass(SelectingSecondLine.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
 
-	}
+    }
 
 }

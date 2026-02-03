@@ -28,25 +28,25 @@ import oripa.domain.paint.linetype.TypeForChangeGettable;
  */
 @Singleton
 public class TypeForChangeContext implements TypeForChangeGettable {
-	private TypeForChange typeFrom = TypeForChange.EMPTY;
-	private TypeForChange typeTo = TypeForChange.EMPTY;
+    private TypeForChange typeFrom = TypeForChange.EMPTY;
+    private TypeForChange typeTo = TypeForChange.EMPTY;
 
-	@Override
-	public TypeForChange getTypeFrom() {
-		return typeFrom;
-	}
+    @Override
+    public TypeForChange getTypeFrom() {
+        return typeFrom;
+    }
 
-	public void setTypeFrom(final TypeForChange typeFrom) {
-		this.typeFrom = typeFrom;
-	}
+    public void setTypeFrom(final TypeForChange typeFrom) {
+        this.typeFrom = typeFrom;
+    }
 
-	@Override
-	public TypeForChange getTypeTo() {
-		return typeTo;
-	}
+    @Override
+    public TypeForChange getTypeTo() {
+        return typeTo;
+    }
 
-	public void setTypeTo(final TypeForChange typeTo) {
-		this.typeTo = typeTo;
-	}
+    public void setTypeTo(final TypeForChange typeTo) {
+        this.typeTo = typeTo;
+    }
 
 }

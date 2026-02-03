@@ -39,78 +39,78 @@ import oripa.swing.view.util.AffineCamera;
  *
  */
 public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
-	private final int WIDTH = 600;
-	private final int HEIGHT = 600;
+    private final int WIDTH = 600;
+    private final int HEIGHT = 600;
 
-	/**
-	 * @param configObj
-	 *            should be an instance of {@link FoldedModelPictureConfig}.
-	 */
-	@Override
-	public boolean export(final FoldedModelEntity foldedModel, final String filePath, final Object configObj)
-			throws IOException, IllegalArgumentException {
+    /**
+     * @param configObj
+     *            should be an instance of {@link FoldedModelPictureConfig}.
+     */
+    @Override
+    public boolean export(final FoldedModelEntity foldedModel, final String filePath, final Object configObj)
+            throws IOException, IllegalArgumentException {
 
-		if (configObj == null) {
-			throw new IllegalArgumentException("configObj should not be null.");
-		}
+        if (configObj == null) {
+            throw new IllegalArgumentException("configObj should not be null.");
+        }
 
-		var config = (FoldedModelPictureConfig) configObj;
+        var config = (FoldedModelPictureConfig) configObj;
 
-		var origamiModel = foldedModel.getOrigamiModel();
-		var overlapRelation = foldedModel.getOverlapRelation();
-		var modelDomain = origamiModel.createDomainOfFoldedModel();
+        var origamiModel = foldedModel.getOrigamiModel();
+        var overlapRelation = foldedModel.getOverlapRelation();
+        var modelDomain = origamiModel.createDomainOfFoldedModel();
 
-		var rendererOption = new FoldedModelPixelRenderer.Option()
-				.setAmbientOcclusion(config.isAmbientOcclusion())
-				.setDrawEdges(config.isDrawEdges())
-				.setFaceOrderFlipped(config.isFaceOrderFlipped())
-				.setFillFace(config.isFillFaces())
-				.setColors(config.getFrontColor(), config.getBackColor());
+        var rendererOption = new FoldedModelPixelRenderer.Option()
+                .setAmbientOcclusion(config.isAmbientOcclusion())
+                .setDrawEdges(config.isDrawEdges())
+                .setFaceOrderFlipped(config.isFaceOrderFlipped())
+                .setFillFace(config.isFillFaces())
+                .setColors(config.getFrontColor(), config.getBackColor());
 
-		var pixelRenderer = new FoldedModelPixelRenderer(WIDTH, HEIGHT);
+        var pixelRenderer = new FoldedModelPixelRenderer(WIDTH, HEIGHT);
 
-		var distortion = new Distortion(modelDomain, WIDTH, HEIGHT);
-		var converter = distortion.createCoordinateConverter(config.getDistortionMethod(),
-				config.getDistortionParameter(),
-				computeScale(modelDomain));
+        var distortion = new Distortion(modelDomain, WIDTH, HEIGHT);
+        var converter = distortion.createCoordinateConverter(config.getDistortionMethod(),
+                config.getDistortionParameter(),
+                computeScale(modelDomain));
 
-		var distortionResult = distortion.apply(origamiModel, overlapRelation,
-				converter, config.getVertexDepths(), config.getEps());
+        var distortionResult = distortion.apply(origamiModel, overlapRelation,
+                converter, config.getVertexDepths(), config.getEps());
 
-		var faces = distortionResult.faces();
-		var interpolatedOverlapRelation = distortionResult.interpolatedOverlapRelation();
+        var faces = distortionResult.faces();
+        var interpolatedOverlapRelation = distortionResult.interpolatedOverlapRelation();
 
-		pixelRenderer.render(faces, interpolatedOverlapRelation, origamiModel.createPaperDomain(),
-				rendererOption);
+        pixelRenderer.render(faces, interpolatedOverlapRelation, origamiModel.createPaperDomain(),
+                rendererOption);
 
-		var camera = new AffineCamera();
+        var camera = new AffineCamera();
 
-		camera.updateCameraPosition(WIDTH / 2, HEIGHT / 2);
-		camera.updateCenterOfPaper(WIDTH / 2, HEIGHT / 2);
-		camera.updateRotateAngle(config.getRotateAngle());
-		camera.updateScale(1);
+        camera.updateCameraPosition(WIDTH / 2, HEIGHT / 2);
+        camera.updateCenterOfPaper(WIDTH / 2, HEIGHT / 2);
+        camera.updateRotateAngle(config.getRotateAngle());
+        camera.updateScale(1);
 
-		var image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-		var g = image.createGraphics();
-		// Clear image
-		g.setTransform(new AffineTransform());
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+        var image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        var g = image.createGraphics();
+        // Clear image
+        g.setTransform(new AffineTransform());
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
 
-		g.setTransform(camera.getAffineTransform());
+        g.setTransform(camera.getAffineTransform());
 
-		var drawer = new PixelDrawer();
+        var drawer = new PixelDrawer();
 
-		drawer.draw(g, pixelRenderer.getPixels(), WIDTH, HEIGHT);
+        drawer.draw(g, pixelRenderer.getPixels(), WIDTH, HEIGHT);
 
-		File file = new File(filePath);
-		ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),
-				file);
+        File file = new File(filePath);
+        ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),
+                file);
 
-		return true;
-	}
+        return true;
+    }
 
-	private double computeScale(final RectangleDomain modelDomain) {
-		return Math.min(WIDTH / modelDomain.getWidth(), HEIGHT / modelDomain.getHeight()) / 1.5;
-	}
+    private double computeScale(final RectangleDomain modelDomain) {
+        return Math.min(WIDTH / modelDomain.getWidth(), HEIGHT / modelDomain.getHeight()) / 1.5;
+    }
 }

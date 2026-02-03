@@ -19,8 +19,8 @@
 package oripa.domain.cptool;
 
 public class CrossingLineSplitterNaiveAlgorithmTest implements CrossingLineSplitterTest {
-	@Override
-	public CrossingLineSplitter createTarget() {
-		return new CrossingLineSplitterNaiveAlgorithm(new LineDivider());
-	}
+    @Override
+    public CrossingLineSplitter createTarget() {
+        return new CrossingLineSplitterNaiveAlgorithm(new LineDivider());
+    }
 }

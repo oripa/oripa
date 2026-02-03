@@ -39,58 +39,58 @@ import oripa.persistence.svg.FacesToSvgConverter;
  */
 public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 
-	private final FacesToSvgConverter facesToSvgConverter;
-	private final boolean faceOrderFlip;
+    private final FacesToSvgConverter facesToSvgConverter;
+    private final boolean faceOrderFlip;
 
-	public FoldedModelExporterSVG(final boolean faceOrderFlip) {
-		facesToSvgConverter = new FacesToSvgConverter();
-		this.faceOrderFlip = faceOrderFlip;
-	}
+    public FoldedModelExporterSVG(final boolean faceOrderFlip) {
+        facesToSvgConverter = new FacesToSvgConverter();
+        this.faceOrderFlip = faceOrderFlip;
+    }
 
-	@Override
-	public boolean export(final FoldedModelEntity foldedModel, final String filepath, final Object configObj)
-			throws IOException {
-		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
-		OverlapRelation overlapRelation = foldedModel.getOverlapRelation();
+    @Override
+    public boolean export(final FoldedModelEntity foldedModel, final String filepath, final Object configObj)
+            throws IOException {
+        OrigamiModel origamiModel = foldedModel.getOrigamiModel();
+        OverlapRelation overlapRelation = foldedModel.getOverlapRelation();
 
-		FaceSorter faceSorter = new FaceSorter(origamiModel.getFaces(), overlapRelation);
+        FaceSorter faceSorter = new FaceSorter(origamiModel.getFaces(), overlapRelation);
 
-		List<OriFace> faces = faceSorter.sortFaces(faceOrderFlip);
+        List<OriFace> faces = faceSorter.sortFaces(faceOrderFlip);
 
-		facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
+        facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
 
-		var config = configObj == null ? new FoldedModelSVGConfig()
-				: (FoldedModelSVGConfig) configObj;
+        var config = configObj == null ? new FoldedModelSVGConfig()
+                : (FoldedModelSVGConfig) configObj;
 
-		configure(config);
+        configure(config);
 
-		try (var fw = new FileWriter(filepath);
-				var bw = new BufferedWriter(fw)) {
-			bw.write(SVG_START);
-			bw.write(GRADIENTS_DEFINITION);
-			bw.write(facesToSvgConverter.getSvgFaces(faces));
-			bw.write(SVG_END_TAG);
-		}
-		return true;
-	}
+        try (var fw = new FileWriter(filepath);
+                var bw = new BufferedWriter(fw)) {
+            bw.write(SVG_START);
+            bw.write(GRADIENTS_DEFINITION);
+            bw.write(facesToSvgConverter.getSvgFaces(faces));
+            bw.write(SVG_END_TAG);
+        }
+        return true;
+    }
 
-	private void configure(final FoldedModelSVGConfig config) {
-		double faceStrokeWidth = config.getFaceStrokeWidth();
-		double precreaseStrokeWidth = config.getPrecreaseStrokeWidth();
+    private void configure(final FoldedModelSVGConfig config) {
+        double faceStrokeWidth = config.getFaceStrokeWidth();
+        double precreaseStrokeWidth = config.getPrecreaseStrokeWidth();
 
-		String frontFillColorCode = config.getFrontFillColorCode();
-		String backFillColorCode = config.getBackFillColorCode();
+        String frontFillColorCode = config.getFrontFillColorCode();
+        String backFillColorCode = config.getBackFillColorCode();
 
-		if (faceOrderFlip) {
-			facesToSvgConverter.setFaceStyles(
-					getBackPathStyle(faceStrokeWidth, backFillColorCode).toString(),
-					getFrontPathStyle(faceStrokeWidth, frontFillColorCode).toString());
-		} else {
-			facesToSvgConverter.setFaceStyles(
-					getFrontPathStyle(faceStrokeWidth, frontFillColorCode).toString(),
-					getBackPathStyle(faceStrokeWidth, backFillColorCode).toString());
-		}
-		facesToSvgConverter.setPrecreaseLineStyle(
-				getPrecreasePathStyle(precreaseStrokeWidth).toString());
-	}
+        if (faceOrderFlip) {
+            facesToSvgConverter.setFaceStyles(
+                    getBackPathStyle(faceStrokeWidth, backFillColorCode).toString(),
+                    getFrontPathStyle(faceStrokeWidth, frontFillColorCode).toString());
+        } else {
+            facesToSvgConverter.setFaceStyles(
+                    getFrontPathStyle(faceStrokeWidth, frontFillColorCode).toString(),
+                    getBackPathStyle(faceStrokeWidth, backFillColorCode).toString());
+        }
+        facesToSvgConverter.setPrecreaseLineStyle(
+                getPrecreasePathStyle(precreaseStrokeWidth).toString());
+    }
 }

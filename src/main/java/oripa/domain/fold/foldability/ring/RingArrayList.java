@@ -25,138 +25,138 @@ import oripa.util.collection.CollectionUtil;
 
 public class RingArrayList<Data> {
 
-	private final List<RingElement<Data>> list = new ArrayList<>();
-	private int headIndex = -1;
-	private int tailIndex = -1;
+    private final List<RingElement<Data>> list = new ArrayList<>();
+    private int headIndex = -1;
+    private int tailIndex = -1;
 
-	private int count = 0;
+    private int count = 0;
 
-	private final List<Boolean> existences = new ArrayList<>();
+    private final List<Boolean> existences = new ArrayList<>();
 
-	public RingArrayList(final List<Data> values) {
-		for (int i = 0; i < values.size(); i++) {
-			add(i, values.get(i));
-		}
+    public RingArrayList(final List<Data> values) {
+        for (int i = 0; i < values.size(); i++) {
+            add(i, values.get(i));
+        }
 
-		headIndex = 0;
-		tailIndex = values.size() - 1;
-	}
+        headIndex = 0;
+        tailIndex = values.size() - 1;
+    }
 
-	private void add(final int index, final Data value) {
-		var element = new RingElement<>(index, value);
+    private void add(final int index, final Data value) {
+        var element = new RingElement<>(index, value);
 
-		list.add(element);
-		existences.add(true);
+        list.add(element);
+        existences.add(true);
 
-		if (list.size() == 1) {
-			element.setNext(element);
-			element.setPrevious(element);
+        if (list.size() == 1) {
+            element.setNext(element);
+            element.setPrevious(element);
 
-			count = 1;
-			return;
-		}
+            count = 1;
+            return;
+        }
 
-		var next = getElement(index + 1);
-		var previous = getElement(index - 1);
+        var next = getElement(index + 1);
+        var previous = getElement(index - 1);
 
-		next.setPrevious(element);
-		previous.setNext(element);
+        next.setPrevious(element);
+        previous.setNext(element);
 
-		element.setNext(next);
-		element.setPrevious(previous);
+        element.setNext(next);
+        element.setPrevious(previous);
 
-		count++;
-	}
+        count++;
+    }
 
-	public Data dropConnection(final int index) {
+    public Data dropConnection(final int index) {
 
-		if (!exists(index)) {
-			throw new IllegalArgumentException("does not exist.");
-		}
+        if (!exists(index)) {
+            throw new IllegalArgumentException("does not exist.");
+        }
 
-		var element = getElement(index);
-		existences.set(index, false);
-		count--;
+        var element = getElement(index);
+        existences.set(index, false);
+        count--;
 
-		if (list.size() == 2) {
-			var other = element.getNext();
+        if (list.size() == 2) {
+            var other = element.getNext();
 
-			other.setNext(other);
-			other.setPrevious(other);
+            other.setNext(other);
+            other.setPrevious(other);
 
-			if (index == headIndex) {
-				headIndex = tailIndex;
-			} else {
-				tailIndex = headIndex;
-			}
+            if (index == headIndex) {
+                headIndex = tailIndex;
+            } else {
+                tailIndex = headIndex;
+            }
 
-			return element.getValue();
-		}
+            return element.getValue();
+        }
 
-		var next = element.getNext();
-		var previous = element.getPrevious();
+        var next = element.getNext();
+        var previous = element.getPrevious();
 
-		previous.setNext(next);
-		next.setPrevious(previous);
+        previous.setNext(next);
+        next.setPrevious(previous);
 
-		if (index == headIndex) {
-			headIndex = next.getRingIndex();
-		}
-		if (index == tailIndex) {
-			tailIndex = previous.getRingIndex();
-		}
+        if (index == headIndex) {
+            headIndex = next.getRingIndex();
+        }
+        if (index == tailIndex) {
+            tailIndex = previous.getRingIndex();
+        }
 
-		return element.getValue();
-	}
+        return element.getValue();
+    }
 
-	public Data get(final int index) {
-		return getElement(index).getValue();
-	}
+    public Data get(final int index) {
+        return getElement(index).getValue();
+    }
 
-	public RingElement<Data> getElement(final int index) {
-		if (!exists(index)) {
-			throw new IllegalArgumentException("does not not exist.");
-		}
-		return CollectionUtil.getCircular(list, index);
-	}
+    public RingElement<Data> getElement(final int index) {
+        if (!exists(index)) {
+            throw new IllegalArgumentException("does not not exist.");
+        }
+        return CollectionUtil.getCircular(list, index);
+    }
 
-	public RingElement<Data> getNext(final int index) {
-		return getElement(index).getNext();
-	}
+    public RingElement<Data> getNext(final int index) {
+        return getElement(index).getNext();
+    }
 
-	public RingElement<Data> getPrevious(final int index) {
-		return getElement(index).getPrevious();
-	}
+    public RingElement<Data> getPrevious(final int index) {
+        return getElement(index).getPrevious();
+    }
 
-	public Data head() {
-		return get(headIndex);
-	}
+    public Data head() {
+        return get(headIndex);
+    }
 
-	public Data tail() {
-		return get(tailIndex);
-	}
+    public Data tail() {
+        return get(tailIndex);
+    }
 
-	public int size() {
-		return count;
-	}
+    public int size() {
+        return count;
+    }
 
-	public boolean exists(final int index) {
-		return CollectionUtil.getCircular(existences, index);
-	}
+    public boolean exists(final int index) {
+        return CollectionUtil.getCircular(existences, index);
+    }
 
-	@Override
-	public String toString() {
-		var builder = new StringBuilder();
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
 
-		for (int i = 0; i < list.size(); i++) {
-			if (exists(i)) {
-				builder.append(i + "th ");
-				builder.append(get(i));
-				builder.append(",");
-			}
-		}
+        for (int i = 0; i < list.size(); i++) {
+            if (exists(i)) {
+                builder.append(i + "th ");
+                builder.append(get(i));
+                builder.append(",");
+            }
+        }
 
-		return builder.toString();
-	}
+        return builder.toString();
+    }
 
 }

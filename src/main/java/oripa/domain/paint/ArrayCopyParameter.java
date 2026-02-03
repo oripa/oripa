@@ -28,10 +28,10 @@ package oripa.domain.paint;
  * @param intervalY
  */
 public record ArrayCopyParameter(
-		boolean fillUp,
-		int rowCount,
-		int columnCount,
-		double intervalX,
-		double intervalY) {
+        boolean fillUp,
+        int rowCount,
+        int columnCount,
+        double intervalX,
+        double intervalY) {
 
 }

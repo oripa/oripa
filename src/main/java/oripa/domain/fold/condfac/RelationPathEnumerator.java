@@ -37,91 +37,91 @@ import oripa.util.Matrices;
  *
  */
 public class RelationPathEnumerator {
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private int faceCount;
+    private int faceCount;
 
-	private int infinity() {
-		return faceCount * 2;
-	}
+    private int infinity() {
+        return faceCount * 2;
+    }
 
-	private int[][] distance;
-	private int[][] prevIndices;
+    private int[][] distance;
+    private int[][] prevIndices;
 
-	public void findPaths(final OverlapRelation overlapRelation) {
-		faceCount = overlapRelation.getSize();
+    public void findPaths(final OverlapRelation overlapRelation) {
+        faceCount = overlapRelation.getSize();
 
-		distance = new int[faceCount][faceCount];
-		prevIndices = new int[faceCount][faceCount];
+        distance = new int[faceCount][faceCount];
+        prevIndices = new int[faceCount][faceCount];
 
-		for (int i = 0; i < faceCount; i++) {
-			for (int j = 0; j < faceCount; j++) {
-				if (overlapRelation.isUpper(i, j) || overlapRelation.isUndefined(i, j)) {
-					distance[i][j] = 1;
-					prevIndices[i][j] = i;
-				} else {
-					distance[i][j] = infinity();
-					prevIndices[i][j] = -1;
-				}
-			}
-		}
+        for (int i = 0; i < faceCount; i++) {
+            for (int j = 0; j < faceCount; j++) {
+                if (overlapRelation.isUpper(i, j) || overlapRelation.isUndefined(i, j)) {
+                    distance[i][j] = 1;
+                    prevIndices[i][j] = i;
+                } else {
+                    distance[i][j] = infinity();
+                    prevIndices[i][j] = -1;
+                }
+            }
+        }
 
-		for (int i = 0; i < faceCount; i++) {
-			distance[i][i] = 0;
-			prevIndices[i][i] = i;
-		}
+        for (int i = 0; i < faceCount; i++) {
+            distance[i][i] = 0;
+            prevIndices[i][i] = i;
+        }
 
-		for (int k = 0; k < faceCount; k++) {
-			for (int i = 0; i < faceCount; i++) {
-				for (int j = 0; j < faceCount; j++) {
-					if (distance[i][j] > distance[i][k] + distance[k][j]) {
-						distance[i][j] = distance[i][k] + distance[k][j];
-						prevIndices[i][j] = prevIndices[k][j];
-					}
-				}
+        for (int k = 0; k < faceCount; k++) {
+            for (int i = 0; i < faceCount; i++) {
+                for (int j = 0; j < faceCount; j++) {
+                    if (distance[i][j] > distance[i][k] + distance[k][j]) {
+                        distance[i][j] = distance[i][k] + distance[k][j];
+                        prevIndices[i][j] = prevIndices[k][j];
+                    }
+                }
 
-			}
-		}
+            }
+        }
 
-		logger.debug(Matrices.toString(distance));
-	}
+        logger.debug(Matrices.toString(distance));
+    }
 
-	public List<Integer> getPath(final int i, final int j) {
-		if (prevIndices[i][j] == -1) {
-			return List.of();
-		}
-		var path = new LinkedList<Integer>();
-		path.add(j);
+    public List<Integer> getPath(final int i, final int j) {
+        if (prevIndices[i][j] == -1) {
+            return List.of();
+        }
+        var path = new LinkedList<Integer>();
+        path.add(j);
 
-		int v = j;
-		while (v != i) {
-			v = prevIndices[i][v];
-			path.addFirst(v);
-		}
+        int v = j;
+        while (v != i) {
+            v = prevIndices[i][v];
+            path.addFirst(v);
+        }
 
-		return new ArrayList<>(path);
-	}
+        return new ArrayList<>(path);
+    }
 
-	public boolean isOnCycle(final int i, final int j) {
-		if (distance[i][j] < infinity() && distance[j][i] < infinity()) {
+    public boolean isOnCycle(final int i, final int j) {
+        if (distance[i][j] < infinity() && distance[j][i] < infinity()) {
 
-			if (distance[i][j] + distance[j][i] <= 2) {
-				return false;
-			}
+            if (distance[i][j] + distance[j][i] <= 2) {
+                return false;
+            }
 
-			return true;
-		}
-		return false;
-	}
+            return true;
+        }
+        return false;
+    }
 
-	public List<Integer> getCycle(final int i, final int j) {
-		if (distance[i][j] < infinity() && distance[j][i] < infinity()) {
-			var path = getPath(i, j);
-			path.removeLast();
-			path.addAll(getPath(j, i));
-			path.removeLast();
-			return path;
-		}
-		return List.of();
-	}
+    public List<Integer> getCycle(final int i, final int j) {
+        if (distance[i][j] < infinity() && distance[j][i] < infinity()) {
+            var path = getPath(i, j);
+            path.removeLast();
+            path.addAll(getPath(j, i));
+            path.removeLast();
+            return path;
+        }
+        return List.of();
+    }
 }

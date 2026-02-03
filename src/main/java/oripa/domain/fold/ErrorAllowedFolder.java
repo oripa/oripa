@@ -28,21 +28,21 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  */
 class ErrorAllowedFolder implements Folder {
 
-	// helper object
-	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
+    // helper object
+    private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
 
-	private final SimpleFolder simpleFolder;
+    private final SimpleFolder simpleFolder;
 
-	public ErrorAllowedFolder(final SimpleFolder simpleFolder) {
-		this.simpleFolder = simpleFolder;
-	}
+    public ErrorAllowedFolder(final SimpleFolder simpleFolder) {
+        this.simpleFolder = simpleFolder;
+    }
 
-	@Override
-	public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
-		simpleFolder.foldWithoutLineType(origamiModel, eps);
-		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
+    @Override
+    public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
+        simpleFolder.foldWithoutLineType(origamiModel, eps);
+        faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
-		return new Result(new FoldedModel(origamiModel, List.of(), List.of()), null);
-	}
+        return new Result(new FoldedModel(origamiModel, List.of(), List.of()), null);
+    }
 
 }

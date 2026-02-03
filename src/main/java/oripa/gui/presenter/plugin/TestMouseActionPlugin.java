@@ -28,29 +28,29 @@ import oripa.gui.view.main.UIPanelSetting;
  */
 public class TestMouseActionPlugin extends AbstractGraphicMouseActionPlugin {
 
-	@Override
-	public String getName() {
-		return "Example";
-	}
+    @Override
+    public String getName() {
+        return "Example";
+    }
 
-	@Override
-	protected String getHint() {
-		return "Draws a segment between selected points.";
-	}
+    @Override
+    protected String getHint() {
+        return "Draws a segment between selected points.";
+    }
 
-	@Override
-	protected void configureChangeOnSelected(final UIPanelSetting uiPanelSetting) {
-		uiPanelSetting.setAlterLineTypePanelVisible(false);
-		uiPanelSetting.setAngleStepPanelVisible(false);
-		uiPanelSetting.setByValuePanelVisible(false);
-		uiPanelSetting.setLineSelectionPanelVisible(false);
+    @Override
+    protected void configureChangeOnSelected(final UIPanelSetting uiPanelSetting) {
+        uiPanelSetting.setAlterLineTypePanelVisible(false);
+        uiPanelSetting.setAngleStepPanelVisible(false);
+        uiPanelSetting.setByValuePanelVisible(false);
+        uiPanelSetting.setLineSelectionPanelVisible(false);
 
-		uiPanelSetting.setLineInputPanelVisible(true);
-	}
+        uiPanelSetting.setLineInputPanelVisible(true);
+    }
 
-	@Override
-	public GraphicMouseAction getGraphicMouseAction() {
-		return new TwoPointSegmentAction();
-	}
+    @Override
+    public GraphicMouseAction getGraphicMouseAction() {
+        return new TwoPointSegmentAction();
+    }
 
 }

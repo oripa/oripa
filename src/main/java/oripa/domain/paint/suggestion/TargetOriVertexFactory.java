@@ -33,34 +33,34 @@ import oripa.vecmath.Vector2d;
  */
 public class TargetOriVertexFactory {
 
-	public OriVertex create(final CreasePattern creasePattern, final Vector2d target, final double pointEps) {
-		var lines = findSelectedVertexLines(creasePattern, target, pointEps);
-		return toOriVertex(target, lines, pointEps);
-	}
+    public OriVertex create(final CreasePattern creasePattern, final Vector2d target, final double pointEps) {
+        var lines = findSelectedVertexLines(creasePattern, target, pointEps);
+        return toOriVertex(target, lines, pointEps);
+    }
 
-	private List<OriLine> findSelectedVertexLines(final CreasePattern creasePattern, final Vector2d target,
-			final double pointEps) {
-		return creasePattern.stream()
-				.filter(line -> line.pointStream()
-						.anyMatch(v -> v.equals(target, pointEps)))
-				.filter(line -> line.length() > pointEps)
-				.toList();
-	}
+    private List<OriLine> findSelectedVertexLines(final CreasePattern creasePattern, final Vector2d target,
+            final double pointEps) {
+        return creasePattern.stream()
+                .filter(line -> line.pointStream()
+                        .anyMatch(v -> v.equals(target, pointEps)))
+                .filter(line -> line.length() > pointEps)
+                .toList();
+    }
 
-	private OriVertex toOriVertex(final Vector2d target, final List<OriLine> lines, final double pointEps) {
-		var startVertex = new OriVertex(target);
+    private OriVertex toOriVertex(final Vector2d target, final List<OriLine> lines, final double pointEps) {
+        var startVertex = new OriVertex(target);
 
-		for (var line : lines) {
-			if (line.getType() == Type.AUX) {
-				continue;
-			}
-			var endVertex = new OriVertex(
-					line.pointStream().filter(p -> !p.equals(target, pointEps)).findFirst().get());
-			var edge = new OriEdge(startVertex, endVertex, line.getType().toInt());
+        for (var line : lines) {
+            if (line.getType() == Type.AUX) {
+                continue;
+            }
+            var endVertex = new OriVertex(
+                    line.pointStream().filter(p -> !p.equals(target, pointEps)).findFirst().get());
+            var edge = new OriEdge(startVertex, endVertex, line.getType().toInt());
 
-			startVertex.addEdge(edge);
-		}
+            startVertex.addEdge(edge);
+        }
 
-		return startVertex;
-	}
+        return startVertex;
+    }
 }

@@ -32,72 +32,72 @@ import oripa.persistence.dao.FileType;
  */
 public class FileAccessService<Data> {
 
-	private final FileDAO<Data> fileDAO;
+    private final FileDAO<Data> fileDAO;
 
-	// @Inject
-	public FileAccessService(final FileDAO<Data> dao) {
-		this.fileDAO = dao;
-	}
+    // @Inject
+    public FileAccessService(final FileDAO<Data> dao) {
+        this.fileDAO = dao;
+    }
 
-	public FileSelectionService<Data> getFileSelectionService() {
-		return new FileSelectionService<>(fileDAO.getFileSelectionSupportSelector());
-	}
+    public FileSelectionService<Data> getFileSelectionService() {
+        return new FileSelectionService<>(fileDAO.getFileSelectionSupportSelector());
+    }
 
-	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
-		fileDAO.setConfigToSavingAction(key, configSupplier);
-	}
+    public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
+        fileDAO.setConfigToSavingAction(key, configSupplier);
+    }
 
-	public boolean canLoad(final String filePath) {
-		return fileDAO.canLoad(filePath);
-	}
+    public boolean canLoad(final String filePath) {
+        return fileDAO.canLoad(filePath);
+    }
 
-	/**
-	 * save file with given parameters.
-	 *
-	 * @param data
-	 * @param path
-	 * @param type
-	 *            null for auto detection.
-	 *
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	public void saveFile(final Data data, final String path, final FileType<Data> type)
-			throws DataAccessException, IllegalArgumentException {
-		if (type == null) {
-			fileDAO.save(data, path);
-		} else {
-			fileDAO.save(data, path, type);
-		}
+    /**
+     * save file with given parameters.
+     *
+     * @param data
+     * @param path
+     * @param type
+     *            null for auto detection.
+     *
+     * @throws IOException
+     * @throws IllegalArgumentException
+     */
+    public void saveFile(final Data data, final String path, final FileType<Data> type)
+            throws DataAccessException, IllegalArgumentException {
+        if (type == null) {
+            fileDAO.save(data, path);
+        } else {
+            fileDAO.save(data, path, type);
+        }
 
-	}
+    }
 
-	/**
-	 * With auto type detection by file path extension.
-	 *
-	 * @param data
-	 * @param path
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	public void saveFile(final Data data, final String path) throws DataAccessException, IllegalArgumentException {
-		saveFile(data, path, null);
-	}
+    /**
+     * With auto type detection by file path extension.
+     *
+     * @param data
+     * @param path
+     * @throws IOException
+     * @throws IllegalArgumentException
+     */
+    public void saveFile(final Data data, final String path) throws DataAccessException, IllegalArgumentException {
+        saveFile(data, path, null);
+    }
 
-	/**
-	 * tries to read data from the path.
-	 *
-	 * @param filePath
-	 * @return the Data of loaded file.
-	 */
-	public Optional<Data> loadFile(final String filePath)
-			throws DataAccessException, IllegalArgumentException {
+    /**
+     * tries to read data from the path.
+     *
+     * @param filePath
+     * @return the Data of loaded file.
+     */
+    public Optional<Data> loadFile(final String filePath)
+            throws DataAccessException, IllegalArgumentException {
 
-		if (!fileDAO.hasLoaders()) {
-			throw new RuntimeException("Not implemented yet.");
-		}
+        if (!fileDAO.hasLoaders()) {
+            throw new RuntimeException("Not implemented yet.");
+        }
 
-		return fileDAO.load(filePath);
+        return fileDAO.load(filePath);
 
-	}
+    }
 }

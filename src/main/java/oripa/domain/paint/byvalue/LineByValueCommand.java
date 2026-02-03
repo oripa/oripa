@@ -33,47 +33,47 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class LineByValueCommand extends ValidatablePaintCommand {
-	private final static Logger logger = LoggerFactory.getLogger(LineByValueCommand.class);
+    private final static Logger logger = LoggerFactory.getLogger(LineByValueCommand.class);
 
-	private final PaintContext context;
-	private final ByValueContext valueSetting;
+    private final PaintContext context;
+    private final ByValueContext valueSetting;
 
-	public LineByValueCommand(final PaintContext context, final ByValueContext valueSetting) {
-		this.context = context;
-		this.valueSetting = valueSetting;
-	}
+    public LineByValueCommand(final PaintContext context, final ByValueContext valueSetting) {
+        this.context = context;
+        this.valueSetting = valueSetting;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 1;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 1;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		Vector2d vertex = context.popVertex().get();
+        Vector2d vertex = context.popVertex().get();
 
-		try {
-			var length = valueSetting.getLength();
-			var angle = valueSetting.getAngle();
+        try {
+            var length = valueSetting.getLength();
+            var angle = valueSetting.getAngle();
 
-			logger.debug("length = " + length);
+            logger.debug("length = " + length);
 
-			if (length <= 0) {
-				return;
-			}
+            if (length <= 0) {
+                return;
+            }
 
-			OriLine vl = new OriLine(GeomUtil.getSegmentByValue(vertex, length, -angle),
-					context.getLineTypeOfNewLines());
+            OriLine vl = new OriLine(GeomUtil.getSegmentByValue(vertex, length, -angle),
+                    context.getLineTypeOfNewLines());
 
-			context.creasePatternUndo().pushUndoInfo();
+            context.creasePatternUndo().pushUndoInfo();
 
-			Painter painter = context.getPainter();
-			painter.addLine(vl);
+            Painter painter = context.getPainter();
+            painter.addLine(vl);
 
-			context.refreshCreasePattern();
+            context.refreshCreasePattern();
 
-		} catch (Exception ex) {
-			logger.error("unknown error: ", ex);
-		}
-	}
+        } catch (Exception ex) {
+            logger.error("unknown error: ", ex);
+        }
+    }
 
 }

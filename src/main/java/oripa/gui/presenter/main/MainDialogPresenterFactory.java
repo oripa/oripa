@@ -32,60 +32,60 @@ import oripa.persistence.doc.Doc;
  *
  */
 public class MainDialogPresenterFactory {
-	private final MainFrameDialogFactory dialogFactory;
+    private final MainFrameDialogFactory dialogFactory;
 
-	private final DocFileSelectionPresenterFactory fileSelectionPresenterFactory;
+    private final DocFileSelectionPresenterFactory fileSelectionPresenterFactory;
 
-	private final ViewScreenUpdater viewScreenUpdater;
-	private final PaintContext paintContext;
+    private final ViewScreenUpdater viewScreenUpdater;
+    private final PaintContext paintContext;
 
-	@Inject
-	public MainDialogPresenterFactory(
-			final ViewScreenUpdater viewScreenUpdater,
-			final MainFrameDialogFactory dialogFactory,
-			final DocFileSelectionPresenterFactory fileSelectionPresenterFactory,
-			final PaintContext paintContext) {
+    @Inject
+    public MainDialogPresenterFactory(
+            final ViewScreenUpdater viewScreenUpdater,
+            final MainFrameDialogFactory dialogFactory,
+            final DocFileSelectionPresenterFactory fileSelectionPresenterFactory,
+            final PaintContext paintContext) {
 
-		this.viewScreenUpdater = viewScreenUpdater;
-		this.dialogFactory = dialogFactory;
+        this.viewScreenUpdater = viewScreenUpdater;
+        this.dialogFactory = dialogFactory;
 
-		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
+        this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
 
-		this.paintContext = paintContext;
-	}
+        this.paintContext = paintContext;
+    }
 
-	public ArrayCopyDialogPresenter createArrayCopyDialogPresenter(
-			final FrameView parent) {
-		var dialog = dialogFactory.createArrayCopyDialog(parent);
+    public ArrayCopyDialogPresenter createArrayCopyDialogPresenter(
+            final FrameView parent) {
+        var dialog = dialogFactory.createArrayCopyDialog(parent);
 
-		return new ArrayCopyDialogPresenter(
-				dialog,
-				paintContext,
-				viewScreenUpdater);
-	}
+        return new ArrayCopyDialogPresenter(
+                dialog,
+                paintContext,
+                viewScreenUpdater);
+    }
 
-	public CircleCopyDialogPresenter createCircleCopyDialogPresenter(
-			final FrameView parent) {
-		var dialog = dialogFactory.createCircleCopyDialog(parent);
+    public CircleCopyDialogPresenter createCircleCopyDialogPresenter(
+            final FrameView parent) {
+        var dialog = dialogFactory.createCircleCopyDialog(parent);
 
-		return new CircleCopyDialogPresenter(
-				dialog,
-				paintContext,
-				viewScreenUpdater);
-	}
+        return new CircleCopyDialogPresenter(
+                dialog,
+                paintContext,
+                viewScreenUpdater);
+    }
 
-	public PropertyDialogPresenter createPropertyDialogPresenter(
-			final FrameView parent,
-			final PropertyHolder propertyHolder) {
-		var dialog = dialogFactory.createPropertyDialog(parent);
+    public PropertyDialogPresenter createPropertyDialogPresenter(
+            final FrameView parent,
+            final PropertyHolder propertyHolder) {
+        var dialog = dialogFactory.createPropertyDialog(parent);
 
-		return new PropertyDialogPresenter(dialog, propertyHolder);
-	}
+        return new PropertyDialogPresenter(dialog, propertyHolder);
+    }
 
-	public DocFileSelectionPresenter createDocFileSelectionPresenter(
-			final FrameView parent, final FileSelectionService<Doc> fileSelectionService) {
-		return fileSelectionPresenterFactory.create(
-				parent,
-				fileSelectionService);
-	}
+    public DocFileSelectionPresenter createDocFileSelectionPresenter(
+            final FrameView parent, final FileSelectionService<Doc> fileSelectionService) {
+        return fileSelectionPresenterFactory.create(
+                parent,
+                fileSelectionService);
+    }
 }

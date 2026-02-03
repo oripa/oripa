@@ -30,40 +30,40 @@ import oripa.value.OriLine;
  *
  */
 public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final OriLine.Type type;
+    private final PaintContext context;
+    private final OriLine.Type type;
 
-	public PickedVerticesConnectionLineAdderCommand(final PaintContext context) {
-		this.context = context;
-		this.type = context.getLineTypeOfNewLines();
-	}
+    public PickedVerticesConnectionLineAdderCommand(final PaintContext context) {
+        this.context = context;
+        this.type = context.getLineTypeOfNewLines();
+    }
 
-	public PickedVerticesConnectionLineAdderCommand(final PaintContext context, final OriLine.Type type) {
-		this.context = context;
-		this.type = type;
-	}
+    public PickedVerticesConnectionLineAdderCommand(final PaintContext context, final OriLine.Type type) {
+        this.context = context;
+        this.type = type;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 2;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 2;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		var p0 = context.popVertex().get();
-		var p1 = context.popVertex().get();
+        var p0 = context.popVertex().get();
+        var p1 = context.popVertex().get();
 
-		if (type == null) {
-			context.clear(false);
-			return;
-		}
+        if (type == null) {
+            context.clear(false);
+            return;
+        }
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		context.getPainter().addLine(
-				new OriLine(p0, p1, type));
+        context.getPainter().addLine(
+                new OriLine(p0, p1, type));
 
-		context.clear(false);
+        context.clear(false);
 
-		context.refreshCreasePattern();
-	}
+        context.refreshCreasePattern();
+    }
 }

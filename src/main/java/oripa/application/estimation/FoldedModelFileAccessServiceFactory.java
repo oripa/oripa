@@ -30,21 +30,21 @@ import oripa.util.file.FileFactory;
  *
  */
 public class FoldedModelFileAccessServiceFactory {
-	private final FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
-	private final FileFactory fileFactory;
+    private final FoldedModelFileSelectionSupportSelectorFactory selectorFactory;
+    private final FileFactory fileFactory;
 
-	@Inject
-	public FoldedModelFileAccessServiceFactory(
-			final FoldedModelFileSelectionSupportSelectorFactory selectorFactory,
-			final FileFactory fileFactory) {
-		this.selectorFactory = selectorFactory;
-		this.fileFactory = fileFactory;
-	}
+    @Inject
+    public FoldedModelFileAccessServiceFactory(
+            final FoldedModelFileSelectionSupportSelectorFactory selectorFactory,
+            final FileFactory fileFactory) {
+        this.selectorFactory = selectorFactory;
+        this.fileFactory = fileFactory;
+    }
 
-	public FileAccessService<FoldedModelEntity> create(final boolean isFaceOrderFlipped) {
-		return new FileAccessService<FoldedModelEntity>(
-				new FileDAO<>(
-						selectorFactory.create(isFaceOrderFlipped, fileFactory),
-						fileFactory));
-	}
+    public FileAccessService<FoldedModelEntity> create(final boolean isFaceOrderFlipped) {
+        return new FileAccessService<FoldedModelEntity>(
+                new FileDAO<>(
+                        selectorFactory.create(isFaceOrderFlipped, fileFactory),
+                        fileFactory));
+    }
 }

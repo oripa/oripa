@@ -35,122 +35,122 @@ import oripa.util.collection.CollectionUtil;
  *
  */
 public class FaceMaker {
-	private static final Logger logger = LoggerFactory.getLogger(FaceMaker.class);
+    private static final Logger logger = LoggerFactory.getLogger(FaceMaker.class);
 
-	private final List<List<Integer>> verticesVertices;
-	private final List<Map<Integer, Integer>> reversedIndices;
+    private final List<List<Integer>> verticesVertices;
+    private final List<Map<Integer, Integer>> reversedIndices;
 
-	private final Set<List<Integer>> unusedDirectedEdges;
+    private final Set<List<Integer>> unusedDirectedEdges;
 
-	/**
-	 * Constructor
-	 */
-	public FaceMaker(final List<List<Integer>> edgesVertices,
-			final List<List<Integer>> verticesVertices) {
+    /**
+     * Constructor
+     */
+    public FaceMaker(final List<List<Integer>> edgesVertices,
+            final List<List<Integer>> verticesVertices) {
 
-		this.verticesVertices = verticesVertices;
+        this.verticesVertices = verticesVertices;
 
-		logger.debug("creating reversed indices.");
-		reversedIndices = createReversedIndices(verticesVertices);
+        logger.debug("creating reversed indices.");
+        reversedIndices = createReversedIndices(verticesVertices);
 
-		logger.debug("creating unused directed edges.");
-		unusedDirectedEdges = createUnusedDirectedEdges(edgesVertices);
-		logger.debug("initialization of face maker is done.");
-	}
+        logger.debug("creating unused directed edges.");
+        unusedDirectedEdges = createUnusedDirectedEdges(edgesVertices);
+        logger.debug("initialization of face maker is done.");
+    }
 
-	private List<Map<Integer, Integer>> createReversedIndices(final List<List<Integer>> verticesVertices) {
-		List<Map<Integer, Integer>> reversed = new ArrayList<>();
+    private List<Map<Integer, Integer>> createReversedIndices(final List<List<Integer>> verticesVertices) {
+        List<Map<Integer, Integer>> reversed = new ArrayList<>();
 
-		for (int u = 0; u < verticesVertices.size(); u++) {
-			var map = new HashMap<Integer, Integer>();
-			var vertices = verticesVertices.get(u);
-			for (int vIndex = 0; vIndex < vertices.size(); vIndex++) {
-				map.put(vertices.get(vIndex), vIndex);
-			}
-			reversed.add(map);
-		}
+        for (int u = 0; u < verticesVertices.size(); u++) {
+            var map = new HashMap<Integer, Integer>();
+            var vertices = verticesVertices.get(u);
+            for (int vIndex = 0; vIndex < vertices.size(); vIndex++) {
+                map.put(vertices.get(vIndex), vIndex);
+            }
+            reversed.add(map);
+        }
 
-		return reversed;
-	}
+        return reversed;
+    }
 
-	private Set<List<Integer>> createUnusedDirectedEdges(final List<List<Integer>> edgesVertices) {
-		Set<List<Integer>> unused = new HashSet<>();
+    private Set<List<Integer>> createUnusedDirectedEdges(final List<List<Integer>> edgesVertices) {
+        Set<List<Integer>> unused = new HashSet<>();
 
-		for (var edge : edgesVertices) {
-			unused.add(edge);
-			unused.add(List.of(edge.get(1), edge.get(0)));
-		}
-		return unused;
-	}
+        for (var edge : edgesVertices) {
+            unused.add(edge);
+            unused.add(List.of(edge.get(1), edge.get(0)));
+        }
+        return unused;
+    }
 
-	public List<Integer> makeFace(final List<Integer> edge) {
+    public List<Integer> makeFace(final List<Integer> edge) {
 
-		if (!unusedDirectedEdges.contains(edge)) {
-			return List.of();
-		}
+        if (!unusedDirectedEdges.contains(edge)) {
+            return List.of();
+        }
 
-		var face = new ArrayList<Integer>(edge);
+        var face = new ArrayList<Integer>(edge);
 
-		unusedDirectedEdges.remove(edge);
+        unusedDirectedEdges.remove(edge);
 
-		var u = edge.get(0);
-		var v = edge.get(1);
+        var u = edge.get(0);
+        var v = edge.get(1);
 
-		var w = getLeftSideNeighbor(u, v);
+        var w = getLeftSideNeighbor(u, v);
 
-		if (!makeFace(face, List.of(v, w))) {
-			return List.of();
-		}
+        if (!makeFace(face, List.of(v, w))) {
+            return List.of();
+        }
 
-		return face;
-	}
+        return face;
+    }
 
-	/**
-	 * To make a counter-clockwise loop, we consider edges incident to v of
-	 * given [u, v]. The edge next to [u, v] in counter-clockwise direction
-	 * (left side of u in the vertices list) is the edge to follow.
-	 *
-	 * @param u
-	 * @param v
-	 * @return the vertex of left side neighbor of u among vertices connecting
-	 *         to v.
-	 */
-	private Integer getLeftSideNeighbor(final int u, final int v) {
-		var uIndex = reversedIndices.get(v).get(u);
-		var vertices = verticesVertices.get(v);
+    /**
+     * To make a counter-clockwise loop, we consider edges incident to v of
+     * given [u, v]. The edge next to [u, v] in counter-clockwise direction
+     * (left side of u in the vertices list) is the edge to follow.
+     *
+     * @param u
+     * @param v
+     * @return the vertex of left side neighbor of u among vertices connecting
+     *         to v.
+     */
+    private Integer getLeftSideNeighbor(final int u, final int v) {
+        var uIndex = reversedIndices.get(v).get(u);
+        var vertices = verticesVertices.get(v);
 
-		return CollectionUtil.getCircular(vertices, uIndex - 1);
-	}
+        return CollectionUtil.getCircular(vertices, uIndex - 1);
+    }
 
-	/**
-	 * make a loop. The first call of this method is with face = (u,v) and edge
-	 * = (v,w).
-	 */
-	private boolean makeFace(final List<Integer> face, final List<Integer> edge) {
-		logger.trace("called with face: " + face);
+    /**
+     * make a loop. The first call of this method is with face = (u,v) and edge
+     * = (v,w).
+     */
+    private boolean makeFace(final List<Integer> face, final List<Integer> edge) {
+        logger.trace("called with face: " + face);
 
-		var u = edge.get(0);
-		var v = edge.get(1);
-		unusedDirectedEdges.remove(edge);
+        var u = edge.get(0);
+        var v = edge.get(1);
+        unusedDirectedEdges.remove(edge);
 
-		if (face.get(0).intValue() == v) {
-			logger.debug("succeeded to make a face: " + face);
-			return true;
-		}
+        if (face.get(0).intValue() == v) {
+            logger.debug("succeeded to make a face: " + face);
+            return true;
+        }
 
-		face.add(v);
+        face.add(v);
 
-		var w = getLeftSideNeighbor(u, v);
+        var w = getLeftSideNeighbor(u, v);
 
-		var nextEdge = List.of(v, w);
+        var nextEdge = List.of(v, w);
 
-		if (!unusedDirectedEdges.contains(nextEdge)) {
-			logger.warn("failed to make a face. (The next path is already used)");
+        if (!unusedDirectedEdges.contains(nextEdge)) {
+            logger.warn("failed to make a face. (The next path is already used)");
 
-			return false;
-		}
+            return false;
+        }
 
-		return makeFace(face, nextEdge);
-	}
+        return makeFace(face, nextEdge);
+    }
 
 }

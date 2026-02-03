@@ -44,213 +44,213 @@ import oripa.geom.RectangleDomain;
  *
  */
 public class ModelComputationFacade {
-	private static final Logger logger = LoggerFactory.getLogger(ModelComputationFacade.class);
+    private static final Logger logger = LoggerFactory.getLogger(ModelComputationFacade.class);
 
-	public enum ComputationType {
-		FULL(EstimationType.FULL, "All folded states", true),
-		FIRST_ONLY(EstimationType.FIRST_ONLY, "First folded state", true),
-		X_RAY(EstimationType.X_RAY, "X-Ray", false);
+    public enum ComputationType {
+        FULL(EstimationType.FULL, "All folded states", true),
+        FIRST_ONLY(EstimationType.FIRST_ONLY, "First folded state", true),
+        X_RAY(EstimationType.X_RAY, "X-Ray", false);
 
-		private final EstimationType estimationType;
-		private final String name;
-		private final boolean isLayerOrdering;
+        private final EstimationType estimationType;
+        private final String name;
+        private final boolean isLayerOrdering;
 
-		private ComputationType(final EstimationType estimationType, final String name, final boolean isLayerOrdering) {
-			this.estimationType = estimationType;
-			this.name = name;
-			this.isLayerOrdering = isLayerOrdering;
-		}
+        private ComputationType(final EstimationType estimationType, final String name, final boolean isLayerOrdering) {
+            this.estimationType = estimationType;
+            this.name = name;
+            this.isLayerOrdering = isLayerOrdering;
+        }
 
-		public boolean isLayerOrdering() {
-			return isLayerOrdering;
-		}
+        public boolean isLayerOrdering() {
+            return isLayerOrdering;
+        }
 
-		EstimationType toEstimationType() {
-			return estimationType;
-		}
+        EstimationType toEstimationType() {
+            return estimationType;
+        }
 
-		@Override
-		public String toString() {
-			return name;
-		}
+        @Override
+        public String toString() {
+            return name;
+        }
 
-		public static Optional<ComputationType> fromString(final String s) {
-			return Arrays.stream(values()).filter(v -> v.toString().equals(s)).findFirst();
-		}
-	}
+        public static Optional<ComputationType> fromString(final String s) {
+            return Arrays.stream(values()).filter(v -> v.toString().equals(s)).findFirst();
+        }
+    }
 
-	/**
-	 * Each field is a immutable list but note that the elements of the lists
-	 * are mutable.
-	 *
-	 * @author OUCHI Koji
-	 *
-	 */
-	public record ComputationResult(
-			List<OrigamiModel> origamiModels,
-			List<FoldedModel> foldedModels,
-			List<EstimationResultRules> estimationRules
+    /**
+     * Each field is a immutable list but note that the elements of the lists
+     * are mutable.
+     *
+     * @author OUCHI Koji
+     *
+     */
+    public record ComputationResult(
+            List<OrigamiModel> origamiModels,
+            List<FoldedModel> foldedModels,
+            List<EstimationResultRules> estimationRules
 
-	) {
-		public ComputationResult(
-				final List<OrigamiModel> origamiModels,
-				final List<FoldedModel> foldedModels,
-				final List<EstimationResultRules> estimationRules) {
-			this.origamiModels = Collections.unmodifiableList(origamiModels);
-			this.foldedModels = Collections.unmodifiableList(foldedModels);
-			this.estimationRules = Collections.unmodifiableList(estimationRules);
-		}
+    ) {
+        public ComputationResult(
+                final List<OrigamiModel> origamiModels,
+                final List<FoldedModel> foldedModels,
+                final List<EstimationResultRules> estimationRules) {
+            this.origamiModels = Collections.unmodifiableList(origamiModels);
+            this.foldedModels = Collections.unmodifiableList(foldedModels);
+            this.estimationRules = Collections.unmodifiableList(estimationRules);
+        }
 
-		/**
-		 * Returns a {@link OrigamiModel} that contains all elements of each
-		 * model. The references by IDs will be broken since the elements are
-		 * mixed.
-		 */
-		public OrigamiModel getMergedOrigamiModel() {
-			var paperSize = RectangleDomain.createFromPoints(
-					origamiModels.stream()
-							.flatMap(model -> model.getVertices().stream())
-							.map(OriVertex::getPositionBeforeFolding)
-							.toList())
-					.maxWidthHeight();
+        /**
+         * Returns a {@link OrigamiModel} that contains all elements of each
+         * model. The references by IDs will be broken since the elements are
+         * mixed.
+         */
+        public OrigamiModel getMergedOrigamiModel() {
+            var paperSize = RectangleDomain.createFromPoints(
+                    origamiModels.stream()
+                            .flatMap(model -> model.getVertices().stream())
+                            .map(OriVertex::getPositionBeforeFolding)
+                            .toList())
+                    .maxWidthHeight();
 
-			var merged = new OrigamiModel(paperSize);
+            var merged = new OrigamiModel(paperSize);
 
-			for (var model : origamiModels) {
-				merged.setVertices(Stream.concat(
-						merged.getVertices().stream(),
-						model.getVertices().stream()).toList());
-				merged.setEdges(Stream.concat(
-						merged.getEdges().stream(),
-						model.getEdges().stream()).toList());
-				merged.setFaces(Stream.concat(
-						merged.getFaces().stream(),
-						model.getFaces().stream()).toList());
-			}
+            for (var model : origamiModels) {
+                merged.setVertices(Stream.concat(
+                        merged.getVertices().stream(),
+                        model.getVertices().stream()).toList());
+                merged.setEdges(Stream.concat(
+                        merged.getEdges().stream(),
+                        model.getEdges().stream()).toList());
+                merged.setFaces(Stream.concat(
+                        merged.getFaces().stream(),
+                        model.getFaces().stream()).toList());
+            }
 
-			return merged;
-		}
+            return merged;
+        }
 
-		public EstimationResultRules getEstimationResultRules() {
-			return estimationRules.stream().reduce(new EstimationResultRules(), (a, b) -> a.or(b));
-		}
+        public EstimationResultRules getEstimationResultRules() {
+            return estimationRules.stream().reduce(new EstimationResultRules(), (a, b) -> a.or(b));
+        }
 
-		/**
-		 * Returns true if all models are globally flat foldable.
-		 */
-		public boolean allGloballyFlatFoldable() {
-			return foldedModels.stream().allMatch(m -> m.getFoldablePatternCount() > 0);
-		}
+        /**
+         * Returns true if all models are globally flat foldable.
+         */
+        public boolean allGloballyFlatFoldable() {
+            return foldedModels.stream().allMatch(m -> m.getFoldablePatternCount() > 0);
+        }
 
-		/**
-		 * Returns true if all models are locally flat foldable.
-		 */
-		public boolean allLocallyFlatFoldable() {
-			return origamiModels.stream().allMatch(OrigamiModel::isLocallyFlatFoldable);
-		}
-	}
+        /**
+         * Returns true if all models are locally flat foldable.
+         */
+        public boolean allLocallyFlatFoldable() {
+            return origamiModels.stream().allMatch(OrigamiModel::isLocallyFlatFoldable);
+        }
+    }
 
-	private final TestedOrigamiModelFactory modelFactory;
-	private final FolderFactory folderFactory;
+    private final TestedOrigamiModelFactory modelFactory;
+    private final FolderFactory folderFactory;
 
-	private final Supplier<Boolean> needCleaningUpDuplication;
-	private final Runnable showCleaningUpMessage;
-	private final Runnable showFailureMessage;
+    private final Supplier<Boolean> needCleaningUpDuplication;
+    private final Runnable showCleaningUpMessage;
+    private final Runnable showFailureMessage;
 
-	private final double eps;
+    private final double eps;
 
-	public ModelComputationFacade(
-			final TestedOrigamiModelFactory modelFactory,
-			final FolderFactory folderFactory,
-			final Supplier<Boolean> needCleaningUpDuplication,
-			final Runnable showCleaningUpMessage,
-			final Runnable showFailureMessage,
-			final double eps) {
-		this.modelFactory = modelFactory;
-		this.folderFactory = folderFactory;
+    public ModelComputationFacade(
+            final TestedOrigamiModelFactory modelFactory,
+            final FolderFactory folderFactory,
+            final Supplier<Boolean> needCleaningUpDuplication,
+            final Runnable showCleaningUpMessage,
+            final Runnable showFailureMessage,
+            final double eps) {
+        this.modelFactory = modelFactory;
+        this.folderFactory = folderFactory;
 
-		this.needCleaningUpDuplication = needCleaningUpDuplication;
-		this.showCleaningUpMessage = showCleaningUpMessage;
-		this.showFailureMessage = showFailureMessage;
-		this.eps = eps;
-	}
+        this.needCleaningUpDuplication = needCleaningUpDuplication;
+        this.showCleaningUpMessage = showCleaningUpMessage;
+        this.showFailureMessage = showFailureMessage;
+        this.eps = eps;
+    }
 
-	/**
-	 *
-	 * @param origamiModels
-	 *            half-edge structure before folding
-	 * @param type
-	 *            type of computation decided with crease types and model
-	 *            building result.
-	 * @return
-	 */
-	public ComputationResult computeModels(
-			final List<OrigamiModel> origamiModels,
-			final ComputationType type) {
+    /**
+     *
+     * @param origamiModels
+     *            half-edge structure before folding
+     * @param type
+     *            type of computation decided with crease types and model
+     *            building result.
+     * @return
+     */
+    public ComputationResult computeModels(
+            final List<OrigamiModel> origamiModels,
+            final ComputationType type) {
 
-		var foldResults = origamiModels.stream()
-				.map(model -> folderFactory
-						.create(model.getModelType())
-						.fold(model, determineEps(model, eps),
-								type.toEstimationType()))
-				.toList();
+        var foldResults = origamiModels.stream()
+                .map(model -> folderFactory
+                        .create(model.getModelType())
+                        .fold(model, determineEps(model, eps),
+                                type.toEstimationType()))
+                .toList();
 
-		var foldedModels = foldResults.stream().map(Folder.Result::foldedModel).toList();
-		var estimationRules = foldResults.stream().map(Folder.Result::estimationRules).toList();
+        var foldedModels = foldResults.stream().map(Folder.Result::foldedModel).toList();
+        var estimationRules = foldResults.stream().map(Folder.Result::estimationRules).toList();
 
-		return new ComputationResult(origamiModels, foldedModels, estimationRules);
-	}
+        return new ComputationResult(origamiModels, foldedModels, estimationRules);
+    }
 
-	private double determineEps(final OrigamiModel model, final double eps) {
-		var minLength = model.getEdges().stream().mapToDouble(e -> e.toSegment().length()).min().getAsDouble();
-		var value = minLength / 300;
-		// var value = model.getPaperSize() * eps;
+    private double determineEps(final OrigamiModel model, final double eps) {
+        var minLength = model.getEdges().stream().mapToDouble(e -> e.toSegment().length()).min().getAsDouble();
+        var value = minLength / 300;
+        // var value = model.getPaperSize() * eps;
 
-		logger.info("eps for folding: {}", value);
+        logger.info("eps for folding: {}", value);
 
-		return value;
+        return value;
 //
 //		return minLength * eps;
-	}
+    }
 
-	/**
-	 * try building the crease pattern and ask for additional measures to help
-	 * clean it
-	 *
-	 * @return Origami model before folding
-	 */
-	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
+    /**
+     * try building the crease pattern and ask for additional measures to help
+     * clean it
+     *
+     * @return Origami model before folding
+     */
+    public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
 
-		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
-				creasePattern, eps);
+        OrigamiModel wholeModel = modelFactory.createOrigamiModel(
+                creasePattern, eps);
 
-		logger.debug("Building origami model.");
+        logger.debug("Building origami model.");
 
-		if (wholeModel.isLocallyFlatFoldable()) {
-			logger.debug("No modification is needed.");
-			return modelFactory.createOrigamiModels(creasePattern, eps);
-		}
+        if (wholeModel.isLocallyFlatFoldable()) {
+            logger.debug("No modification is needed.");
+            return modelFactory.createOrigamiModels(creasePattern, eps);
+        }
 
-		// ask if ORIPA should try to remove duplication.
-		if (!needCleaningUpDuplication.get()) {
-			// the answer is "no."
-			return modelFactory.createOrigamiModels(creasePattern, eps);
-		}
+        // ask if ORIPA should try to remove duplication.
+        if (!needCleaningUpDuplication.get()) {
+            // the answer is "no."
+            return modelFactory.createOrigamiModels(creasePattern, eps);
+        }
 
-		// clean up the crease pattern
-		if (creasePattern.cleanDuplicatedLines(eps)) {
-			showCleaningUpMessage.run();
-		}
-		// re-create the model data for simplified crease pattern
-		wholeModel = modelFactory
-				.createOrigamiModel(creasePattern, eps);
+        // clean up the crease pattern
+        if (creasePattern.cleanDuplicatedLines(eps)) {
+            showCleaningUpMessage.run();
+        }
+        // re-create the model data for simplified crease pattern
+        wholeModel = modelFactory
+                .createOrigamiModel(creasePattern, eps);
 
-		if (wholeModel.isLocallyFlatFoldable()) {
-			return modelFactory.createOrigamiModels(creasePattern, eps);
-		}
+        if (wholeModel.isLocallyFlatFoldable()) {
+            return modelFactory.createOrigamiModels(creasePattern, eps);
+        }
 
-		showFailureMessage.run();
+        showFailureMessage.run();
 
-		return modelFactory.createOrigamiModels(creasePattern, eps);
-	}
+        return modelFactory.createOrigamiModels(creasePattern, eps);
+    }
 }

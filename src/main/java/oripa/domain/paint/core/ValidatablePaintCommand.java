@@ -28,18 +28,18 @@ import oripa.util.Command;
  *
  */
 public abstract class ValidatablePaintCommand implements Command {
-	protected void validateCounts(final PaintContext context,
-			final int correctVertexCount, final int correctLineCount) {
-		if (context.getVertexCount() != correctVertexCount || context.getLineCount() != correctLineCount) {
-			throw new IllegalStateException(
-					String.format("wrong state. There should be %d pickedVertices and %d pickedLines",
-							correctVertexCount, correctLineCount));
-		}
-	}
+    protected void validateCounts(final PaintContext context,
+            final int correctVertexCount, final int correctLineCount) {
+        if (context.getVertexCount() != correctVertexCount || context.getLineCount() != correctLineCount) {
+            throw new IllegalStateException(
+                    String.format("wrong state. There should be %d pickedVertices and %d pickedLines",
+                            correctVertexCount, correctLineCount));
+        }
+    }
 
-	protected void validateThat(final Supplier<Boolean> isValid, final String errorMessage) {
-		if (!isValid.get()) {
-			throw new IllegalStateException(errorMessage);
-		}
-	}
+    protected void validateThat(final Supplier<Boolean> isValid, final String errorMessage) {
+        if (!isValid.get()) {
+            throw new IllegalStateException(errorMessage);
+        }
+    }
 }

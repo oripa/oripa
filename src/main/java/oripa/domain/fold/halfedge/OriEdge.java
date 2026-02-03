@@ -33,116 +33,116 @@ import oripa.vecmath.Vector2d;
  */
 public class OriEdge {
 
-	private final OriVertex startVertex;
-	private final OriVertex endVertex;
-	private OriHalfedge left = null;
-	private OriHalfedge right = null;
-	private int type;
+    private final OriVertex startVertex;
+    private final OriVertex endVertex;
+    private OriHalfedge left = null;
+    private OriHalfedge right = null;
+    private int type;
 
-	public OriEdge(final OriVertex startVertex, final OriVertex endVertex, final int type) {
-		this.type = type;
-		this.startVertex = startVertex;
-		this.endVertex = endVertex;
-	}
+    public OriEdge(final OriVertex startVertex, final OriVertex endVertex, final int type) {
+        this.type = type;
+        this.startVertex = startVertex;
+        this.endVertex = endVertex;
+    }
 
-	/**
-	 * @return sv
-	 */
-	public OriVertex getStartVertex() {
-		return startVertex;
-	}
+    /**
+     * @return sv
+     */
+    public OriVertex getStartVertex() {
+        return startVertex;
+    }
 
-	/**
-	 * @return ev
-	 */
-	public OriVertex getEndVertex() {
-		return endVertex;
-	}
+    /**
+     * @return ev
+     */
+    public OriVertex getEndVertex() {
+        return endVertex;
+    }
 
-	/**
-	 * @return left
-	 */
-	public Optional<OriHalfedge> getLeft() {
-		return Optional.ofNullable(left);
-	}
+    /**
+     * @return left
+     */
+    public Optional<OriHalfedge> getLeft() {
+        return Optional.ofNullable(left);
+    }
 
-	/**
-	 * @param left
-	 *            Sets left
-	 */
-	void setLeft(final OriHalfedge left) {
-		this.left = left;
-	}
+    /**
+     * @param left
+     *            Sets left
+     */
+    void setLeft(final OriHalfedge left) {
+        this.left = left;
+    }
 
-	/**
-	 * @return right
-	 */
-	public Optional<OriHalfedge> getRight() {
-		return Optional.ofNullable(right);
-	}
+    /**
+     * @return right
+     */
+    public Optional<OriHalfedge> getRight() {
+        return Optional.ofNullable(right);
+    }
 
-	/**
-	 * @param right
-	 *            Sets right
-	 */
-	void setRight(final OriHalfedge right) {
-		this.right = right;
-	}
+    /**
+     * @param right
+     *            Sets right
+     */
+    void setRight(final OriHalfedge right) {
+        this.right = right;
+    }
 
-	/**
-	 * @return type
-	 */
-	public int getType() {
-		return type;
-	}
+    /**
+     * @return type
+     */
+    public int getType() {
+        return type;
+    }
 
-	public void setType(final int type) {
-		this.type = type;
-	}
+    public void setType(final int type) {
+        this.type = type;
+    }
 
-	public OriVertex oppositeVertex(final OriVertex v) {
-		return v == startVertex ? endVertex : startVertex;
-	}
+    public OriVertex oppositeVertex(final OriVertex v) {
+        return v == startVertex ? endVertex : startVertex;
+    }
 
-	/**
-	 * Computes the angle of the direction of this edge if given {@code sv} is
-	 * the start point of the direction.
-	 *
-	 * @param sv
-	 *            start vertex of the direction
-	 * @return arc tangent of direction vector between 0 and 2 * pi.
-	 */
-	public double getAngle(final OriVertex sv) {
-		var ev = oppositeVertex(sv);
-		Vector2d dir = ev.getPositionBeforeFolding().subtract(sv.getPositionBeforeFolding());
+    /**
+     * Computes the angle of the direction of this edge if given {@code sv} is
+     * the start point of the direction.
+     *
+     * @param sv
+     *            start vertex of the direction
+     * @return arc tangent of direction vector between 0 and 2 * pi.
+     */
+    public double getAngle(final OriVertex sv) {
+        var ev = oppositeVertex(sv);
+        Vector2d dir = ev.getPositionBeforeFolding().subtract(sv.getPositionBeforeFolding());
 
-		return dir.ownAngle();
-	}
+        return dir.ownAngle();
+    }
 
-	public boolean isBoundary() {
-		return type == OriLine.Type.CUT.toInt();
-	}
+    public boolean isBoundary() {
+        return type == OriLine.Type.CUT.toInt();
+    }
 
-	public boolean isMountain() {
-		return type == OriLine.Type.MOUNTAIN.toInt();
-	}
+    public boolean isMountain() {
+        return type == OriLine.Type.MOUNTAIN.toInt();
+    }
 
-	public boolean isValley() {
-		return type == OriLine.Type.VALLEY.toInt();
-	}
+    public boolean isValley() {
+        return type == OriLine.Type.VALLEY.toInt();
+    }
 
-	public boolean isUnassigned() {
-		return type == OriLine.Type.UNASSIGNED.toInt();
-	}
+    public boolean isUnassigned() {
+        return type == OriLine.Type.UNASSIGNED.toInt();
+    }
 
-	public boolean isAssigned() {
-		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
-	}
+    public boolean isAssigned() {
+        return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
+    }
 
-	public boolean isFoldLine() {
-		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt()
-				|| type == OriLine.Type.UNASSIGNED.toInt();
-	}
+    public boolean isFoldLine() {
+        return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt()
+                || type == OriLine.Type.UNASSIGNED.toInt();
+    }
 
 //	@Override
 //	public int hashCode() {
@@ -164,8 +164,8 @@ public class OriEdge {
 //		return false;
 //	}
 
-	public Segment toSegment() {
-		return new Segment(getStartVertex().getPosition(), getEndVertex().getPosition());
-	}
+    public Segment toSegment() {
+        return new Segment(getStartVertex().getPosition(), getEndVertex().getPosition());
+    }
 
 }

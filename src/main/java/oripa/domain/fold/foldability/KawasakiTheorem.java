@@ -41,40 +41,40 @@ import oripa.util.rule.AbstractRule;
  *
  */
 public class KawasakiTheorem extends AbstractRule<OriVertex> {
-	private static final Logger logger = LoggerFactory.getLogger(KawasakiTheorem.class);
+    private static final Logger logger = LoggerFactory.getLogger(KawasakiTheorem.class);
 
-	public KawasakiTheorem() {
-		super("Kawasaki");
-	}
+    public KawasakiTheorem() {
+        super("Kawasaki");
+    }
 
-	/**
-	 *
-	 * @param vertex
-	 * @return true if the {@code vertex} passes the theorem test.
-	 */
-	@Override
-	public boolean holds(final OriVertex vertex) {
+    /**
+     *
+     * @param vertex
+     * @return true if the {@code vertex} passes the theorem test.
+     */
+    @Override
+    public boolean holds(final OriVertex vertex) {
 
-		if (!vertex.isInsideOfPaper()) {
-			return true;
-		}
+        if (!vertex.isInsideOfPaper()) {
+            return true;
+        }
 
-		double oddSum = 0;
+        double oddSum = 0;
 
-		for (int i = 0; i < vertex.edgeCount(); i++) {
-			double angle = vertex.getAngleDifference(i);
+        for (int i = 0; i < vertex.edgeCount(); i++) {
+            double angle = vertex.getAngleDifference(i);
 
-			if (i % 2 == 0) {
-				oddSum += angle;
-			}
-		}
+            if (i % 2 == 0) {
+                oddSum += angle;
+            }
+        }
 
-		if (!MathUtil.areRadianEqual(oddSum, Math.PI)) {
-			logger.trace("edge angle sum invalid");
-			return false;
-		}
+        if (!MathUtil.areRadianEqual(oddSum, Math.PI)) {
+            logger.trace("edge angle sum invalid");
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

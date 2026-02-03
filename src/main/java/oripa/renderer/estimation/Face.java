@@ -25,27 +25,27 @@ import oripa.domain.fold.halfedge.OriFace;
  *
  */
 public class Face {
-	private final OriFace originalFace;
-	private final OriFace convertedFace;
+    private final OriFace originalFace;
+    private final OriFace convertedFace;
 
-	public Face(final OriFace original, final OriFace converted) {
-		originalFace = original;
-		convertedFace = converted;
-	}
+    public Face(final OriFace original, final OriFace converted) {
+        originalFace = original;
+        convertedFace = converted;
+    }
 
-	public OriFace getOriginalFace() {
-		return originalFace;
-	}
+    public OriFace getOriginalFace() {
+        return originalFace;
+    }
 
-	public OriFace getConvertedFace() {
-		return convertedFace;
-	}
+    public OriFace getConvertedFace() {
+        return convertedFace;
+    }
 
-	public int halfedgeCount() {
-		return originalFace.halfedgeCount();
-	}
+    public int halfedgeCount() {
+        return originalFace.halfedgeCount();
+    }
 
-	public int getFaceID() {
-		return originalFace.getFaceID();
-	}
+    public int getFaceID() {
+        return originalFace.getFaceID();
+    }
 }

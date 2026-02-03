@@ -28,43 +28,43 @@ import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
  *
  */
 public class ComplexActionFactory {
-	private final EditOutlineActionFactory outlineFactory;
-	private final CopyAndPasteActionFactory copyPasteFactory;
-	private final ByValueContext byValueContext;
-	private final TypeForChangeContext typeForChangeContext;
+    private final EditOutlineActionFactory outlineFactory;
+    private final CopyAndPasteActionFactory copyPasteFactory;
+    private final ByValueContext byValueContext;
+    private final TypeForChangeContext typeForChangeContext;
 
-	@Inject
-	public ComplexActionFactory(final EditOutlineActionFactory outlineFactory,
-			final CopyAndPasteActionFactory copyPasteFactory,
-			final ByValueContext byValueContext,
-			final TypeForChangeContext typeForChangeContext) {
-		this.outlineFactory = outlineFactory;
-		this.copyPasteFactory = copyPasteFactory;
-		this.byValueContext = byValueContext;
-		this.typeForChangeContext = typeForChangeContext;
-	}
+    @Inject
+    public ComplexActionFactory(final EditOutlineActionFactory outlineFactory,
+            final CopyAndPasteActionFactory copyPasteFactory,
+            final ByValueContext byValueContext,
+            final TypeForChangeContext typeForChangeContext) {
+        this.outlineFactory = outlineFactory;
+        this.copyPasteFactory = copyPasteFactory;
+        this.byValueContext = byValueContext;
+        this.typeForChangeContext = typeForChangeContext;
+    }
 
-	public GraphicMouseAction createEditOutline() {
-		return outlineFactory.create();
-	}
+    public GraphicMouseAction createEditOutline() {
+        return outlineFactory.create();
+    }
 
-	public GraphicMouseAction createCopyAndPaste() {
-		return copyPasteFactory.createCopyAndPaste();
-	}
+    public GraphicMouseAction createCopyAndPaste() {
+        return copyPasteFactory.createCopyAndPaste();
+    }
 
-	public GraphicMouseAction createCutAndPaste() {
-		return copyPasteFactory.createCutAndPaste();
-	}
+    public GraphicMouseAction createCutAndPaste() {
+        return copyPasteFactory.createCutAndPaste();
+    }
 
-	public GraphicMouseAction createImport() {
-		return copyPasteFactory.createImport();
-	}
+    public GraphicMouseAction createImport() {
+        return copyPasteFactory.createImport();
+    }
 
-	public GraphicMouseAction createByValue() {
-		return new LineByValueAction(byValueContext);
-	}
+    public GraphicMouseAction createByValue() {
+        return new LineByValueAction(byValueContext);
+    }
 
-	public GraphicMouseAction createTypeChange() {
-		return new LineTypeChangeAction(typeForChangeContext);
-	}
+    public GraphicMouseAction createTypeChange() {
+        return new LineTypeChangeAction(typeForChangeContext);
+    }
 }

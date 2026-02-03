@@ -30,64 +30,64 @@ import oripa.OriLineProxy;
  *
  */
 public class ElementLoader {
-	private final TypedXPath xpath;
-	private final ValueNodeParser parser;
+    private final TypedXPath xpath;
+    private final ValueNodeParser parser;
 
-	public ElementLoader(final TypedXPath xpath) {
-		this.xpath = xpath;
-		parser = new ValueNodeParser(xpath);
-	}
+    public ElementLoader(final TypedXPath xpath) {
+        this.xpath = xpath;
+        parser = new ValueNodeParser(xpath);
+    }
 
-	public Node findDataSetNode(final Node rootNode) throws XPathExpressionException {
-		return xpath.evaluateAsNode("/java/object", rootNode);
-	}
+    public Node findDataSetNode(final Node rootNode) throws XPathExpressionException {
+        return xpath.evaluateAsNode("/java/object", rootNode);
+    }
 
-	public NodeList findFieldNodes(final Node rootNode) throws XPathExpressionException {
-		return xpath.evaluateAsNodeList("//void[@method='getField']", rootNode);
-	}
+    public NodeList findFieldNodes(final Node rootNode) throws XPathExpressionException {
+        return xpath.evaluateAsNodeList("//void[@method='getField']", rootNode);
+    }
 
-	public int loadVersionFieldValue(final String fieldName, final Node datasetNode)
-			throws XPathExpressionException {
+    public int loadVersionFieldValue(final String fieldName, final Node datasetNode)
+            throws XPathExpressionException {
 
-		return parser.parseIntProperty(fieldName, datasetNode);
-	}
+        return parser.parseIntProperty(fieldName, datasetNode);
+    }
 
-	public String loadPropertyFieldValue(final String fieldName, final NodeList fieldNodes)
-			throws XPathExpressionException {
+    public String loadPropertyFieldValue(final String fieldName, final NodeList fieldNodes)
+            throws XPathExpressionException {
 
-		for (int i = 0; i < fieldNodes.getLength(); i++) {
-			var fieldNode = fieldNodes.item(i).cloneNode(true);
+        for (int i = 0; i < fieldNodes.getLength(); i++) {
+            var fieldNode = fieldNodes.item(i).cloneNode(true);
 
-			var nodeName = parser.parseObjectName(fieldNode);
+            var nodeName = parser.parseObjectName(fieldNode);
 
-			if (nodeName.equals(fieldName)) {
-				return parser.parseStringValue(fieldNode);
-			}
-		}
-		// each field can be null.
-		return null;
-	}
+            if (nodeName.equals(fieldName)) {
+                return parser.parseStringValue(fieldNode);
+            }
+        }
+        // each field can be null.
+        return null;
+    }
 
-	public OriLineProxy[] loadOriLineProxies(final Node rootNode) throws XPathExpressionException {
-		var lineExpression = "//object[@class='oripa.OriLineProxy']";
-		var lineProxyNodes = xpath.evaluateAsNodeList(lineExpression, rootNode);
+    public OriLineProxy[] loadOriLineProxies(final Node rootNode) throws XPathExpressionException {
+        var lineExpression = "//object[@class='oripa.OriLineProxy']";
+        var lineProxyNodes = xpath.evaluateAsNodeList(lineExpression, rootNode);
 
-		var proxies = new OriLineProxy[lineProxyNodes.getLength()];
+        var proxies = new OriLineProxy[lineProxyNodes.getLength()];
 
-		for (int i = 0; i < lineProxyNodes.getLength(); i++) {
-			var lineProxyNode = lineProxyNodes.item(i).cloneNode(true);
+        for (int i = 0; i < lineProxyNodes.getLength(); i++) {
+            var lineProxyNode = lineProxyNodes.item(i).cloneNode(true);
 
-			var proxy = new OriLineProxy();
-			proxy.setType(parser.parseIntProperty("type", lineProxyNode));
-			proxy.setX0(parser.parseDoubleProperty("x0", lineProxyNode));
-			proxy.setY0(parser.parseDoubleProperty("y0", lineProxyNode));
-			proxy.setX1(parser.parseDoubleProperty("x1", lineProxyNode));
-			proxy.setY1(parser.parseDoubleProperty("y1", lineProxyNode));
+            var proxy = new OriLineProxy();
+            proxy.setType(parser.parseIntProperty("type", lineProxyNode));
+            proxy.setX0(parser.parseDoubleProperty("x0", lineProxyNode));
+            proxy.setY0(parser.parseDoubleProperty("y0", lineProxyNode));
+            proxy.setX1(parser.parseDoubleProperty("x1", lineProxyNode));
+            proxy.setY1(parser.parseDoubleProperty("y1", lineProxyNode));
 
-			proxies[i] = proxy;
-		}
+            proxies[i] = proxy;
+        }
 
-		return proxies;
-	}
+        return proxies;
+    }
 
 }

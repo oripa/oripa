@@ -32,75 +32,75 @@ import oripa.vecmath.Vector2d;
  */
 public class PointToLineThroughPointAxiomAction extends AbstractGraphicMouseAction {
 
-	public PointToLineThroughPointAxiomAction() {
-		setActionState(new SelectingFirstVertex());
-	}
+    public PointToLineThroughPointAxiomAction() {
+        setActionState(new SelectingFirstVertex());
+    }
 
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		super.recoverImpl(context);
-		setActionState(new SelectingFirstVertex());
-	}
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        super.recoverImpl(context);
+        setActionState(new SelectingFirstVertex());
+    }
 
-	@Override
-	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		if (paintContext.getVertexCount() <= 1 && paintContext.getLineCount() <= 1) {
-			return super.onMove(viewContext, paintContext, differentAction);
-		}
+    @Override
+    public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
+        if (paintContext.getVertexCount() <= 1 && paintContext.getLineCount() <= 1) {
+            return super.onMove(viewContext, paintContext, differentAction);
+        }
 
-		if (paintContext.getVertexCount() == 2 && paintContext.getLineCount() == 1
-				&& paintContext.getSnapPoints().isEmpty()) {
-			var solutionLineOpt = NearestItemFinder.getNearestInSolutionLines(viewContext, paintContext);
-			if (solutionLineOpt.isPresent()) {
-				paintContext.setSolutionLineToPick(solutionLineOpt.orElseThrow());
-			} else {
-				paintContext.setSolutionLineToPick(null);
-			}
-			return Optional.empty();
-		}
+        if (paintContext.getVertexCount() == 2 && paintContext.getLineCount() == 1
+                && paintContext.getSnapPoints().isEmpty()) {
+            var solutionLineOpt = NearestItemFinder.getNearestInSolutionLines(viewContext, paintContext);
+            if (solutionLineOpt.isPresent()) {
+                paintContext.setSolutionLineToPick(solutionLineOpt.orElseThrow());
+            } else {
+                paintContext.setSolutionLineToPick(null);
+            }
+            return Optional.empty();
+        }
 
-		var nearestOpt = super.onMove(viewContext, paintContext, differentAction);
+        var nearestOpt = super.onMove(viewContext, paintContext, differentAction);
 
-		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
+        var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
 
-		var mousePoint = viewContext.getLogicalMousePoint();
-		snapPointOpt
-				.filter(snapPoint -> nearestOpt.isEmpty()
-						|| snapPoint.distance(mousePoint) < nearestOpt.orElseThrow().distance(mousePoint))
-				.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
+        var mousePoint = viewContext.getLogicalMousePoint();
+        snapPointOpt
+                .filter(snapPoint -> nearestOpt.isEmpty()
+                        || snapPoint.distance(mousePoint) < nearestOpt.orElseThrow().distance(mousePoint))
+                .ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
 
-		return snapPointOpt;
-	}
+        return snapPointOpt;
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		if (paintContext.getVertexCount() == 0 && paintContext.getLineCount() == 0) {
-			drawPickCandidateVertex(drawer, viewContext, paintContext);
-		}
-		if (paintContext.getVertexCount() == 1 && paintContext.getLineCount() == 0) {
-			drawPickCandidateLine(drawer, viewContext, paintContext);
-		}
-		if (paintContext.getVertexCount() == 1 && paintContext.getLineCount() == 1) {
-			drawPickCandidateVertex(drawer, viewContext, paintContext);
-		}
+        if (paintContext.getVertexCount() == 0 && paintContext.getLineCount() == 0) {
+            drawPickCandidateVertex(drawer, viewContext, paintContext);
+        }
+        if (paintContext.getVertexCount() == 1 && paintContext.getLineCount() == 0) {
+            drawPickCandidateLine(drawer, viewContext, paintContext);
+        }
+        if (paintContext.getVertexCount() == 1 && paintContext.getLineCount() == 1) {
+            drawPickCandidateVertex(drawer, viewContext, paintContext);
+        }
 
-		if (!paintContext.getSolutionLines().isEmpty()) {
-			drawSolutionLines(drawer, viewContext, paintContext);
-			drawSolutionCandidateLine(drawer, viewContext, paintContext);
-		}
+        if (!paintContext.getSolutionLines().isEmpty()) {
+            drawSolutionLines(drawer, viewContext, paintContext);
+            drawSolutionCandidateLine(drawer, viewContext, paintContext);
+        }
 
-		if (!paintContext.getSnapPoints().isEmpty()) {
-			drawSnapPoints(drawer, viewContext, paintContext);
-			drawPickCandidateVertex(drawer, viewContext, paintContext);
-		}
+        if (!paintContext.getSnapPoints().isEmpty()) {
+            drawSnapPoints(drawer, viewContext, paintContext);
+            drawPickCandidateVertex(drawer, viewContext, paintContext);
+        }
 
-		if (paintContext.getVertexCount() == 3) {
-			drawTemporaryLine(drawer, viewContext, paintContext);
-		}
+        if (paintContext.getVertexCount() == 3) {
+            drawTemporaryLine(drawer, viewContext, paintContext);
+        }
 
-		super.onDraw(drawer, viewContext, paintContext);
-	}
+        super.onDraw(drawer, viewContext, paintContext);
+    }
 }

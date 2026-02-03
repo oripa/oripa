@@ -33,44 +33,44 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class OutlineEditerCommand extends ValidatablePaintCommand {
-	private static final Logger logger = LoggerFactory.getLogger(OutlineEditerCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(OutlineEditerCommand.class);
 
-	private final PaintContext context;
-	private final CloseTempOutlineFactory closeTempOutlineFactory;
+    private final PaintContext context;
+    private final CloseTempOutlineFactory closeTempOutlineFactory;
 
-	public OutlineEditerCommand(final PaintContext context, final CloseTempOutlineFactory factory) {
-		this.context = context;
-		this.closeTempOutlineFactory = factory;
-	}
+    public OutlineEditerCommand(final PaintContext context, final CloseTempOutlineFactory factory) {
+        this.context = context;
+        this.closeTempOutlineFactory = factory;
+    }
 
-	@Override
-	public void execute() {
-		logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
-		validateThat(() -> context.getVertexCount() > 0, "Wrong state. There should be one or more pickedVertices.");
+    @Override
+    public void execute() {
+        logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
+        validateThat(() -> context.getVertexCount() > 0, "Wrong state. There should be one or more pickedVertices.");
 
-		var vOpt = context.peekVertex();
+        var vOpt = context.peekVertex();
 
-		var pickedVertices = context.getPickedVertices().subList(0, context.getVertexCount() - 1).stream()
-				.distinct()
-				.toList();
+        var pickedVertices = context.getPickedVertices().subList(0, context.getVertexCount() - 1).stream()
+                .distinct()
+                .toList();
 
-		if (pickedVertices.stream()
-				.anyMatch(tv -> tv.equals(vOpt.get(), context.getPointEps()))) {
-			if (pickedVertices.size() > 2) {
-				// finish editing
-				context.creasePatternUndo().pushUndoInfo();
-				closeTmpOutline(pickedVertices, context.getPainter());
+        if (pickedVertices.stream()
+                .anyMatch(tv -> tv.equals(vOpt.get(), context.getPointEps()))) {
+            if (pickedVertices.size() > 2) {
+                // finish editing
+                context.creasePatternUndo().pushUndoInfo();
+                closeTmpOutline(pickedVertices, context.getPainter());
 
-				context.clear(false);
+                context.clear(false);
 
-				context.refreshCreasePattern();
-			}
-		}
+                context.refreshCreasePattern();
+            }
+        }
 
-		logger.debug("# of picked vertices (after): " + context.getPickedVertices().size());
-	}
+        logger.debug("# of picked vertices (after): " + context.getPickedVertices().size());
+    }
 
-	private void closeTmpOutline(final Collection<Vector2d> outlineVertices, final Painter painter) {
-		closeTempOutlineFactory.create().execute(outlineVertices, painter);
-	}
+    private void closeTmpOutline(final Collection<Vector2d> outlineVertices, final Painter painter) {
+        closeTempOutlineFactory.create().execute(outlineVertices, painter);
+    }
 }

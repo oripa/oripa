@@ -28,25 +28,25 @@ import java.util.stream.Collectors;
  */
 public class SingleRuleConjunction<Variable> extends AbstractRule<Collection<Variable>> {
 
-	private final Rule<Variable> rule;
+    private final Rule<Variable> rule;
 
-	/**
-	 *
-	 * @param rule
-	 */
-	public SingleRuleConjunction(final Rule<Variable> rule) {
-		super(rule.getName());
-		this.rule = rule;
-	}
+    /**
+     *
+     * @param rule
+     */
+    public SingleRuleConjunction(final Rule<Variable> rule) {
+        super(rule.getName());
+        this.rule = rule;
+    }
 
-	@Override
-	public boolean holds(final Collection<Variable> inputs) {
-		return inputs.stream().allMatch(input -> rule.holds(input));
-	}
+    @Override
+    public boolean holds(final Collection<Variable> inputs) {
+        return inputs.stream().allMatch(input -> rule.holds(input));
+    }
 
-	public Set<Variable> findViolations(final Collection<Variable> inputs) {
-		return inputs.stream()
-				.filter(input -> rule.violates(input))
-				.collect(Collectors.toSet());
-	}
+    public Set<Variable> findViolations(final Collection<Variable> inputs) {
+        return inputs.stream()
+                .filter(input -> rule.violates(input))
+                .collect(Collectors.toSet());
+    }
 }

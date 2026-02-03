@@ -30,19 +30,19 @@ import java.io.IOException;
  *
  */
 public class InitDataFileWriter {
-	/**
-	 *
-	 * @param initData
-	 *            to be written
-	 * @param filePath
-	 */
-	public void write(final InitData initData, final String filePath) {
-		try (var fos = new FileOutputStream(filePath);
-				var bos = new BufferedOutputStream(fos);
-				var enc = new XMLEncoder(bos);) {
-			enc.writeObject(initData);
+    /**
+     *
+     * @param initData
+     *            to be written
+     * @param filePath
+     */
+    public void write(final InitData initData, final String filePath) {
+        try (var fos = new FileOutputStream(filePath);
+                var bos = new BufferedOutputStream(fos);
+                var enc = new XMLEncoder(bos);) {
+            enc.writeObject(initData);
 
-		} catch (IOException e) {
-		}
-	}
+        } catch (IOException e) {
+        }
+    }
 }

@@ -32,30 +32,30 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class SelectedLineDeleterCommand extends ValidatablePaintCommand {
-	private static final Logger logger = LoggerFactory.getLogger(SelectedLineDeleterCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(SelectedLineDeleterCommand.class);
 
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public SelectedLineDeleterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public SelectedLineDeleterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		Painter painter = context.getPainter();
+    @Override
+    public void execute() {
+        Painter painter = context.getPainter();
 
-		validateThat(() -> painter.countSelectedLines() > 0,
-				"Wrong state. There should be one or more selected lines.");
+        validateThat(() -> painter.countSelectedLines() > 0,
+                "Wrong state. There should be one or more selected lines.");
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		try {
-			painter.removeSelectedLines();
-		} catch (Exception ex) {
-			logger.error("error when deleting selected lines", ex);
-		}
-		if (!context.isPasting()) {
-			context.clear(false);
-		}
-	}
+        try {
+            painter.removeSelectedLines();
+        } catch (Exception ex) {
+            logger.error("error when deleting selected lines", ex);
+        }
+        if (!context.isPasting()) {
+            context.clear(false);
+        }
+    }
 }

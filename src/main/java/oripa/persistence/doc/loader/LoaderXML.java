@@ -38,54 +38,54 @@ import oripa.resource.Version;
 
 public class LoaderXML implements DocLoader {
 
-	private DataSet loadAsDataSet(final String filePath) throws IOException, WrongDataFormatException {
-		var elementLoader = new ElementLoader(new TypedXPath());
+    private DataSet loadAsDataSet(final String filePath) throws IOException, WrongDataFormatException {
+        var elementLoader = new ElementLoader(new TypedXPath());
 
-		DataSet dataset = new DataSet();
-		try {
-			var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			var xmlDocument = builder.parse(new File(filePath));
+        DataSet dataset = new DataSet();
+        try {
+            var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            var xmlDocument = builder.parse(new File(filePath));
 
-			// parse opx version
-			var datasetNode = elementLoader.findDataSetNode(xmlDocument);
-			dataset.setMainVersion(elementLoader.loadVersionFieldValue("mainVersion", datasetNode));
-			dataset.setSubVersion(elementLoader.loadVersionFieldValue("subVersion", datasetNode));
+            // parse opx version
+            var datasetNode = elementLoader.findDataSetNode(xmlDocument);
+            dataset.setMainVersion(elementLoader.loadVersionFieldValue("mainVersion", datasetNode));
+            dataset.setSubVersion(elementLoader.loadVersionFieldValue("subVersion", datasetNode));
 
-			// get object fields
-			var fieldNodes = elementLoader.findFieldNodes(xmlDocument);
+            // get object fields
+            var fieldNodes = elementLoader.findFieldNodes(xmlDocument);
 
-			// parse property values
-			dataset.title = elementLoader.loadPropertyFieldValue("title", fieldNodes);
-			dataset.editorName = elementLoader.loadPropertyFieldValue("editorName", fieldNodes);
-			dataset.originalAuthorName = elementLoader.loadPropertyFieldValue("originalAuthorName", fieldNodes);
-			dataset.reference = elementLoader.loadPropertyFieldValue("reference", fieldNodes);
-			dataset.memo = elementLoader.loadPropertyFieldValue("memo", fieldNodes);
+            // parse property values
+            dataset.title = elementLoader.loadPropertyFieldValue("title", fieldNodes);
+            dataset.editorName = elementLoader.loadPropertyFieldValue("editorName", fieldNodes);
+            dataset.originalAuthorName = elementLoader.loadPropertyFieldValue("originalAuthorName", fieldNodes);
+            dataset.reference = elementLoader.loadPropertyFieldValue("reference", fieldNodes);
+            dataset.memo = elementLoader.loadPropertyFieldValue("memo", fieldNodes);
 
-			// parse line proxies
-			dataset.lines = elementLoader.loadOriLineProxies(xmlDocument);
-		} catch (SAXException e) {
-			throw new WrongDataFormatException("The file is not in XML format.", e);
-		} catch (NumberFormatException e) {
-			throw new WrongDataFormatException("Parse error.", e);
-		} catch (ParserConfigurationException | XPathExpressionException e) {
-			throw new RuntimeException("Bad implementation.", e);
-		}
-		return dataset;
-	}
+            // parse line proxies
+            dataset.lines = elementLoader.loadOriLineProxies(xmlDocument);
+        } catch (SAXException e) {
+            throw new WrongDataFormatException("The file is not in XML format.", e);
+        } catch (NumberFormatException e) {
+            throw new WrongDataFormatException("Parse error.", e);
+        } catch (ParserConfigurationException | XPathExpressionException e) {
+            throw new RuntimeException("Bad implementation.", e);
+        }
+        return dataset;
+    }
 
-	@Override
-	public Optional<Doc> load(final String filePath)
-			throws FileVersionError, WrongDataFormatException, IOException {
+    @Override
+    public Optional<Doc> load(final String filePath)
+            throws FileVersionError, WrongDataFormatException, IOException {
 
-		DataSet data;
+        DataSet data;
 
-		data = loadAsDataSet(filePath);
+        data = loadAsDataSet(filePath);
 
-		if (data.getMainVersion() > Version.FILE_MAJOR_VERSION) {
-			throw new FileVersionError();
-		}
+        if (data.getMainVersion() > Version.FILE_MAJOR_VERSION) {
+            throw new FileVersionError();
+        }
 
-		return Optional.of(data.recover(filePath));
+        return Optional.of(data.recover(filePath));
 
-	}
+    }
 }

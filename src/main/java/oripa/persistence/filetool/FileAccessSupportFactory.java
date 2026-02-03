@@ -30,71 +30,71 @@ import oripa.resource.ResourceKey;
  *
  */
 public class FileAccessSupportFactory {
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public FileAccessSupportFactory(final ResourceHolder resourceHolder) {
-		this.resourceHolder = resourceHolder;
-	}
+    @Inject
+    public FileAccessSupportFactory(final ResourceHolder resourceHolder) {
+        this.resourceHolder = resourceHolder;
+    }
 
-	/**
-	 * Creates a support object for given file type key with an explanation text
-	 * obtained via given label resource key.
-	 *
-	 * @param key
-	 * @param description
-	 */
-	public <Data> FileAccessSupport<Data> createFileAccessSupport(final FileTypePropertyWithAccessor<Data> key,
-			final String labelResourceKey, final String... appendings) {
+    /**
+     * Creates a support object for given file type key with an explanation text
+     * obtained via given label resource key.
+     *
+     * @param key
+     * @param description
+     */
+    public <Data> FileAccessSupport<Data> createFileAccessSupport(final FileTypePropertyWithAccessor<Data> key,
+            final String labelResourceKey, final String... appendings) {
 
-		var description = createDescription(key, labelResourceKey, appendings);
+        var description = createDescription(key, labelResourceKey, appendings);
 
-		return new FileAccessSupport<Data>(key, description);
-	}
+        return new FileAccessSupport<Data>(key, description);
+    }
 
-	public <Data> MultiTypeAcceptableFileLoadingSupport<Data> createMultiTypeAcceptableLoading(
-			final Collection<FileAccessSupport<Data>> accessSupports,
-			final String message) throws IllegalArgumentException {
-		return new MultiTypeAcceptableFileLoadingSupport<Data>(accessSupports, message);
-	}
+    public <Data> MultiTypeAcceptableFileLoadingSupport<Data> createMultiTypeAcceptableLoading(
+            final Collection<FileAccessSupport<Data>> accessSupports,
+            final String message) throws IllegalArgumentException {
+        return new MultiTypeAcceptableFileLoadingSupport<Data>(accessSupports, message);
+    }
 
-	/**
-	 * A utility method for creating support object. This method provides an
-	 * explanation text for dialog.
-	 *
-	 * @param fileTypeKey
-	 * @param resourceKey
-	 * @return explanation text for dialog.
-	 */
-	protected <Data> String createDescription(final FileTypeProperty<Data> fileTypeKey,
-			final String resourceKey, final String... appendings) {
-		var description = createDefaultDescription(fileTypeKey,
-				resourceHolder.getString(ResourceKey.LABEL, resourceKey));
+    /**
+     * A utility method for creating support object. This method provides an
+     * explanation text for dialog.
+     *
+     * @param fileTypeKey
+     * @param resourceKey
+     * @return explanation text for dialog.
+     */
+    protected <Data> String createDescription(final FileTypeProperty<Data> fileTypeKey,
+            final String resourceKey, final String... appendings) {
+        var description = createDefaultDescription(fileTypeKey,
+                resourceHolder.getString(ResourceKey.LABEL, resourceKey));
 
-		return Stream.of(appendings)
-				.reduce(description, String::concat);
-	}
+        return Stream.of(appendings)
+                .reduce(description, String::concat);
+    }
 
-	/**
-	 *
-	 * @param type
-	 *            file type
-	 * @param explanation
-	 * @return in the style of "(*.extension1, *.extension2, ...)
-	 *         ${explanation}"
-	 */
-	protected String createDefaultDescription(final FileTypeProperty<?> type,
-			final String explanation) {
-		String[] extensions = type.getExtensions();
+    /**
+     *
+     * @param type
+     *            file type
+     * @param explanation
+     * @return in the style of "(*.extension1, *.extension2, ...)
+     *         ${explanation}"
+     */
+    protected String createDefaultDescription(final FileTypeProperty<?> type,
+            final String explanation) {
+        String[] extensions = type.getExtensions();
 
-		StringBuilder builder = new StringBuilder();
-		builder.append("(")
-				.append("*.")
-				.append(String.join(",*.", extensions))
-				.append(") ")
-				.append(explanation);
+        StringBuilder builder = new StringBuilder();
+        builder.append("(")
+                .append("*.")
+                .append(String.join(",*.", extensions))
+                .append(") ")
+                .append(explanation);
 
-		return builder.toString();
-	}
+        return builder.toString();
+    }
 
 }

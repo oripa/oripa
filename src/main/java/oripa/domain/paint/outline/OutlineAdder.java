@@ -32,31 +32,31 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class OutlineAdder {
-	private final OverlappingLineExtractor overlappingExtractor;
+    private final OverlappingLineExtractor overlappingExtractor;
 
-	/**
-	 * Constructor
-	 */
-	public OutlineAdder(final OverlappingLineExtractor overlappingExtractor) {
-		this.overlappingExtractor = overlappingExtractor;
-	}
+    /**
+     * Constructor
+     */
+    public OutlineAdder(final OverlappingLineExtractor overlappingExtractor) {
+        this.overlappingExtractor = overlappingExtractor;
+    }
 
-	public void addOutlines(final Painter painter,
-			final Collection<Vector2d> outlineVertices) {
-		var creasePattern = painter.getCreasePattern();
-		var overlappings = new ArrayList<OriLine>();
-		var lines = new ArrayList<OriLine>();
+    public void addOutlines(final Painter painter,
+            final Collection<Vector2d> outlineVertices) {
+        var creasePattern = painter.getCreasePattern();
+        var overlappings = new ArrayList<OriLine>();
+        var lines = new ArrayList<OriLine>();
 
-		PairLoop.iterateAll(outlineVertices, (element, nextElement) -> {
-			var line = new OriLine(element, nextElement, OriLine.Type.CUT);
-			lines.add(line);
-			overlappings.addAll(overlappingExtractor.extract(creasePattern, line, painter.getPointEps()));
+        PairLoop.iterateAll(outlineVertices, (element, nextElement) -> {
+            var line = new OriLine(element, nextElement, OriLine.Type.CUT);
+            lines.add(line);
+            overlappings.addAll(overlappingExtractor.extract(creasePattern, line, painter.getPointEps()));
 
-			return true;
-		});
+            return true;
+        });
 
-		painter.removeLines(overlappings);
-		painter.addLines(lines);
-	}
+        painter.removeLines(overlappings);
+        painter.addLines(lines);
+    }
 
 }

@@ -31,110 +31,110 @@ import oripa.value.OriLine;
  *
  */
 public class OriEdgesFactory {
-	/**
-	 * Creates new OriEdges and sets the relation to half-edges of faces.
-	 * Half-edge data structure in strict way should share reference of edges
-	 * among vertices and half-edges but ORIPA doesn't use the relation.
-	 * Therefore we can 'create' new edges and set the references to half-edges
-	 * of faces.
-	 *
-	 * @param faces
-	 *            are assumed to have correct half-edges, i.e., each half-edge
-	 *            should be assigned at least a start vertex, next half-edge and
-	 *            the line type value. every half-edge of the faces will be
-	 *            affected.
-	 * @return a list of edges
-	 */
-	public List<OriEdge> createOriEdges(final Collection<OriFace> faces) {
-		var edges = new ArrayList<OriEdge>();
-		var halfedges = new HashMap<OriVertex, List<OriHalfedge>>();
+    /**
+     * Creates new OriEdges and sets the relation to half-edges of faces.
+     * Half-edge data structure in strict way should share reference of edges
+     * among vertices and half-edges but ORIPA doesn't use the relation.
+     * Therefore we can 'create' new edges and set the references to half-edges
+     * of faces.
+     *
+     * @param faces
+     *            are assumed to have correct half-edges, i.e., each half-edge
+     *            should be assigned at least a start vertex, next half-edge and
+     *            the line type value. every half-edge of the faces will be
+     *            affected.
+     * @return a list of edges
+     */
+    public List<OriEdge> createOriEdges(final Collection<OriFace> faces) {
+        var edges = new ArrayList<OriEdge>();
+        var halfedges = new HashMap<OriVertex, List<OriHalfedge>>();
 
-		// Clear all the Halfedges
-		for (OriFace face : faces) {
-			face.halfedgeStream().forEach(he -> {
-				he.setPair(null);
-				he.setEdge(null);
+        // Clear all the Halfedges
+        for (OriFace face : faces) {
+            face.halfedgeStream().forEach(he -> {
+                he.setPair(null);
+                he.setEdge(null);
 
-				allocateAndPut(he.getVertex(), he, halfedges);
-			});
-		}
+                allocateAndPut(he.getVertex(), he, halfedges);
+            });
+        }
 
-		// find half-edge pairs whose
-		// directions are opposite (that's the definition of edge).
-		halfedges.values().forEach(hes -> {
-			for (var he0 : hes) {
-				var pairOpt = he0.getPair();
-				if (pairOpt.isPresent()) {
-					continue;
-				}
+        // find half-edge pairs whose
+        // directions are opposite (that's the definition of edge).
+        halfedges.values().forEach(hes -> {
+            for (var he0 : hes) {
+                var pairOpt = he0.getPair();
+                if (pairOpt.isPresent()) {
+                    continue;
+                }
 
-				var oppositeHes = halfedges.get(he0.getNext().getVertex());
-				for (var he1 : oppositeHes) {
-					if (isOppositeDirection(he0, he1)) {
-						edges.add(makePair(he0, he1));
-						break;
-					}
-				}
-			}
-		});
+                var oppositeHes = halfedges.get(he0.getNext().getVertex());
+                for (var he1 : oppositeHes) {
+                    if (isOppositeDirection(he0, he1)) {
+                        edges.add(makePair(he0, he1));
+                        break;
+                    }
+                }
+            }
+        });
 
-		// If the pair wasn't found it should be boundary of paper
-		halfedges.values().forEach(hes -> {
-			for (var he : hes) {
-				var pairOpt = he.getPair();
-				if (pairOpt.isEmpty()) {
-					edges.add(makeBoundary(he));
-				}
-			}
-		});
+        // If the pair wasn't found it should be boundary of paper
+        halfedges.values().forEach(hes -> {
+            for (var he : hes) {
+                var pairOpt = he.getPair();
+                if (pairOpt.isEmpty()) {
+                    edges.add(makeBoundary(he));
+                }
+            }
+        });
 
-		return edges;
-	}
+        return edges;
+    }
 
-	private void allocateAndPut(final OriVertex vertex, final OriHalfedge he,
-			final Map<OriVertex, List<OriHalfedge>> halfedges) {
-		halfedges.putIfAbsent(vertex, new ArrayList<>());
-		halfedges.get(vertex).add(he);
-	}
+    private void allocateAndPut(final OriVertex vertex, final OriHalfedge he,
+            final Map<OriVertex, List<OriHalfedge>> halfedges) {
+        halfedges.putIfAbsent(vertex, new ArrayList<>());
+        halfedges.get(vertex).add(he);
+    }
 
-	private boolean isOppositeDirection(final OriHalfedge he0, final OriHalfedge he1) {
-		return he0.getVertex() == he1.getNext().getVertex() && he0.getNext().getVertex() == he1.getVertex();
-	}
+    private boolean isOppositeDirection(final OriHalfedge he0, final OriHalfedge he1) {
+        return he0.getVertex() == he1.getNext().getVertex() && he0.getNext().getVertex() == he1.getVertex();
+    }
 
-	/**
-	 * creates new OriEdge which consist of given half-edges.
-	 *
-	 * @param he0
-	 *            .pair and .edge will be affected.
-	 * @param he1
-	 *            .pair and .edge will be affected.
-	 * @return an edge for he0 and he1.
-	 */
-	private OriEdge makePair(final OriHalfedge he0, final OriHalfedge he1) {
-		he0.setPair(he1);
-		he1.setPair(he0);
+    /**
+     * creates new OriEdge which consist of given half-edges.
+     *
+     * @param he0
+     *            .pair and .edge will be affected.
+     * @param he1
+     *            .pair and .edge will be affected.
+     * @return an edge for he0 and he1.
+     */
+    private OriEdge makePair(final OriHalfedge he0, final OriHalfedge he1) {
+        he0.setPair(he1);
+        he1.setPair(he0);
 
-		OriEdge edge = new OriEdge(he0.getVertex(), he1.getVertex(), he0.getTemporaryType());
-		he0.setEdge(edge);
-		he1.setEdge(edge);
-		edge.setLeft(he0);
-		edge.setRight(he1);
-		return edge;
-	}
+        OriEdge edge = new OriEdge(he0.getVertex(), he1.getVertex(), he0.getTemporaryType());
+        he0.setEdge(edge);
+        he1.setEdge(edge);
+        edge.setLeft(he0);
+        edge.setRight(he1);
+        return edge;
+    }
 
-	/**
-	 * creates new OriEdge which consist of given half-edge.
-	 *
-	 * @param he
-	 *            .edge will be affected.
-	 * @return an edge with CUT type for he0 and he1.
-	 */
-	private OriEdge makeBoundary(final OriHalfedge he) {
-		OriEdge edge = new OriEdge(he.getVertex(), he.getNext().getVertex(), OriLine.Type.CUT.toInt());
-		he.setEdge(edge);
-		edge.setLeft(he);
+    /**
+     * creates new OriEdge which consist of given half-edge.
+     *
+     * @param he
+     *            .edge will be affected.
+     * @return an edge with CUT type for he0 and he1.
+     */
+    private OriEdge makeBoundary(final OriHalfedge he) {
+        OriEdge edge = new OriEdge(he.getVertex(), he.getNext().getVertex(), OriLine.Type.CUT.toInt());
+        he.setEdge(edge);
+        edge.setLeft(he);
 
-		return edge;
-	}
+        return edge;
+    }
 
 }

@@ -9,27 +9,27 @@ import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 
 public class PluginPaintBoundStateFactory {
 
-	private final StateManager<EditMode> stateManager;
-	private final MouseActionSetterFactory setterFactory;
+    private final StateManager<EditMode> stateManager;
+    private final MouseActionSetterFactory setterFactory;
 
-	@Inject
-	public PluginPaintBoundStateFactory(
-			final StateManager<EditMode> stateManager,
-			final MouseActionSetterFactory setterFactory) {
-		this.stateManager = stateManager;
-		this.setterFactory = setterFactory;
-	}
+    @Inject
+    public PluginPaintBoundStateFactory(
+            final StateManager<EditMode> stateManager,
+            final MouseActionSetterFactory setterFactory) {
+        this.stateManager = stateManager;
+        this.setterFactory = setterFactory;
+    }
 
-	public ApplicationState<EditMode> create(
-			final GraphicMouseActionPlugin plugin) {
-		var mouseAction = plugin.getGraphicMouseAction();
+    public ApplicationState<EditMode> create(
+            final GraphicMouseActionPlugin plugin) {
+        var mouseAction = plugin.getGraphicMouseAction();
 
-		ApplicationState<EditMode> state = new PaintBoundState(
-				stateManager, mouseAction.getEditMode(), setterFactory.create(mouseAction), plugin.getChangeHint(),
-				new Runnable[] { plugin.getChangeOnSelected()::changeViewSetting });
+        ApplicationState<EditMode> state = new PaintBoundState(
+                stateManager, mouseAction.getEditMode(), setterFactory.create(mouseAction), plugin.getChangeHint(),
+                new Runnable[] { plugin.getChangeOnSelected()::changeViewSetting });
 
-		return state;
+        return state;
 
-	}
+    }
 
 }

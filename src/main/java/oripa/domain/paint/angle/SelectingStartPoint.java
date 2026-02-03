@@ -27,17 +27,17 @@ import oripa.util.Command;
  *
  */
 public class SelectingStartPoint extends PickingVertex {
-	@Override
-	protected void initialize() {
-		setNextClass(SelectingEndPoint.class);
-	}
+    @Override
+    protected void initialize() {
+        setNextClass(SelectingEndPoint.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var snapPointFactory = new AngleSnapPointFactory();
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        var snapPointFactory = new AngleSnapPointFactory();
 
-		Command command = new AngleSnapPointsSetterCommand(context, snapPointFactory);
-		command.execute();
-	}
+        Command command = new AngleSnapPointsSetterCommand(context, snapPointFactory);
+        command.execute();
+    }
 
 }

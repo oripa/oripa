@@ -31,27 +31,27 @@ import oripa.util.rule.AbstractRule;
  */
 class LayerOrderRule extends AbstractRule<OriFace> {
 
-	private final List<OriFace> violatingFaces;
+    private final List<OriFace> violatingFaces;
 
-	public LayerOrderRule(final String name, final List<OriFace> violatingFaces) {
-		super(name);
-		this.violatingFaces = violatingFaces;
-	}
+    public LayerOrderRule(final String name, final List<OriFace> violatingFaces) {
+        super(name);
+        this.violatingFaces = violatingFaces;
+    }
 
-	@Override
-	public boolean holds(final OriFace face) {
-		return violatingFaces.stream().noneMatch(violation -> face.equals(violation));
-	}
+    @Override
+    public boolean holds(final OriFace face) {
+        return violatingFaces.stream().noneMatch(violation -> face.equals(violation));
+    }
 
-	@Override
-	public String toString() {
-		return getName() + ":[" +
-				String.join(",",
-						violatingFaces.stream()
-								.mapToInt(OriFace::getFaceID)
-								.boxed()
-								.map(id -> id.toString())
-								.toList())
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return getName() + ":[" +
+                String.join(",",
+                        violatingFaces.stream()
+                                .mapToInt(OriFace::getFaceID)
+                                .boxed()
+                                .map(id -> id.toString())
+                                .toList())
+                + "]";
+    }
 }

@@ -34,77 +34,77 @@ import oripa.value.OriLine;
  */
 @ExtendWith(MockitoExtension.class)
 class OriVertexTest {
-	final static double EPS = 1e-8;
+    final static double EPS = 1e-8;
 
-	@Test
-	void testAddEdge() {
-		var vertex = new OriVertex(1, 1);
+    @Test
+    void testAddEdge() {
+        var vertex = new OriVertex(1, 1);
 
-		var v1 = new OriVertex(2, 1); // 0 deg.
-		var e1 = new OriEdge(vertex, v1, OriLine.Type.MOUNTAIN.toInt());
+        var v1 = new OriVertex(2, 1); // 0 deg.
+        var e1 = new OriEdge(vertex, v1, OriLine.Type.MOUNTAIN.toInt());
 
-		var v2 = new OriVertex(2, 2); // 45 deg.
-		var e2 = new OriEdge(vertex, v2, OriLine.Type.MOUNTAIN.toInt());
+        var v2 = new OriVertex(2, 2); // 45 deg.
+        var e2 = new OriEdge(vertex, v2, OriLine.Type.MOUNTAIN.toInt());
 
-		var v3 = new OriVertex(0, 1 - 1e-8); // -180 deg.
-		var e3 = new OriEdge(vertex, v3, OriLine.Type.MOUNTAIN.toInt());
+        var v3 = new OriVertex(0, 1 - 1e-8); // -180 deg.
+        var e3 = new OriEdge(vertex, v3, OriLine.Type.MOUNTAIN.toInt());
 
-		Stream.of(e1, e2, e3).forEach(vertex::addEdge);
+        Stream.of(e1, e2, e3).forEach(vertex::addEdge);
 
-		assertSame(e1, vertex.getEdge(0));
-		assertSame(e2, vertex.getEdge(1));
-		assertSame(e3, vertex.getEdge(2));
+        assertSame(e1, vertex.getEdge(0));
+        assertSame(e2, vertex.getEdge(1));
+        assertSame(e3, vertex.getEdge(2));
 
-		var v4 = new OriVertex(1, 0); // -90 deg.
-		// reversed direction
-		var e4 = new OriEdge(v4, vertex, OriLine.Type.MOUNTAIN.toInt());
+        var v4 = new OriVertex(1, 0); // -90 deg.
+        // reversed direction
+        var e4 = new OriEdge(v4, vertex, OriLine.Type.MOUNTAIN.toInt());
 
-		vertex.addEdge(e4);
+        vertex.addEdge(e4);
 
-		assertSame(e1, vertex.getEdge(0));
-		assertSame(e2, vertex.getEdge(1));
-		assertSame(e3, vertex.getEdge(2));
-		assertSame(e4, vertex.getEdge(3));
-	}
+        assertSame(e1, vertex.getEdge(0));
+        assertSame(e2, vertex.getEdge(1));
+        assertSame(e3, vertex.getEdge(2));
+        assertSame(e4, vertex.getEdge(3));
+    }
 
-	@Test
-	void testGetAngleDifference_lessThanOrEqualToPi() {
-		var vertex = new OriVertex(1, 1);
+    @Test
+    void testGetAngleDifference_lessThanOrEqualToPi() {
+        var vertex = new OriVertex(1, 1);
 
-		var v1 = new OriVertex(2, 1); // 0 deg.
-		var e1 = new OriEdge(vertex, v1, OriLine.Type.MOUNTAIN.toInt());
+        var v1 = new OriVertex(2, 1); // 0 deg.
+        var e1 = new OriEdge(vertex, v1, OriLine.Type.MOUNTAIN.toInt());
 
-		var v2 = new OriVertex(2, 2); // 45 deg.
-		var e2 = new OriEdge(vertex, v2, OriLine.Type.MOUNTAIN.toInt());
+        var v2 = new OriVertex(2, 2); // 45 deg.
+        var e2 = new OriEdge(vertex, v2, OriLine.Type.MOUNTAIN.toInt());
 
-		var v3 = new OriVertex(0, 1 - EPS * 0.1); // -180 deg.
-		var e3 = new OriEdge(vertex, v3, OriLine.Type.MOUNTAIN.toInt());
+        var v3 = new OriVertex(0, 1 - EPS * 0.1); // -180 deg.
+        var e3 = new OriEdge(vertex, v3, OriLine.Type.MOUNTAIN.toInt());
 
-		Stream.of(e1, e2, e3).forEach(vertex::addEdge);
+        Stream.of(e1, e2, e3).forEach(vertex::addEdge);
 
-		assertEquals(Math.PI / 4, vertex.getAngleDifference(0), EPS);
-		assertEquals(3 * Math.PI / 4, vertex.getAngleDifference(1), EPS);
-		assertEquals(Math.PI, vertex.getAngleDifference(2), EPS);
-	}
+        assertEquals(Math.PI / 4, vertex.getAngleDifference(0), EPS);
+        assertEquals(3 * Math.PI / 4, vertex.getAngleDifference(1), EPS);
+        assertEquals(Math.PI, vertex.getAngleDifference(2), EPS);
+    }
 
-	@Test
-	void testGetAngleDifference_largerThanPi() {
-		var vertex = new OriVertex(1, 1);
+    @Test
+    void testGetAngleDifference_largerThanPi() {
+        var vertex = new OriVertex(1, 1);
 
-		var v1 = new OriVertex(2, 1); // 0 deg.
-		var e1 = new OriEdge(vertex, v1, OriLine.Type.MOUNTAIN.toInt());
+        var v1 = new OriVertex(2, 1); // 0 deg.
+        var e1 = new OriEdge(vertex, v1, OriLine.Type.MOUNTAIN.toInt());
 
-		var v2 = new OriVertex(2, 2); // 45 deg.
-		var e2 = new OriEdge(vertex, v2, OriLine.Type.MOUNTAIN.toInt());
+        var v2 = new OriVertex(2, 2); // 45 deg.
+        var e2 = new OriEdge(vertex, v2, OriLine.Type.MOUNTAIN.toInt());
 
-		var v3 = new OriVertex(0, 2); // 135 deg.
-		var e3 = new OriEdge(vertex, v3, OriLine.Type.MOUNTAIN.toInt());
+        var v3 = new OriVertex(0, 2); // 135 deg.
+        var e3 = new OriEdge(vertex, v3, OriLine.Type.MOUNTAIN.toInt());
 
-		Stream.of(e1, e2, e3).forEach(vertex::addEdge);
+        Stream.of(e1, e2, e3).forEach(vertex::addEdge);
 
-		assertEquals(Math.PI / 4, vertex.getAngleDifference(0), EPS);
-		assertEquals(Math.PI / 2, vertex.getAngleDifference(1), EPS);
-		assertEquals(5 * Math.PI / 4, vertex.getAngleDifference(2), EPS);
-	}
+        assertEquals(Math.PI / 4, vertex.getAngleDifference(0), EPS);
+        assertEquals(Math.PI / 2, vertex.getAngleDifference(1), EPS);
+        assertEquals(5 * Math.PI / 4, vertex.getAngleDifference(2), EPS);
+    }
 
 }

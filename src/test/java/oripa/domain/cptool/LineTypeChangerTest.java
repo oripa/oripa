@@ -34,138 +34,138 @@ import oripa.value.OriLine;
  */
 class LineTypeChangerTest {
 
-	static final double EPS = 1e-5;
+    static final double EPS = 1e-5;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.LineTypeChanger#alterLineType(oripa.value.OriLine, java.util.Collection, oripa.domain.cptool.TypeForChange, oripa.domain.cptool.TypeForChange)}.
-	 */
-	@Test
-	void testAlterLineType_changeables() {
-		var changer = new LineTypeChanger();
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.LineTypeChanger#alterLineType(oripa.value.OriLine, java.util.Collection, oripa.domain.cptool.TypeForChange, oripa.domain.cptool.TypeForChange)}.
+     */
+    @Test
+    void testAlterLineType_changeables() {
+        var changer = new LineTypeChanger();
 
-		var lines = createChangeableLines();
-		var line = findLine(lines, OriLine.Type.MOUNTAIN);
-		testChangeable(changer, line, lines, TypeForChange.MOUNTAIN, TypeForChange.VALLEY);
+        var lines = createChangeableLines();
+        var line = findLine(lines, OriLine.Type.MOUNTAIN);
+        testChangeable(changer, line, lines, TypeForChange.MOUNTAIN, TypeForChange.VALLEY);
 
-		lines = createChangeableLines();
-		line = findLine(lines, OriLine.Type.VALLEY);
-		testChangeable(changer, line, lines, TypeForChange.VALLEY, TypeForChange.AUX);
+        lines = createChangeableLines();
+        line = findLine(lines, OriLine.Type.VALLEY);
+        testChangeable(changer, line, lines, TypeForChange.VALLEY, TypeForChange.AUX);
 
-		lines = createChangeableLines();
-		line = findLine(lines, OriLine.Type.AUX);
-		testChangeable(changer, line, lines, TypeForChange.AUX, TypeForChange.CUT);
+        lines = createChangeableLines();
+        line = findLine(lines, OriLine.Type.AUX);
+        testChangeable(changer, line, lines, TypeForChange.AUX, TypeForChange.CUT);
 
-		lines = createChangeableLines();
-		line = findLine(lines, OriLine.Type.CUT);
-		testChangeable(changer, line, lines, TypeForChange.CUT, TypeForChange.MOUNTAIN);
-	}
+        lines = createChangeableLines();
+        line = findLine(lines, OriLine.Type.CUT);
+        testChangeable(changer, line, lines, TypeForChange.CUT, TypeForChange.MOUNTAIN);
+    }
 
-	private Collection<OriLine> createChangeableLines() {
-		var mountainLine = new OriLine(0, 0, 10, 0, OriLine.Type.MOUNTAIN);
-		var valleyLine = new OriLine(10, 0, 20, 0, OriLine.Type.VALLEY);
-		var auxLine = new OriLine(20, 0, 30, 0, OriLine.Type.AUX);
-		var cutLine = new OriLine(30, 0, 40, 0, OriLine.Type.CUT);
+    private Collection<OriLine> createChangeableLines() {
+        var mountainLine = new OriLine(0, 0, 10, 0, OriLine.Type.MOUNTAIN);
+        var valleyLine = new OriLine(10, 0, 20, 0, OriLine.Type.VALLEY);
+        var auxLine = new OriLine(20, 0, 30, 0, OriLine.Type.AUX);
+        var cutLine = new OriLine(30, 0, 40, 0, OriLine.Type.CUT);
 
-		return new ArrayList<OriLine>(List.of(mountainLine, valleyLine, auxLine, cutLine));
-	}
+        return new ArrayList<OriLine>(List.of(mountainLine, valleyLine, auxLine, cutLine));
+    }
 
-	private OriLine findLine(final Collection<OriLine> lines, final OriLine.Type type) {
-		return lines.stream()
-				.filter(l -> l.getType() == type)
-				.findFirst()
-				.get();
-	}
+    private OriLine findLine(final Collection<OriLine> lines, final OriLine.Type type) {
+        return lines.stream()
+                .filter(l -> l.getType() == type)
+                .findFirst()
+                .get();
+    }
 
-	/**
-	 * from mountain, valley, aux or cut to other.
-	 *
-	 * @param changer
-	 * @param line
-	 * @param lines
-	 * @param from
-	 * @param to
-	 */
-	private void testChangeable(final LineTypeChanger changer, final OriLine line,
-			final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
-		changer.alterLineType(line, lines, from, to, EPS);
+    /**
+     * from mountain, valley, aux or cut to other.
+     *
+     * @param changer
+     * @param line
+     * @param lines
+     * @param from
+     * @param to
+     */
+    private void testChangeable(final LineTypeChanger changer, final OriLine line,
+            final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
+        changer.alterLineType(line, lines, from, to, EPS);
 
-		var afterLine = getLine(line, lines);
+        var afterLine = getLine(line, lines);
 
-		assertEquals(to.getOriLineType(), afterLine.getType());
-		assertNotNull(afterLine.getType());
-	}
+        assertEquals(to.getOriLineType(), afterLine.getType());
+        assertNotNull(afterLine.getType());
+    }
 
-	private OriLine getLine(final OriLine line, final Collection<OriLine> lines) {
-		return lines.stream()
-				.filter(l -> l.getP0().equals(line.getP0()) && l.getP1().equals(line.getP1()))
-				.findFirst()
-				.get();
-	}
+    private OriLine getLine(final OriLine line, final Collection<OriLine> lines) {
+        return lines.stream()
+                .filter(l -> l.getP0().equals(line.getP0()) && l.getP1().equals(line.getP1()))
+                .findFirst()
+                .get();
+    }
 
-	@Test
-	void testAlterLineType_delete() {
-		var changer = new LineTypeChanger();
+    @Test
+    void testAlterLineType_delete() {
+        var changer = new LineTypeChanger();
 
-		var lines = createChangeableLines();
-		var lineCount = lines.size();
-		var line = findLine(lines, OriLine.Type.MOUNTAIN);
+        var lines = createChangeableLines();
+        var lineCount = lines.size();
+        var line = findLine(lines, OriLine.Type.MOUNTAIN);
 
-		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.DELETE, EPS);
-		assertEquals(lineCount - 1, lines.size());
-		assertFalse(lines.contains(line));
+        changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.DELETE, EPS);
+        assertEquals(lineCount - 1, lines.size());
+        assertFalse(lines.contains(line));
 
-	}
+    }
 
-	@Test
-	void testAlterLineType_flip() {
-		var changer = new LineTypeChanger();
+    @Test
+    void testAlterLineType_flip() {
+        var changer = new LineTypeChanger();
 
-		var lines = createChangeableLines();
-		var line = findLine(lines, OriLine.Type.MOUNTAIN);
+        var lines = createChangeableLines();
+        var line = findLine(lines, OriLine.Type.MOUNTAIN);
 
-		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.VALLEY, getLine(line, lines).getType());
+        changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
+        assertEquals(OriLine.Type.VALLEY, getLine(line, lines).getType());
 
-		lines = createChangeableLines();
-		line = findLine(lines, OriLine.Type.VALLEY);
+        lines = createChangeableLines();
+        line = findLine(lines, OriLine.Type.VALLEY);
 
-		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.MOUNTAIN, getLine(line, lines).getType());
+        changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
+        assertEquals(OriLine.Type.MOUNTAIN, getLine(line, lines).getType());
 
-		// doesn't change if the type is aux or cut
+        // doesn't change if the type is aux or cut
 
-		lines = createChangeableLines();
-		line = findLine(lines, OriLine.Type.AUX);
+        lines = createChangeableLines();
+        line = findLine(lines, OriLine.Type.AUX);
 
-		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.AUX, getLine(line, lines).getType());
+        changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
+        assertEquals(OriLine.Type.AUX, getLine(line, lines).getType());
 
-		lines = createChangeableLines();
-		line = findLine(lines, OriLine.Type.CUT);
+        lines = createChangeableLines();
+        line = findLine(lines, OriLine.Type.CUT);
 
-		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.CUT, getLine(line, lines).getType());
-	}
+        changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
+        assertEquals(OriLine.Type.CUT, getLine(line, lines).getType());
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.LineTypeChanger#alterLineTypes(java.util.Collection, java.util.Collection, oripa.domain.cptool.TypeForChange, oripa.domain.cptool.TypeForChange)}.
-	 */
-	@Test
-	void testAlterLineTypes_delete() {
-		var changer = new LineTypeChanger();
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.LineTypeChanger#alterLineTypes(java.util.Collection, java.util.Collection, oripa.domain.cptool.TypeForChange, oripa.domain.cptool.TypeForChange)}.
+     */
+    @Test
+    void testAlterLineTypes_delete() {
+        var changer = new LineTypeChanger();
 
-		var lines = createChangeableLines();
-		var lineCount = lines.size();
-		var line1 = findLine(lines, OriLine.Type.MOUNTAIN);
-		var line2 = findLine(lines, OriLine.Type.VALLEY);
+        var lines = createChangeableLines();
+        var lineCount = lines.size();
+        var line1 = findLine(lines, OriLine.Type.MOUNTAIN);
+        var line2 = findLine(lines, OriLine.Type.VALLEY);
 
-		changer.alterLineTypes(List.of(line1, line2), lines, TypeForChange.EMPTY,
-				TypeForChange.DELETE, EPS);
-		assertEquals(lineCount - 2, lines.size());
-		assertFalse(lines.contains(line1));
-		assertFalse(lines.contains(line2));
-	}
+        changer.alterLineTypes(List.of(line1, line2), lines, TypeForChange.EMPTY,
+                TypeForChange.DELETE, EPS);
+        assertEquals(lineCount - 2, lines.size());
+        assertFalse(lines.contains(line1));
+        assertFalse(lines.contains(line2));
+    }
 
 }

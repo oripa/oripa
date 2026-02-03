@@ -7,34 +7,34 @@ import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 import oripa.gui.view.util.ChildFrameManager;
 
 public class FoldabilityCheckSwingFrameFactory implements FoldabilityCheckFrameFactory {
-	private final ChildFrameManager childFrameManager;
+    private final ChildFrameManager childFrameManager;
 
-	@Inject
-	public FoldabilityCheckSwingFrameFactory(final ChildFrameManager childFrameManager) {
-		this.childFrameManager = childFrameManager;
-	}
+    @Inject
+    public FoldabilityCheckSwingFrameFactory(final ChildFrameManager childFrameManager) {
+        this.childFrameManager = childFrameManager;
+    }
 
-	@Override
-	public FoldabilityCheckFrameView createFrame(final FrameView parent) {
+    @Override
+    public FoldabilityCheckFrameView createFrame(final FrameView parent) {
 
-		var frameOpt = childFrameManager.find(parent,
-				FoldabilityCheckFrame.class);
+        var frameOpt = childFrameManager.find(parent,
+                FoldabilityCheckFrame.class);
 
-		frameOpt.ifPresent(frame -> {
-			removeFromChildFrameManager(frame);
-			frame.dispose();
-		});
+        frameOpt.ifPresent(frame -> {
+            removeFromChildFrameManager(frame);
+            frame.dispose();
+        });
 
-		var frame = new FoldabilityCheckFrame();
+        var frame = new FoldabilityCheckFrame();
 
-		frame.setOnCloseListener(this::removeFromChildFrameManager);
-		childFrameManager.putChild(parent, frame);
+        frame.setOnCloseListener(this::removeFromChildFrameManager);
+        childFrameManager.putChild(parent, frame);
 
-		return frame;
-	}
+        return frame;
+    }
 
-	private void removeFromChildFrameManager(final FrameView frame) {
-		childFrameManager.closeAll(frame);
-		childFrameManager.removeFromChildren(frame);
-	}
+    private void removeFromChildFrameManager(final FrameView frame) {
+        childFrameManager.closeAll(frame);
+        childFrameManager.removeFromChildren(frame);
+    }
 }

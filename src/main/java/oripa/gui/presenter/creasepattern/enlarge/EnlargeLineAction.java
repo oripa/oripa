@@ -39,221 +39,221 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class EnlargeLineAction extends AbstractGraphicMouseAction {
-	private Vector2d mouseStartPoint;
-	private Vector2d originOfEnlargement;
+    private Vector2d mouseStartPoint;
+    private Vector2d originOfEnlargement;
 
-	private RectangleDomain originalDomain = RectangleDomain.voidDomain();
-	private RectangleDomain enlargedDomain = RectangleDomain.voidDomain();
+    private RectangleDomain originalDomain = RectangleDomain.voidDomain();
+    private RectangleDomain enlargedDomain = RectangleDomain.voidDomain();
 
-	private Enlarger enlarger;
+    private Enlarger enlarger;
 
-	public EnlargeLineAction() {
-		setEditMode(EditMode.SELECT);
-		setNeedSelect(true);
+    public EnlargeLineAction() {
+        setEditMode(EditMode.SELECT);
+        setNeedSelect(true);
 
-		setActionState(new SelectingLine());
-	}
+        setActionState(new SelectingLine());
+    }
 
-	@Override
-	public boolean isUsingCtrlKeyOnDrag() {
-		return isEnlarging();
-	}
+    @Override
+    public boolean isUsingCtrlKeyOnDrag() {
+        return isEnlarging();
+    }
 
-	private boolean isEnlarging() {
-		return originOfEnlargement != null;
-	}
+    private boolean isEnlarging() {
+        return originOfEnlargement != null;
+    }
 
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		context.clear(false);
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        context.clear(false);
 
-		Collection<OriLine> creasePattern = context.getCreasePattern();
-		if (creasePattern == null) {
-			return;
-		}
+        Collection<OriLine> creasePattern = context.getCreasePattern();
+        if (creasePattern == null) {
+            return;
+        }
 
-		creasePattern.stream()
-				.filter(OriLine::isSelected)
-				.forEach(context::pushLine);
+        creasePattern.stream()
+                .filter(OriLine::isSelected)
+                .forEach(context::pushLine);
 
-		originalDomain = createDomain(context.getPickedLines());
-	}
+        originalDomain = createDomain(context.getPickedLines());
+    }
 
-	private RectangleDomain createDomain(final Collection<OriLine> lines) {
-		return lines.isEmpty() ? RectangleDomain.voidDomain() : RectangleDomain.createFromSegments(lines);
-	}
+    private RectangleDomain createDomain(final Collection<OriLine> lines) {
+        return lines.isEmpty() ? RectangleDomain.voidDomain() : RectangleDomain.createFromSegments(lines);
+    }
 
-	@Override
-	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		super.onMove(viewContext, paintContext, false);
+    @Override
+    public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
+        super.onMove(viewContext, paintContext, false);
 
-		if (isEnlarging()) {
-			// Should not come to this path because onDrag() should be called
-			// instead.
-			throw new RuntimeException("wrong execution path.");
-		}
+        if (isEnlarging()) {
+            // Should not come to this path because onDrag() should be called
+            // instead.
+            throw new RuntimeException("wrong execution path.");
+        }
 
-		if (originalDomain.isVoid()) {
-			return Optional.empty();
-		}
+        if (originalDomain.isVoid()) {
+            return Optional.empty();
+        }
 
-		var points = List.of(
-				originalDomain.getLeftTop(),
-				originalDomain.getLeftBottom(),
-				originalDomain.getRightTop(),
-				originalDomain.getRightBottom());
+        var points = List.of(
+                originalDomain.getLeftTop(),
+                originalDomain.getLeftBottom(),
+                originalDomain.getRightTop(),
+                originalDomain.getRightBottom());
 
-		var mouseStartPointOpt = NearestItemFinder.getNearestVertex(viewContext, points);
-		mouseStartPoint = mouseStartPointOpt.orElse(null);
+        var mouseStartPointOpt = NearestItemFinder.getNearestVertex(viewContext, points);
+        mouseStartPoint = mouseStartPointOpt.orElse(null);
 
-		return mouseStartPointOpt;
-	}
+        return mouseStartPointOpt;
+    }
 
-	@Override
-	public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		var nextAction = super.onLeftClick(viewContext, paintContext, differentAction);
+    @Override
+    public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
+        var nextAction = super.onLeftClick(viewContext, paintContext, differentAction);
 
-		originalDomain = createDomain(paintContext.getPickedLines());
+        originalDomain = createDomain(paintContext.getPickedLines());
 
-		return nextAction;
-	}
+        return nextAction;
+    }
 
-	@Override
-	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean doSpecial) {
-		super.onRightClick(viewContext, paintContext, doSpecial);
+    @Override
+    public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean doSpecial) {
+        super.onRightClick(viewContext, paintContext, doSpecial);
 
-		originalDomain = createDomain(paintContext.getPickedLines());
-	}
+        originalDomain = createDomain(paintContext.getPickedLines());
+    }
 
-	/**
-	 * set old line-selected marks to current context.
-	 */
-	@Override
-	public void undo(final PaintContext context) {
-		context.creasePatternUndo().undo();
-		context.refreshCreasePattern();
+    /**
+     * set old line-selected marks to current context.
+     */
+    @Override
+    public void undo(final PaintContext context) {
+        context.creasePatternUndo().undo();
+        context.refreshCreasePattern();
 
-		recover(context);
-	}
+        recover(context);
+    }
 
-	@Override
-	public void redo(final PaintContext context) {
-		context.creasePatternUndo().redo();
-		context.refreshCreasePattern();
+    @Override
+    public void redo(final PaintContext context) {
+        context.creasePatternUndo().redo();
+        context.refreshCreasePattern();
 
-		recover(context);
-	}
+        recover(context);
+    }
 
-	@Override
-	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
+    @Override
+    public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
 
-		if (mouseStartPoint == null) {
-			return;
-		}
+        if (mouseStartPoint == null) {
+            return;
+        }
 
-		switchEnlarger(differentAction);
-	}
+        switchEnlarger(differentAction);
+    }
 
-	private void switchEnlarger(final boolean differentAction) {
-		enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
-		originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint).orElse(null);
-	}
+    private void switchEnlarger(final boolean differentAction) {
+        enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
+        originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint).orElse(null);
+    }
 
-	@Override
-	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		var mousePoint = getMousePoint(viewContext, paintContext);
+    @Override
+    public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
+        var mousePoint = getMousePoint(viewContext, paintContext);
 
-		if (mouseStartPoint == null) {
-			return;
-		}
+        if (mouseStartPoint == null) {
+            return;
+        }
 
-		switchEnlarger(differentAction);
-		enlargedDomain = enlarger.createEnlargedDomain(mousePoint, originOfEnlargement, mouseStartPoint);
-	}
+        switchEnlarger(differentAction);
+        enlargedDomain = enlarger.createEnlargedDomain(mousePoint, originOfEnlargement, mouseStartPoint);
+    }
 
-	private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
-		setCandidateVertexOnMove(viewContext, paintContext, false);
+    private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+        setCandidateVertexOnMove(viewContext, paintContext, false);
 
-		var mousePointOpt = paintContext.getCandidateVertexToPick();
-		if (mousePointOpt.isEmpty()) {
-			return viewContext.getLogicalMousePoint();
-		}
+        var mousePointOpt = paintContext.getCandidateVertexToPick();
+        if (mousePointOpt.isEmpty()) {
+            return viewContext.getLogicalMousePoint();
+        }
 
-		return mousePointOpt.get();
-	}
+        return mousePointOpt.get();
+    }
 
-	@Override
-	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
+    @Override
+    public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
 
-		if (!isEnlarging()) {
-			return;
-		}
+        if (!isEnlarging()) {
+            return;
+        }
 
-		paintContext.creasePatternUndo().pushUndoInfo();
-		enlargeLines(viewContext, paintContext);
+        paintContext.creasePatternUndo().pushUndoInfo();
+        enlargeLines(viewContext, paintContext);
 
-		originOfEnlargement = null;
+        originOfEnlargement = null;
 
-		mouseStartPoint = null;
-		originalDomain = RectangleDomain.voidDomain();
-		enlargedDomain = RectangleDomain.voidDomain();
+        mouseStartPoint = null;
+        originalDomain = RectangleDomain.voidDomain();
+        enlargedDomain = RectangleDomain.voidDomain();
 
-		enlarger = null;
-	}
+        enlarger = null;
+    }
 
-	private void enlargeLines(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
-		var painter = paintContext.getPainter();
-		painter.removeLines(paintContext.getPickedLines());
+    private void enlargeLines(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+        var painter = paintContext.getPainter();
+        painter.removeLines(paintContext.getPickedLines());
 
-		var mousePoint = getMousePoint(viewContext, paintContext);
-		painter.addLines(enlarger.createEnlargedLines(mousePoint, originOfEnlargement, mouseStartPoint,
-				paintContext.getPickedLines()));
+        var mousePoint = getMousePoint(viewContext, paintContext);
+        painter.addLines(enlarger.createEnlargedLines(mousePoint, originOfEnlargement, mouseStartPoint,
+                paintContext.getPickedLines()));
 
-		paintContext.clear(true);
+        paintContext.clear(true);
 
-		paintContext.refreshCreasePattern();
+        paintContext.refreshCreasePattern();
 
-	}
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
-		super.onDraw(drawer, viewContext, paintContext);
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
+        super.onDraw(drawer, viewContext, paintContext);
 
-		if (!isEnlarging()) {
-			this.drawPickCandidateLine(drawer, viewContext, paintContext);
-		}
+        if (!isEnlarging()) {
+            this.drawPickCandidateLine(drawer, viewContext, paintContext);
+        }
 
-		if (mouseStartPoint != null) {
-			drawer.selectAssistLineColor();
-			drawer.selectMouseActionVertexSize(viewContext.getScale());
-			drawer.drawVertex(mouseStartPoint);
-		}
+        if (mouseStartPoint != null) {
+            drawer.selectAssistLineColor();
+            drawer.selectMouseActionVertexSize(viewContext.getScale());
+            drawer.drawVertex(mouseStartPoint);
+        }
 
-		if (!originalDomain.isVoid()) {
-			drawer.selectAreaSelectionStroke(viewContext.getScale());
-			drawer.selectAreaSelectionColor();
-			drawer.drawRectangle(originalDomain.getLeftTop(), originalDomain.getRightBottom());
-		}
+        if (!originalDomain.isVoid()) {
+            drawer.selectAreaSelectionStroke(viewContext.getScale());
+            drawer.selectAreaSelectionColor();
+            drawer.drawRectangle(originalDomain.getLeftTop(), originalDomain.getRightBottom());
+        }
 
-		if (!enlargedDomain.isVoid()) {
-			this.drawPickCandidateVertex(drawer, viewContext, paintContext);
+        if (!enlargedDomain.isVoid()) {
+            this.drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-			drawer.selectCandidateLineStroke(viewContext.getScale(), viewContext.isZeroLineWidth());
-			drawer.selectAssistLineColor();
-			var mousePoint = getMousePoint(viewContext, paintContext);
-			enlarger.createEnlargedLines(mousePoint, originOfEnlargement, mouseStartPoint,
-					paintContext.getPickedLines()).forEach(drawer::drawLine);
+            drawer.selectCandidateLineStroke(viewContext.getScale(), viewContext.isZeroLineWidth());
+            drawer.selectAssistLineColor();
+            var mousePoint = getMousePoint(viewContext, paintContext);
+            enlarger.createEnlargedLines(mousePoint, originOfEnlargement, mouseStartPoint,
+                    paintContext.getPickedLines()).forEach(drawer::drawLine);
 
-			drawer.selectAreaSelectionStroke(viewContext.getScale());
-			drawer.selectAssistLineColor();
-			drawer.drawRectangle(enlargedDomain.getLeftTop(), enlargedDomain.getRightBottom());
-		}
-	}
+            drawer.selectAreaSelectionStroke(viewContext.getScale());
+            drawer.selectAssistLineColor();
+            drawer.drawRectangle(enlargedDomain.getLeftTop(), enlargedDomain.getRightBottom());
+        }
+    }
 }

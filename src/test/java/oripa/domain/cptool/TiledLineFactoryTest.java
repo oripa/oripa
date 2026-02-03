@@ -34,28 +34,28 @@ import oripa.value.OriLine.Type;
  *
  */
 class TiledLineFactoryTest {
-	TiledLineFactory factory = new TiledLineFactory();
-	static final double EPS = 1e-8;
+    TiledLineFactory factory = new TiledLineFactory();
+    static final double EPS = 1e-8;
 
-	@Test
-	void test() {
-		var creasePattern = new DefaultPaperFactory().create();
+    @Test
+    void test() {
+        var creasePattern = new DefaultPaperFactory().create();
 
-		var lines = List.of(
-				// vertical segment
-				new OriLine(-100, -200, -100, -100, Type.MOUNTAIN),
-				// horizontal segment
-				new OriLine(-200, -100, -100, -100, Type.MOUNTAIN));
+        var lines = List.of(
+                // vertical segment
+                new OriLine(-100, -200, -100, -100, Type.MOUNTAIN),
+                // horizontal segment
+                new OriLine(-200, -100, -100, -100, Type.MOUNTAIN));
 
-		// creates 4x4 grids
-		var tiledLines = factory.createFullyTiledLines(
-				lines, creasePattern,
-				RectangleDomain.createFromSegments(creasePattern).maxWidthHeight(), EPS);
+        // creates 4x4 grids
+        var tiledLines = factory.createFullyTiledLines(
+                lines, creasePattern,
+                RectangleDomain.createFromSegments(creasePattern).maxWidthHeight(), EPS);
 
-		// tiledLines doesn't contain the given lines
-		assertEquals(22, tiledLines.stream()
-				.filter(tl -> tl.length() > EPS)
-				.count());
-	}
+        // tiledLines doesn't contain the given lines
+        assertEquals(22, tiledLines.stream()
+                .filter(tl -> tl.length() > EPS)
+                .count());
+    }
 
 }

@@ -23,12 +23,12 @@ package oripa.persistence.filetool;
  *
  */
 public class WrongDataFormatException extends Exception {
-	public WrongDataFormatException(final String msg) {
-		super(msg);
-	}
+    public WrongDataFormatException(final String msg) {
+        super(msg);
+    }
 
-	public WrongDataFormatException(final String msg, final Throwable t) {
-		super(msg, t);
-	}
+    public WrongDataFormatException(final String msg, final Throwable t) {
+        super(msg, t);
+    }
 
 }

@@ -32,79 +32,79 @@ import oripa.util.collection.CollectionUtil;
  *
  */
 class OverlapRelationInterpolater {
-	public OverlapRelation interpolate(final OverlapRelation overlapRelation, final List<Face> faces,
-			final double eps) {
-		var interpolatedOverlapRelation = overlapRelation.clone();
-		var changed = false;
+    public OverlapRelation interpolate(final OverlapRelation overlapRelation, final List<Face> faces,
+            final double eps) {
+        var interpolatedOverlapRelation = overlapRelation.clone();
+        var changed = false;
 
-		Set<IntPair> newOverlaps = CollectionUtil.newConcurrentHashSet();
+        Set<IntPair> newOverlaps = CollectionUtil.newConcurrentHashSet();
 
-		for (var face : faces) {
-			face.getConvertedFace().buildTriangles(eps);
-		}
+        for (var face : faces) {
+            face.getConvertedFace().buildTriangles(eps);
+        }
 
-		// preparation
-		IntStream.range(0, faces.size())
-				.parallel()
-				.forEach(i -> IntStream.range(0, faces.size())
-						.parallel()
-						.forEach(j -> {
-							var face_i = faces.get(i);
-							var index_i = face_i.getFaceID();
+        // preparation
+        IntStream.range(0, faces.size())
+                .parallel()
+                .forEach(i -> IntStream.range(0, faces.size())
+                        .parallel()
+                        .forEach(j -> {
+                            var face_i = faces.get(i);
+                            var index_i = face_i.getFaceID();
 
-							var face_j = faces.get(j);
-							var index_j = face_j.getFaceID();
+                            var face_j = faces.get(j);
+                            var index_j = face_j.getFaceID();
 
-							// converted faces (= distorted faces) can overlap
-							// even if original faces don't overlap.
-							if (overlapRelation.isNoOverlap(index_i, index_j)) {
-								if (OriGeomUtil.isFaceOverlap(
-										face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
-									newOverlaps.add(new IntPair(i, j));
-								}
-							}
-						}));
+                            // converted faces (= distorted faces) can overlap
+                            // even if original faces don't overlap.
+                            if (overlapRelation.isNoOverlap(index_i, index_j)) {
+                                if (OriGeomUtil.isFaceOverlap(
+                                        face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
+                                    newOverlaps.add(new IntPair(i, j));
+                                }
+                            }
+                        }));
 
-		do {
-			// update overlap relation
-			changed = newOverlaps.stream()
-					.anyMatch(pair -> interpolate(interpolatedOverlapRelation, faces,
-							pair.v1(), pair.v2(), eps));
-		} while (changed);
+        do {
+            // update overlap relation
+            changed = newOverlaps.stream()
+                    .anyMatch(pair -> interpolate(interpolatedOverlapRelation, faces,
+                            pair.v1(), pair.v2(), eps));
+        } while (changed);
 
-		return interpolatedOverlapRelation;
-	}
+        return interpolatedOverlapRelation;
+    }
 
-	private boolean interpolate(final OverlapRelation interpolatedOverlapRelation, final List<Face> faces,
-			final int i, final int j, final double eps) {
-		var face_i = faces.get(i);
-		var index_i = face_i.getFaceID();
+    private boolean interpolate(final OverlapRelation interpolatedOverlapRelation, final List<Face> faces,
+            final int i, final int j, final double eps) {
+        var face_i = faces.get(i);
+        var index_i = face_i.getFaceID();
 
-		var face_j = faces.get(j);
-		var index_j = face_j.getFaceID();
+        var face_j = faces.get(j);
+        var index_j = face_j.getFaceID();
 
-		if (i == j) {
-			return false;
-		}
+        if (i == j) {
+            return false;
+        }
 
-		if (!interpolatedOverlapRelation.isNoOverlap(index_i, index_j)) {
-			return false;
-		}
+        if (!interpolatedOverlapRelation.isNoOverlap(index_i, index_j)) {
+            return false;
+        }
 
-		for (var midFace : faces) {
-			var index_mid = midFace.getFaceID();
+        for (var midFace : faces) {
+            var index_mid = midFace.getFaceID();
 
-			if (index_i == index_mid || index_j == index_mid) {
-				continue;
-			}
+            if (index_i == index_mid || index_j == index_mid) {
+                continue;
+            }
 
-			if (interpolatedOverlapRelation.isUpper(index_i, index_mid)
-					&& interpolatedOverlapRelation.isUpper(index_mid, index_j)) {
+            if (interpolatedOverlapRelation.isUpper(index_i, index_mid)
+                    && interpolatedOverlapRelation.isUpper(index_mid, index_j)) {
 
-				interpolatedOverlapRelation.setUpper(index_i, index_j);
-				return true;
-			}
-		}
-		return false;
-	}
+                interpolatedOverlapRelation.setUpper(index_i, index_j);
+                return true;
+            }
+        }
+        return false;
+    }
 }

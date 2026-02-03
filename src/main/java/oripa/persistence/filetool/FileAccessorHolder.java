@@ -23,8 +23,8 @@ package oripa.persistence.filetool;
  *
  */
 public interface FileAccessorHolder<Data> {
-	Loader<Data> getLoader();
+    Loader<Data> getLoader();
 
-	Exporter<Data> getExporter();
+    Exporter<Data> getExporter();
 
 }

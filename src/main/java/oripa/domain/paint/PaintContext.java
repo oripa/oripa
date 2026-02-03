@@ -16,246 +16,246 @@ import oripa.vecmath.Vector2d;
  *
  */
 public interface PaintContext extends CreasePatternHolder {
-	boolean isTriangularGridMode();
+    boolean isTriangularGridMode();
 
-	void setTriangularGridMode(boolean enabled);
+    void setTriangularGridMode(boolean enabled);
 
-	// =================================================================================
-	// Properties used by action state
-	// =================================================================================
+    // =================================================================================
+    // Properties used by action state
+    // =================================================================================
 
-	// ---------------------------------------------------------------
-	// State of input instruction
+    // ---------------------------------------------------------------
+    // State of input instruction
 
-	/**
-	 *
-	 * @return true if user is trying to paste selected lines
-	 */
-	boolean isPasting();
+    /**
+     *
+     * @return true if user is trying to paste selected lines
+     */
+    boolean isPasting();
 
-	/**
-	 * notify the painting algorithm that the user started pasting.
-	 */
-	void startPasting();
+    /**
+     * notify the painting algorithm that the user started pasting.
+     */
+    void startPasting();
 
-	/**
-	 * notify the painting algorithm that the user finished pasting.
-	 */
-	void finishPasting();
+    /**
+     * notify the painting algorithm that the user finished pasting.
+     */
+    void finishPasting();
 
-	// ---------------------------------------------------------------
-	// Values Picked by User
+    // ---------------------------------------------------------------
+    // Values Picked by User
 
-	/**
-	 * remove all lines and all vertices in this context.
-	 *
-	 * @param unselect
-	 *            true if the removed lines should be marked as unselected.
-	 */
-	void clear(boolean unselect);
+    /**
+     * remove all lines and all vertices in this context.
+     *
+     * @param unselect
+     *            true if the removed lines should be marked as unselected.
+     */
+    void clear(boolean unselect);
 
-	/**
-	 *
-	 * @return unmodifiable list of lines which user picked.
-	 */
-	List<OriLine> getPickedLines();
+    /**
+     *
+     * @return unmodifiable list of lines which user picked.
+     */
+    List<OriLine> getPickedLines();
 
-	/**
-	 *
-	 * @return unmodifiable list of vertices which user picked.
-	 */
-	List<Vector2d> getPickedVertices();
+    /**
+     *
+     * @return unmodifiable list of vertices which user picked.
+     */
+    List<Vector2d> getPickedVertices();
 
-	/**
-	 *
-	 * @param index
-	 * @return a line at specified position in the order of user selection
-	 */
-	OriLine getLine(int index);
+    /**
+     *
+     * @param index
+     * @return a line at specified position in the order of user selection
+     */
+    OriLine getLine(int index);
 
-	/**
-	 *
-	 * @param index
-	 * @return a vertex at specified position in the order of user selection
-	 */
-	Vector2d getVertex(int index);
+    /**
+     *
+     * @param index
+     * @return a vertex at specified position in the order of user selection
+     */
+    Vector2d getVertex(int index);
 
-	/**
-	 *
-	 * @param picked
-	 *            line to be stored as the latest
-	 */
-	void pushLine(OriLine picked);
+    /**
+     *
+     * @param picked
+     *            line to be stored as the latest
+     */
+    void pushLine(OriLine picked);
 
-	/**
-	 * pop the last pushed line and mark it unselected.
-	 *
-	 * @return popped line. empty if no line is pushed.
-	 */
-	Optional<OriLine> popLine();
+    /**
+     * pop the last pushed line and mark it unselected.
+     *
+     * @return popped line. empty if no line is pushed.
+     */
+    Optional<OriLine> popLine();
 
-	/**
-	 *
-	 * @param picked
-	 *            vertex to be stored as the latest
-	 */
-	void pushVertex(Vector2d picked);
+    /**
+     *
+     * @param picked
+     *            vertex to be stored as the latest
+     */
+    void pushVertex(Vector2d picked);
 
-	/**
-	 * pop the last pushed vertex.
-	 *
-	 * @return popped vertex. empty if no vertex is pushed.
-	 */
-	Optional<Vector2d> popVertex();
+    /**
+     * pop the last pushed vertex.
+     *
+     * @return popped vertex. empty if no vertex is pushed.
+     */
+    Optional<Vector2d> popVertex();
 
-	/**
-	 * performs the same as {@link List#remove(Object o)}.
-	 *
-	 * @param line
-	 * @return
-	 */
-	boolean removeLine(OriLine line);
+    /**
+     * performs the same as {@link List#remove(Object o)}.
+     *
+     * @param line
+     * @return
+     */
+    boolean removeLine(OriLine line);
 
-	/**
-	 *
-	 * @return the latest vertex
-	 */
-	Optional<Vector2d> peekVertex();
+    /**
+     *
+     * @return the latest vertex
+     */
+    Optional<Vector2d> peekVertex();
 
-	/**
-	 *
-	 * @return the latest line
-	 */
-	Optional<OriLine> peekLine();
+    /**
+     *
+     * @return the latest line
+     */
+    Optional<OriLine> peekLine();
 
-	/**
-	 *
-	 * @return count of lines in this context
-	 */
-	int getLineCount();
+    /**
+     *
+     * @return count of lines in this context
+     */
+    int getLineCount();
 
-	/**
-	 *
-	 * @return count of vertices in this context
-	 */
-	int getVertexCount();
+    /**
+     *
+     * @return count of vertices in this context
+     */
+    int getVertexCount();
 
-	// ---------------------------------------------------------------
-	// Misc
+    // ---------------------------------------------------------------
+    // Misc
 
-	Painter getPainter();
+    Painter getPainter();
 
-	void setLineTypeOfNewLines(OriLine.Type lineType);
+    void setLineTypeOfNewLines(OriLine.Type lineType);
 
-	OriLine.Type getLineTypeOfNewLines();
+    OriLine.Type getLineTypeOfNewLines();
 
-	void setCandidateLineToPick(OriLine pickCandidateL);
+    void setCandidateLineToPick(OriLine pickCandidateL);
 
-	Optional<OriLine> getCandidateLineToPick();
+    Optional<OriLine> getCandidateLineToPick();
 
-	void setCandidateVertexToPick(Vector2d pickCandidateV);
+    void setCandidateVertexToPick(Vector2d pickCandidateV);
 
-	Optional<Vector2d> getCandidateVertexToPick();
+    Optional<Vector2d> getCandidateVertexToPick();
 
-	void setSolutionLineToPick(Line solutionLine);
+    void setSolutionLineToPick(Line solutionLine);
 
-	Optional<Line> getSolutionLineToPick();
+    Optional<Line> getSolutionLineToPick();
 
-	CreasePatternUndoer creasePatternUndo();
+    CreasePatternUndoer creasePatternUndo();
 
-	void refreshCreasePattern();
+    void refreshCreasePattern();
 
-	void setAngleStep(AngleStep step);
+    void setAngleStep(AngleStep step);
 
-	AngleStep getAngleStep();
+    AngleStep getAngleStep();
 
-	void setSolutionLines(Collection<Line> lines);
+    void setSolutionLines(Collection<Line> lines);
 
-	/**
-	 * Returns unmodifiable collection.
-	 *
-	 * @return
-	 */
-	Collection<Line> getSolutionLines();
+    /**
+     * Returns unmodifiable collection.
+     *
+     * @return
+     */
+    Collection<Line> getSolutionLines();
 
-	/**
-	 * Makes the solution lines empty.
-	 */
-	void clearSolutionLines();
+    /**
+     * Makes the solution lines empty.
+     */
+    void clearSolutionLines();
 
-	void setSnapPoints(Collection<Vector2d> points);
+    void setSnapPoints(Collection<Vector2d> points);
 
-	/**
-	 * Returns unmodifiable collection.
-	 *
-	 * @return
-	 */
-	Collection<Vector2d> getSnapPoints();
+    /**
+     * Returns unmodifiable collection.
+     *
+     * @return
+     */
+    Collection<Vector2d> getSnapPoints();
 
-	/**
-	 * Makes the snap points empty.
-	 */
-	void clearSnapPoints();
+    /**
+     * Makes the snap points empty.
+     */
+    void clearSnapPoints();
 
-	/**
-	 * Keeps the lines in a temporary place.
-	 *
-	 * @param lines
-	 */
-	void SetImportedLines(Collection<OriLine> lines);
+    /**
+     * Keeps the lines in a temporary place.
+     *
+     * @param lines
+     */
+    void SetImportedLines(Collection<OriLine> lines);
 
-	/**
-	 * Adds all imported lines to picked lines.
-	 *
-	 * @param lines
-	 */
-	void loadFromImportedLines();
+    /**
+     * Adds all imported lines to picked lines.
+     *
+     * @param lines
+     */
+    void loadFromImportedLines();
 
-	/**
-	 * Makes the imported lines empty.
-	 */
-	void clearImportedLines();
+    /**
+     * Makes the imported lines empty.
+     */
+    void clearImportedLines();
 
-	/**
-	 * sets division number of grid. should update grid points for
-	 * {@link #getGrids()}.
-	 *
-	 * @param divNum
-	 */
-	void setGridDivNum(int divNum);
+    /**
+     * sets division number of grid. should update grid points for
+     * {@link #getGrids()}.
+     *
+     * @param divNum
+     */
+    void setGridDivNum(int divNum);
 
-	int getGridDivNum();
+    int getGridDivNum();
 
-	void updateGrids();
+    void updateGrids();
 
-	/**
-	 * Returns unmodifiable list.
-	 *
-	 * @return
-	 */
-	Collection<Vector2d> getGrids();
+    /**
+     * Returns unmodifiable list.
+     *
+     * @return
+     */
+    Collection<Vector2d> getGrids();
 
-	void clearGrids();
+    void clearGrids();
 
-	void setCircleCopyParameter(CircleCopyParameter p);
+    void setCircleCopyParameter(CircleCopyParameter p);
 
-	CircleCopyParameter getCircleCopyParameter();
+    CircleCopyParameter getCircleCopyParameter();
 
-	void setArrayCopyParameter(ArrayCopyParameter p);
+    void setArrayCopyParameter(ArrayCopyParameter p);
 
-	ArrayCopyParameter getArrayCopyParameter();
+    ArrayCopyParameter getArrayCopyParameter();
 
-	default int countSelectedLines() {
-		return getPainter().countSelectedLines();
-	}
+    default int countSelectedLines() {
+        return getPainter().countSelectedLines();
+    }
 
-	default boolean creasePatternChangeExists() {
-		return creasePatternUndo().changeExists();
-	}
+    default boolean creasePatternChangeExists() {
+        return creasePatternUndo().changeExists();
+    }
 
-	default void clearCreasePatternChanged() {
-		creasePatternUndo().clearChanged();
-	}
+    default void clearCreasePatternChanged() {
+        creasePatternUndo().clearChanged();
+    }
 
-	public double getPointEps();
+    public double getPointEps();
 }

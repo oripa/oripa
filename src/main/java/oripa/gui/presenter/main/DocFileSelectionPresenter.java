@@ -40,46 +40,46 @@ import oripa.util.file.FileFactory;
  *
  */
 public class DocFileSelectionPresenter extends FileSelectionPresenter<Doc> {
-	private final FileModelCheckService fileModelCheckService;
+    private final FileModelCheckService fileModelCheckService;
 
-	public DocFileSelectionPresenter(
-			final FrameView parent,
-			final FileChooserFactory chooserFactory,
-			final FileModelCheckService fileModelCheckService,
-			final FileFactory fileFactory,
-			final FileSelectionService<Doc> fileSelectionService,
-			final ExtensionCorrector extensionCorrector) {
-		super(parent, chooserFactory, fileFactory, fileSelectionService, extensionCorrector);
+    public DocFileSelectionPresenter(
+            final FrameView parent,
+            final FileChooserFactory chooserFactory,
+            final FileModelCheckService fileModelCheckService,
+            final FileFactory fileFactory,
+            final FileSelectionService<Doc> fileSelectionService,
+            final ExtensionCorrector extensionCorrector) {
+        super(parent, chooserFactory, fileFactory, fileSelectionService, extensionCorrector);
 
-		this.fileModelCheckService = fileModelCheckService;
-	}
+        this.fileModelCheckService = fileModelCheckService;
+    }
 
-	/**
-	 * Opens dialog for saving given data to a file. Conducts foldability check
-	 * before saving. The default file name is "export.xxx" where "xxx" is the
-	 * extension designated by the {@code type}.
-	 *
-	 * @param document
-	 * @param directory
-	 * @param type
-	 * @throws FileChooserCanceledException
-	 * @throws IOException
-	 * @throws UserCanceledException
-	 */
-	public FileSelectionResult<Doc> saveFileWithModelCheck(
-			final String directory,
-			final FileType<Doc> type,
-			final Supplier<Boolean> acceptModelError)
-			throws IOException {
+    /**
+     * Opens dialog for saving given data to a file. Conducts foldability check
+     * before saving. The default file name is "export.xxx" where "xxx" is the
+     * extension designated by the {@code type}.
+     *
+     * @param document
+     * @param directory
+     * @param type
+     * @throws FileChooserCanceledException
+     * @throws IOException
+     * @throws UserCanceledException
+     */
+    public FileSelectionResult<Doc> saveFileWithModelCheck(
+            final String directory,
+            final FileType<Doc> type,
+            final Supplier<Boolean> acceptModelError)
+            throws IOException {
 
-		if (!fileModelCheckService.checkFoldability(acceptModelError)) {
-			return FileSelectionResult.createCanceled();
-		}
+        if (!fileModelCheckService.checkFoldability(acceptModelError)) {
+            return FileSelectionResult.createCanceled();
+        }
 
-		File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
-		var filePath = givenFile.getCanonicalPath();
+        File givenFile = fileFactory.create(directory, "export." + type.getExtensions()[0]);
+        var filePath = givenFile.getCanonicalPath();
 
-		return saveUsingGUI(filePath, List.of(type));
-	}
+        return saveUsingGUI(filePath, List.of(type));
+    }
 
 }

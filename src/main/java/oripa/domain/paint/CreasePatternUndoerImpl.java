@@ -28,55 +28,55 @@ import oripa.value.OriLine;
  *
  */
 public class CreasePatternUndoerImpl implements CreasePatternUndoer {
-	private final AbstractUndoManager<Collection<OriLine>> undoManager = new CreasePatternUndoManager();
+    private final AbstractUndoManager<Collection<OriLine>> undoManager = new CreasePatternUndoManager();
 
-	private final CreasePatternHolder owner;
+    private final CreasePatternHolder owner;
 
-	public CreasePatternUndoerImpl(final CreasePatternHolder aOwner) {
-		owner = aOwner;
-	}
+    public CreasePatternUndoerImpl(final CreasePatternHolder aOwner) {
+        owner = aOwner;
+    }
 
-	@Override
-	public synchronized void pushUndoInfo() {
-		undoManager.push(owner.getCreasePattern());
-	}
+    @Override
+    public synchronized void pushUndoInfo() {
+        undoManager.push(owner.getCreasePattern());
+    }
 
-	@Override
-	public synchronized void undo() {
-		var infoOpt = undoManager.undo(owner.getCreasePattern());
+    @Override
+    public synchronized void undo() {
+        var infoOpt = undoManager.undo(owner.getCreasePattern());
 
-		infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
-	}
+        infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
+    }
 
-	@Override
-	public boolean canUndo() {
-		return undoManager.canUndo();
-	}
+    @Override
+    public boolean canUndo() {
+        return undoManager.canUndo();
+    }
 
-	@Override
-	public synchronized void redo() {
-		var infoOpt = undoManager.redo();
+    @Override
+    public synchronized void redo() {
+        var infoOpt = undoManager.redo();
 
-		infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
-	}
+        infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
+    }
 
-	@Override
-	public boolean canRedo() {
-		return undoManager.canRedo();
-	}
+    @Override
+    public boolean canRedo() {
+        return undoManager.canRedo();
+    }
 
-	@Override
-	public boolean changeExists() {
-		return undoManager.isChanged();
-	}
+    @Override
+    public boolean changeExists() {
+        return undoManager.isChanged();
+    }
 
-	@Override
-	public void clearChanged() {
-		undoManager.clearChanged();
-	}
+    @Override
+    public void clearChanged() {
+        undoManager.clearChanged();
+    }
 
-	@Override
-	public void clear() {
-		undoManager.clear();
-	}
+    @Override
+    public void clear() {
+        undoManager.clear();
+    }
 }

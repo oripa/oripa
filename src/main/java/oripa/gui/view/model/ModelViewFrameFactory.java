@@ -26,7 +26,7 @@ import oripa.gui.view.FrameView;
  */
 public interface ModelViewFrameFactory {
 
-	ModelViewFrameView createFrame(
-			FrameView parent);
+    ModelViewFrameView createFrame(
+            FrameView parent);
 
 }

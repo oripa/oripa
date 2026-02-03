@@ -23,39 +23,39 @@ import java.util.List;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
 class AssignedModelFolder implements Folder {
-	// helper object
-	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
+    // helper object
+    private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
 
-	private final SimpleFolder simpleFolder;
+    private final SimpleFolder simpleFolder;
 
-	private final LayerOrderEnumerator enumerator;
+    private final LayerOrderEnumerator enumerator;
 
-	public AssignedModelFolder(final SimpleFolder simpleFolder,
-			final LayerOrderEnumerator enumerator) {
-		this.simpleFolder = simpleFolder;
-		this.enumerator = enumerator;
-	}
+    public AssignedModelFolder(final SimpleFolder simpleFolder,
+            final LayerOrderEnumerator enumerator) {
+        this.simpleFolder = simpleFolder;
+        this.enumerator = enumerator;
+    }
 
-	@Override
-	public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
-		simpleFolder.simpleFoldWithoutZorder(origamiModel, eps);
-		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
+    @Override
+    public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
+        simpleFolder.simpleFoldWithoutZorder(origamiModel, eps);
+        faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
-		if (estimationType == EstimationType.X_RAY) {
-			origamiModel.setFolded(true);
-			return new Result(new FoldedModel(origamiModel, List.of(), List.of()), new EstimationResultRules());
-		}
+        if (estimationType == EstimationType.X_RAY) {
+            origamiModel.setFolded(true);
+            return new Result(new FoldedModel(origamiModel, List.of(), List.of()), new EstimationResultRules());
+        }
 
-		var enumerationResult = enumerator.enumerate(origamiModel, eps, estimationType == EstimationType.FIRST_ONLY);
+        var enumerationResult = enumerator.enumerate(origamiModel, eps, estimationType == EstimationType.FIRST_ONLY);
 
-		var foldedModel = new FoldedModel(origamiModel, enumerationResult.getOverlapRelations(),
-				enumerationResult.getSubfaces());
+        var foldedModel = new FoldedModel(origamiModel, enumerationResult.getOverlapRelations(),
+                enumerationResult.getSubfaces());
 
-		if (enumerationResult.isEmpty()) {
-			return new Result(foldedModel, enumerationResult.getRules());
-		}
+        if (enumerationResult.isEmpty()) {
+            return new Result(foldedModel, enumerationResult.getRules());
+        }
 
-		origamiModel.setFolded(true);
-		return new Result(foldedModel, enumerationResult.getRules());
-	}
+        origamiModel.setFolded(true);
+        return new Result(foldedModel, enumerationResult.getRules());
+    }
 }
