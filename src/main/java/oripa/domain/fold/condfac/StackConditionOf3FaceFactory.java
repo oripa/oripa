@@ -38,70 +38,70 @@ import oripa.util.StopWatch;
  *
  */
 public class StackConditionOf3FaceFactory {
-	private static final Logger logger = LoggerFactory.getLogger(StackConditionOf3FaceFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(StackConditionOf3FaceFactory.class);
 
-	/**
-	 * Creates 3-face condition: If face[i] and face[j] touching edge are
-	 * covered by face[k] then OR[i][k] = OR[j][k]
-	 *
-	 * @param faces
-	 *            all faces of the model
-	 * @param overlapRelation
-	 *            overlap relation matrix
-	 */
-	public List<StackConditionOf3Faces> createAll(
-			final List<OriFace> faces, final OverlapRelation overlapRelation,
-			final List<Integer>[][] overlappingFaceIndexIntersections,
-			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge) {
+    /**
+     * Creates 3-face condition: If face[i] and face[j] touching edge are
+     * covered by face[k] then OR[i][k] = OR[j][k]
+     *
+     * @param faces
+     *            all faces of the model
+     * @param overlapRelation
+     *            overlap relation matrix
+     */
+    public List<StackConditionOf3Faces> createAll(
+            final List<OriFace> faces, final OverlapRelation overlapRelation,
+            final List<Integer>[][] overlappingFaceIndexIntersections,
+            final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge) {
 
-		var conditions = new ArrayList<StackConditionOf3Faces>();
+        var conditions = new ArrayList<StackConditionOf3Faces>();
 
-		var watch = new StopWatch(true);
+        var watch = new StopWatch(true);
 
-		for (OriFace f_i : faces) {
-			var index_i = f_i.getFaceID();
-			for (OriHalfedge he : f_i.halfedgeIterable()) {
-				var pairOpt = he.getPair();
+        for (OriFace f_i : faces) {
+            var index_i = f_i.getFaceID();
+            for (OriHalfedge he : f_i.halfedgeIterable()) {
+                var pairOpt = he.getPair();
 
-				pairOpt.map(OriHalfedge::getFace)
-						.map(OriFace::getFaceID)
-						.filter(index_j -> overlapRelation.isLower(index_i, index_j))
-						.ifPresent(index_j -> conditions.addAll(createForIandJ(index_i, index_j,
-								overlappingFaceIndexIntersections,
-								faceIndicesOnHalfedge.get(he))));
-			}
-		}
+                pairOpt.map(OriHalfedge::getFace)
+                        .map(OriFace::getFaceID)
+                        .filter(index_j -> overlapRelation.isLower(index_i, index_j))
+                        .ifPresent(index_j -> conditions.addAll(createForIandJ(index_i, index_j,
+                                overlappingFaceIndexIntersections,
+                                faceIndicesOnHalfedge.get(he))));
+            }
+        }
 
-		logger.debug("#condition3 = {}", conditions.size());
-		logger.debug("condition3s computation time {}[ms]", watch.getMilliSec());
+        logger.debug("#condition3 = {}", conditions.size());
+        logger.debug("condition3s computation time {}[ms]", watch.getMilliSec());
 
-		return conditions;
-	}
+        return conditions;
+    }
 
-	private Collection<StackConditionOf3Faces> createForIandJ(
-			final int index_i, final int index_j,
-			final List<Integer>[][] overlappingFaceIndexIntersections,
-			final Set<Integer> faceIndicesOnHalfedge) {
+    private Collection<StackConditionOf3Faces> createForIandJ(
+            final int index_i, final int index_j,
+            final List<Integer>[][] overlappingFaceIndexIntersections,
+            final Set<Integer> faceIndicesOnHalfedge) {
 
-		var conditions = new ArrayList<StackConditionOf3Faces>();
-		var indices = overlappingFaceIndexIntersections[index_i][index_j];
-		for (var index_k : indices) {
-			if (index_i == index_k || index_j == index_k) {
-				continue;
-			}
-			if (!faceIndicesOnHalfedge.contains(index_k)) {
-				continue;
-			}
+        var conditions = new ArrayList<StackConditionOf3Faces>();
+        var indices = overlappingFaceIndexIntersections[index_i][index_j];
+        for (var index_k : indices) {
+            if (index_i == index_k || index_j == index_k) {
+                continue;
+            }
+            if (!faceIndicesOnHalfedge.contains(index_k)) {
+                continue;
+            }
 
-			var upper = index_i;
-			var lower = index_j;
-			var other = index_k;
-			StackConditionOf3Faces cond = new StackConditionOf3Faces(lower, upper, other);
+            var upper = index_i;
+            var lower = index_j;
+            var other = index_k;
+            StackConditionOf3Faces cond = new StackConditionOf3Faces(lower, upper, other);
 
-			conditions.add(cond);
-		}
+            conditions.add(cond);
+        }
 
-		return conditions;
-	}
+        return conditions;
+    }
 
 }

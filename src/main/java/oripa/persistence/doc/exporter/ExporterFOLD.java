@@ -37,62 +37,62 @@ import oripa.persistence.foldformat.CreasePatternFOLDFormat;
  *
  */
 public class ExporterFOLD implements DocExporter {
-	private static final Logger logger = LoggerFactory.getLogger(ExporterFOLD.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExporterFOLD.class);
 
-	/**
-	 * {@code configObj} is required.
-	 *
-	 * @param configObj
-	 *            {@link CreasePatternFOLDConfig} instance.
-	 */
-	@Override
-	public boolean export(final Doc doc, final String filePath, final Object configObj)
-			throws IOException, IllegalArgumentException {
-		logger.info("start exporting FOLD file.");
+    /**
+     * {@code configObj} is required.
+     *
+     * @param configObj
+     *            {@link CreasePatternFOLDConfig} instance.
+     */
+    @Override
+    public boolean export(final Doc doc, final String filePath, final Object configObj)
+            throws IOException, IllegalArgumentException {
+        logger.info("start exporting FOLD file.");
 
-		var config = (CreasePatternFOLDConfig) configObj;
+        var config = (CreasePatternFOLDConfig) configObj;
 
-		final double pointEps = config.getEps();
+        final double pointEps = config.getEps();
 
-		var pointsMerger = new PointsMerger();
-		var creasePattern = pointsMerger.mergeClosePoints(doc.getCreasePattern(), pointEps);
+        var pointsMerger = new PointsMerger();
+        var creasePattern = pointsMerger.mergeClosePoints(doc.getCreasePattern(), pointEps);
 
-		var property = doc.getProperty();
+        var property = doc.getProperty();
 
-		var foldFormat = new CreasePatternFOLDFormat();
+        var foldFormat = new CreasePatternFOLDFormat();
 
-		var converter = new CreasePatternElementConverter();
+        var converter = new CreasePatternElementConverter();
 
-		foldFormat.setFileAuthor(property.getEditorName());
-		foldFormat.setFrameTitle(property.getTitle());
-		foldFormat.setFrameDescription(property.getMemo());
+        foldFormat.setFileAuthor(property.getEditorName());
+        foldFormat.setFrameTitle(property.getTitle());
+        foldFormat.setFrameDescription(property.getMemo());
 
-		foldFormat.setVerticesCoords(converter.toVerticesCoords(creasePattern));
-		logger.info("size of vertices_coords: " + foldFormat.getVerticesCoords().size());
+        foldFormat.setVerticesCoords(converter.toVerticesCoords(creasePattern));
+        logger.info("size of vertices_coords: " + foldFormat.getVerticesCoords().size());
 
-		foldFormat.setEdgesVertices(converter.toEdgesVertices(creasePattern));
-		logger.info("size of edges_vertices: " + foldFormat.getEdgesVertices().size());
+        foldFormat.setEdgesVertices(converter.toEdgesVertices(creasePattern));
+        logger.info("size of edges_vertices: " + foldFormat.getEdgesVertices().size());
 
-		foldFormat.setEdgesAssignment(converter.toEdgesAssignment(creasePattern));
-		logger.info("size of edges_assignment: " + foldFormat.getEdgesAssignment().size());
+        foldFormat.setEdgesAssignment(converter.toEdgesAssignment(creasePattern));
+        logger.info("size of edges_assignment: " + foldFormat.getEdgesAssignment().size());
 
-		// Information of faces will be exported only if the crease pattern is
-		// completed.
-		try {
-			foldFormat.setFacesVertices(converter.toFacesVertices(creasePattern));
-			logger.info("size of faces_vertices: " + foldFormat.getFacesVertices().size());
-		} catch (IllegalArgumentException e) {
-			logger.info("Faces are not created. (eps = " + pointEps + ")", e);
-		}
+        // Information of faces will be exported only if the crease pattern is
+        // completed.
+        try {
+            foldFormat.setFacesVertices(converter.toFacesVertices(creasePattern));
+            logger.info("size of faces_vertices: " + foldFormat.getFacesVertices().size());
+        } catch (IllegalArgumentException e) {
+            logger.info("Faces are not created. (eps = " + pointEps + ")", e);
+        }
 
-		try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
-			var gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.toJson(foldFormat, writer);
-			writer.flush();
-		}
+        try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
+            var gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(foldFormat, writer);
+            writer.flush();
+        }
 
-		logger.info("end exporting FOLD file.");
+        logger.info("end exporting FOLD file.");
 
-		return true;
-	}
+        return true;
+    }
 }

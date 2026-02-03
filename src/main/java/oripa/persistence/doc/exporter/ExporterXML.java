@@ -28,16 +28,16 @@ import oripa.persistence.doc.Doc;
 
 public class ExporterXML implements DocExporter {
 
-	@Override
-	public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
-		DataSet dataset = new DataSet(doc);
+    @Override
+    public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
+        DataSet dataset = new DataSet(doc);
 
-		try (var fos = new FileOutputStream(filePath);
-				var bos = new BufferedOutputStream(fos);
-				var enc = new XMLEncoder(bos);) {
-			enc.writeObject(dataset);
-		}
+        try (var fos = new FileOutputStream(filePath);
+                var bos = new BufferedOutputStream(fos);
+                var enc = new XMLEncoder(bos);) {
+            enc.writeObject(dataset);
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

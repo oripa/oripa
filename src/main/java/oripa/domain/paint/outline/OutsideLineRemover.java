@@ -33,54 +33,54 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class OutsideLineRemover {
-	private static final Logger logger = LoggerFactory.getLogger(OutsideLineRemover.class);
+    private static final Logger logger = LoggerFactory.getLogger(OutsideLineRemover.class);
 
-	private final IsOnTempOutlineLoop isOnTempOutlineLoop;
-	private final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
+    private final IsOnTempOutlineLoop isOnTempOutlineLoop;
+    private final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
 
-	public OutsideLineRemover(final IsOnTempOutlineLoop isOnTempOutlineLoop,
-			final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop) {
-		this.isOnTempOutlineLoop = isOnTempOutlineLoop;
-		this.isOutsideOfTempOutlineLoop = isOutsideOfTempOutlineLoop;
-	}
+    public OutsideLineRemover(final IsOnTempOutlineLoop isOnTempOutlineLoop,
+            final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop) {
+        this.isOnTempOutlineLoop = isOnTempOutlineLoop;
+        this.isOutsideOfTempOutlineLoop = isOutsideOfTempOutlineLoop;
+    }
 
-	public void removeLinesOutsideOfOutlines(final Painter painter,
-			final Collection<Vector2d> outlineVertices) {
-		var creasePattern = painter.getCreasePattern();
-		var toBeRemoved = new ArrayList<OriLine>();
+    public void removeLinesOutsideOfOutlines(final Painter painter,
+            final Collection<Vector2d> outlineVertices) {
+        var creasePattern = painter.getCreasePattern();
+        var toBeRemoved = new ArrayList<OriLine>();
 
-		for (OriLine line : creasePattern) {
-			if (line.isBoundary()) {
-				continue;
-			}
-			double eps = creasePattern.getPaperSize() * 0.001;
-			var onPoint0 = isOnTempOutlineLoop.execute(outlineVertices, line.getP0(), eps);
-			var onPoint1 = isOnTempOutlineLoop.execute(outlineVertices, line.getP1(), eps);
+        for (OriLine line : creasePattern) {
+            if (line.isBoundary()) {
+                continue;
+            }
+            double eps = creasePattern.getPaperSize() * 0.001;
+            var onPoint0 = isOnTempOutlineLoop.execute(outlineVertices, line.getP0(), eps);
+            var onPoint1 = isOnTempOutlineLoop.execute(outlineVertices, line.getP1(), eps);
 
-			logger.debug("line = " + line);
-			logger.debug("onPoint0 = " + onPoint0);
-			logger.debug("onPoint1 = " + onPoint1);
-			// meaningless?
+            logger.debug("line = " + line);
+            logger.debug("onPoint0 = " + onPoint0);
+            logger.debug("onPoint1 = " + onPoint1);
+            // meaningless?
 //			if (onPoint0 != null && onPoint0 == onPoint1) {
 //				toBeRemoved.add(line);
 //				logger.debug("line is removed: it's on contour.");
 //			}
 
-			var isOutsideP0 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.getP0());
-			var isOutsideP1 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.getP1());
+            var isOutsideP0 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.getP0());
+            var isOutsideP1 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.getP1());
 
-			logger.debug(String.join(",", outlineVertices.stream()
-					.map(v -> v.toString()).toList()));
-			logger.debug("isOutsideP0 = " + isOutsideP0);
-			logger.debug("isOutsideP1 = " + isOutsideP1);
+            logger.debug(String.join(",", outlineVertices.stream()
+                    .map(v -> v.toString()).toList()));
+            logger.debug("isOutsideP0 = " + isOutsideP0);
+            logger.debug("isOutsideP1 = " + isOutsideP1);
 
-			if ((!onPoint0 && isOutsideP0) || (!onPoint1 && isOutsideP1)) {
-				toBeRemoved.add(line);
-				logger.debug("line is removed: it's outside of contour.");
-			}
-		}
+            if ((!onPoint0 && isOutsideP0) || (!onPoint1 && isOutsideP1)) {
+                toBeRemoved.add(line);
+                logger.debug("line is removed: it's outside of contour.");
+            }
+        }
 
-		painter.removeLines(toBeRemoved);
-	}
+        painter.removeLines(toBeRemoved);
+    }
 
 }

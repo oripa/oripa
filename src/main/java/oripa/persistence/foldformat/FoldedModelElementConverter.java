@@ -39,270 +39,270 @@ import oripa.value.OriLine;
  */
 public class FoldedModelElementConverter {
 
-	private final AssignmentConverter assignmentConverter = new AssignmentConverter();
+    private final AssignmentConverter assignmentConverter = new AssignmentConverter();
 
-	/**
-	 * Call this method first of all. This method sets the ID of each vertex.
-	 *
-	 * @param origamiModel
-	 */
-	public void setVertexIDs(final OrigamiModel origamiModel) {
-		var vertices = origamiModel.getVertices();
+    /**
+     * Call this method first of all. This method sets the ID of each vertex.
+     *
+     * @param origamiModel
+     */
+    public void setVertexIDs(final OrigamiModel origamiModel) {
+        var vertices = origamiModel.getVertices();
 
-		IntStream.range(0, vertices.size())
-				.forEach(i -> vertices.get(i).setVertexID(i));
-	}
+        IntStream.range(0, vertices.size())
+                .forEach(i -> vertices.get(i).setVertexID(i));
+    }
 
-	public List<List<Double>> toVerticesCoords(final OrigamiModel origamiModel) {
-		var vertices = origamiModel.getVertices();
+    public List<List<Double>> toVerticesCoords(final OrigamiModel origamiModel) {
+        var vertices = origamiModel.getVertices();
 
-		var coords = vertices.stream()
-				.map(vertex -> {
-					var position = vertex.getPosition();
-					return List.of(position.getX(), position.getY());
-				})
-				.collect(Collectors.toCollection(ArrayList::new));
+        var coords = vertices.stream()
+                .map(vertex -> {
+                    var position = vertex.getPosition();
+                    return List.of(position.getX(), position.getY());
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
 
-		return coords;
-	}
+        return coords;
+    }
 
-	/**
-	 * This method assumes that each vertex has its ID.
-	 *
-	 * @param origamiModel
-	 * @return
-	 */
-	public List<List<Integer>> toEdgesVertices(final OrigamiModel origamiModel) {
-		var edges = origamiModel.getEdges();
+    /**
+     * This method assumes that each vertex has its ID.
+     *
+     * @param origamiModel
+     * @return
+     */
+    public List<List<Integer>> toEdgesVertices(final OrigamiModel origamiModel) {
+        var edges = origamiModel.getEdges();
 
-		var vertexIndices = edges.stream()
-				.map(edge -> List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()))
-				.collect(Collectors.toCollection(ArrayList::new));
+        var vertexIndices = edges.stream()
+                .map(edge -> List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()))
+                .collect(Collectors.toCollection(ArrayList::new));
 
-		return vertexIndices;
-	}
+        return vertexIndices;
+    }
 
-	/**
-	 * This method assumes that each vertex has its ID.
-	 *
-	 * @param origamiModel
-	 * @return
-	 */
-	public List<String> toEdgesAssignment(final OrigamiModel origamiModel) {
-		var edges = origamiModel.getEdges();
+    /**
+     * This method assumes that each vertex has its ID.
+     *
+     * @param origamiModel
+     * @return
+     */
+    public List<String> toEdgesAssignment(final OrigamiModel origamiModel) {
+        var edges = origamiModel.getEdges();
 
-		return edges.stream()
-				.map(edge -> assignmentConverter.toFOLD(OriLine.Type.fromInt(edge.getType())))
-				.collect(Collectors.toCollection(ArrayList::new));
-	}
+        return edges.stream()
+                .map(edge -> assignmentConverter.toFOLD(OriLine.Type.fromInt(edge.getType())))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
 
-	/**
-	 * This method assumes that each vertex has its ID.
-	 *
-	 * @param origamiModel
-	 * @return
-	 */
-	public List<List<Integer>> toFacesVertices(final OrigamiModel origamiModel) {
-		var faces = origamiModel.getFaces();
+    /**
+     * This method assumes that each vertex has its ID.
+     *
+     * @param origamiModel
+     * @return
+     */
+    public List<List<Integer>> toFacesVertices(final OrigamiModel origamiModel) {
+        var faces = origamiModel.getFaces();
 
-		return faces.stream()
-				.map(face -> face.halfedgeStream()
-						.map(he -> he.getVertex().getVertexID())
-						.toList())
-				.collect(Collectors.toCollection(ArrayList::new));
-	}
+        return faces.stream()
+                .map(face -> face.halfedgeStream()
+                        .map(he -> he.getVertex().getVertexID())
+                        .toList())
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
 
-	public List<List<Integer>> toFaceOrders(final OrigamiModel origamiModel, final OverlapRelation overlapRelation) {
-		var faces = origamiModel.getFaces();
+    public List<List<Integer>> toFaceOrders(final OrigamiModel origamiModel, final OverlapRelation overlapRelation) {
+        var faces = origamiModel.getFaces();
 
-		var orders = new ArrayList<List<Integer>>(faces.size());
+        var orders = new ArrayList<List<Integer>>(faces.size());
 
-		for (int i = 0; i < faces.size(); i++) {
-			for (int j = i + 1; j < faces.size(); j++) {
-				var g = faces.get(j);
+        for (int i = 0; i < faces.size(); i++) {
+            for (int j = i + 1; j < faces.size(); j++) {
+                var g = faces.get(j);
 
-				if (g.isFaceFront()) {
-					if (overlapRelation.isUpper(i, j)) {
-						orders.add(List.of(i, j, 1));
-					} else if (overlapRelation.isLower(i, j)) {
-						orders.add(List.of(i, j, -1));
-					}
-				} else {
-					if (overlapRelation.isUpper(i, j)) {
-						orders.add(List.of(i, j, -1));
-					} else if (overlapRelation.isLower(i, j)) {
-						orders.add(List.of(i, j, 1));
-					}
-				}
-			}
-		}
+                if (g.isFaceFront()) {
+                    if (overlapRelation.isUpper(i, j)) {
+                        orders.add(List.of(i, j, 1));
+                    } else if (overlapRelation.isLower(i, j)) {
+                        orders.add(List.of(i, j, -1));
+                    }
+                } else {
+                    if (overlapRelation.isUpper(i, j)) {
+                        orders.add(List.of(i, j, -1));
+                    } else if (overlapRelation.isLower(i, j)) {
+                        orders.add(List.of(i, j, 1));
+                    }
+                }
+            }
+        }
 
-		return orders;
-	}
+        return orders;
+    }
 
-	public List<OriVertex> fromVerticesCoords(final List<List<Double>> verticesCoords) {
-		var vertices = new ArrayList<OriVertex>();
+    public List<OriVertex> fromVerticesCoords(final List<List<Double>> verticesCoords) {
+        var vertices = new ArrayList<OriVertex>();
 
-		verticesCoords.forEach(coords -> {
-			vertices.add(new OriVertex(coords.get(0), coords.get(1)));
-		});
+        verticesCoords.forEach(coords -> {
+            vertices.add(new OriVertex(coords.get(0), coords.get(1)));
+        });
 
-		return vertices;
-	}
+        return vertices;
+    }
 
-	public List<OriEdge> fromEdges(final List<List<Integer>> edgesVertices, final List<String> edgesAssignment,
-			final List<OriVertex> vertices) {
-		var edges = new ArrayList<OriEdge>();
+    public List<OriEdge> fromEdges(final List<List<Integer>> edgesVertices, final List<String> edgesAssignment,
+            final List<OriVertex> vertices) {
+        var edges = new ArrayList<OriEdge>();
 
-		for (int i = 0; i < edgesVertices.size(); i++) {
-			var edgeVertices = edgesVertices.get(i);
-			var edge = new OriEdge(
-					vertices.get(edgeVertices.get(0)),
-					vertices.get(edgeVertices.get(1)),
-					assignmentConverter.fromFOLD(edgesAssignment.get(i)).toInt());
-			edges.add(edge);
-		}
+        for (int i = 0; i < edgesVertices.size(); i++) {
+            var edgeVertices = edgesVertices.get(i);
+            var edge = new OriEdge(
+                    vertices.get(edgeVertices.get(0)),
+                    vertices.get(edgeVertices.get(1)),
+                    assignmentConverter.fromFOLD(edgesAssignment.get(i)).toInt());
+            edges.add(edge);
+        }
 
-		return edges;
-	}
+        return edges;
+    }
 
-	public List<OriFace> fromFacesVertices(final List<List<Integer>> facesVertices,
-			final List<List<Integer>> edgesVertices, final List<OriVertex> vertices, final List<OriEdge> edges,
-			final double eps) {
-		var faces = new ArrayList<OriFace>();
+    public List<OriFace> fromFacesVertices(final List<List<Integer>> facesVertices,
+            final List<List<Integer>> edgesVertices, final List<OriVertex> vertices, final List<OriEdge> edges,
+            final double eps) {
+        var faces = new ArrayList<OriFace>();
 
-		for (int i = 0; i < facesVertices.size(); i++) {
-			var face = new OriFace();
+        for (int i = 0; i < facesVertices.size(); i++) {
+            var face = new OriFace();
 
-			var faceVertices = facesVertices.get(i);
+            var faceVertices = facesVertices.get(i);
 
-			faceVertices.forEach(v -> {
-				var halfedge = new OriHalfedge(vertices.get(v), face);
-				face.addHalfedge(halfedge);
-			});
-			face.makeHalfedgeLoop(eps);
+            faceVertices.forEach(v -> {
+                var halfedge = new OriHalfedge(vertices.get(v), face);
+                face.addHalfedge(halfedge);
+            });
+            face.makeHalfedgeLoop(eps);
 
-			final int vertexCount = faceVertices.size();
-			for (int j = 0; j < vertexCount; j++) {
-				var target = List.of(faceVertices.get(j), faceVertices.get((j + 1) % vertexCount));
-				var edgeIndex = edgesVertices.indexOf(target);
-				if (edgeIndex == -1) {
-					edgeIndex = edgesVertices.indexOf(target.reversed());
-				}
-				if (edgeIndex == -1) {
-					throw new IllegalArgumentException("no edgeVertices match.");
-				}
-				face.getHalfedge(j).setEdge(edges.get(edgeIndex));
-			}
+            final int vertexCount = faceVertices.size();
+            for (int j = 0; j < vertexCount; j++) {
+                var target = List.of(faceVertices.get(j), faceVertices.get((j + 1) % vertexCount));
+                var edgeIndex = edgesVertices.indexOf(target);
+                if (edgeIndex == -1) {
+                    edgeIndex = edgesVertices.indexOf(target.reversed());
+                }
+                if (edgeIndex == -1) {
+                    throw new IllegalArgumentException("no edgeVertices match.");
+                }
+                face.getHalfedge(j).setEdge(edges.get(edgeIndex));
+            }
 
-			if (!GeomUtil.isStrictlyCCW(
-					face.getHalfedge(0).getPosition(),
-					face.getHalfedge(1).getPosition(),
-					face.getHalfedge(2).getPosition())) {
-				face.invertFaceFront();
-			}
+            if (!GeomUtil.isStrictlyCCW(
+                    face.getHalfedge(0).getPosition(),
+                    face.getHalfedge(1).getPosition(),
+                    face.getHalfedge(2).getPosition())) {
+                face.invertFaceFront();
+            }
 
-			face.setFaceID(i);
-			faces.add(face);
-		}
+            face.setFaceID(i);
+            faces.add(face);
+        }
 
-		return faces;
-	}
+        return faces;
+    }
 
-	public OverlapRelation fromFaceOrders(final List<List<Integer>> faceOrders, final List<OriFace> faces) {
-		var overlapRelation = new OverlapRelation(faces.size());
+    public OverlapRelation fromFaceOrders(final List<List<Integer>> faceOrders, final List<OriFace> faces) {
+        var overlapRelation = new OverlapRelation(faces.size());
 
-		faceOrders.forEach(order -> {
-			var i = order.get(0);
-			var j = order.get(1);
-			var g = faces.get(j);
-			var direction = order.get(2);
-			if (g.isFaceFront()) {
-				if (direction == 1) {
-					overlapRelation.setUpper(i, j);
-				} else if (direction == -1) {
-					overlapRelation.setLower(i, j);
-				}
-			} else {
-				if (direction == 1) {
-					overlapRelation.setLower(i, j);
-				} else if (direction == -1) {
-					overlapRelation.setUpper(i, j);
-				}
+        faceOrders.forEach(order -> {
+            var i = order.get(0);
+            var j = order.get(1);
+            var g = faces.get(j);
+            var direction = order.get(2);
+            if (g.isFaceFront()) {
+                if (direction == 1) {
+                    overlapRelation.setUpper(i, j);
+                } else if (direction == -1) {
+                    overlapRelation.setLower(i, j);
+                }
+            } else {
+                if (direction == 1) {
+                    overlapRelation.setLower(i, j);
+                } else if (direction == -1) {
+                    overlapRelation.setUpper(i, j);
+                }
 
-			}
-		});
+            }
+        });
 
-		return overlapRelation;
-	}
+        return overlapRelation;
+    }
 
-	/**
-	 * Converts model's precreases and adds them to FOLD properties. Does not
-	 * merge vertices of precreases.
-	 *
-	 * @param edgesVertices
-	 * @param edgesAssignment
-	 * @param verticesCoords
-	 * @param origamiModel
-	 */
-	public List<List<Integer>> addPrecreases(
-			final List<List<Integer>> edgesVertices,
-			final List<String> edgesAssignment,
-			final List<List<Double>> verticesCoords,
-			final OrigamiModel origamiModel) {
+    /**
+     * Converts model's precreases and adds them to FOLD properties. Does not
+     * merge vertices of precreases.
+     *
+     * @param edgesVertices
+     * @param edgesAssignment
+     * @param verticesCoords
+     * @param origamiModel
+     */
+    public List<List<Integer>> addPrecreases(
+            final List<List<Integer>> edgesVertices,
+            final List<String> edgesAssignment,
+            final List<List<Double>> verticesCoords,
+            final OrigamiModel origamiModel) {
 
-		int precreaseIndex = edgesVertices.size();
-		var facesPrecreases = new ArrayList<List<Integer>>();
+        int precreaseIndex = edgesVertices.size();
+        var facesPrecreases = new ArrayList<List<Integer>>();
 
-		var faces = origamiModel.getFaces();
+        var faces = origamiModel.getFaces();
 
-		for (var face : faces) {
-			for (var precrease : face.precreaseIterable()) {
-				facesPrecreases.add(List.of(face.getFaceID(), precreaseIndex++));
-			}
-		}
+        for (var face : faces) {
+            for (var precrease : face.precreaseIterable()) {
+                facesPrecreases.add(List.of(face.getFaceID(), precreaseIndex++));
+            }
+        }
 
-		var precreaseEdges = faces.stream()
-				.flatMap(OriFace::precreaseStream)
-				.map(precrease -> new OriEdge(
-						new OriVertex(precrease.getP0()), new OriVertex(precrease.getP1()),
-						precrease.getType().toInt()))
-				.toList();
+        var precreaseEdges = faces.stream()
+                .flatMap(OriFace::precreaseStream)
+                .map(precrease -> new OriEdge(
+                        new OriVertex(precrease.getP0()), new OriVertex(precrease.getP1()),
+                        precrease.getType().toInt()))
+                .toList();
 
-		var precreaseVertices = precreaseEdges.stream()
-				.flatMap(edge -> Stream.of(edge.getStartVertex(), edge.getEndVertex()))
-				.toList();
+        var precreaseVertices = precreaseEdges.stream()
+                .flatMap(edge -> Stream.of(edge.getStartVertex(), edge.getEndVertex()))
+                .toList();
 
-		var vertexCount = verticesCoords.size();
+        var vertexCount = verticesCoords.size();
 
-		for (int i = 0; i < precreaseVertices.size(); i++) {
-			var vertex = precreaseVertices.get(i);
-			vertex.setVertexID(vertexCount + i);
-			verticesCoords.add(List.of(
-					vertex.getPosition().getX(),
-					vertex.getPosition().getY()));
-		}
+        for (int i = 0; i < precreaseVertices.size(); i++) {
+            var vertex = precreaseVertices.get(i);
+            vertex.setVertexID(vertexCount + i);
+            verticesCoords.add(List.of(
+                    vertex.getPosition().getX(),
+                    vertex.getPosition().getY()));
+        }
 
-		for (var edge : precreaseEdges) {
-			edgesVertices.add(List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()));
-			edgesAssignment.add(assignmentConverter.toFOLD(OriLine.Type.AUX));
-		}
+        for (var edge : precreaseEdges) {
+            edgesVertices.add(List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()));
+            edgesAssignment.add(assignmentConverter.toFOLD(OriLine.Type.AUX));
+        }
 
-		return facesPrecreases;
-	}
+        return facesPrecreases;
+    }
 
-	public void restorePrecreases(final List<List<Integer>> facesPrecreases, final List<OriEdge> edges,
-			final List<OriFace> faces) {
-		for (int i = 0; i < faces.size(); i++) {
-			var faceID = i;
-			var face = faces.get(i);
-			var precreases = facesPrecreases.stream()
-					.filter(precrease -> precrease.get(0) == faceID)
-					.map(precrease -> edges.get(precrease.get(1)))
-					.map(edge -> new OriLine(edge.toSegment(), OriLine.Type.AUX))
-					.toList();
+    public void restorePrecreases(final List<List<Integer>> facesPrecreases, final List<OriEdge> edges,
+            final List<OriFace> faces) {
+        for (int i = 0; i < faces.size(); i++) {
+            var faceID = i;
+            var face = faces.get(i);
+            var precreases = facesPrecreases.stream()
+                    .filter(precrease -> precrease.get(0) == faceID)
+                    .map(precrease -> edges.get(precrease.get(1)))
+                    .map(edge -> new OriLine(edge.toSegment(), OriLine.Type.AUX))
+                    .toList();
 
-			face.setPrecreases(precreases);
-		}
-	}
+            face.setPrecreases(precreases);
+        }
+    }
 }

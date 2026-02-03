@@ -37,17 +37,17 @@ import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
  */
 public class PaintDomainModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bind(SelectionOriginHolder.class).to(SelectionOriginHolderImpl.class);
-		bind(ByValueContext.class).to(ByValueContextImpl.class);
+    @Override
+    protected void configure() {
+        bind(SelectionOriginHolder.class).to(SelectionOriginHolderImpl.class);
+        bind(ByValueContext.class).to(ByValueContextImpl.class);
 
-		bind(CutModelOutlinesHolder.class).to(DefaultCutModelOutlinesHolder.class);
-	}
+        bind(CutModelOutlinesHolder.class).to(DefaultCutModelOutlinesHolder.class);
+    }
 
-	@Provides
-	@Singleton
-	PaintContext getPaintContext() {
-		return new PaintContextFactory().createContext();
-	}
+    @Provides
+    @Singleton
+    PaintContext getPaintContext() {
+        return new PaintContextFactory().createContext();
+    }
 }

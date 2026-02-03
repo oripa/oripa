@@ -28,13 +28,13 @@ import org.junit.jupiter.api.Test;
  */
 class OptionParserTest {
 
-	@Test
-	void testParseLine() {
-		var parser = new OptionParser();
-		var option = parser.parse("// test : #008888");
+    @Test
+    void testParseLine() {
+        var parser = new OptionParser();
+        var option = parser.parse("// test : #008888");
 
-		assertEquals("test", option.key());
-		assertEquals("#008888", option.value());
-	}
+        assertEquals("test", option.key());
+        assertEquals("#008888", option.value());
+    }
 
 }

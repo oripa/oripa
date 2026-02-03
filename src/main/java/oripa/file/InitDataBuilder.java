@@ -28,80 +28,80 @@ import java.util.Collection;
  */
 public class InitDataBuilder {
 
-	public String lastUsedFile = ""; // dead property
-	public String[] MRUFiles = null;
+    public String lastUsedFile = ""; // dead property
+    public String[] MRUFiles = null;
 
-	private Boolean zeroLineWidth = null;
-	private Boolean mvLineVisible = null;
-	private Boolean auxLineVisible = null;
-	private Boolean vertexVisible = null;
+    private Boolean zeroLineWidth = null;
+    private Boolean mvLineVisible = null;
+    private Boolean auxLineVisible = null;
+    private Boolean vertexVisible = null;
 
-	public InitDataBuilder() {
-	}
+    public InitDataBuilder() {
+    }
 
-	public InitDataBuilder setLastUsedFile(final String filePath) {
-		lastUsedFile = filePath;
-		return this;
-	}
+    public InitDataBuilder setLastUsedFile(final String filePath) {
+        lastUsedFile = filePath;
+        return this;
+    }
 
-	public InitDataBuilder setMRUFiles(final Collection<String> mru) {
-		MRUFiles = mru.toArray(new String[mru.size()]);
-		return this;
-	}
+    public InitDataBuilder setMRUFiles(final Collection<String> mru) {
+        MRUFiles = mru.toArray(new String[mru.size()]);
+        return this;
+    }
 
-	public InitDataBuilder setZeroLineWidth(final boolean zeroLineWidth) {
-		this.zeroLineWidth = Boolean.valueOf(zeroLineWidth);
-		return this;
-	}
+    public InitDataBuilder setZeroLineWidth(final boolean zeroLineWidth) {
+        this.zeroLineWidth = Boolean.valueOf(zeroLineWidth);
+        return this;
+    }
 
-	public InitDataBuilder setMVLineVisible(final boolean mvLineVisible) {
-		this.mvLineVisible = Boolean.valueOf(mvLineVisible);
-		return this;
-	}
+    public InitDataBuilder setMVLineVisible(final boolean mvLineVisible) {
+        this.mvLineVisible = Boolean.valueOf(mvLineVisible);
+        return this;
+    }
 
-	public InitDataBuilder setAuxLineVisible(final boolean auxLineVisible) {
-		this.auxLineVisible = Boolean.valueOf(auxLineVisible);
-		return this;
-	}
+    public InitDataBuilder setAuxLineVisible(final boolean auxLineVisible) {
+        this.auxLineVisible = Boolean.valueOf(auxLineVisible);
+        return this;
+    }
 
-	public InitDataBuilder setVertexVisible(final boolean vertexVisible) {
-		this.vertexVisible = Boolean.valueOf(vertexVisible);
-		return this;
-	}
+    public InitDataBuilder setVertexVisible(final boolean vertexVisible) {
+        this.vertexVisible = Boolean.valueOf(vertexVisible);
+        return this;
+    }
 
-	private void assertValueIsSet(final Object obj, final String displayName) {
-		if (obj == null) {
-			throw new IllegalStateException(displayName + " should have some value.");
-		}
-	}
+    private void assertValueIsSet(final Object obj, final String displayName) {
+        if (obj == null) {
+            throw new IllegalStateException(displayName + " should have some value.");
+        }
+    }
 
-	/**
-	 * build object
-	 *
-	 * @return constructed InitData Object
-	 * @throws IllegalStateException
-	 *             if some the data fields is not set
-	 */
-	public InitData get() throws IllegalStateException {
-		assertValueIsSet(MRUFiles, "MRUFiles");
+    /**
+     * build object
+     *
+     * @return constructed InitData Object
+     * @throws IllegalStateException
+     *             if some the data fields is not set
+     */
+    public InitData get() throws IllegalStateException {
+        assertValueIsSet(MRUFiles, "MRUFiles");
 
-		assertValueIsSet(zeroLineWidth, "zeroLineWidth");
+        assertValueIsSet(zeroLineWidth, "zeroLineWidth");
 
-		assertValueIsSet(mvLineVisible, "mvLineVisible");
-		assertValueIsSet(auxLineVisible, "auxLineVisible");
-		assertValueIsSet(vertexVisible, "vertexVisible");
+        assertValueIsSet(mvLineVisible, "mvLineVisible");
+        assertValueIsSet(auxLineVisible, "auxLineVisible");
+        assertValueIsSet(vertexVisible, "vertexVisible");
 
-		var initData = new InitData();
+        var initData = new InitData();
 
-		initData.setLastUsedFile(lastUsedFile);
-		initData.setMRUFiles(MRUFiles);
+        initData.setLastUsedFile(lastUsedFile);
+        initData.setMRUFiles(MRUFiles);
 
-		initData.setZeroLineWidth(zeroLineWidth);
+        initData.setZeroLineWidth(zeroLineWidth);
 
-		initData.setMvLineVisible(mvLineVisible);
-		initData.setAuxLineVisible(auxLineVisible);
-		initData.setVertexVisible(vertexVisible);
+        initData.setMvLineVisible(mvLineVisible);
+        initData.setAuxLineVisible(auxLineVisible);
+        initData.setVertexVisible(vertexVisible);
 
-		return initData;
-	}
+        return initData;
+    }
 }

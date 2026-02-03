@@ -26,15 +26,15 @@ import oripa.persistence.dao.FileType;
  *
  */
 public class OrigamiModelFileTypes {
-	public static FileType<OrigamiModel> obj() {
-		return new FileType<>(OrigamiModelFileTypeKey.OBJ_MODEL);
-	}
+    public static FileType<OrigamiModel> obj() {
+        return new FileType<>(OrigamiModelFileTypeKey.OBJ_MODEL);
+    }
 
-	public static FileType<OrigamiModel> dxf() {
-		return new FileType<>(OrigamiModelFileTypeKey.DXF_MODEL);
-	}
+    public static FileType<OrigamiModel> dxf() {
+        return new FileType<>(OrigamiModelFileTypeKey.DXF_MODEL);
+    }
 
-	public static FileType<OrigamiModel> svg() {
-		return new FileType<>(OrigamiModelFileTypeKey.SVG_MODEL);
-	}
+    public static FileType<OrigamiModel> svg() {
+        return new FileType<>(OrigamiModelFileTypeKey.SVG_MODEL);
+    }
 }

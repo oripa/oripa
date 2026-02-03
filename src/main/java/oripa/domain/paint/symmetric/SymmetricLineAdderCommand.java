@@ -28,37 +28,37 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class SymmetricLineAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final boolean doWalk;
+    private final PaintContext context;
+    private final boolean doWalk;
 
-	public SymmetricLineAdderCommand(final PaintContext context, final boolean doWalk) {
-		this.context = context;
-		this.doWalk = doWalk;
-	}
+    public SymmetricLineAdderCommand(final PaintContext context, final boolean doWalk) {
+        this.context = context;
+        this.doWalk = doWalk;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 3;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 3;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		Vector2d first = context.getVertex(0);
-		Vector2d second = context.getVertex(1);
-		Vector2d third = context.getVertex(2);
+        Vector2d first = context.getVertex(0);
+        Vector2d second = context.getVertex(1);
+        Vector2d third = context.getVertex(2);
 
-		context.clear(false);
+        context.clear(false);
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Painter painter = context.getPainter();
+        Painter painter = context.getPainter();
 
-		if (doWalk) {
-			painter.addSymmetricLineAutoWalk(
-					first, second, third, context.getLineTypeOfNewLines());
-		} else {
-			painter.addSymmetricLine(
-					first, second, third, context.getLineTypeOfNewLines());
-		}
-	}
+        if (doWalk) {
+            painter.addSymmetricLineAutoWalk(
+                    first, second, third, context.getLineTypeOfNewLines());
+        } else {
+            painter.addSymmetricLine(
+                    first, second, third, context.getLineTypeOfNewLines());
+        }
+    }
 
 }

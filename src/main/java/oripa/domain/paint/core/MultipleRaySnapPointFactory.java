@@ -31,20 +31,20 @@ import oripa.vecmath.Vector2d;
  */
 public class MultipleRaySnapPointFactory {
 
-	public Collection<Vector2d> createSnapPoints(
-			final CreasePattern creasePattern,
-			final Vector2d v,
-			final Collection<Double> angles,
-			final double pointEps) {
+    public Collection<Vector2d> createSnapPoints(
+            final CreasePattern creasePattern,
+            final Vector2d v,
+            final Collection<Double> angles,
+            final double pointEps) {
 
-		var snapPointFactory = new RaySnapPointFactory();
-		Function<Double, Ray> createRay = angle -> new Ray(v, angle);
+        var snapPointFactory = new RaySnapPointFactory();
+        Function<Double, Ray> createRay = angle -> new Ray(v, angle);
 
-		return angles.stream()
-				.map(createRay)
-				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, pointEps)
-						.stream())
-				.filter(point -> !point.equals(v, pointEps))
-				.toList();
-	}
+        return angles.stream()
+                .map(createRay)
+                .flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, pointEps)
+                        .stream())
+                .filter(point -> !point.equals(v, pointEps))
+                .toList();
+    }
 }

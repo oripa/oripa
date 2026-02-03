@@ -26,40 +26,40 @@ import java.beans.PropertyChangeListener;
  */
 public interface UIPanelSetting {
 
-	String LINE_SELECTION_PANEL_VISIBLE = "line-selection-panel-visible";
-	String LINE_INPUT_PANEL_VISIBLE = "line-input-panel-visible";
-	String BY_VALUE_PANEL_VISIBLE = "by-value panel visible";
-	String ALTER_LINE_TYPE_PANEL_VISIBLE = "alter-line-type panel visible";
-	String ANGLE_STEP_PANEL_VISIBLE = "angle step panel visible";
-	String SELECTED_MODE = "selected mode";
+    String LINE_SELECTION_PANEL_VISIBLE = "line-selection-panel-visible";
+    String LINE_INPUT_PANEL_VISIBLE = "line-input-panel-visible";
+    String BY_VALUE_PANEL_VISIBLE = "by-value panel visible";
+    String ALTER_LINE_TYPE_PANEL_VISIBLE = "alter-line-type panel visible";
+    String ANGLE_STEP_PANEL_VISIBLE = "angle step panel visible";
+    String SELECTED_MODE = "selected mode";
 
-	void addPropertyChangeListener(
-			String propertyName, PropertyChangeListener listener);
+    void addPropertyChangeListener(
+            String propertyName, PropertyChangeListener listener);
 
-	boolean isByValuePanelVisible();
+    boolean isByValuePanelVisible();
 
-	boolean isAlterLineTypePanelVisible();
+    boolean isAlterLineTypePanelVisible();
 
-	boolean isSelectLinePanelVisible();
+    boolean isSelectLinePanelVisible();
 
-	boolean isLineInputPanelVisible();
+    boolean isLineInputPanelVisible();
 
-	boolean isAngleStepPanelVisible();
+    boolean isAngleStepPanelVisible();
 
-	void setByValuePanelVisible(boolean byValuePanelVisible);
+    void setByValuePanelVisible(boolean byValuePanelVisible);
 
-	void setAlterLineTypePanelVisible(boolean alterLineTypePanelVisible);
+    void setAlterLineTypePanelVisible(boolean alterLineTypePanelVisible);
 
-	void setLineSelectionPanelVisible(boolean lineSelectionPanelVisible);
+    void setLineSelectionPanelVisible(boolean lineSelectionPanelVisible);
 
-	void setLineInputPanelVisible(boolean lineInputPanelVisible);
+    void setLineInputPanelVisible(boolean lineInputPanelVisible);
 
-	void setAngleStepPanelVisible(boolean angleStepVisible);
+    void setAngleStepPanelVisible(boolean angleStepVisible);
 
-	void selectInputMode();
+    void selectInputMode();
 
-	void selectSelectMode();
+    void selectSelectMode();
 
-	String getSelectedModeString();
+    String getSelectedModeString();
 
 }

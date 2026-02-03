@@ -32,50 +32,50 @@ import oripa.vecmath.Vector2d;
  */
 class OriLineTest {
 
-	@Test
-	void testHashCode() {
-		var line1 = new OriLine(0, 1, 2, 3, OriLine.Type.VALLEY);
-		var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.MOUNTAIN);
+    @Test
+    void testHashCode() {
+        var line1 = new OriLine(0, 1, 2, 3, OriLine.Type.VALLEY);
+        var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.MOUNTAIN);
 
-		assertNotEquals(line1, line2);
-		assertNotEquals(line1.hashCode(), line2.hashCode());
+        assertNotEquals(line1, line2);
+        assertNotEquals(line1.hashCode(), line2.hashCode());
 
-		// test reversed direction
-		var line2Reversed = new OriLine(2, 3, 0, 1, OriLine.Type.VALLEY);
+        // test reversed direction
+        var line2Reversed = new OriLine(2, 3, 0, 1, OriLine.Type.VALLEY);
 
-		assertEquals(line1, line2Reversed);
-		assertEquals(line1.hashCode(), line2Reversed.hashCode());
+        assertEquals(line1, line2Reversed);
+        assertEquals(line1.hashCode(), line2Reversed.hashCode());
 
-	}
+    }
 
-	@Test
-	void testAffineValues() {
-		Segment segment = new OriLine(new Vector2d(0, 2), new Vector2d(1, 0), OriLine.Type.MOUNTAIN);
+    @Test
+    void testAffineValues() {
+        Segment segment = new OriLine(new Vector2d(0, 2), new Vector2d(1, 0), OriLine.Type.MOUNTAIN);
 
-		assertEquals(1, segment.getAffineYValueAt(0.5), 1e-8);
-		assertEquals(0.5, segment.getAffineXValueAt(1), 1e-8);
-	}
+        assertEquals(1, segment.getAffineYValueAt(0.5), 1e-8);
+        assertEquals(0.5, segment.getAffineXValueAt(1), 1e-8);
+    }
 
-	@Test
-	void testCreateCanonical_noChange() {
-		var line = new OriLine(1, 2, 3, 4, Type.AUX);
-		var canonical = line.createCanonical();
+    @Test
+    void testCreateCanonical_noChange() {
+        var line = new OriLine(1, 2, 3, 4, Type.AUX);
+        var canonical = line.createCanonical();
 
-		assertEquals(canonical.getP0().getX(), 1);
-		assertEquals(canonical.getP0().getY(), 2);
-		assertEquals(canonical.getP1().getX(), 3);
-		assertEquals(canonical.getP1().getY(), 4);
-	}
+        assertEquals(canonical.getP0().getX(), 1);
+        assertEquals(canonical.getP0().getY(), 2);
+        assertEquals(canonical.getP1().getX(), 3);
+        assertEquals(canonical.getP1().getY(), 4);
+    }
 
-	@Test
-	void testCreateCanonical_reversed() {
-		var line = new OriLine(4, 3, 2, 1, Type.AUX);
-		var canonical = line.createCanonical();
+    @Test
+    void testCreateCanonical_reversed() {
+        var line = new OriLine(4, 3, 2, 1, Type.AUX);
+        var canonical = line.createCanonical();
 
-		assertEquals(canonical.getP0().getX(), 2);
-		assertEquals(canonical.getP0().getY(), 1);
-		assertEquals(canonical.getP1().getX(), 4);
-		assertEquals(canonical.getP1().getY(), 3);
-	}
+        assertEquals(canonical.getP0().getX(), 2);
+        assertEquals(canonical.getP0().getY(), 1);
+        assertEquals(canonical.getP1().getX(), 4);
+        assertEquals(canonical.getP1().getY(), 3);
+    }
 
 }

@@ -31,109 +31,109 @@ import oripa.value.OriLine;
  */
 class OriLineClipTest {
 
-	@Test
-	void testPositveSlope_2() {
-		var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
+    @Test
+    void testPositveSlope_2() {
+        var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
 
-		clip.add(new OriLine(1.2, 1.2, 3.2, 5.2, OriLine.Type.MOUNTAIN));
+        clip.add(new OriLine(1.2, 1.2, 3.2, 5.2, OriLine.Type.MOUNTAIN));
 
-		// clip is inclusive.
-		var clipped = clip.clip(new RectangleDomain(0, 0, 1, 1), 0);
-		assertTrue(!clipped.isEmpty());
+        // clip is inclusive.
+        var clipped = clip.clip(new RectangleDomain(0, 0, 1, 1), 0);
+        assertTrue(!clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(1, 1, 2, 2), 0);
-		assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(1, 1, 2, 2), 0);
+        assertTrue(!clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(1, 2, 2, 3), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 2, 3, 3), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 4, 3, 5), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(3, 4, 4, 5), 0);
-		assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(1, 2, 2, 3), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 2, 3, 3), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 4, 3, 5), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(3, 4, 4, 5), 0);
+        assertTrue(!clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(3, 5, 4, 6), 0);
-		assertTrue(!clipped.isEmpty());
-	}
+        clipped = clip.clip(new RectangleDomain(3, 5, 4, 6), 0);
+        assertTrue(!clipped.isEmpty());
+    }
 
-	@Test
-	void testNegativeSlope_2() {
-		var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
+    @Test
+    void testNegativeSlope_2() {
+        var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
 
-		clip.add(new OriLine(1.2, 5.2, 3.2, 1.2, OriLine.Type.MOUNTAIN));
+        clip.add(new OriLine(1.2, 5.2, 3.2, 1.2, OriLine.Type.MOUNTAIN));
 
-		// clip is inclusive.
-		var clipped = clip.clip(new RectangleDomain(0, 6, 1, 7), 0);
-		assertTrue(clipped.isEmpty());
+        // clip is inclusive.
+        var clipped = clip.clip(new RectangleDomain(0, 6, 1, 7), 0);
+        assertTrue(clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(1, 5, 2, 6), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(1, 4, 2, 5), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(1, 3, 2, 4), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 2, 3, 3), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 1, 3, 2), 0);
-		assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(1, 5, 2, 6), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(1, 4, 2, 5), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(1, 3, 2, 4), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 2, 3, 3), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 1, 3, 2), 0);
+        assertTrue(!clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(3, 1, 4, 2), 0);
-		assertTrue(!clipped.isEmpty());
-	}
+        clipped = clip.clip(new RectangleDomain(3, 1, 4, 2), 0);
+        assertTrue(!clipped.isEmpty());
+    }
 
-	@Test
-	void testVertical() {
-		var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
+    @Test
+    void testVertical() {
+        var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
 
-		clip.add(new OriLine(2.9, 4.5, 2.9, 8.9, OriLine.Type.MOUNTAIN));
+        clip.add(new OriLine(2.9, 4.5, 2.9, 8.9, OriLine.Type.MOUNTAIN));
 
-		// clip is inclusive.
-		var clipped = clip.clip(new RectangleDomain(2, 2, 3, 3), 0);
-		assertTrue(clipped.isEmpty());
+        // clip is inclusive.
+        var clipped = clip.clip(new RectangleDomain(2, 2, 3, 3), 0);
+        assertTrue(clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 4, 3, 5), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 5, 3, 6), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 6, 3, 7), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 7, 3, 8), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 8, 3, 9), 0);
-		assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 4, 3, 5), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 5, 3, 6), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 6, 3, 7), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 7, 3, 8), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 8, 3, 9), 0);
+        assertTrue(!clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(2, 9, 3, 10), 0);
-		assertTrue(clipped.isEmpty());
-	}
+        clipped = clip.clip(new RectangleDomain(2, 9, 3, 10), 0);
+        assertTrue(clipped.isEmpty());
+    }
 
-	@Test
-	void testHorizontal() {
-		var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
+    @Test
+    void testHorizontal() {
+        var clip = new OriLineClip(new RectangleDomain(0, 0, 16, 16));
 
-		clip.add(new OriLine(2.2, 3.4, 5.6, 3.4, OriLine.Type.MOUNTAIN));
+        clip.add(new OriLine(2.2, 3.4, 5.6, 3.4, OriLine.Type.MOUNTAIN));
 
-		// clip is inclusive.
-		var clipped = clip.clip(new RectangleDomain(0, 3, 1, 4), 0);
-		assertTrue(clipped.isEmpty());
+        // clip is inclusive.
+        var clipped = clip.clip(new RectangleDomain(0, 3, 1, 4), 0);
+        assertTrue(clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(1, 3, 2, 4), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(4, 3, 5, 4), 0);
-		assertTrue(!clipped.isEmpty());
-		clipped = clip.clip(new RectangleDomain(5, 3, 6, 4), 0);
-		assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(1, 3, 2, 4), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(2, 3, 3, 4), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(4, 3, 5, 4), 0);
+        assertTrue(!clipped.isEmpty());
+        clipped = clip.clip(new RectangleDomain(5, 3, 6, 4), 0);
+        assertTrue(!clipped.isEmpty());
 
-		clipped = clip.clip(new RectangleDomain(6, 3, 7, 4), 0);
-		assertTrue(clipped.isEmpty());
-	}
+        clipped = clip.clip(new RectangleDomain(6, 3, 7, 4), 0);
+        assertTrue(clipped.isEmpty());
+    }
 
 }

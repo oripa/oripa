@@ -26,9 +26,9 @@ import java.util.Collection;
  */
 public interface FileChooserFactory {
 
-	public SavingFileChooserView createForSaving(String path,
-			final Collection<FileFilterProperty> filterProperties);
+    public SavingFileChooserView createForSaving(String path,
+            final Collection<FileFilterProperty> filterProperties);
 
-	public LoadingFileChooserView createForLoading(String path,
-			final Collection<FileFilterProperty> filterProperties);
+    public LoadingFileChooserView createForLoading(String path,
+            final Collection<FileFilterProperty> filterProperties);
 }

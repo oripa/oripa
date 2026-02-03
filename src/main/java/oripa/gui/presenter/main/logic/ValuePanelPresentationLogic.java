@@ -29,30 +29,30 @@ import oripa.util.MathUtil;
  */
 public class ValuePanelPresentationLogic {
 
-	private final UIPanelView view;
-	private final PaintContext paintContext;
+    private final UIPanelView view;
+    private final PaintContext paintContext;
 
-	@Inject
-	public ValuePanelPresentationLogic(
-			final UIPanelView view,
-			final PaintContext paintContext) {
+    @Inject
+    public ValuePanelPresentationLogic(
+            final UIPanelView view,
+            final PaintContext paintContext) {
 
-		this.view = view;
-		this.paintContext = paintContext;
-	}
+        this.view = view;
+        this.paintContext = paintContext;
+    }
 
-	/**
-	 * Updates text fields' format setting based on eps in context.
-	 */
-	public void updateValuePanelFractionDigits() {
-		view.setValuePanelFractionDigits(
-				computeValuePanelFractionDigits(paintContext.getPointEps()),
-				computeValuePanelFractionDigits(MathUtil.angleDegreeEps()));
-	}
+    /**
+     * Updates text fields' format setting based on eps in context.
+     */
+    public void updateValuePanelFractionDigits() {
+        view.setValuePanelFractionDigits(
+                computeValuePanelFractionDigits(paintContext.getPointEps()),
+                computeValuePanelFractionDigits(MathUtil.angleDegreeEps()));
+    }
 
-	private int computeValuePanelFractionDigits(final double eps) {
-		// 1 digit is added for precision.
-		return (int) Math.floor(Math.abs(Math.log10(eps))) + 1;
-	}
+    private int computeValuePanelFractionDigits(final double eps) {
+        // 1 digit is added for precision.
+        return (int) Math.floor(Math.abs(Math.log10(eps))) + 1;
+    }
 
 }

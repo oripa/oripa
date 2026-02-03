@@ -10,41 +10,41 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class AngleMeasuringAction extends AbstractGraphicMouseAction {
 
-	private final ByValueContext byValueContext;
+    private final ByValueContext byValueContext;
 
-	public AngleMeasuringAction(final ByValueContext byValueContext) {
-		setActionState(new SelectingVertexForAngle(byValueContext));
-		this.byValueContext = byValueContext;
-	}
+    public AngleMeasuringAction(final ByValueContext byValueContext) {
+        setActionState(new SelectingVertexForAngle(byValueContext));
+        this.byValueContext = byValueContext;
+    }
 
-	@Override
-	public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext,
-			final PaintContext paintContext,
-			final boolean differentAction) {
-		int vertexCountBeforeAction = paintContext.getVertexCount();
+    @Override
+    public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext,
+            final PaintContext paintContext,
+            final boolean differentAction) {
+        int vertexCountBeforeAction = paintContext.getVertexCount();
 
-		GraphicMouseAction action;
-		action = super.onLeftClick(viewContext, paintContext, differentAction);
+        GraphicMouseAction action;
+        action = super.onLeftClick(viewContext, paintContext, differentAction);
 
-		int vertexCountAfterAction = paintContext.getVertexCount();
+        int vertexCountAfterAction = paintContext.getVertexCount();
 
-		if (isActionPerformed(vertexCountBeforeAction, vertexCountAfterAction)) {
-			action = new LineByValueAction(byValueContext);
-		}
+        if (isActionPerformed(vertexCountBeforeAction, vertexCountAfterAction)) {
+            action = new LineByValueAction(byValueContext);
+        }
 
-		return action;
-	}
+        return action;
+    }
 
-	private boolean isActionPerformed(final int countBeforeAction, final int countAfterAction) {
-		return countBeforeAction > 0 && countAfterAction == 0;
-	}
+    private boolean isActionPerformed(final int countBeforeAction, final int countAfterAction) {
+        return countBeforeAction > 0 && countAfterAction == 0;
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		drawPickCandidateVertex(drawer, viewContext, paintContext);
+        drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-		super.onDraw(drawer, viewContext, paintContext);
-	}
+        super.onDraw(drawer, viewContext, paintContext);
+    }
 }

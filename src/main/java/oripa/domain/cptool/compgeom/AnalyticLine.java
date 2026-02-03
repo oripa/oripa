@@ -27,70 +27,70 @@ import oripa.value.OriLine;
  *
  */
 public class AnalyticLine implements AngleInterceptGettable {
-	private final OriLine line;
-	private final double angle;
-	private final double intercept;
+    private final OriLine line;
+    private final double angle;
+    private final double intercept;
 
-	public AnalyticLine(final OriLine line) {
-		this.line = line;
+    public AnalyticLine(final OriLine line) {
+        this.line = line;
 
-		var p0 = line.getP0();
-		var p1 = line.getP1();
+        var p0 = line.getP0();
+        var p1 = line.getP1();
 
-		var angle = Math.atan2(p1.getY() - p0.getY(), p1.getX() - p0.getX());
-		// limit the angle 0 to PI.
-		if (angle < 0) {
-			angle += Math.PI;
-		}
-		// a line with angle PI is the same as one with angle 0.
-		if (Math.PI - angle < MathUtil.angleRadianEps()) {
-			angle = 0;
-		}
-		this.angle = angle;
+        var angle = Math.atan2(p1.getY() - p0.getY(), p1.getX() - p0.getX());
+        // limit the angle 0 to PI.
+        if (angle < 0) {
+            angle += Math.PI;
+        }
+        // a line with angle PI is the same as one with angle 0.
+        if (Math.PI - angle < MathUtil.angleRadianEps()) {
+            angle = 0;
+        }
+        this.angle = angle;
 
-		if (isVertical()) {
-			// use x-intercept
-			intercept = p0.getX();
-		} else {
-			// use y-intercept
-			intercept = line.getAffineYValueAt(0);
-		}
-	}
+        if (isVertical()) {
+            // use x-intercept
+            intercept = p0.getX();
+        } else {
+            // use y-intercept
+            intercept = line.getAffineYValueAt(0);
+        }
+    }
 
-	public boolean isVertical() {
-		return MathUtil.areRadianEqual(Math.PI / 2, angle);
-	}
+    public boolean isVertical() {
+        return MathUtil.areRadianEqual(Math.PI / 2, angle);
+    }
 
-	/**
-	 * @return line
-	 */
-	public OriLine getLine() {
-		return line;
-	}
+    /**
+     * @return line
+     */
+    public OriLine getLine() {
+        return line;
+    }
 
-	/**
-	 * @return angle
-	 */
-	@Override
-	public double getAngle() {
-		return angle;
-	}
+    /**
+     * @return angle
+     */
+    @Override
+    public double getAngle() {
+        return angle;
+    }
 
-	/**
-	 * @return intercept
-	 */
-	@Override
-	public double getIntercept() {
-		return intercept;
-	}
+    /**
+     * @return intercept
+     */
+    @Override
+    public double getIntercept() {
+        return intercept;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "line: " + line + " angle: " + angle + " intercept: " + intercept;
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "line: " + line + " angle: " + angle + " intercept: " + intercept;
+    }
 }

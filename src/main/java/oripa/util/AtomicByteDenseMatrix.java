@@ -26,49 +26,49 @@ import java.util.stream.IntStream;
  *
  */
 public class AtomicByteDenseMatrix implements ByteMatrix {
-	private final AtomicInteger[][] values;
+    private final AtomicInteger[][] values;
 
-	public AtomicByteDenseMatrix(final int rowCount, final int columnCount) {
-		values = new AtomicInteger[rowCount][columnCount];
+    public AtomicByteDenseMatrix(final int rowCount, final int columnCount) {
+        values = new AtomicInteger[rowCount][columnCount];
 
-		IntStream.range(0, rowCount).parallel().forEach(i -> {
-			IntStream.range(0, columnCount).parallel().forEach(j -> {
-				values[i][j] = new AtomicInteger();
-			});
-		});
-	}
+        IntStream.range(0, rowCount).parallel().forEach(i -> {
+            IntStream.range(0, columnCount).parallel().forEach(j -> {
+                values[i][j] = new AtomicInteger();
+            });
+        });
+    }
 
-	@Override
-	public void set(final int i, final int j, final byte value) {
-		values[i][j].set(value);
-	}
+    @Override
+    public void set(final int i, final int j, final byte value) {
+        values[i][j].set(value);
+    }
 
-	@Override
-	public byte get(final int i, final int j) {
-		return values[i][j].byteValue();
-	}
+    @Override
+    public byte get(final int i, final int j) {
+        return values[i][j].byteValue();
+    }
 
-	@Override
-	public ByteMatrix clone() {
-		var matrix = new AtomicByteDenseMatrix(values.length, values[0].length);
+    @Override
+    public ByteMatrix clone() {
+        var matrix = new AtomicByteDenseMatrix(values.length, values[0].length);
 
-		IntStream.range(0, matrix.rowCount()).parallel().forEach(i -> {
-			IntStream.range(0, matrix.columnCount()).parallel().forEach(j -> {
-				matrix.values[i][j].set(values[i][j].get());
-			});
-		});
+        IntStream.range(0, matrix.rowCount()).parallel().forEach(i -> {
+            IntStream.range(0, matrix.columnCount()).parallel().forEach(j -> {
+                matrix.values[i][j].set(values[i][j].get());
+            });
+        });
 
-		return matrix;
-	}
+        return matrix;
+    }
 
-	@Override
-	public int rowCount() {
-		return values.length;
-	}
+    @Override
+    public int rowCount() {
+        return values.length;
+    }
 
-	@Override
-	public int columnCount() {
-		return values[0].length;
-	}
+    @Override
+    public int columnCount() {
+        return values[0].length;
+    }
 
 }

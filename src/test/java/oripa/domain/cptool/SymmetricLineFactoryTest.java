@@ -33,44 +33,44 @@ import oripa.vecmath.Vector2d;
  *
  */
 class SymmetricLineFactoryTest {
-	SymmetricLineFactory factory = new SymmetricLineFactory();
-	static final double EPS = 1e-8;
+    SymmetricLineFactory factory = new SymmetricLineFactory();
+    static final double EPS = 1e-8;
 
-	@Test
-	void testAutoWalk_XShape() throws PainterCommandFailedException {
-		// X shape
-		var lines = List.of(
-				new OriLine(0, 0, 100, 100, Type.MOUNTAIN),
-				new OriLine(0, 0, 100, -100, Type.MOUNTAIN),
-				new OriLine(0, 0, -100, 100, Type.MOUNTAIN),
-				new OriLine(0, 0, -100, -100, Type.MOUNTAIN));
+    @Test
+    void testAutoWalk_XShape() throws PainterCommandFailedException {
+        // X shape
+        var lines = List.of(
+                new OriLine(0, 0, 100, 100, Type.MOUNTAIN),
+                new OriLine(0, 0, 100, -100, Type.MOUNTAIN),
+                new OriLine(0, 0, -100, 100, Type.MOUNTAIN),
+                new OriLine(0, 0, -100, -100, Type.MOUNTAIN));
 
-		var symmetricLines = factory.createSymmetricLineAutoWalk(
-				new Vector2d(-50, 50), new Vector2d(50, 50), new Vector2d(0, 0), lines, Type.VALLEY, EPS);
+        var symmetricLines = factory.createSymmetricLineAutoWalk(
+                new Vector2d(-50, 50), new Vector2d(50, 50), new Vector2d(0, 0), lines, Type.VALLEY, EPS);
 
-		assertEquals(3, symmetricLines.size());
+        assertEquals(3, symmetricLines.size());
 
-		assertTrue(symmetricLines.contains(new OriLine(-50, -50, -50, 50, Type.VALLEY)));
-		assertTrue(symmetricLines.contains(new OriLine(-50, -50, 50, -50, Type.VALLEY)));
-		assertTrue(symmetricLines.contains(new OriLine(50, 50, 50, -50, Type.VALLEY)));
+        assertTrue(symmetricLines.contains(new OriLine(-50, -50, -50, 50, Type.VALLEY)));
+        assertTrue(symmetricLines.contains(new OriLine(-50, -50, 50, -50, Type.VALLEY)));
+        assertTrue(symmetricLines.contains(new OriLine(50, 50, 50, -50, Type.VALLEY)));
 
-	}
+    }
 
-	@Test
-	void testAutoWalk_canGoThroughEndPoints() throws PainterCommandFailedException {
-		var lines = List.of(
-				new OriLine(0, 0, 0, 100, Type.MOUNTAIN),
-				new OriLine(50, 0, 50, 100, Type.MOUNTAIN),
-				new OriLine(150, 100, 150, 0, Type.MOUNTAIN),
-				new OriLine(200, 100, 200, 0, Type.MOUNTAIN));
+    @Test
+    void testAutoWalk_canGoThroughEndPoints() throws PainterCommandFailedException {
+        var lines = List.of(
+                new OriLine(0, 0, 0, 100, Type.MOUNTAIN),
+                new OriLine(50, 0, 50, 100, Type.MOUNTAIN),
+                new OriLine(150, 100, 150, 0, Type.MOUNTAIN),
+                new OriLine(200, 100, 200, 0, Type.MOUNTAIN));
 
-		var symmetricLines = factory.createSymmetricLineAutoWalk(
-				new Vector2d(-50, 0), new Vector2d(0, 0), new Vector2d(0, 50), lines, Type.VALLEY, EPS);
+        var symmetricLines = factory.createSymmetricLineAutoWalk(
+                new Vector2d(-50, 0), new Vector2d(0, 0), new Vector2d(0, 50), lines, Type.VALLEY, EPS);
 
-		assertEquals(3, symmetricLines.size());
+        assertEquals(3, symmetricLines.size());
 
-		assertTrue(symmetricLines.contains(new OriLine(0, 0, 50, 0, Type.VALLEY)));
-		assertTrue(symmetricLines.contains(new OriLine(50, 0, 150, 0, Type.VALLEY)));
-		assertTrue(symmetricLines.contains(new OriLine(150, 0, 200, 0, Type.VALLEY)));
-	}
+        assertTrue(symmetricLines.contains(new OriLine(0, 0, 50, 0, Type.VALLEY)));
+        assertTrue(symmetricLines.contains(new OriLine(50, 0, 150, 0, Type.VALLEY)));
+        assertTrue(symmetricLines.contains(new OriLine(150, 0, 200, 0, Type.VALLEY)));
+    }
 }

@@ -32,105 +32,105 @@ import org.slf4j.LoggerFactory;
  * @param <Backup>
  */
 public abstract class AbstractUndoManager<Backup> {
-	private static final Logger logger = LoggerFactory.getLogger(AbstractUndoManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractUndoManager.class);
 
-	private final List<UndoInfo<Backup>> undoList = Collections
-			.synchronizedList(new ArrayList<UndoInfo<Backup>>());
-	private int index = 0;
-	private int endIndex = 0;
-	private boolean changed = false;
+    private final List<UndoInfo<Backup>> undoList = Collections
+            .synchronizedList(new ArrayList<UndoInfo<Backup>>());
+    private int index = 0;
+    private int endIndex = 0;
+    private boolean changed = false;
 
-	/**
-	 * Constructor
-	 */
-	public AbstractUndoManager() {
-	}
+    /**
+     * Constructor
+     */
+    public AbstractUndoManager() {
+    }
 
-	protected abstract UndoInfo<Backup> createUndoInfo(Backup info);
+    protected abstract UndoInfo<Backup> createUndoInfo(Backup info);
 
-	public void push(final Backup info) {
-		push(createUndoInfo(info));
-	}
+    public void push(final Backup info) {
+        push(createUndoInfo(info));
+    }
 
-	private void set(final int i, final UndoInfo<Backup> info) {
-		if (i == undoList.size()) {
-			undoList.add(info);
-		} else {
-			undoList.set(i, info);
-		}
-	}
+    private void set(final int i, final UndoInfo<Backup> info) {
+        if (i == undoList.size()) {
+            undoList.add(info);
+        } else {
+            undoList.set(i, info);
+        }
+    }
 
-	private synchronized void push(final UndoInfo<Backup> info) {
-		set(index, info);
-		index++;
-		endIndex = index;
+    private synchronized void push(final UndoInfo<Backup> info) {
+        set(index, info);
+        index++;
+        endIndex = index;
 
-		changed = true;
-	}
+        changed = true;
+    }
 
-	/**
-	 *
-	 * @param info
-	 *            current data which may be stored as the start of undo
-	 *            sequence.
-	 * @return
-	 */
-	public synchronized Optional<UndoInfo<Backup>> undo(final Backup info) {
-		if (!canUndo()) {
-			logger.debug("can't undo: " + indexLog());
-			return Optional.empty();
-		}
+    /**
+     *
+     * @param info
+     *            current data which may be stored as the start of undo
+     *            sequence.
+     * @return
+     */
+    public synchronized Optional<UndoInfo<Backup>> undo(final Backup info) {
+        if (!canUndo()) {
+            logger.debug("can't undo: " + indexLog());
+            return Optional.empty();
+        }
 
-		changed = true;
+        changed = true;
 
-		if (index == endIndex) {
-			logger.debug("set the start of undo sequence: " + indexLog());
-			set(index, createUndoInfo(info));
+        if (index == endIndex) {
+            logger.debug("set the start of undo sequence: " + indexLog());
+            set(index, createUndoInfo(info));
 
-		}
+        }
 
-		logger.debug("before undo: " + indexLog());
+        logger.debug("before undo: " + indexLog());
 
-		return Optional.of(undoList.get(--index));
-	}
+        return Optional.of(undoList.get(--index));
+    }
 
-	public synchronized Optional<UndoInfo<Backup>> redo() {
-		if (!canRedo()) {
-			logger.debug("can't redo: " + indexLog());
-			return Optional.empty();
-		}
+    public synchronized Optional<UndoInfo<Backup>> redo() {
+        if (!canRedo()) {
+            logger.debug("can't redo: " + indexLog());
+            return Optional.empty();
+        }
 
-		changed = true;
+        changed = true;
 
-		logger.debug("before redo: " + indexLog());
+        logger.debug("before redo: " + indexLog());
 
-		return Optional.of(undoList.get(++index));
-	}
+        return Optional.of(undoList.get(++index));
+    }
 
-	public boolean isChanged() {
-		return changed;
-	}
+    public boolean isChanged() {
+        return changed;
+    }
 
-	public void clearChanged() {
-		changed = false;
-	}
+    public void clearChanged() {
+        changed = false;
+    }
 
-	public void clear() {
-		clearChanged();
-		undoList.clear();
-		index = 0;
-		endIndex = 0;
-	}
+    public void clear() {
+        clearChanged();
+        undoList.clear();
+        index = 0;
+        endIndex = 0;
+    }
 
-	private String indexLog() {
-		return "index = " + index + ", endIndex = " + endIndex;
-	}
+    private String indexLog() {
+        return "index = " + index + ", endIndex = " + endIndex;
+    }
 
-	public boolean canUndo() {
-		return index > 0;
-	}
+    public boolean canUndo() {
+        return index > 0;
+    }
 
-	public boolean canRedo() {
-		return index < endIndex;
-	}
+    public boolean canRedo() {
+        return index < endIndex;
+    }
 }

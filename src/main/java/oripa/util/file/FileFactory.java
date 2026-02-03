@@ -25,11 +25,11 @@ import java.io.File;
  *
  */
 public class FileFactory {
-	public File create(final String path) {
-		return new File(path);
-	}
+    public File create(final String path) {
+        return new File(path);
+    }
 
-	public File create(final String directory, final String fileName) {
-		return new File(directory, fileName);
-	}
+    public File create(final String directory, final String fileName) {
+        return new File(directory, fileName);
+    }
 }

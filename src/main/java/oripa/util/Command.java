@@ -24,5 +24,5 @@ package oripa.util;
  */
 @FunctionalInterface
 public interface Command {
-	void execute();
+    void execute();
 }

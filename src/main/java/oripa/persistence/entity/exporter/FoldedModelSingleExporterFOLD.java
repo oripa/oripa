@@ -34,25 +34,25 @@ import oripa.persistence.foldformat.FoldedModelElementConverter;
  */
 public class FoldedModelSingleExporterFOLD implements Exporter<FoldedModelEntity> {
 
-	@Override
-	public boolean export(final FoldedModelEntity entity, final String filePath, final Object configObj)
-			throws IOException, IllegalArgumentException {
-		var elementConverter = new FoldedModelElementConverter();
-		var factory = new FoldedModelFOLDFactory(elementConverter);
+    @Override
+    public boolean export(final FoldedModelEntity entity, final String filePath, final Object configObj)
+            throws IOException, IllegalArgumentException {
+        var elementConverter = new FoldedModelElementConverter();
+        var factory = new FoldedModelFOLDFactory(elementConverter);
 
-		var origamiModel = entity.getOrigamiModel();
+        var origamiModel = entity.getOrigamiModel();
 
-		var foldFormat = factory.createWithoutFaceOrders(origamiModel);
+        var foldFormat = factory.createWithoutFaceOrders(origamiModel);
 
-		foldFormat.setFaceOrders(elementConverter.toFaceOrders(origamiModel, entity.getOverlapRelation()));
+        foldFormat.setFaceOrders(elementConverter.toFaceOrders(origamiModel, entity.getOverlapRelation()));
 
-		try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
-			var gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.toJson(foldFormat, writer);
-			writer.flush();
-		}
+        try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
+            var gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(foldFormat, writer);
+            writer.flush();
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

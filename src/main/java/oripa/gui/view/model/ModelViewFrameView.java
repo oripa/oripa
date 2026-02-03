@@ -30,39 +30,39 @@ import oripa.gui.view.FrameView;
  */
 public interface ModelViewFrameView extends FrameView {
 
-	ModelViewScreenView getModelScreenView();
+    ModelViewScreenView getModelScreenView();
 
-	void setModelCount(int count);
+    void setModelCount(int count);
 
-	void setModel(final OrigamiModel origamiModel);
+    void setModel(final OrigamiModel origamiModel);
 
-	void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+    void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
-	void removeModelIndexChangeListeners();
+    void removeModelIndexChangeListeners();
 
-	void setOnCloseListener(final Consumer<FrameView> listener);
+    void setOnCloseListener(final Consumer<FrameView> listener);
 
-	void selectModel(final int index);
+    void selectModel(final int index);
 
-	void addFlipModelButtonListener(Runnable listener);
+    void addFlipModelButtonListener(Runnable listener);
 
-	void addCrossLineButtonListener(Runnable listener);
+    void addCrossLineButtonListener(Runnable listener);
 
-	void addExportDXFButtonListener(Runnable listener);
+    void addExportDXFButtonListener(Runnable listener);
 
-	void addExportOBJButtonListener(Runnable listener);
+    void addExportOBJButtonListener(Runnable listener);
 
-	void addExportSVGButtonListener(Runnable listener);
+    void addExportSVGButtonListener(Runnable listener);
 
-	void addFillAlphaButtonListener(Runnable listener);
+    void addFillAlphaButtonListener(Runnable listener);
 
-	void addFillNoneButtonListener(Runnable listener);
+    void addFillNoneButtonListener(Runnable listener);
 
-	boolean isCrossLineVisible();
+    boolean isCrossLineVisible();
 
-	void setModelDisplayMode(ModelDisplayMode mode);
+    void setModelDisplayMode(ModelDisplayMode mode);
 
-	void addModelSwitchListener(Consumer<Integer> listener);
+    void addModelSwitchListener(Consumer<Integer> listener);
 
-	void showExportErrorMessage(Exception e);
+    void showExportErrorMessage(Exception e);
 }

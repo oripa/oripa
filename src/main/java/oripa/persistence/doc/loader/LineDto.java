@@ -22,14 +22,14 @@ import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 class LineDto {
-	OriLine.Type type;
-	double p0x, p0y, p1x, p1y;
+    OriLine.Type type;
+    double p0x, p0y, p1x, p1y;
 
-	Vector2d getP0() {
-		return new Vector2d(p0x, p0y);
-	}
+    Vector2d getP0() {
+        return new Vector2d(p0x, p0y);
+    }
 
-	Vector2d getP1() {
-		return new Vector2d(p1x, p1y);
-	}
+    Vector2d getP1() {
+        return new Vector2d(p1x, p1y);
+    }
 }

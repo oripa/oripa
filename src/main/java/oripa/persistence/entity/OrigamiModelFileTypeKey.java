@@ -31,70 +31,70 @@ import oripa.persistence.filetool.Loader;
  *
  */
 enum OrigamiModelFileTypeKey implements FileTypePropertyWithAccessor<OrigamiModel> {
-	OBJ_MODEL("obj", 1, null, new OrigamiModelExporterOBJ(), "obj"),
-	DXF_MODEL("dxf", 2, null, new OrigamiModelExporterDXF(), "dxf"),
-	SVG_MODEL("svg", 3, null, new OrigamiModelExporterSVG(), "svg");
+    OBJ_MODEL("obj", 1, null, new OrigamiModelExporterOBJ(), "obj"),
+    DXF_MODEL("dxf", 2, null, new OrigamiModelExporterDXF(), "dxf"),
+    SVG_MODEL("svg", 3, null, new OrigamiModelExporterSVG(), "svg");
 
-	private final String keyText;
-	private final Integer order;
-	private final String[] extensions;
-	private final Loader<OrigamiModel> loader;
-	private final Exporter<OrigamiModel> exporter;
+    private final String keyText;
+    private final Integer order;
+    private final String[] extensions;
+    private final Loader<OrigamiModel> loader;
+    private final Exporter<OrigamiModel> exporter;
 
-	/**
-	 *
-	 * Constructor
-	 *
-	 * @param key
-	 *            key string
-	 * @param order
-	 *            defines the order of members.
-	 * @param extensions
-	 *            which should be managed as that file type.
-	 */
-	OrigamiModelFileTypeKey(final String key, final Integer order,
-			final Loader<OrigamiModel> loader,
-			final Exporter<OrigamiModel> exporter,
-			final String... extensions) {
-		this.keyText = key;
-		this.order = order;
-		this.loader = loader;
-		this.exporter = exporter;
-		this.extensions = extensions;
-	}
+    /**
+     *
+     * Constructor
+     *
+     * @param key
+     *            key string
+     * @param order
+     *            defines the order of members.
+     * @param extensions
+     *            which should be managed as that file type.
+     */
+    OrigamiModelFileTypeKey(final String key, final Integer order,
+            final Loader<OrigamiModel> loader,
+            final Exporter<OrigamiModel> exporter,
+            final String... extensions) {
+        this.keyText = key;
+        this.order = order;
+        this.loader = loader;
+        this.exporter = exporter;
+        this.extensions = extensions;
+    }
 
-	@Override
-	public String getKeyText() {
-		return keyText;
-	}
+    @Override
+    public String getKeyText() {
+        return keyText;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.doc.FileTypeProperty#getExtensions()
-	 */
-	@Override
-	public String[] getExtensions() {
-		return extensions;
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.persistent.doc.FileTypeProperty#getExtensions()
+     */
+    @Override
+    public String[] getExtensions() {
+        return extensions;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
-	 */
-	@Override
-	public Integer getOrder() {
-		return order;
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
+     */
+    @Override
+    public Integer getOrder() {
+        return order;
+    }
 
-	@Override
-	public Loader<OrigamiModel> getLoader() {
-		return loader;
-	}
+    @Override
+    public Loader<OrigamiModel> getLoader() {
+        return loader;
+    }
 
-	@Override
-	public Exporter<OrigamiModel> getExporter() {
-		return exporter;
-	}
+    @Override
+    public Exporter<OrigamiModel> getExporter() {
+        return exporter;
+    }
 }

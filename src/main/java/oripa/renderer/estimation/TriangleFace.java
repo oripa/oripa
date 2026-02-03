@@ -29,86 +29,86 @@ import oripa.vecmath.Vector2d;
 
 class TriangleFace {
 
-	public TriangleVertex[] v;
-	private final OriFace originalFace;
-	private final OriFace convertedFace;
+    public TriangleVertex[] v;
+    private final OriFace originalFace;
+    private final OriFace convertedFace;
 
-	private final List<Integer> halfEdgeIndices;
+    private final List<Integer> halfEdgeIndices;
 
-	public TriangleFace(final Face f, final List<Integer> halfEdgeIndices) {
-		originalFace = f.getOriginalFace();
-		convertedFace = f.getConvertedFace();
+    public TriangleFace(final Face f, final List<Integer> halfEdgeIndices) {
+        originalFace = f.getOriginalFace();
+        convertedFace = f.getConvertedFace();
 
-		v = new TriangleVertex[3];
-		for (int i = 0; i < 3; i++) {
-			v[i] = new TriangleVertex();
-		}
+        v = new TriangleVertex[3];
+        for (int i = 0; i < 3; i++) {
+            v[i] = new TriangleVertex();
+        }
 
-		if (halfEdgeIndices.size() != 3) {
-			throw new IllegalArgumentException();
-		}
+        if (halfEdgeIndices.size() != 3) {
+            throw new IllegalArgumentException();
+        }
 
-		this.halfEdgeIndices = new ArrayList<>(halfEdgeIndices);
-	}
+        this.halfEdgeIndices = new ArrayList<>(halfEdgeIndices);
+    }
 
-	/**
-	 * Sets the current position of face vertices, which are expected to be the
-	 * ones after fold, to each vertex of this triangle face.
-	 */
-	public void initializePositions() {
-		for (int i = 0; i < halfEdgeIndices.size(); i++) {
-			var he = convertedFace.getHalfedge(halfEdgeIndices.get(i));
-			v[i].p = he.getPosition();
-		}
-	}
+    /**
+     * Sets the current position of face vertices, which are expected to be the
+     * ones after fold, to each vertex of this triangle face.
+     */
+    public void initializePositions() {
+        for (int i = 0; i < halfEdgeIndices.size(); i++) {
+            var he = convertedFace.getHalfedge(halfEdgeIndices.get(i));
+            v[i].p = he.getPosition();
+        }
+    }
 
-	/**
-	 *
-	 * @param index
-	 *            index of the vertices of this triangle. 0 <= index < 3.
-	 * @param x
-	 *            x-coordinate value to be set.
-	 * @param y
-	 *            y-coordinate value to be set.
-	 */
-	public void setPosition(final int index, final double x, final double y) {
-		v[index].p = new Vector2d(x, y);
-	}
+    /**
+     *
+     * @param index
+     *            index of the vertices of this triangle. 0 <= index < 3.
+     * @param x
+     *            x-coordinate value to be set.
+     * @param y
+     *            y-coordinate value to be set.
+     */
+    public void setPosition(final int index, final double x, final double y) {
+        v[index].p = new Vector2d(x, y);
+    }
 
-	/**
-	 *
-	 * @param index
-	 *            index of the vertices of this triangle. 0 <= index < 3.
-	 * @return the vertex at the given index.
-	 */
-	public Vector2d getPosition(final int index) {
-		return v[index].p;
-	}
+    /**
+     *
+     * @param index
+     *            index of the vertices of this triangle. 0 <= index < 3.
+     * @return the vertex at the given index.
+     */
+    public Vector2d getPosition(final int index) {
+        return v[index].p;
+    }
 
-	/**
-	 * Sets the normalized color and parameters for rendering to the vertices of
-	 * this triangle face.
-	 *
-	 * @param colorMap
-	 *            a mapping halfedges of the original face to normalized colors.
-	 *            This parameter is expected to be created by
-	 *            {@link VertexColorMapFactory#createVertexColors(OriFace, List, List, boolean)}.
-	 * @param paperDomain
-	 *            rectangle domain of the sheet of paper before fold.
-	 */
-	public void prepareColor(final Map<OriHalfedge, FloatingRGB> colorMap, final RectangleDomain paperDomain) {
-		for (int i = 0; i < halfEdgeIndices.size(); i++) {
-			var he = originalFace.getHalfedge(halfEdgeIndices.get(i));
-			v[i].color = new FloatingRGB(colorMap.get(he));
+    /**
+     * Sets the normalized color and parameters for rendering to the vertices of
+     * this triangle face.
+     *
+     * @param colorMap
+     *            a mapping halfedges of the original face to normalized colors.
+     *            This parameter is expected to be created by
+     *            {@link VertexColorMapFactory#createVertexColors(OriFace, List, List, boolean)}.
+     * @param paperDomain
+     *            rectangle domain of the sheet of paper before fold.
+     */
+    public void prepareColor(final Map<OriHalfedge, FloatingRGB> colorMap, final RectangleDomain paperDomain) {
+        for (int i = 0; i < halfEdgeIndices.size(); i++) {
+            var he = originalFace.getHalfedge(halfEdgeIndices.get(i));
+            v[i].color = new FloatingRGB(colorMap.get(he));
 
-			double x = (he.getPositionBeforeFolding().getX() - paperDomain.getCenterX()) / paperDomain.getWidth();
-			double y = (he.getPositionBeforeFolding().getY() - paperDomain.getCenterY()) / paperDomain.getHeight();
+            double x = (he.getPositionBeforeFolding().getX() - paperDomain.getCenterX()) / paperDomain.getWidth();
+            double y = (he.getPositionBeforeFolding().getY() - paperDomain.getCenterY()) / paperDomain.getHeight();
 
-			v[i].uv = new Vector2d(x + 0.5, y + 0.5);
-		}
-	}
+            v[i].uv = new Vector2d(x + 0.5, y + 0.5);
+        }
+    }
 
-	public boolean isFaceFront() {
-		return originalFace.isFaceFront();
-	}
+    public boolean isFaceFront() {
+        return originalFace.isFaceFront();
+    }
 }

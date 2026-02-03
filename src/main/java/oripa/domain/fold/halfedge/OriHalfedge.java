@@ -35,181 +35,181 @@ import oripa.vecmath.Vector2d;
  */
 public class OriHalfedge {
 
-	private OriHalfedge next = null;
-	private OriHalfedge previous = null;
-	private OriHalfedge pair = null;
-	private OriEdge edge = null;
-	private final OriVertex vertex;
-	private final OriFace face;
+    private OriHalfedge next = null;
+    private OriHalfedge previous = null;
+    private OriHalfedge pair = null;
+    private OriEdge edge = null;
+    private final OriVertex vertex;
+    private final OriFace face;
 
-	/**
-	 * mountain/valley value for constructing edges.
-	 */
-	private int temporaryType = 0;
+    /**
+     * mountain/valley value for constructing edges.
+     */
+    private int temporaryType = 0;
 
-	/**
-	 * temporary position while folding
-	 */
-	private Vector2d positionWhileFolding = new Vector2d(0, 0);
+    /**
+     * temporary position while folding
+     */
+    private Vector2d positionWhileFolding = new Vector2d(0, 0);
 
-	/**
-	 * position for display after fold.
-	 */
-	private Vector2d positionForDisplay = new Vector2d(0, 0);
+    /**
+     * position for display after fold.
+     */
+    private Vector2d positionForDisplay = new Vector2d(0, 0);
 
-	public OriHalfedge(final OriVertex v, final OriFace f) {
-		vertex = v;
-		face = f;
-		positionWhileFolding = v.getPosition();
-	}
+    public OriHalfedge(final OriVertex v, final OriFace f) {
+        vertex = v;
+        face = f;
+        positionWhileFolding = v.getPosition();
+    }
 
-	/**
-	 * @return next
-	 */
-	public OriHalfedge getNext() {
-		return next;
-	}
+    /**
+     * @return next
+     */
+    public OriHalfedge getNext() {
+        return next;
+    }
 
-	/**
-	 * @param next
-	 *            Sets next
-	 */
-	public void setNext(final OriHalfedge next) {
-		this.next = next;
-	}
+    /**
+     * @param next
+     *            Sets next
+     */
+    public void setNext(final OriHalfedge next) {
+        this.next = next;
+    }
 
-	/**
-	 * @return previous
-	 */
-	public OriHalfedge getPrevious() {
-		return previous;
-	}
+    /**
+     * @return previous
+     */
+    public OriHalfedge getPrevious() {
+        return previous;
+    }
 
-	/**
-	 * @param previous
-	 *            Sets previous
-	 */
-	void setPrevious(final OriHalfedge previous) {
-		this.previous = previous;
-	}
+    /**
+     * @param previous
+     *            Sets previous
+     */
+    void setPrevious(final OriHalfedge previous) {
+        this.previous = previous;
+    }
 
-	/**
-	 * @return pair of this half-edge.
-	 */
-	public Optional<OriHalfedge> getPair() {
-		return Optional.ofNullable(pair);
-	}
+    /**
+     * @return pair of this half-edge.
+     */
+    public Optional<OriHalfedge> getPair() {
+        return Optional.ofNullable(pair);
+    }
 
-	/**
-	 * @param pair
-	 *            Sets pair of this half-edge.
-	 */
-	void setPair(final OriHalfedge pair) {
-		this.pair = pair;
-	}
+    /**
+     * @param pair
+     *            Sets pair of this half-edge.
+     */
+    void setPair(final OriHalfedge pair) {
+        this.pair = pair;
+    }
 
-	/**
-	 * Gets the underlying edge.
-	 *
-	 * @return edge
-	 */
-	public OriEdge getEdge() {
-		return edge;
-	}
+    /**
+     * Gets the underlying edge.
+     *
+     * @return edge
+     */
+    public OriEdge getEdge() {
+        return edge;
+    }
 
-	/**
-	 * @param edge
-	 *            Sets the underlying edge
-	 */
-	public void setEdge(final OriEdge edge) {
-		this.edge = edge;
-	}
+    /**
+     * @param edge
+     *            Sets the underlying edge
+     */
+    public void setEdge(final OriEdge edge) {
+        this.edge = edge;
+    }
 
-	/**
-	 *
-	 * @return the line type of the underlying edge.
-	 */
-	public int getType() {
-		return edge.getType();
-	}
+    /**
+     *
+     * @return the line type of the underlying edge.
+     */
+    public int getType() {
+        return edge.getType();
+    }
 
-	/**
-	 * Gets vertex of the start point of this half-edge.
-	 *
-	 * @return vertex
-	 */
-	public OriVertex getVertex() {
-		return vertex;
-	}
+    /**
+     * Gets vertex of the start point of this half-edge.
+     *
+     * @return vertex
+     */
+    public OriVertex getVertex() {
+        return vertex;
+    }
 
-	/**
-	 * Gets the face containing this half-edge.
-	 *
-	 * @return face
-	 */
-	public OriFace getFace() {
-		return face;
-	}
+    /**
+     * Gets the face containing this half-edge.
+     *
+     * @return face
+     */
+    public OriFace getFace() {
+        return face;
+    }
 
-	/**
-	 * @return temporaryType
-	 */
-	int getTemporaryType() {
-		return temporaryType;
-	}
+    /**
+     * @return temporaryType
+     */
+    int getTemporaryType() {
+        return temporaryType;
+    }
 
-	/**
-	 * @param temporaryType
-	 *            Sets temporaryType
-	 */
-	void setTemporaryType(final int temporaryType) {
-		this.temporaryType = temporaryType;
-	}
+    /**
+     * @param temporaryType
+     *            Sets temporaryType
+     */
+    void setTemporaryType(final int temporaryType) {
+        this.temporaryType = temporaryType;
+    }
 
-	/**
-	 * @return positionWhileFolding
-	 */
-	public Vector2d getPositionWhileFolding() {
-		return positionWhileFolding;
-	}
+    /**
+     * @return positionWhileFolding
+     */
+    public Vector2d getPositionWhileFolding() {
+        return positionWhileFolding;
+    }
 
-	public void setPositionWhileFolding(final Vector2d v) {
-		positionWhileFolding = v;
-	}
+    public void setPositionWhileFolding(final Vector2d v) {
+        positionWhileFolding = v;
+    }
 
-	/**
-	 * Gets current position of the start point of this half-edge.
-	 *
-	 * @return current position (the same as {@code getVertex().getPosition()}).
-	 */
-	public Vector2d getPosition() {
-		return vertex.getPosition();
-	}
+    /**
+     * Gets current position of the start point of this half-edge.
+     *
+     * @return current position (the same as {@code getVertex().getPosition()}).
+     */
+    public Vector2d getPosition() {
+        return vertex.getPosition();
+    }
 
-	/**
-	 * @return position for display after fold.
-	 */
-	public Vector2d getPositionForDisplay() {
-		return positionForDisplay;
-	}
+    /**
+     * @return position for display after fold.
+     */
+    public Vector2d getPositionForDisplay() {
+        return positionForDisplay;
+    }
 
-	public void setPositionForDisplay(final Vector2d v) {
-		positionForDisplay = v;
-	}
+    public void setPositionForDisplay(final Vector2d v) {
+        positionForDisplay = v;
+    }
 
-	/**
-	 * Gets position of the start point of this half-edge before fold.
-	 *
-	 * @return position before fold (the same as
-	 *         {@code getVertex().getPositionBeforeFolding()})
-	 */
-	public Vector2d getPositionBeforeFolding() {
-		return vertex.getPositionBeforeFolding();
-	}
+    /**
+     * Gets position of the start point of this half-edge before fold.
+     *
+     * @return position before fold (the same as
+     *         {@code getVertex().getPositionBeforeFolding()})
+     */
+    public Vector2d getPositionBeforeFolding() {
+        return vertex.getPositionBeforeFolding();
+    }
 
-	@Override
-	public String toString() {
-		return "(from:" + getPositionBeforeFolding() + ", to:"
-				+ getNext().getPositionBeforeFolding() + ")";
-	}
+    @Override
+    public String toString() {
+        return "(from:" + getPositionBeforeFolding() + ", to:"
+                + getNext().getPositionBeforeFolding() + ")";
+    }
 }

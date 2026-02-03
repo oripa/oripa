@@ -31,43 +31,43 @@ import oripa.util.rule.AbstractRule;
  *
  */
 public class BigLittleBigLemma extends AbstractRule<OriVertex> {
-	private static final double EPS = MathUtil.angleRadianEps();
+    private static final double EPS = MathUtil.angleRadianEps();
 
-	public BigLittleBigLemma() {
-		super("Big-little-big");
-	}
+    public BigLittleBigLemma() {
+        super("Big-little-big");
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.util.collection.Rule#holds(java.lang.Object)
-	 */
-	@Override
-	public boolean holds(final OriVertex vertex) {
-		var edgeNum = vertex.edgeCount();
-		if (edgeNum < 4) {
-			return true;
-		}
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.util.collection.Rule#holds(java.lang.Object)
+     */
+    @Override
+    public boolean holds(final OriVertex vertex) {
+        var edgeNum = vertex.edgeCount();
+        if (edgeNum < 4) {
+            return true;
+        }
 
-		var lemmaHolds = true;
+        var lemmaHolds = true;
 
-		for (int i = 0; i < edgeNum; i++) {
-			var e2 = vertex.getEdge(i + 1);
-			var e3 = vertex.getEdge(i + 2);
+        for (int i = 0; i < edgeNum; i++) {
+            var e2 = vertex.getEdge(i + 1);
+            var e3 = vertex.getEdge(i + 2);
 
-			if (!e2.isAssigned() || !e3.isAssigned()) {
-				continue;
-			}
+            if (!e2.isAssigned() || !e3.isAssigned()) {
+                continue;
+            }
 
-			var a1 = vertex.getAngleDifference(i);
-			var a2 = vertex.getAngleDifference(i + 1);
-			var a3 = vertex.getAngleDifference(i + 2);
+            var a1 = vertex.getAngleDifference(i);
+            var a2 = vertex.getAngleDifference(i + 1);
+            var a3 = vertex.getAngleDifference(i + 2);
 
-			if (a1 - a2 > EPS && a3 - a2 > EPS) {
-				lemmaHolds &= e2.getType() != e3.getType();
-			}
-		}
+            if (a1 - a2 > EPS && a3 - a2 > EPS) {
+                lemmaHolds &= e2.getType() != e3.getType();
+            }
+        }
 
-		return lemmaHolds;
-	}
+        return lemmaHolds;
+    }
 }

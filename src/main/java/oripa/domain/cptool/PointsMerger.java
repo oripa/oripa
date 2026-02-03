@@ -35,68 +35,68 @@ import oripa.value.OriPoint;
  *
  */
 public class PointsMerger {
-	Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public PointsMerger() {
-	}
+    public PointsMerger() {
+    }
 
-	/**
-	 *
-	 * @param lines
-	 * @return new lines with merged vertices. very short lines are removed from
-	 *         the result.
-	 */
-	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
-		boolean changed;
-		int count = 0;
+    /**
+     *
+     * @param lines
+     * @return new lines with merged vertices. very short lines are removed from
+     *         the result.
+     */
+    public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
+        boolean changed;
+        int count = 0;
 
-		var merged = new HashSet<>(lines);
+        var merged = new HashSet<>(lines);
 
-		do {
+        do {
 //			logger.debug("merge iteration {}", count);
 
-			changed = merged.removeIf(line -> line.length() < pointEps);
+            changed = merged.removeIf(line -> line.length() < pointEps);
 
-			var pointSet = new TreeSet<OriPoint>(merged.stream()
-					.flatMap(OriLine::oriPointStream)
-					.toList());
+            var pointSet = new TreeSet<OriPoint>(merged.stream()
+                    .flatMap(OriLine::oriPointStream)
+                    .toList());
 
-			var cleaned = merged.stream().toList();
-			for (var line : cleaned) {
-				var p0 = find(pointSet, line.getOriPoint0(), pointEps);
-				var p1 = find(pointSet, line.getOriPoint1(), pointEps);
+            var cleaned = merged.stream().toList();
+            for (var line : cleaned) {
+                var p0 = find(pointSet, line.getOriPoint0(), pointEps);
+                var p1 = find(pointSet, line.getOriPoint1(), pointEps);
 
-				var needsUpdate = !p0.equals(line.getP0()) || !p1.equals(line.getP1());
+                var needsUpdate = !p0.equals(line.getP0()) || !p1.equals(line.getP1());
 
-				changed |= needsUpdate;
+                changed |= needsUpdate;
 
-				if (needsUpdate) {
+                if (needsUpdate) {
 //					logger.debug("merge: p0 {} -> {}", line.getP0(), p0);
 //					logger.debug("merge: p1 {} -> {}", line.getP1(), p1);
-					merged.remove(line);
-					merged.add(new OriLine(p0, p1, line.getType()));
+                    merged.remove(line);
+                    merged.add(new OriLine(p0, p1, line.getType()));
 //					lineAdder.addLineAssumingNoOverlap(new OriLine(p0, p1, line.getType()), merged, pointEps);
-				}
-			}
-			count++;
-		} while (changed && count <= 10);
+                }
+            }
+            count++;
+        } while (changed && count <= 10);
 
-		logger.debug("merge count: {}", count);
+        logger.debug("merge count: {}", count);
 
-		return merged;
-	}
+        return merged;
+    }
 
-	private OriPoint find(final TreeSet<OriPoint> pointSet, final OriPoint p, final double pointEps) {
-		var boundSet = CollectionUtil.rangeSetInclusive(
-				pointSet,
-				new OriPoint(p.getX() - pointEps, p.getY() - pointEps),
-				new OriPoint(p.getX() + pointEps, p.getY() + pointEps));
+    private OriPoint find(final TreeSet<OriPoint> pointSet, final OriPoint p, final double pointEps) {
+        var boundSet = CollectionUtil.rangeSetInclusive(
+                pointSet,
+                new OriPoint(p.getX() - pointEps, p.getY() - pointEps),
+                new OriPoint(p.getX() + pointEps, p.getY() + pointEps));
 
-		var neighbors = boundSet.stream()
-				.filter(point -> point.equals(p, pointEps))
-				.sorted()
-				.toList();
+        var neighbors = boundSet.stream()
+                .filter(point -> point.equals(p, pointEps))
+                .sorted()
+                .toList();
 
-		return neighbors.get(0);
-	}
+        return neighbors.get(0);
+    }
 }

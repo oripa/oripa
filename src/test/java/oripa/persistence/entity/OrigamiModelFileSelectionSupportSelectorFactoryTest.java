@@ -38,29 +38,29 @@ import oripa.util.file.FileFactory;
 @ExtendWith(MockitoExtension.class)
 class OrigamiModelFileSelectionSupportSelectorFactoryTest {
 
-	@InjectMocks
-	OrigamiModelFileSelectionSupportSelectorFactory selectorFactory;
+    @InjectMocks
+    OrigamiModelFileSelectionSupportSelectorFactory selectorFactory;
 
-	@Mock
-	FileSelectionSupportFactory selectionSupportFactory;
+    @Mock
+    FileSelectionSupportFactory selectionSupportFactory;
 
-	@Mock
-	FileAccessSupportFactory accessSupportFactory;
+    @Mock
+    FileAccessSupportFactory accessSupportFactory;
 
-	@Test
-	void selectorContainsAllTypes() {
+    @Test
+    void selectorContainsAllTypes() {
 
-		for (var key : OrigamiModelFileTypeKey.values()) {
+        for (var key : OrigamiModelFileTypeKey.values()) {
 
-			when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
-					.thenReturn(mock());
+            when(accessSupportFactory.createFileAccessSupport(eq(key), anyString(), any(String[].class)))
+                    .thenReturn(mock());
 
-			when(selectionSupportFactory.create(any())).thenReturn(mock());
-		}
+            when(selectionSupportFactory.create(any())).thenReturn(mock());
+        }
 
-		FileFactory fileFactory = mock();
+        FileFactory fileFactory = mock();
 
-		selectorFactory.create(fileFactory);
-	}
+        selectorFactory.create(fileFactory);
+    }
 
 }

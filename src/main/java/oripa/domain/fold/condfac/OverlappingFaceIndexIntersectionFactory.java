@@ -34,62 +34,62 @@ import oripa.domain.fold.origeom.OverlapRelation;
  *
  */
 public class OverlappingFaceIndexIntersectionFactory {
-	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	@SuppressWarnings("unchecked")
-	public List<Integer>[][] create(
-			final List<OriFace> faces,
-			final OverlapRelation overlapRelation) {
-		var indices = IntStream.range(0, faces.size())
-				.mapToObj(i -> new HashSet<Integer>())
-				.toList();
+    @SuppressWarnings("unchecked")
+    public List<Integer>[][] create(
+            final List<OriFace> faces,
+            final OverlapRelation overlapRelation) {
+        var indices = IntStream.range(0, faces.size())
+                .mapToObj(i -> new HashSet<Integer>())
+                .toList();
 
-		// prepare pair indices of overlapping faces.
-		for (var face : faces) {
-			for (var other : faces) {
-				var index_i = face.getFaceID();
-				var index_j = other.getFaceID();
-				if (!overlapRelation.isNoOverlap(index_i, index_j)) {
-					indices.get(index_i).add(index_j);
-				}
-			}
-		}
+        // prepare pair indices of overlapping faces.
+        for (var face : faces) {
+            for (var other : faces) {
+                var index_i = face.getFaceID();
+                var index_j = other.getFaceID();
+                if (!overlapRelation.isNoOverlap(index_i, index_j)) {
+                    indices.get(index_i).add(index_j);
+                }
+            }
+        }
 
-		// extract overlapping-face indices shared by face pair.
-		var indexIntersections = new List[faces.size()][faces.size()];
-		faces.parallelStream().forEach(face -> {
-			for (var other : faces) {
-				var index_i = face.getFaceID();
-				var index_j = other.getFaceID();
+        // extract overlapping-face indices shared by face pair.
+        var indexIntersections = new List[faces.size()][faces.size()];
+        faces.parallelStream().forEach(face -> {
+            for (var other : faces) {
+                var index_i = face.getFaceID();
+                var index_j = other.getFaceID();
 
-				if (index_i == index_j) {
-					continue;
-				}
+                if (index_i == index_j) {
+                    continue;
+                }
 
-				var overlappingFaces_i = indices.get(index_i);
-				var overlappingFaces_j = indices.get(index_j);
+                var overlappingFaces_i = indices.get(index_i);
+                var overlappingFaces_j = indices.get(index_j);
 
-				indexIntersections[index_i][index_j] = overlappingFaces_i.stream()
-						.filter(index -> overlappingFaces_j.contains(index))
-						.toList();
-			}
-		});
+                indexIntersections[index_i][index_j] = overlappingFaces_i.stream()
+                        .filter(index -> overlappingFaces_j.contains(index))
+                        .toList();
+            }
+        });
 
-		int count = 0;
-		for (var intersectionLists : indexIntersections) {
-			if (intersectionLists == null) {
-				continue;
-			}
-			for (var intersections : intersectionLists) {
-				if (intersections == null) {
-					continue;
-				}
-				count += intersections.size();
-			}
-		}
-		logger.debug("#overlappingIntersection = {}", count);
+        int count = 0;
+        for (var intersectionLists : indexIntersections) {
+            if (intersectionLists == null) {
+                continue;
+            }
+            for (var intersections : intersectionLists) {
+                if (intersections == null) {
+                    continue;
+                }
+                count += intersections.size();
+            }
+        }
+        logger.debug("#overlappingIntersection = {}", count);
 
-		return indexIntersections;
-	}
+        return indexIntersections;
+    }
 
 }

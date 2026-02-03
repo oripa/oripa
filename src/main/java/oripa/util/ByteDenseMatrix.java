@@ -23,39 +23,39 @@ package oripa.util;
  *
  */
 public class ByteDenseMatrix implements ByteMatrix {
-	private final byte[][] values;
+    private final byte[][] values;
 
-	public ByteDenseMatrix(final int rowCount, final int columnCount) {
-		values = new byte[rowCount][columnCount];
-	}
+    public ByteDenseMatrix(final int rowCount, final int columnCount) {
+        values = new byte[rowCount][columnCount];
+    }
 
-	private ByteDenseMatrix(final byte[][] values) {
-		this.values = Matrices.clone(values);
-	}
+    private ByteDenseMatrix(final byte[][] values) {
+        this.values = Matrices.clone(values);
+    }
 
-	@Override
-	public void set(final int i, final int j, final byte value) {
-		values[i][j] = value;
-	}
+    @Override
+    public void set(final int i, final int j, final byte value) {
+        values[i][j] = value;
+    }
 
-	@Override
-	public byte get(final int i, final int j) {
-		return values[i][j];
-	}
+    @Override
+    public byte get(final int i, final int j) {
+        return values[i][j];
+    }
 
-	@Override
-	public ByteMatrix clone() {
-		return new ByteDenseMatrix(values);
-	}
+    @Override
+    public ByteMatrix clone() {
+        return new ByteDenseMatrix(values);
+    }
 
-	@Override
-	public int rowCount() {
-		return values.length;
-	}
+    @Override
+    public int rowCount() {
+        return values.length;
+    }
 
-	@Override
-	public int columnCount() {
-		return values[0].length;
-	}
+    @Override
+    public int columnCount() {
+        return values[0].length;
+    }
 
 }

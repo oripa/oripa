@@ -27,22 +27,22 @@ import java.util.List;
  */
 public interface ByteMatrix {
 
-	void set(int i, int j, byte value);
+    void set(int i, int j, byte value);
 
-	byte get(int i, int j);
+    byte get(int i, int j);
 
-	default List<Byte> getRow(final int i) {
-		var row = new ArrayList<Byte>();
-		for (int j = 0; j < columnCount(); j++) {
-			row.add(get(i, j));
-		}
-		return row;
-	}
+    default List<Byte> getRow(final int i) {
+        var row = new ArrayList<Byte>();
+        for (int j = 0; j < columnCount(); j++) {
+            row.add(get(i, j));
+        }
+        return row;
+    }
 
-	ByteMatrix clone();
+    ByteMatrix clone();
 
-	int rowCount();
+    int rowCount();
 
-	int columnCount();
+    int columnCount();
 
 }

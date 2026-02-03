@@ -28,51 +28,51 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  *
  */
 class UnassignedModelFolder implements Folder {
-	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
-	private final SimpleFolder simpleFolder;
-	private final LayerOrderEnumerator layerOrderEnumerator;
+    private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
+    private final SimpleFolder simpleFolder;
+    private final LayerOrderEnumerator layerOrderEnumerator;
 
-	public UnassignedModelFolder(final SimpleFolder simpleFolder,
-			final LayerOrderEnumerator enumerator) {
-		this.simpleFolder = simpleFolder;
-		this.layerOrderEnumerator = enumerator;
-	}
+    public UnassignedModelFolder(final SimpleFolder simpleFolder,
+            final LayerOrderEnumerator enumerator) {
+        this.simpleFolder = simpleFolder;
+        this.layerOrderEnumerator = enumerator;
+    }
 
-	@Override
-	public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
-		simpleFolder.simpleFoldWithoutZorder(origamiModel, eps);
-		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
+    @Override
+    public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
+        simpleFolder.simpleFoldWithoutZorder(origamiModel, eps);
+        faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
-		if (estimationType == EstimationType.X_RAY) {
-			origamiModel.setFolded(true);
-			return new Result(new FoldedModel(origamiModel, List.of(), List.of()), new EstimationResultRules());
-		}
+        if (estimationType == EstimationType.X_RAY) {
+            origamiModel.setFolded(true);
+            return new Result(new FoldedModel(origamiModel, List.of(), List.of()), new EstimationResultRules());
+        }
 
-		var firstOnly = estimationType == EstimationType.FIRST_ONLY;
+        var firstOnly = estimationType == EstimationType.FIRST_ONLY;
 
-		var assignmentEnumerator = new AssignmentEnumerator();
+        var assignmentEnumerator = new AssignmentEnumerator();
 
-		var results = new ArrayList<LayerOrderEnumerator.Result>();
+        var results = new ArrayList<LayerOrderEnumerator.Result>();
 
-		assignmentEnumerator.enumerate(origamiModel,
-				assignedModel -> {
-					if (firstOnly && results.stream().anyMatch(result -> !result.isEmpty())) {
-						return;
-					}
-					results.add(layerOrderEnumerator.enumerate(assignedModel, eps, firstOnly));
-				});
+        assignmentEnumerator.enumerate(origamiModel,
+                assignedModel -> {
+                    if (firstOnly && results.stream().anyMatch(result -> !result.isEmpty())) {
+                        return;
+                    }
+                    results.add(layerOrderEnumerator.enumerate(assignedModel, eps, firstOnly));
+                });
 
-		origamiModel.setFolded(true);
+        origamiModel.setFolded(true);
 
-		return new Result(
-				new FoldedModel(origamiModel,
-						results.stream()
-								.flatMap(result -> result.getOverlapRelations().stream())
-								.toList(),
-						results.get(0).getSubfaces()),
-				results.stream()
-						.map(result -> result.getRules())
-						.reduce(new EstimationResultRules(), (a, b) -> a.or(b)));
+        return new Result(
+                new FoldedModel(origamiModel,
+                        results.stream()
+                                .flatMap(result -> result.getOverlapRelations().stream())
+                                .toList(),
+                        results.get(0).getSubfaces()),
+                results.stream()
+                        .map(result -> result.getRules())
+                        .reduce(new EstimationResultRules(), (a, b) -> a.or(b)));
 
-	}
+    }
 }

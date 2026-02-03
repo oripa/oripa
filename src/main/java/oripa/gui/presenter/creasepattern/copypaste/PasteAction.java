@@ -18,93 +18,93 @@ import oripa.vecmath.Vector2d;
 
 public class PasteAction extends AbstractGraphicMouseAction {
 
-	private final SelectionOriginHolder originHolder;
-	private final ShiftedLineFactory factory = new ShiftedLineFactory();
+    private final SelectionOriginHolder originHolder;
+    private final ShiftedLineFactory factory = new ShiftedLineFactory();
 
-	public PasteAction(final SelectionOriginHolder originHolder) {
-		this.originHolder = originHolder;
+    public PasteAction(final SelectionOriginHolder originHolder) {
+        this.originHolder = originHolder;
 
-		setEditMode(EditMode.INPUT);
-		setNeedSelect(true);
+        setEditMode(EditMode.INPUT);
+        setNeedSelect(true);
 
-		setActionState(new PastingOnVertex(originHolder));
-	}
+        setActionState(new PastingOnVertex(originHolder));
+    }
 
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		context.clear(false);
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        context.clear(false);
 
-		context.startPasting();
+        context.startPasting();
 
-		CreasePattern creasePattern = context.getCreasePattern();
+        CreasePattern creasePattern = context.getCreasePattern();
 
-		creasePattern.stream()
-				.filter(OriLine::isSelected)
-				.forEach(context::pushLine);
-	}
+        creasePattern.stream()
+                .filter(OriLine::isSelected)
+                .forEach(context::pushLine);
+    }
 
-	/**
-	 * Clear context and mark lines as unselected.
-	 */
-	@Override
-	public void destroy(final PaintContext context) {
-		context.clear(true);
-		context.finishPasting();
-	}
+    /**
+     * Clear context and mark lines as unselected.
+     */
+    @Override
+    public void destroy(final PaintContext context) {
+        context.clear(true);
+        context.finishPasting();
+    }
 
-	@Override
-	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
+    @Override
+    public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
 
-		setCandidateVertexOnMove(viewContext, paintContext, false);
-		var closeVertexOpt = paintContext.getCandidateVertexToPick();
+        setCandidateVertexOnMove(viewContext, paintContext, false);
+        var closeVertexOpt = paintContext.getCandidateVertexToPick();
 
-		// to get the vertex which disappeared by cutting.
-		var closeVertexOfLinesOpt = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
+        // to get the vertex which disappeared by cutting.
+        var closeVertexOfLinesOpt = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
 
-		var current = viewContext.getLogicalMousePoint();
-		var closeVertex = closeVertexOpt
-				.map(closeV -> closeVertexOfLinesOpt
-						.map(closeVertexOfLines -> NearestVertexFinder.findNearestOf(
-								current, closeV, closeVertexOfLines))
-						.orElse(closeV))
-				.orElse(closeVertexOfLinesOpt.orElse(current));
+        var current = viewContext.getLogicalMousePoint();
+        var closeVertex = closeVertexOpt
+                .map(closeV -> closeVertexOfLinesOpt
+                        .map(closeVertexOfLines -> NearestVertexFinder.findNearestOf(
+                                current, closeV, closeVertexOfLines))
+                        .orElse(closeV))
+                .orElse(closeVertexOfLinesOpt.orElse(current));
 
-		paintContext.setCandidateVertexToPick(closeVertex);
+        paintContext.setCandidateVertexToPick(closeVertex);
 
-		return Optional.of(closeVertex);
-	}
+        return Optional.of(closeVertex);
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		super.onDraw(drawer, viewContext, paintContext);
+        super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(drawer, viewContext, paintContext);
+        drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-		var originOpt = originHolder.getOrigin(paintContext);
+        var originOpt = originHolder.getOrigin(paintContext);
 
-		if (originOpt.isEmpty()) {
-			return;
-		}
+        if (originOpt.isEmpty()) {
+            return;
+        }
 
-		var origin = originOpt.get();
+        var origin = originOpt.get();
 
-		drawer.selectSelectedItemColor();
-		drawVertex(drawer, viewContext, origin);
+        drawer.selectSelectedItemColor();
+        drawVertex(drawer, viewContext, origin);
 
-		var candidateVertexOpt = paintContext.getCandidateVertexToPick();
+        var candidateVertexOpt = paintContext.getCandidateVertexToPick();
 
-		var point = candidateVertexOpt.orElse(viewContext.getLogicalMousePoint());
-		var offset = factory.createOffset(origin, point);
+        var point = candidateVertexOpt.orElse(viewContext.getLogicalMousePoint());
+        var offset = factory.createOffset(origin, point);
 
-		drawer.selectAssistLineColor();
+        drawer.selectAssistLineColor();
 
-		// shift and draw the lines to be pasted.
-		for (OriLine l : paintContext.getPickedLines()) {
-			var shifted = factory.createShiftedLine(l, offset);
-			drawer.drawLine(shifted);
-		}
-	}
+        // shift and draw the lines to be pasted.
+        for (OriLine l : paintContext.getPickedLines()) {
+            var shifted = factory.createShiftedLine(l, offset);
+            drawer.drawLine(shifted);
+        }
+    }
 }

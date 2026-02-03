@@ -27,21 +27,21 @@ import oripa.domain.paint.core.PickingVertex;
  */
 public class SelectingFirstEndPoint extends PickingVertex {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingSecondVertexForLine.class);
-		setNextClass(SelectingSecondEndPoint.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingSecondVertexForLine.class);
+        setNextClass(SelectingSecondEndPoint.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
 
-	}
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-		context.clearSnapPoints();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popVertex();
+        context.clearSnapPoints();
+    }
 
 }

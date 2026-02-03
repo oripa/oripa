@@ -27,23 +27,23 @@ import oripa.domain.paint.core.PickingLine;
  */
 public class SelectingFirstLine extends PickingLine {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingVertex.class);
-		setNextClass(SelectingSecondLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingVertex.class);
+        setNextClass(SelectingSecondLine.class);
+    }
 
-	/* (non Javadoc)
-	 * @see oripa.domain.paint.core.AbstractActionState#onResult(oripa.domain.paint.PaintContext, boolean)
-	 */
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
+    /* (non Javadoc)
+     * @see oripa.domain.paint.core.AbstractActionState#onResult(oripa.domain.paint.PaintContext, boolean)
+     */
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
 
-	}
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popVertex();
+    }
 
 }

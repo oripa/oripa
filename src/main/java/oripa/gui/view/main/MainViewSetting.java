@@ -27,36 +27,36 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 public class MainViewSetting {
-	private final MainFrameSetting mainFrameSetting;
-	private final PainterScreenSetting painterScreenSetting;
-	private final UIPanelSetting uiPanelSetting;
+    private final MainFrameSetting mainFrameSetting;
+    private final PainterScreenSetting painterScreenSetting;
+    private final UIPanelSetting uiPanelSetting;
 
-	@Inject
-	public MainViewSetting(final MainFrameSetting frameSetting, final PainterScreenSetting screenSetting,
-			final UIPanelSetting uiSetting) {
-		this.mainFrameSetting = frameSetting;
-		this.painterScreenSetting = screenSetting;
-		this.uiPanelSetting = uiSetting;
-	}
+    @Inject
+    public MainViewSetting(final MainFrameSetting frameSetting, final PainterScreenSetting screenSetting,
+            final UIPanelSetting uiSetting) {
+        this.mainFrameSetting = frameSetting;
+        this.painterScreenSetting = screenSetting;
+        this.uiPanelSetting = uiSetting;
+    }
 
-	/**
-	 * @return mainFrameSetting
-	 */
-	public MainFrameSetting getMainFrameSetting() {
-		return mainFrameSetting;
-	}
+    /**
+     * @return mainFrameSetting
+     */
+    public MainFrameSetting getMainFrameSetting() {
+        return mainFrameSetting;
+    }
 
-	/**
-	 * @return painterScreenSetting
-	 */
-	public PainterScreenSetting getPainterScreenSetting() {
-		return painterScreenSetting;
-	}
+    /**
+     * @return painterScreenSetting
+     */
+    public PainterScreenSetting getPainterScreenSetting() {
+        return painterScreenSetting;
+    }
 
-	/**
-	 * @return uiPanelSetting
-	 */
-	public UIPanelSetting getUiPanelSetting() {
-		return uiPanelSetting;
-	}
+    /**
+     * @return uiPanelSetting
+     */
+    public UIPanelSetting getUiPanelSetting() {
+        return uiPanelSetting;
+    }
 }

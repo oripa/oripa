@@ -6,21 +6,21 @@ import oripa.util.Command;
 
 public class SelectingSecondVertexForLine extends PickingVertex {
 
-	public SelectingSecondVertexForLine() {
-		super();
-	}
+    public SelectingSecondVertexForLine() {
+        super();
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var snapPointFactory = new LineSnapPointFactory();
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        var snapPointFactory = new LineSnapPointFactory();
 
-		Command command = new LineSnapPointsSetterCommand(context, snapPointFactory);
-		command.execute();
-	}
+        Command command = new LineSnapPointsSetterCommand(context, snapPointFactory);
+        command.execute();
+    }
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingFirstVertexForLine.class);
-		setNextClass(SelectingFirstEndPoint.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingFirstVertexForLine.class);
+        setNextClass(SelectingFirstEndPoint.class);
+    }
 }

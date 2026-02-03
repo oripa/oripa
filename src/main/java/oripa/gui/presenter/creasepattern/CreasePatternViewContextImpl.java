@@ -27,112 +27,112 @@ import oripa.vecmath.Vector2d;
  */
 class CreasePatternViewContextImpl implements CreasePatternViewContext {
 
-	private Vector2d logicalPoint = new Vector2d(0, 0);
+    private Vector2d logicalPoint = new Vector2d(0, 0);
 
-	private double scale;
+    private double scale;
 
-	private boolean gridVisible = InitialVisibilities.GRID;
+    private boolean gridVisible = InitialVisibilities.GRID;
 
-	private boolean vertexVisible = InitialVisibilities.VERTEX;
-	private boolean mvLineVisible = InitialVisibilities.MVU;
-	private boolean auxLineVisible = InitialVisibilities.AUX;
-	private boolean crossLineVisible = InitialVisibilities.CROSS;
-	private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
+    private boolean vertexVisible = InitialVisibilities.VERTEX;
+    private boolean mvLineVisible = InitialVisibilities.MVU;
+    private boolean auxLineVisible = InitialVisibilities.AUX;
+    private boolean crossLineVisible = InitialVisibilities.CROSS;
+    private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
 
-	public CreasePatternViewContextImpl() {
-	}
+    public CreasePatternViewContextImpl() {
+    }
 
-	@Override
-	public void setLogicalMousePoint(final Vector2d logicalPoint) {
-		this.logicalPoint = logicalPoint;
-	}
+    @Override
+    public void setLogicalMousePoint(final Vector2d logicalPoint) {
+        this.logicalPoint = logicalPoint;
+    }
 
-	@Override
-	public Vector2d getLogicalMousePoint() {
-		return logicalPoint;
-	}
+    @Override
+    public Vector2d getLogicalMousePoint() {
+        return logicalPoint;
+    }
 
-	/**
-	 * @return scale
-	 */
-	@Override
-	public double getScale() {
-		return scale;
-	}
+    /**
+     * @return scale
+     */
+    @Override
+    public double getScale() {
+        return scale;
+    }
 
-	/**
-	 * @param scale
-	 *            Sets scale
-	 */
-	@Override
-	public void setScale(final double scale) {
-		this.scale = scale;
-	}
+    /**
+     * @param scale
+     *            Sets scale
+     */
+    @Override
+    public void setScale(final double scale) {
+        this.scale = scale;
+    }
 
-	@Override
-	public void setMVLineVisible(final boolean visible) {
-		mvLineVisible = visible;
-	}
+    @Override
+    public void setMVLineVisible(final boolean visible) {
+        mvLineVisible = visible;
+    }
 
-	@Override
-	public boolean isMVLineVisible() {
-		return mvLineVisible;
-	}
+    @Override
+    public boolean isMVLineVisible() {
+        return mvLineVisible;
+    }
 
-	@Override
-	public boolean isVertexVisible() {
-		return vertexVisible;
-	}
+    @Override
+    public boolean isVertexVisible() {
+        return vertexVisible;
+    }
 
-	@Override
-	public void setVertexVisible(final boolean visible) {
-		vertexVisible = visible;
-	}
+    @Override
+    public void setVertexVisible(final boolean visible) {
+        vertexVisible = visible;
+    }
 
-	@Override
-	public void setAuxLineVisible(final boolean visible) {
-		auxLineVisible = visible;
-	}
+    @Override
+    public void setAuxLineVisible(final boolean visible) {
+        auxLineVisible = visible;
+    }
 
-	@Override
-	public boolean isAuxLineVisible() {
-		return auxLineVisible;
-	}
+    @Override
+    public boolean isAuxLineVisible() {
+        return auxLineVisible;
+    }
 
-	/**
-	 * @return whether grid is visible or not.
-	 */
-	@Override
-	public boolean isGridVisible() {
-		return gridVisible;
-	}
+    /**
+     * @return whether grid is visible or not.
+     */
+    @Override
+    public boolean isGridVisible() {
+        return gridVisible;
+    }
 
-	/**
-	 * @param gridVisible
-	 *            Sets gridVisible
-	 */
-	@Override
-	public void setGridVisible(final boolean gridVisible) {
-		this.gridVisible = gridVisible;
-	}
+    /**
+     * @param gridVisible
+     *            Sets gridVisible
+     */
+    @Override
+    public void setGridVisible(final boolean gridVisible) {
+        this.gridVisible = gridVisible;
+    }
 
-	@Override
-	public void setCrossLineVisible(final boolean visible) {
-		crossLineVisible = visible;
-	}
+    @Override
+    public void setCrossLineVisible(final boolean visible) {
+        crossLineVisible = visible;
+    }
 
-	@Override
-	public boolean isCrossLineVisible() {
-		return crossLineVisible;
-	}
+    @Override
+    public boolean isCrossLineVisible() {
+        return crossLineVisible;
+    }
 
-	@Override
-	public boolean isZeroLineWidth() {
-		return zeroLineWidth;
-	}
+    @Override
+    public boolean isZeroLineWidth() {
+        return zeroLineWidth;
+    }
 
-	@Override
-	public void setZeroLineWidth(final boolean zeroLineWidth) {
-		this.zeroLineWidth = zeroLineWidth;
-	}
+    @Override
+    public void setZeroLineWidth(final boolean zeroLineWidth) {
+        this.zeroLineWidth = zeroLineWidth;
+    }
 }

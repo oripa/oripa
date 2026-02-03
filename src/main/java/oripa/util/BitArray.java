@@ -28,182 +28,182 @@ import java.util.Objects;
  *
  */
 public class BitArray {
-	private final int[] blocks;
+    private final int[] blocks;
 
-	public final int bitLength;
+    public final int bitLength;
 
-	private static final int oneBlockBitLength = 32;
-	private static final int one = 0x0001;
-	private static final int fullBit = 0xFFFF;
+    private static final int oneBlockBitLength = 32;
+    private static final int one = 0x0001;
+    private static final int fullBit = 0xFFFF;
 
-	public BitArray(final int bitLength) {
-		this.bitLength = bitLength;
+    public BitArray(final int bitLength) {
+        this.bitLength = bitLength;
 
-		var blockCount = bitLength / oneBlockBitLength + ((bitLength % oneBlockBitLength == 0) ? 0 : 1);
-		blocks = new int[blockCount];
+        var blockCount = bitLength / oneBlockBitLength + ((bitLength % oneBlockBitLength == 0) ? 0 : 1);
+        blocks = new int[blockCount];
 
-		Arrays.fill(blocks, 0);
-	}
+        Arrays.fill(blocks, 0);
+    }
 
-	public BitArray(final BitArray other) {
-		this(other.bitLength);
-		setAll(other);
-	}
+    public BitArray(final BitArray other) {
+        this(other.bitLength);
+        setAll(other);
+    }
 
-	public void setAll(final BitArray other) {
-		if (bitLength != other.bitLength) {
-			throw new IllegalArgumentException("bit length should be equal.");
-		}
+    public void setAll(final BitArray other) {
+        if (bitLength != other.bitLength) {
+            throw new IllegalArgumentException("bit length should be equal.");
+        }
 
-		for (int i = 0; i < blocks.length; i++) {
-			blocks[i] = other.blocks[i];
-		}
-	}
+        for (int i = 0; i < blocks.length; i++) {
+            blocks[i] = other.blocks[i];
+        }
+    }
 
-	public boolean get(final int index) {
-		if (index >= bitLength) {
-			throw new IllegalArgumentException("index should be less than " + bitLength);
-		}
+    public boolean get(final int index) {
+        if (index >= bitLength) {
+            throw new IllegalArgumentException("index should be less than " + bitLength);
+        }
 
-		var blockIndex = index / oneBlockBitLength;
-		var bitIndex = index % oneBlockBitLength;
+        var blockIndex = index / oneBlockBitLength;
+        var bitIndex = index % oneBlockBitLength;
 
-		return (blocks[blockIndex] & (one << bitIndex)) != 0;
-	}
+        return (blocks[blockIndex] & (one << bitIndex)) != 0;
+    }
 
-	public void setOne(final int index) {
-		if (index >= bitLength) {
-			throw new IllegalArgumentException("index should be less than " + bitLength);
-		}
+    public void setOne(final int index) {
+        if (index >= bitLength) {
+            throw new IllegalArgumentException("index should be less than " + bitLength);
+        }
 
-		var blockIndex = index / oneBlockBitLength;
-		var bitIndex = index % oneBlockBitLength;
+        var blockIndex = index / oneBlockBitLength;
+        var bitIndex = index % oneBlockBitLength;
 
-		blocks[blockIndex] |= one << bitIndex;
-	}
+        blocks[blockIndex] |= one << bitIndex;
+    }
 
-	public boolean setOneAndGetChange(final int index) {
-		if (index >= bitLength) {
-			throw new IllegalArgumentException("index should be less than " + bitLength);
-		}
+    public boolean setOneAndGetChange(final int index) {
+        if (index >= bitLength) {
+            throw new IllegalArgumentException("index should be less than " + bitLength);
+        }
 
-		var blockIndex = index / oneBlockBitLength;
-		var bitIndex = index % oneBlockBitLength;
+        var blockIndex = index / oneBlockBitLength;
+        var bitIndex = index % oneBlockBitLength;
 
-		var b = blocks[blockIndex];
-		blocks[blockIndex] |= one << bitIndex;
+        var b = blocks[blockIndex];
+        blocks[blockIndex] |= one << bitIndex;
 
-		return b != blocks[blockIndex];
-	}
+        return b != blocks[blockIndex];
+    }
 
-	public void setZero(final int index) {
-		if (index >= bitLength) {
-			throw new IllegalArgumentException("index should be less than " + bitLength);
-		}
+    public void setZero(final int index) {
+        if (index >= bitLength) {
+            throw new IllegalArgumentException("index should be less than " + bitLength);
+        }
 
-		var blockIndex = index / oneBlockBitLength;
-		var bitIndex = index % oneBlockBitLength;
+        var blockIndex = index / oneBlockBitLength;
+        var bitIndex = index % oneBlockBitLength;
 
-		blocks[blockIndex] &= ~(one << bitIndex);
-	}
+        blocks[blockIndex] &= ~(one << bitIndex);
+    }
 
-	public boolean setZeroAndGetChange(final int index) {
-		if (index >= bitLength) {
-			throw new IllegalArgumentException("index should be less than " + bitLength);
-		}
+    public boolean setZeroAndGetChange(final int index) {
+        if (index >= bitLength) {
+            throw new IllegalArgumentException("index should be less than " + bitLength);
+        }
 
-		var blockIndex = index / oneBlockBitLength;
-		var bitIndex = index % oneBlockBitLength;
+        var blockIndex = index / oneBlockBitLength;
+        var bitIndex = index % oneBlockBitLength;
 
-		var b = blocks[blockIndex];
-		blocks[blockIndex] &= ~(one << bitIndex);
+        var b = blocks[blockIndex];
+        blocks[blockIndex] &= ~(one << bitIndex);
 
-		return b != blocks[blockIndex];
-	}
+        return b != blocks[blockIndex];
+    }
 
-	public BitArray or(final BitArray other) {
-		if (bitLength != other.bitLength) {
-			throw new IllegalArgumentException("bit length should be equal.");
-		}
+    public BitArray or(final BitArray other) {
+        if (bitLength != other.bitLength) {
+            throw new IllegalArgumentException("bit length should be equal.");
+        }
 
-		var result = new BitArray(bitLength);
+        var result = new BitArray(bitLength);
 
-		for (int i = 0; i < blocks.length; i++) {
-			result.blocks[i] = blocks[i] | other.blocks[i];
-		}
+        for (int i = 0; i < blocks.length; i++) {
+            result.blocks[i] = blocks[i] | other.blocks[i];
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public BitArray and(final BitArray other) {
-		if (bitLength != other.bitLength) {
-			throw new IllegalArgumentException("bit length should be equal.");
-		}
+    public BitArray and(final BitArray other) {
+        if (bitLength != other.bitLength) {
+            throw new IllegalArgumentException("bit length should be equal.");
+        }
 
-		var result = new BitArray(bitLength);
+        var result = new BitArray(bitLength);
 
-		for (int i = 0; i < blocks.length; i++) {
-			result.blocks[i] = blocks[i] & other.blocks[i];
-		}
+        for (int i = 0; i < blocks.length; i++) {
+            result.blocks[i] = blocks[i] & other.blocks[i];
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public BitArray not() {
-		var result = new BitArray(bitLength);
-		for (int i = 0; i < blocks.length; i++) {
-			result.blocks[i] = ~blocks[i];
-		}
+    public BitArray not() {
+        var result = new BitArray(bitLength);
+        for (int i = 0; i < blocks.length; i++) {
+            result.blocks[i] = ~blocks[i];
+        }
 
-		if (bitLength % oneBlockBitLength != 0) {
-			result.blocks[blocks.length - 1] &= fullBit >>> (oneBlockBitLength - bitLength % oneBlockBitLength);
-		}
-		return result;
-	}
+        if (bitLength % oneBlockBitLength != 0) {
+            result.blocks[blocks.length - 1] &= fullBit >>> (oneBlockBitLength - bitLength % oneBlockBitLength);
+        }
+        return result;
+    }
 
-	public boolean allZero() {
-		for (int i = 0; i < blocks.length; i++) {
-			if (blocks[i] != 0) {
-				return false;
-			}
-		}
-		return true;
-	}
+    public boolean allZero() {
+        for (int i = 0; i < blocks.length; i++) {
+            if (blocks[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	public void clear() {
-		for (int i = 0; i < blocks.length; i++) {
-			blocks[i] = 0;
-		}
-	}
+    public void clear() {
+        for (int i = 0; i < blocks.length; i++) {
+            blocks[i] = 0;
+        }
+    }
 
-	public int countOnes() {
-		int count = 0;
-		for (int i = 0; i < blocks.length; i++) {
-			count += Integer.bitCount(blocks[i]);
-		}
-		return count;
-	}
+    public int countOnes() {
+        int count = 0;
+        for (int i = 0; i < blocks.length; i++) {
+            count += Integer.bitCount(blocks[i]);
+        }
+        return count;
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof BitArray other) {
-			return bitLength == other.bitLength && Arrays.equals(blocks, other.blocks);
-		}
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof BitArray other) {
+            return bitLength == other.bitLength && Arrays.equals(blocks, other.blocks);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(bitLength, blocks);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(bitLength, blocks);
+    }
 
-	@Override
-	public String toString() {
-		return Arrays.stream(blocks)
-				.mapToObj(block -> "%8s".formatted(Integer.toHexString(block)).replace(' ', '0'))
-				.toList()
-				.reversed().stream()
-				.reduce("", String::concat);
-	}
+    @Override
+    public String toString() {
+        return Arrays.stream(blocks)
+                .mapToObj(block -> "%8s".formatted(Integer.toHexString(block)).replace(' ', '0'))
+                .toList()
+                .reversed().stream()
+                .reduce("", String::concat);
+    }
 }

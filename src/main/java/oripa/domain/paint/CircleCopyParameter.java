@@ -27,8 +27,8 @@ package oripa.domain.paint;
  * @param copyCount
  */
 public record CircleCopyParameter(
-		double centerX,
-		double centerY,
-		double angleDegree,
-		int copyCount) {
+        double centerX,
+        double centerY,
+        double angleDegree,
+        int copyCount) {
 }

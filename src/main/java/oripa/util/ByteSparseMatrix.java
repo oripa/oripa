@@ -27,57 +27,57 @@ import java.util.HashMap;
  *
  */
 public class ByteSparseMatrix implements ByteMatrix {
-	private final HashMap<IntPair, Byte> values;
+    private final HashMap<IntPair, Byte> values;
 
-	public final int rowCount;
-	public final int columnCount;
+    public final int rowCount;
+    public final int columnCount;
 
-	public ByteSparseMatrix(final int rowCount, final int columnCount) {
-		this.rowCount = rowCount;
-		this.columnCount = columnCount;
-		values = new HashMap<>();
-	}
+    public ByteSparseMatrix(final int rowCount, final int columnCount) {
+        this.rowCount = rowCount;
+        this.columnCount = columnCount;
+        values = new HashMap<>();
+    }
 
-	@SuppressWarnings("unchecked")
-	private ByteSparseMatrix(final ByteSparseMatrix m) {
-		this.rowCount = m.rowCount;
-		this.columnCount = m.columnCount;
-		this.values = (HashMap<IntPair, Byte>) m.values.clone();
-	}
+    @SuppressWarnings("unchecked")
+    private ByteSparseMatrix(final ByteSparseMatrix m) {
+        this.rowCount = m.rowCount;
+        this.columnCount = m.columnCount;
+        this.values = (HashMap<IntPair, Byte>) m.values.clone();
+    }
 
-	@Override
-	public ByteMatrix clone() {
-		return new ByteSparseMatrix(this);
-	}
+    @Override
+    public ByteMatrix clone() {
+        return new ByteSparseMatrix(this);
+    }
 
-	@Override
-	public void set(final int i, final int j, final byte value) {
-		if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
-			throw new IllegalArgumentException();
-		}
-		if (value == 0) {
-			values.remove(new IntPair(i, j));
-			return;
-		}
-		values.put(new IntPair(i, j), value);
-	}
+    @Override
+    public void set(final int i, final int j, final byte value) {
+        if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
+            throw new IllegalArgumentException();
+        }
+        if (value == 0) {
+            values.remove(new IntPair(i, j));
+            return;
+        }
+        values.put(new IntPair(i, j), value);
+    }
 
-	@Override
-	public byte get(final int i, final int j) {
-		if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
-			throw new IllegalArgumentException();
-		}
-		var value = values.get(new IntPair(i, j));
-		return value == null ? 0 : value;
-	}
+    @Override
+    public byte get(final int i, final int j) {
+        if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
+            throw new IllegalArgumentException();
+        }
+        var value = values.get(new IntPair(i, j));
+        return value == null ? 0 : value;
+    }
 
-	@Override
-	public int rowCount() {
-		return rowCount;
-	}
+    @Override
+    public int rowCount() {
+        return rowCount;
+    }
 
-	@Override
-	public int columnCount() {
-		return columnCount;
-	}
+    @Override
+    public int columnCount() {
+        return columnCount;
+    }
 }

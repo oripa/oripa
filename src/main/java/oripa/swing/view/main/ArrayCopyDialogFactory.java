@@ -30,14 +30,14 @@ import oripa.resource.ResourceHolder;
  *
  */
 public class ArrayCopyDialogFactory {
-	private final ResourceHolder resourceHolder;
+    private final ResourceHolder resourceHolder;
 
-	@Inject
-	public ArrayCopyDialogFactory(final ResourceHolder resourceHolder) {
-		this.resourceHolder = resourceHolder;
-	}
+    @Inject
+    public ArrayCopyDialogFactory(final ResourceHolder resourceHolder) {
+        this.resourceHolder = resourceHolder;
+    }
 
-	public ArrayCopyDialogView create(final FrameView owner) {
-		return new ArrayCopyDialog((JFrame) owner, resourceHolder);
-	}
+    public ArrayCopyDialogView create(final FrameView owner) {
+        return new ArrayCopyDialog((JFrame) owner, resourceHolder);
+    }
 }

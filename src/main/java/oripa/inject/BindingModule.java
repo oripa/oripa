@@ -38,30 +38,30 @@ import oripa.gui.view.ViewScreenUpdater;
  */
 public class BindingModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bind(TypeForChangeGettable.class).to(TypeForChangeContext.class);
-		bind(TypeForChangeContext.class);
-	}
+    @Override
+    protected void configure() {
+        bind(TypeForChangeGettable.class).to(TypeForChangeContext.class);
+        bind(TypeForChangeContext.class);
+    }
 
-	@Provides
-	@Singleton
-	StateManager<EditMode> getStateManager() {
-		return new EditModeStateManager();
-	}
+    @Provides
+    @Singleton
+    StateManager<EditMode> getStateManager() {
+        return new EditModeStateManager();
+    }
 
-	@Provides
-	StatePopperFactory<EditMode> getStatePopperFactory(final StateManager<EditMode> stateManager) {
-		return new StatePopperFactory<EditMode>(stateManager);
-	}
+    @Provides
+    StatePopperFactory<EditMode> getStatePopperFactory(final StateManager<EditMode> stateManager) {
+        return new StatePopperFactory<EditMode>(stateManager);
+    }
 
-	@Provides
-	StatePopper<EditMode> createStatePopper(final StatePopperFactory<EditMode> factory) {
-		return factory.createForState();
-	}
+    @Provides
+    StatePopper<EditMode> createStatePopper(final StatePopperFactory<EditMode> factory) {
+        return factory.createForState();
+    }
 
-	@Provides
-	ScreenUpdater getScreenUpdater(final ViewScreenUpdater viewScreenUpdater) {
-		return viewScreenUpdater::updateScreen;
-	}
+    @Provides
+    ScreenUpdater getScreenUpdater(final ViewScreenUpdater viewScreenUpdater) {
+        return viewScreenUpdater::updateScreen;
+    }
 }

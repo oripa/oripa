@@ -37,69 +37,69 @@ import oripa.resource.StringID;
  */
 public class MainFramePaintMenuListenerFactory {
 
-	final PaintContext paintContext;
-	final MouseActionHolder mouseActionHolder;
-	final BindingObjectFactoryFacade bindingFactory;
+    final PaintContext paintContext;
+    final MouseActionHolder mouseActionHolder;
+    final BindingObjectFactoryFacade bindingFactory;
 
-	@Inject
-	public MainFramePaintMenuListenerFactory(
-			final PaintContext paintContext,
-			final MouseActionHolder mouseActionHolder,
-			final BindingObjectFactoryFacade bindingFactory
+    @Inject
+    public MainFramePaintMenuListenerFactory(
+            final PaintContext paintContext,
+            final MouseActionHolder mouseActionHolder,
+            final BindingObjectFactoryFacade bindingFactory
 
-	) {
-		this.paintContext = paintContext;
-		this.mouseActionHolder = mouseActionHolder;
-		this.bindingFactory = bindingFactory;
+    ) {
+        this.paintContext = paintContext;
+        this.mouseActionHolder = mouseActionHolder;
+        this.bindingFactory = bindingFactory;
 
-	}
+    }
 
-	public Runnable createChangeOutlineButtonListener() {
-		var changeOutlineState = bindingFactory.createState(StringID.EDIT_CONTOUR_ID);
-		return changeOutlineState::performActions;
-	}
+    public Runnable createChangeOutlineButtonListener() {
+        var changeOutlineState = bindingFactory.createState(StringID.EDIT_CONTOUR_ID);
+        return changeOutlineState::performActions;
+    }
 
-	public Runnable createCopyAndPasteButtonListener(final Runnable showCopyPasteErrorMessage) {
-		Supplier<Boolean> detectCopyPasteError = this::detectCopyPasteError;
-		var copyPasteState = bindingFactory.createState(StringID.COPY_PASTE_ID,
-				detectCopyPasteError, showCopyPasteErrorMessage);
-		return copyPasteState::performActions;
-	}
+    public Runnable createCopyAndPasteButtonListener(final Runnable showCopyPasteErrorMessage) {
+        Supplier<Boolean> detectCopyPasteError = this::detectCopyPasteError;
+        var copyPasteState = bindingFactory.createState(StringID.COPY_PASTE_ID,
+                detectCopyPasteError, showCopyPasteErrorMessage);
+        return copyPasteState::performActions;
+    }
 
-	public Runnable createCutAndPasteButtonListener(final Runnable showCopyPasteErrorMessage) {
-		Supplier<Boolean> detectCopyPasteError = this::detectCopyPasteError;
-		var cutPasteState = bindingFactory.createState(StringID.CUT_PASTE_ID,
-				detectCopyPasteError, showCopyPasteErrorMessage);
-		return cutPasteState::performActions;
-	}
+    public Runnable createCutAndPasteButtonListener(final Runnable showCopyPasteErrorMessage) {
+        Supplier<Boolean> detectCopyPasteError = this::detectCopyPasteError;
+        var cutPasteState = bindingFactory.createState(StringID.CUT_PASTE_ID,
+                detectCopyPasteError, showCopyPasteErrorMessage);
+        return cutPasteState::performActions;
+    }
 
-	private boolean detectCopyPasteError() {
-		return paintContext.countSelectedLines() == 0;
-	}
+    private boolean detectCopyPasteError() {
+        return paintContext.countSelectedLines() == 0;
+    }
 
-	public Runnable createSelectAllLineActionListener() {
-		var selectAllState = bindingFactory.createState(StringID.SELECT_ALL_LINE_ID);
-		var selectAllListener = new SelectAllLineActionListener(paintContext);
+    public Runnable createSelectAllLineActionListener() {
+        var selectAllState = bindingFactory.createState(StringID.SELECT_ALL_LINE_ID);
+        var selectAllListener = new SelectAllLineActionListener(paintContext);
 
-		return () -> {
-			selectAllState.performActions();
-			selectAllListener.run();
-		};
-	}
+        return () -> {
+            selectAllState.performActions();
+            selectAllListener.run();
+        };
+    }
 
-	public Runnable createUnselectAllItemsActionListener(final ScreenUpdater screenUpdater) {
-		var statePopper = bindingFactory.createStatePopperForState();
-		return new UnselectAllItemsActionListener(mouseActionHolder, paintContext, statePopper,
-				screenUpdater);
+    public Runnable createUnselectAllItemsActionListener(final ScreenUpdater screenUpdater) {
+        var statePopper = bindingFactory.createStatePopperForState();
+        return new UnselectAllItemsActionListener(mouseActionHolder, paintContext, statePopper,
+                screenUpdater);
 
-	}
+    }
 
-	public Runnable createDeleteSelectedLinesActionListener(final ScreenUpdater screenUpdater) {
-		return new DeleteSelectedLinesActionListener(paintContext, screenUpdater);
-	}
+    public Runnable createDeleteSelectedLinesActionListener(final ScreenUpdater screenUpdater) {
+        return new DeleteSelectedLinesActionListener(paintContext, screenUpdater);
+    }
 
-	public Runnable createImportButtonListener(final Consumer<Runnable> importFileUsingGUI) {
-		var state = bindingFactory.createState(StringID.IMPORT_CP_ID);
-		return () -> importFileUsingGUI.accept(state::performActions);
-	}
+    public Runnable createImportButtonListener(final Consumer<Runnable> importFileUsingGUI) {
+        var state = bindingFactory.createState(StringID.IMPORT_CP_ID);
+        return () -> importFileUsingGUI.accept(state::performActions);
+    }
 }

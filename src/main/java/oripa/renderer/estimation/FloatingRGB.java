@@ -23,30 +23,30 @@ package oripa.renderer.estimation;
  *
  */
 class FloatingRGB {
-	private final double r, g, b;
+    private final double r, g, b;
 
-	public FloatingRGB(final double r, final double g, final double b) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-	}
+    public FloatingRGB(final double r, final double g, final double b) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
 
-	public FloatingRGB(final FloatingRGB rgb) {
-		r = rgb.r;
-		g = rgb.g;
-		b = rgb.b;
-	}
+    public FloatingRGB(final FloatingRGB rgb) {
+        r = rgb.r;
+        g = rgb.g;
+        b = rgb.b;
+    }
 
-	public double getR() {
-		return r;
-	}
+    public double getR() {
+        return r;
+    }
 
-	public double getG() {
-		return g;
-	}
+    public double getG() {
+        return g;
+    }
 
-	public double getB() {
-		return b;
-	}
+    public double getB() {
+        return b;
+    }
 
 }

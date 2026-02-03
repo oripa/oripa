@@ -30,24 +30,24 @@ import oripa.util.Command;
  *
  */
 public class SelectingSecondEndPoint extends PickingVertex {
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingFirstEndPoint.class);
-		setNextClass(SelectingFirstVertexForLine.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingFirstEndPoint.class);
+        setNextClass(SelectingFirstVertexForLine.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var endPoints = List.of(context.getVertex(2), context.getVertex(3));
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        var endPoints = List.of(context.getVertex(2), context.getVertex(3));
 
-		// remove unnecessary vertices
-		context.clear(false);
+        // remove unnecessary vertices
+        context.clear(false);
 
-		// push end points
-		context.pushVertex(endPoints.get(0));
-		context.pushVertex(endPoints.get(1));
+        // push end points
+        context.pushVertex(endPoints.get(0));
+        context.pushVertex(endPoints.get(1));
 
-		Command command = new PickedVerticesConnectionLineAdderCommand(context);
-		command.execute();
-	}
+        Command command = new PickedVerticesConnectionLineAdderCommand(context);
+        command.execute();
+    }
 }

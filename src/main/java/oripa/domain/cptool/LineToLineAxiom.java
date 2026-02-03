@@ -36,149 +36,149 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class LineToLineAxiom {
-	private static final Logger logger = LoggerFactory.getLogger(LineToLineAxiom.class);
+    private static final Logger logger = LoggerFactory.getLogger(LineToLineAxiom.class);
 
-	public List<Line> createFoldLines(final Segment s0, final Segment s1, final double pointEps) {
+    public List<Line> createFoldLines(final Segment s0, final Segment s1, final double pointEps) {
 
-		var line0 = s0.getLine();
-		var line1 = s1.getLine();
+        var line0 = s0.getLine();
+        var line1 = s1.getLine();
 
-		if (line0.equals(line1, pointEps)) {
-			if (GeomUtil.isOverlap(s0, s1, pointEps)) {
-				// out of consideration.
-				return List.of();
-			}
-			return createForSegmentsOnTheSameLine(s0, s1);
-		}
+        if (line0.equals(line1, pointEps)) {
+            if (GeomUtil.isOverlap(s0, s1, pointEps)) {
+                // out of consideration.
+                return List.of();
+            }
+            return createForSegmentsOnTheSameLine(s0, s1);
+        }
 
-		if (line0.isParallel(line1)) {
-			return createForParallelSegments(line0, line1);
-		}
+        if (line0.isParallel(line1)) {
+            return createForParallelSegments(line0, line1);
+        }
 
-		var segmentCrossPointOpt = GeomUtil.getCrossPoint(s0, s1);
+        var segmentCrossPointOpt = GeomUtil.getCrossPoint(s0, s1);
 
-		return segmentCrossPointOpt
-				.map(crossPoint -> createForSegmentsWithCross(s0, s1, crossPoint, pointEps))
-				.orElse(createForSegmentsWithoutCross(s0, s1, pointEps));
+        return segmentCrossPointOpt
+                .map(crossPoint -> createForSegmentsWithCross(s0, s1, crossPoint, pointEps))
+                .orElse(createForSegmentsWithoutCross(s0, s1, pointEps));
 
-	}
+    }
 
-	/**
-	 * Extended interpretation of the axiom. This method returns the
-	 * perpendicular bisector of the closest points between the given segments.
-	 *
-	 * @param s0
-	 * @param s1
-	 * @return
-	 */
-	private List<Line> createForSegmentsOnTheSameLine(final Segment s0, final Segment s1) {
-		var p0 = GeomUtil.getNearestPointToSegment(s1.getP0(), s0);
-		var p1 = GeomUtil.getNearestPointToSegment(s0.getP0(), s1);
+    /**
+     * Extended interpretation of the axiom. This method returns the
+     * perpendicular bisector of the closest points between the given segments.
+     *
+     * @param s0
+     * @param s1
+     * @return
+     */
+    private List<Line> createForSegmentsOnTheSameLine(final Segment s0, final Segment s1) {
+        var p0 = GeomUtil.getNearestPointToSegment(s1.getP0(), s0);
+        var p1 = GeomUtil.getNearestPointToSegment(s0.getP0(), s1);
 
-		var p = p0.add(p1).multiply(0.5);
+        var p = p0.add(p1).multiply(0.5);
 
-		return List.of(new Line(p, s0.getLine().getDirection().getRightSidePerpendicular()));
-	}
+        return List.of(new Line(p, s0.getLine().getDirection().getRightSidePerpendicular()));
+    }
 
-	private List<Line> createForParallelSegments(final Line line0, final Line line1) {
+    private List<Line> createForParallelSegments(final Line line0, final Line line1) {
 
-		var point = line0.getPoint();
+        var point = line0.getPoint();
 
-		var dir0 = line0.getDirection();
-		var verticalLine = new Line(point, dir0.getRightSidePerpendicular());
+        var dir0 = line0.getDirection();
+        var verticalLine = new Line(point, dir0.getRightSidePerpendicular());
 
-		var crossPointOpt = GeomUtil.getCrossPoint(verticalLine, line1);
+        var crossPointOpt = GeomUtil.getCrossPoint(verticalLine, line1);
 
-		return crossPointOpt.map(crossPoint -> {
-			var midPoint = point.add(crossPoint).multiply(0.5);
-			return List.of(new Line(midPoint, dir0));
-		}).orElse(List.of());
-	}
+        return crossPointOpt.map(crossPoint -> {
+            var midPoint = point.add(crossPoint).multiply(0.5);
+            return List.of(new Line(midPoint, dir0));
+        }).orElse(List.of());
+    }
 
-	/**
-	 * For version compatibility: Probably won't happen on recent versions since
-	 * current ORIPA always makes a cross point after input.
-	 *
-	 * @param s0
-	 * @param s1
-	 * @param segmentCrossPoint
-	 * @param pointEps
-	 * @return
-	 */
-	private List<Line> createForSegmentsWithCross(final Segment s0, final Segment s1,
-			final Vector2d segmentCrossPoint, final double pointEps) {
+    /**
+     * For version compatibility: Probably won't happen on recent versions since
+     * current ORIPA always makes a cross point after input.
+     *
+     * @param s0
+     * @param s1
+     * @param segmentCrossPoint
+     * @param pointEps
+     * @return
+     */
+    private List<Line> createForSegmentsWithCross(final Segment s0, final Segment s1,
+            final Vector2d segmentCrossPoint, final double pointEps) {
 
-		var sharedOpt = s0.getSharedEndPoint(s1, pointEps);
+        var sharedOpt = s0.getSharedEndPoint(s1, pointEps);
 
-		return sharedOpt.map(shared -> createUsingCrossPoint(s0, s1, shared))
-				.orElseGet(() -> {
-					var line0 = s0.getLine();
-					var line1 = s1.getLine();
+        return sharedOpt.map(shared -> createUsingCrossPoint(s0, s1, shared))
+                .orElseGet(() -> {
+                    var line0 = s0.getLine();
+                    var line1 = s1.getLine();
 
-					var pointOnLine0 = segmentCrossPoint.add(line0.getDirection());
+                    var pointOnLine0 = segmentCrossPoint.add(line0.getDirection());
 
-					var pointOnLine1 = segmentCrossPoint.add(line1.getDirection());
+                    var pointOnLine1 = segmentCrossPoint.add(line1.getDirection());
 
-					var reversedDir = line1.getDirection().multiply(-1);
-					var pointOnLine1Reversed = segmentCrossPoint.add(reversedDir);
+                    var reversedDir = line1.getDirection().multiply(-1);
+                    var pointOnLine1Reversed = segmentCrossPoint.add(reversedDir);
 
-					return List.of(
-							GeomUtil.getBisectorLine(pointOnLine0, segmentCrossPoint, pointOnLine1),
-							GeomUtil.getBisectorLine(pointOnLine0, segmentCrossPoint, pointOnLine1Reversed));
+                    return List.of(
+                            GeomUtil.getBisectorLine(pointOnLine0, segmentCrossPoint, pointOnLine1),
+                            GeomUtil.getBisectorLine(pointOnLine0, segmentCrossPoint, pointOnLine1Reversed));
 
-				});
-	}
+                });
+    }
 
-	private List<Line> createForSegmentsWithoutCross(final Segment s0, final Segment s1, final double pointEps) {
-		logger.trace("s0 = {}", s0);
-		logger.trace("s1 = {}", s1);
+    private List<Line> createForSegmentsWithoutCross(final Segment s0, final Segment s1, final double pointEps) {
+        logger.trace("s0 = {}", s0);
+        logger.trace("s1 = {}", s1);
 
-		var lines = tryPotentialCross(s0, s1, pointEps)
-				.orElse(tryPotentialCross(s1, s0, pointEps)
-						.orElse(List.of()));
+        var lines = tryPotentialCross(s0, s1, pointEps)
+                .orElse(tryPotentialCross(s1, s0, pointEps)
+                        .orElse(List.of()));
 
-		if (lines.isEmpty()) {
-			// no potential cross on segments
-			var line0 = s0.getLine();
-			var line1 = s1.getLine();
-			var lineCrossPointOpt = GeomUtil.getCrossPoint(line0, line1);
-			return lineCrossPointOpt
-					.map(lineCrossPoint -> createUsingCrossPoint(s0, s1, lineCrossPoint))
-					.orElse(List.of());
-		}
+        if (lines.isEmpty()) {
+            // no potential cross on segments
+            var line0 = s0.getLine();
+            var line1 = s1.getLine();
+            var lineCrossPointOpt = GeomUtil.getCrossPoint(line0, line1);
+            return lineCrossPointOpt
+                    .map(lineCrossPoint -> createUsingCrossPoint(s0, s1, lineCrossPoint))
+                    .orElse(List.of());
+        }
 
-		return lines;
-	}
+        return lines;
+    }
 
-	private Optional<List<Line>> tryPotentialCross(final Segment s0, final Segment s1, final double pointEps) {
-		var line1 = s1.getLine();
-		return GeomUtil.getCrossPoint(line1, s0)
-				.filter(cp -> s0.pointStream().noneMatch(p -> p.equals(cp, pointEps)))
-				.map(cp -> createForPotentialCross(s0, s1, cp));
-	}
+    private Optional<List<Line>> tryPotentialCross(final Segment s0, final Segment s1, final double pointEps) {
+        var line1 = s1.getLine();
+        return GeomUtil.getCrossPoint(line1, s0)
+                .filter(cp -> s0.pointStream().noneMatch(p -> p.equals(cp, pointEps)))
+                .map(cp -> createForPotentialCross(s0, s1, cp));
+    }
 
-	private List<Line> createForPotentialCross(
-			final Segment segmentIncludingCrossPoint, final Segment s, final Vector2d lineCrossPoint) {
-		var point0a = segmentIncludingCrossPoint.getP0();
-		var point0b = segmentIncludingCrossPoint.getP1();
-		var point1 = selectFarEndPoint(s, lineCrossPoint);
+    private List<Line> createForPotentialCross(
+            final Segment segmentIncludingCrossPoint, final Segment s, final Vector2d lineCrossPoint) {
+        var point0a = segmentIncludingCrossPoint.getP0();
+        var point0b = segmentIncludingCrossPoint.getP1();
+        var point1 = selectFarEndPoint(s, lineCrossPoint);
 
-		return List.of(
-				GeomUtil.getBisectorLine(point0a, lineCrossPoint, point1),
-				GeomUtil.getBisectorLine(point0b, lineCrossPoint, point1));
-	}
+        return List.of(
+                GeomUtil.getBisectorLine(point0a, lineCrossPoint, point1),
+                GeomUtil.getBisectorLine(point0b, lineCrossPoint, point1));
+    }
 
-	private List<Line> createUsingCrossPoint(final Segment s0, final Segment s1, final Vector2d crossPoint) {
-		var point0 = selectFarEndPoint(s0, crossPoint);
-		var point1 = selectFarEndPoint(s1, crossPoint);
+    private List<Line> createUsingCrossPoint(final Segment s0, final Segment s1, final Vector2d crossPoint) {
+        var point0 = selectFarEndPoint(s0, crossPoint);
+        var point1 = selectFarEndPoint(s1, crossPoint);
 
-		return List.of(GeomUtil.getBisectorLine(point0, crossPoint, point1));
-	}
+        return List.of(GeomUtil.getBisectorLine(point0, crossPoint, point1));
+    }
 
-	private Vector2d selectFarEndPoint(final Segment s, final Vector2d p) {
-		return s.getP0().distance(p) > s.getP1().distance(p)
-				? s.getP0()
-				: s.getP1();
-	}
+    private Vector2d selectFarEndPoint(final Segment s, final Vector2d p) {
+        return s.getP0().distance(p) > s.getP1().distance(p)
+                ? s.getP0()
+                : s.getP1();
+    }
 
 }

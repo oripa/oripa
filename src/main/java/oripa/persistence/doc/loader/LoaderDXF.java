@@ -30,94 +30,94 @@ import oripa.value.OriLine;
 
 public class LoaderDXF implements DocLoader {
 
-	@Override
-	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
-		var dtos = new ArrayList<LineDto>();
+    @Override
+    public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
+        var dtos = new ArrayList<LineDto>();
 
-		try (var r = new FileReader(filePath)) {
-			StreamTokenizer st = new StreamTokenizer(r);
-			st.resetSyntax();
-			st.wordChars('0', '9');
-			st.wordChars('.', '.');
-			st.wordChars('0', '\u00FF');
-			st.wordChars('-', '-');
-			st.whitespaceChars(' ', ' ');
-			st.whitespaceChars('\t', '\t');
-			st.whitespaceChars('\n', '\n');
-			st.whitespaceChars('\r', '\r');
+        try (var r = new FileReader(filePath)) {
+            StreamTokenizer st = new StreamTokenizer(r);
+            st.resetSyntax();
+            st.wordChars('0', '9');
+            st.wordChars('.', '.');
+            st.wordChars('0', '\u00FF');
+            st.wordChars('-', '-');
+            st.whitespaceChars(' ', ' ');
+            st.whitespaceChars('\t', '\t');
+            st.whitespaceChars('\n', '\n');
+            st.whitespaceChars('\r', '\r');
 
-			int token;
+            int token;
 
-			LineDto dto;
-			while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
-				if (token == StreamTokenizer.TT_WORD && st.sval.equals("LINE")) {
-					dto = new LineDto();
-					System.out.println("new Line");
+            LineDto dto;
+            while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
+                if (token == StreamTokenizer.TT_WORD && st.sval.equals("LINE")) {
+                    dto = new LineDto();
+                    System.out.println("new Line");
 
-					while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
-						if (token == StreamTokenizer.TT_WORD
-								&& st.sval.equals("0")) {
-							dtos.add(dto);
-							break;
-						} else if (token == StreamTokenizer.TT_WORD
-								&& st.sval.equals("62")) {
-							st.nextToken();
-							int color = Integer.parseInt(st.sval);
-							System.out.println("color = " + color);
-							if (color == 1 || (9 < color && color < 40)) {
-								// Reds are mountains
-								dto.type = OriLine.Type.MOUNTAIN;
-							} else if (color == 2 || color == 5
-									|| (139 < color && color < 200)) {
-								// Blues are valleys
-								dto.type = OriLine.Type.VALLEY;
-							} else if (color == 3
-									|| (59 < color && color < 130)) {
-								// greens are cuts
-								dto.type = OriLine.Type.CUT;
-							} else {
-								dto.type = OriLine.Type.AUX;
-							}
-						} else if (token == StreamTokenizer.TT_WORD
-								&& st.sval.equals("10")) {
-							st.nextToken();
-							dto.p0x = Double.parseDouble(st.sval);
-						} else if (token == StreamTokenizer.TT_WORD
-								&& st.sval.equals("20")) {
-							st.nextToken();
-							dto.p0y = Double.parseDouble(st.sval);
-						} else if (token == StreamTokenizer.TT_WORD
-								&& st.sval.equals("11")) {
-							st.nextToken();
-							dto.p1x = Double.parseDouble(st.sval);
-						} else if (token == StreamTokenizer.TT_WORD
-								&& st.sval.equals("21")) {
-							st.nextToken();
-							dto.p1y = Double.parseDouble(st.sval);
+                    while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
+                        if (token == StreamTokenizer.TT_WORD
+                                && st.sval.equals("0")) {
+                            dtos.add(dto);
+                            break;
+                        } else if (token == StreamTokenizer.TT_WORD
+                                && st.sval.equals("62")) {
+                            st.nextToken();
+                            int color = Integer.parseInt(st.sval);
+                            System.out.println("color = " + color);
+                            if (color == 1 || (9 < color && color < 40)) {
+                                // Reds are mountains
+                                dto.type = OriLine.Type.MOUNTAIN;
+                            } else if (color == 2 || color == 5
+                                    || (139 < color && color < 200)) {
+                                // Blues are valleys
+                                dto.type = OriLine.Type.VALLEY;
+                            } else if (color == 3
+                                    || (59 < color && color < 130)) {
+                                // greens are cuts
+                                dto.type = OriLine.Type.CUT;
+                            } else {
+                                dto.type = OriLine.Type.AUX;
+                            }
+                        } else if (token == StreamTokenizer.TT_WORD
+                                && st.sval.equals("10")) {
+                            st.nextToken();
+                            dto.p0x = Double.parseDouble(st.sval);
+                        } else if (token == StreamTokenizer.TT_WORD
+                                && st.sval.equals("20")) {
+                            st.nextToken();
+                            dto.p0y = Double.parseDouble(st.sval);
+                        } else if (token == StreamTokenizer.TT_WORD
+                                && st.sval.equals("11")) {
+                            st.nextToken();
+                            dto.p1x = Double.parseDouble(st.sval);
+                        } else if (token == StreamTokenizer.TT_WORD
+                                && st.sval.equals("21")) {
+                            st.nextToken();
+                            dto.p1y = Double.parseDouble(st.sval);
 
-							if (dto.getP0().distance(dto.getP1()) < 0.001) {
-								dtos.remove(dto);
-							}
+                            if (dto.getP0().distance(dto.getP1()) < 0.001) {
+                                dtos.remove(dto);
+                            }
 
-						} else {
-							System.out.println("skip" + st.sval);
-							st.nextToken();
-						}
-					}
-				}
-			}
+                        } else {
+                            System.out.println("skip" + st.sval);
+                            st.nextToken();
+                        }
+                    }
+                }
+            }
 
-		} catch (NumberFormatException e) {
-			throw new WrongDataFormatException("Parse error.", e);
-		}
+        } catch (NumberFormatException e) {
+            throw new WrongDataFormatException("Parse error.", e);
+        }
 
-		if (dtos.isEmpty()) {
-			return Optional.empty();
-		}
+        if (dtos.isEmpty()) {
+            return Optional.empty();
+        }
 
-		var doc = Doc.forLoading(new LineDtoConverter().convert(dtos));
+        var doc = Doc.forLoading(new LineDtoConverter().convert(dtos));
 
-		return Optional.of(doc);
-	}
+        return Optional.of(doc);
+    }
 
 }

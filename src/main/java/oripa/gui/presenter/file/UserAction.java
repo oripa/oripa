@@ -23,6 +23,6 @@ package oripa.gui.presenter.file;
  *
  */
 public enum UserAction {
-	SELECTED,
-	CANCELED
+    SELECTED,
+    CANCELED
 }

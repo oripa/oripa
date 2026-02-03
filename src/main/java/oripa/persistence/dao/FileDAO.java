@@ -38,108 +38,108 @@ import oripa.util.file.FileFactory;
  *
  */
 public class FileDAO<Data> implements DataAccessObject<Data> {
-	private static Logger logger = LoggerFactory.getLogger(FileDAO.class);
+    private static Logger logger = LoggerFactory.getLogger(FileDAO.class);
 
-	private final FileSelectionSupportSelector<Data> fileSelectionSupportSelector;
+    private final FileSelectionSupportSelector<Data> fileSelectionSupportSelector;
 
-	private final FileFactory fileFactory;
+    private final FileFactory fileFactory;
 
-	@Inject
-	public FileDAO(final FileSelectionSupportSelector<Data> selector, final FileFactory fileFactory) {
-		this.fileSelectionSupportSelector = selector;
-		this.fileFactory = fileFactory;
-	}
+    @Inject
+    public FileDAO(final FileSelectionSupportSelector<Data> selector, final FileFactory fileFactory) {
+        this.fileSelectionSupportSelector = selector;
+        this.fileFactory = fileFactory;
+    }
 
-	public FileSelectionSupportSelector<Data> getFileSelectionSupportSelector() {
-		return fileSelectionSupportSelector;
-	}
+    public FileSelectionSupportSelector<Data> getFileSelectionSupportSelector() {
+        return fileSelectionSupportSelector;
+    }
 
-	public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
-		var supportOpt = fileSelectionSupportSelector.getFileSelectionSupport(key);
+    public void setConfigToSavingAction(final FileType<Data> key, final Supplier<Object> configSupplier) {
+        var supportOpt = fileSelectionSupportSelector.getFileSelectionSupport(key);
 
-		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
-	}
+        supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
+    }
 
-	public boolean canLoad(final String filePath) {
-		try {
-			fileSelectionSupportSelector.getLoadableOf(filePath);
-			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
-	}
+    public boolean canLoad(final String filePath) {
+        try {
+            fileSelectionSupportSelector.getLoadableOf(filePath);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 
-	public boolean hasLoaders() {
-		return !fileSelectionSupportSelector.getLoadables().isEmpty();
-	}
+    public boolean hasLoaders() {
+        return !fileSelectionSupportSelector.getLoadables().isEmpty();
+    }
 
-	@Override
-	public Optional<Data> load(final String path)
-			throws DataAccessException, IllegalArgumentException {
+    @Override
+    public Optional<Data> load(final String path)
+            throws DataAccessException, IllegalArgumentException {
 
-		var canonicalPath = canonicalPath(path);
-		var file = fileFactory.create(canonicalPath);
+        var canonicalPath = canonicalPath(path);
+        var file = fileFactory.create(canonicalPath);
 
-		if (!file.exists()) {
-			throw new DataAccessException(canonicalPath + " doesn't exist.");
-		}
-		var loadingAction = fileSelectionSupportSelector.getLoadableOf(canonicalPath).getLoadingAction();
+        if (!file.exists()) {
+            throw new DataAccessException(canonicalPath + " doesn't exist.");
+        }
+        var loadingAction = fileSelectionSupportSelector.getLoadableOf(canonicalPath).getLoadingAction();
 
-		try {
-			return loadingAction.load(canonicalPath);
-		} catch (FileVersionError | IOException | WrongDataFormatException e) {
-			throw new DataAccessException(e);
-		}
-	}
+        try {
+            return loadingAction.load(canonicalPath);
+        } catch (FileVersionError | IOException | WrongDataFormatException e) {
+            throw new DataAccessException(e);
+        }
+    }
 
-	@Override
-	public void save(final Data data, final String path)
-			throws DataAccessException, IllegalArgumentException {
+    @Override
+    public void save(final Data data, final String path)
+            throws DataAccessException, IllegalArgumentException {
 
-		logger.info("save(): path = {}", path);
+        logger.info("save(): path = {}", path);
 
-		var support = fileSelectionSupportSelector.getSavableOf(path);
-		var savingAction = support.getSavingAction();
+        var support = fileSelectionSupportSelector.getSavableOf(path);
+        var savingAction = support.getSavingAction();
 
-		try {
-			savingAction.save(data, canonicalPath(path));
-		} catch (IOException e) {
-			throw new DataAccessException(e);
-		}
-	}
+        try {
+            savingAction.save(data, canonicalPath(path));
+        } catch (IOException e) {
+            throw new DataAccessException(e);
+        }
+    }
 
-	/**
-	 * Extended version of {@link #save(Object, String)} for specifying saving
-	 * action.
-	 *
-	 * @param data
-	 * @param path
-	 * @param type
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	public void save(final Data data, final String path, final FileType<Data> type)
-			throws DataAccessException, IllegalArgumentException {
+    /**
+     * Extended version of {@link #save(Object, String)} for specifying saving
+     * action.
+     *
+     * @param data
+     * @param path
+     * @param type
+     * @throws IOException
+     * @throws IllegalArgumentException
+     */
+    public void save(final Data data, final String path, final FileType<Data> type)
+            throws DataAccessException, IllegalArgumentException {
 
-		logger.info("save(): path = {}", path);
+        logger.info("save(): path = {}", path);
 
-		var support = fileSelectionSupportSelector.getSavablesOf(List.of(type)).stream()
-				.findFirst()
-				.get();
-		var savingAction = support.getSavingAction();
+        var support = fileSelectionSupportSelector.getSavablesOf(List.of(type)).stream()
+                .findFirst()
+                .get();
+        var savingAction = support.getSavingAction();
 
-		try {
-			savingAction.save(data, canonicalPath(path));
-		} catch (IOException e) {
-			throw new DataAccessException(e);
-		}
-	}
+        try {
+            savingAction.save(data, canonicalPath(path));
+        } catch (IOException e) {
+            throw new DataAccessException(e);
+        }
+    }
 
-	private String canonicalPath(final String path) throws DataAccessException {
-		try {
-			return fileFactory.create(path).getCanonicalPath();
-		} catch (Exception e) {
-			throw new DataAccessException(e);
-		}
-	}
+    private String canonicalPath(final String path) throws DataAccessException {
+        try {
+            return fileFactory.create(path).getCanonicalPath();
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
 }

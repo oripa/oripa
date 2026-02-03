@@ -36,61 +36,61 @@ import oripa.value.OriPoint;
  *
  */
 public class OriVerticesFactory {
-	private static final Logger logger = LoggerFactory.getLogger(OriVerticesFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(OriVerticesFactory.class);
 
-	public List<OriVertex> createOriVertices(final Collection<OriLine> creasePatternWithoutAux, final double pointEps) {
-		var vertices = new ArrayList<OriVertex>();
-		var verticesMap = new TreeMap<OriPoint, OriVertex>();
+    public List<OriVertex> createOriVertices(final Collection<OriLine> creasePatternWithoutAux, final double pointEps) {
+        var vertices = new ArrayList<OriVertex>();
+        var verticesMap = new TreeMap<OriPoint, OriVertex>();
 
-		int edgeCount = 0;
+        int edgeCount = 0;
 
-		var shortestSegment = new Segment(0, 0, 1e20, 0);
+        var shortestSegment = new Segment(0, 0, 1e20, 0);
 
-		for (OriLine l : creasePatternWithoutAux) {
-			if (l.length() < pointEps) {
-				continue;
-			}
+        for (OriLine l : creasePatternWithoutAux) {
+            if (l.length() < pointEps) {
+                continue;
+            }
 
-			shortestSegment = shortestSegment.length() < l.length() ? shortestSegment : l;
+            shortestSegment = shortestSegment.length() < l.length() ? shortestSegment : l;
 
-			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.getOriPoint0(), pointEps);
-			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.getOriPoint1(), pointEps);
-			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
-			edgeCount++;
+            OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.getOriPoint0(), pointEps);
+            OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.getOriPoint1(), pointEps);
+            OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
+            edgeCount++;
 
-			sv.addEdge(eg);
-			ev.addEdge(eg);
+            sv.addEdge(eg);
+            ev.addEdge(eg);
 
-		}
-		vertices.addAll(verticesMap.values());
+        }
+        vertices.addAll(verticesMap.values());
 
-		logger.debug("#vertex = " + vertices.size());
-		logger.debug("#edge = " + edgeCount);
-		logger.debug("shortest edge ({}) = {}", shortestSegment.length(), shortestSegment);
+        logger.debug("#vertex = " + vertices.size());
+        logger.debug("#edge = " + edgeCount);
+        logger.debug("shortest edge ({}) = {}", shortestSegment.length(), shortestSegment);
 
-		return vertices;
-	}
+        return vertices;
+    }
 
-	private OriVertex addAndGetVertexFromVVec(
-			final TreeMap<OriPoint, OriVertex> verticesMap, final OriPoint p, final double pointEps) {
-		var boundMap = CollectionUtil.rangeMapInclusive(verticesMap,
-				new OriPoint(p.getX() - pointEps, p.getY() - pointEps),
-				new OriPoint(p.getX() + pointEps, p.getY() + pointEps));
+    private OriVertex addAndGetVertexFromVVec(
+            final TreeMap<OriPoint, OriVertex> verticesMap, final OriPoint p, final double pointEps) {
+        var boundMap = CollectionUtil.rangeMapInclusive(verticesMap,
+                new OriPoint(p.getX() - pointEps, p.getY() - pointEps),
+                new OriPoint(p.getX() + pointEps, p.getY() + pointEps));
 
-		var neighbors = boundMap.keySet().stream()
-				.filter(point -> point.equals(p, pointEps))
-				.toList();
+        var neighbors = boundMap.keySet().stream()
+                .filter(point -> point.equals(p, pointEps))
+                .toList();
 
-		if (neighbors.isEmpty()) {
-			var vtx = new OriVertex(p);
-			verticesMap.put(p, vtx);
-			return vtx;
-		}
+        if (neighbors.isEmpty()) {
+            var vtx = new OriVertex(p);
+            verticesMap.put(p, vtx);
+            return vtx;
+        }
 
-		// suppress position drift by using nearest
-		var neighbor = p.findNearest(neighbors);
+        // suppress position drift by using nearest
+        var neighbor = p.findNearest(neighbors);
 
-		return boundMap.get(neighbor.get());
-	}
+        return boundMap.get(neighbor.get());
+    }
 
 }

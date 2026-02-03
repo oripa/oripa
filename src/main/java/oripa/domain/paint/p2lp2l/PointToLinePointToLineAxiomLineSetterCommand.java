@@ -30,39 +30,39 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class PointToLinePointToLineAxiomLineSetterCommand extends ValidatablePaintCommand {
-	private static Logger logger = LoggerFactory.getLogger(PointToLinePointToLineAxiomLineSetterCommand.class);
+    private static Logger logger = LoggerFactory.getLogger(PointToLinePointToLineAxiomLineSetterCommand.class);
 
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public PointToLinePointToLineAxiomLineSetterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public PointToLinePointToLineAxiomLineSetterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int vertexCount = 2;
-		final int lineCount = 2;
+    @Override
+    public void execute() {
+        final int vertexCount = 2;
+        final int lineCount = 2;
 
-		validateCounts(context, vertexCount, lineCount);
+        validateCounts(context, vertexCount, lineCount);
 
-		var p0 = context.getVertex(0);
-		var p1 = context.getVertex(1);
+        var p0 = context.getVertex(0);
+        var p1 = context.getVertex(1);
 
-		var s0 = context.getLine(0);
-		var s1 = context.getLine(1);
+        var s0 = context.getLine(0);
+        var s1 = context.getLine(1);
 
-		var paperSize = context.getCreasePattern().getPaperSize();
-		var range = paperSize * 2;
+        var paperSize = context.getCreasePattern().getPaperSize();
+        var range = paperSize * 2;
 
-		logger.debug("search range: {}", range);
+        logger.debug("search range: {}", range);
 
-		var foldLines = new PointToLinePointToLineAxiom().createFoldLines(
-				p0, s0, p1, s1, range, context.getPointEps());
+        var foldLines = new PointToLinePointToLineAxiom().createFoldLines(
+                p0, s0, p1, s1, range, context.getPointEps());
 
-		logger.debug("solution lines: {}", foldLines);
+        logger.debug("solution lines: {}", foldLines);
 
-		context.setSolutionLines(foldLines);
+        context.setSolutionLines(foldLines);
 
-	}
+    }
 
 }

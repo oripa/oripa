@@ -31,12 +31,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 class ExtensionCorrectorTest {
-	@InjectMocks
-	ExtensionCorrector extensionCorrector;
+    @InjectMocks
+    ExtensionCorrector extensionCorrector;
 
-	@Test
-	void test() {
-		assertEquals("aaa.bbb.ccc", extensionCorrector.correct("aaa.bbb.xxx", new String[] { "ccc" }));
-	}
+    @Test
+    void test() {
+        assertEquals("aaa.bbb.ccc", extensionCorrector.correct("aaa.bbb.xxx", new String[] { "ccc" }));
+    }
 
 }

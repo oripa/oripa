@@ -27,21 +27,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class TypedXPath {
-	private final XPath xpath;
+    private final XPath xpath;
 
-	public TypedXPath() {
-		this(XPathFactory.newInstance().newXPath());
-	}
+    public TypedXPath() {
+        this(XPathFactory.newInstance().newXPath());
+    }
 
-	public TypedXPath(final XPath xpath) {
-		this.xpath = xpath;
-	}
+    public TypedXPath(final XPath xpath) {
+        this.xpath = xpath;
+    }
 
-	public Node evaluateAsNode(final String expression, final Node node) throws XPathExpressionException {
-		return (Node) xpath.evaluate(expression, node, XPathConstants.NODE);
-	}
+    public Node evaluateAsNode(final String expression, final Node node) throws XPathExpressionException {
+        return (Node) xpath.evaluate(expression, node, XPathConstants.NODE);
+    }
 
-	public NodeList evaluateAsNodeList(final String expression, final Node node) throws XPathExpressionException {
-		return (NodeList) xpath.evaluate(expression, node, XPathConstants.NODESET);
-	}
+    public NodeList evaluateAsNodeList(final String expression, final Node node) throws XPathExpressionException {
+        return (NodeList) xpath.evaluate(expression, node, XPathConstants.NODESET);
+    }
 }

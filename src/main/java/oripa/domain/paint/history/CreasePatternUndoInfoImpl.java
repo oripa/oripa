@@ -8,27 +8,27 @@ import oripa.value.OriLine;
 
 class CreasePatternUndoInfoImpl implements UndoInfo<Collection<OriLine>> {
 
-	private ArrayList<OriLine> lines = new ArrayList<>();
+    private ArrayList<OriLine> lines = new ArrayList<>();
 
-	@SuppressWarnings("unused")
-	private CreasePatternUndoInfoImpl() {
-	}
+    @SuppressWarnings("unused")
+    private CreasePatternUndoInfoImpl() {
+    }
 
-	public CreasePatternUndoInfoImpl(final Collection<OriLine> lines) {
-		setInfo(lines);
-	}
+    public CreasePatternUndoInfoImpl(final Collection<OriLine> lines) {
+        setInfo(lines);
+    }
 
-	@Override
-	public java.util.Collection<OriLine> getInfo() {
-		return lines;
-	}
+    @Override
+    public java.util.Collection<OriLine> getInfo() {
+        return lines;
+    }
 
-	@Override
-	public void setInfo(final Collection<OriLine> lines) {
-		this.lines = new ArrayList<>(lines.size());
-		for (OriLine l : lines) {
-			this.lines.add(new OriLine(l));
-		}
+    @Override
+    public void setInfo(final Collection<OriLine> lines) {
+        this.lines = new ArrayList<>(lines.size());
+        for (OriLine l : lines) {
+            this.lines.add(new OriLine(l));
+        }
 
-	}
+    }
 }

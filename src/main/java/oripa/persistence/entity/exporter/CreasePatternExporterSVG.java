@@ -33,20 +33,20 @@ import oripa.persistence.svg.CreasePatternToSvgConverter;
  *
  */
 public class CreasePatternExporterSVG implements Exporter<CreasePattern> {
-	@Override
-	public boolean export(final CreasePattern creasePattern, final String filepath, final Object configObj)
-			throws IOException, IllegalArgumentException {
+    @Override
+    public boolean export(final CreasePattern creasePattern, final String filepath, final Object configObj)
+            throws IOException, IllegalArgumentException {
 
-		double scale = SVG_SIZE / creasePattern.getPaperSize();
-		CreasePatternToSvgConverter creasePatternToSvgConverter = new CreasePatternToSvgConverter(creasePattern, scale);
+        double scale = SVG_SIZE / creasePattern.getPaperSize();
+        CreasePatternToSvgConverter creasePatternToSvgConverter = new CreasePatternToSvgConverter(creasePattern, scale);
 
-		try (var fw = new FileWriter(filepath);
-				var bw = new BufferedWriter(fw)) {
-			bw.write(SVG_START);
-			bw.write(creasePatternToSvgConverter.getSvgCreasePattern());
-			bw.write(SVG_END_TAG);
-		}
+        try (var fw = new FileWriter(filepath);
+                var bw = new BufferedWriter(fw)) {
+            bw.write(SVG_START);
+            bw.write(creasePatternToSvgConverter.getSvgCreasePattern());
+            bw.write(SVG_END_TAG);
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

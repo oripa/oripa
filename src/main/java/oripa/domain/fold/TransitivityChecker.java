@@ -32,79 +32,79 @@ import oripa.domain.fold.subface.SubFace;
  *
  */
 public class TransitivityChecker {
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	/**
-	 *
-	 * @param subface
-	 * @param overlapRelation
-	 * @return invalid order of indices. null if valid or undetermined
-	 */
-	public List<Integer> checkSubfaceTransitivity(final SubFace subface, final OverlapRelation overlapRelation) {
+    /**
+     *
+     * @param subface
+     * @param overlapRelation
+     * @return invalid order of indices. null if valid or undetermined
+     */
+    public List<Integer> checkSubfaceTransitivity(final SubFace subface, final OverlapRelation overlapRelation) {
 
-		var parentFaceIndices = subface.getParentFaceIndices();
+        var parentFaceIndices = subface.getParentFaceIndices();
 
-		var undefined = false;
-		for (var i : parentFaceIndices) {
-			for (var j : parentFaceIndices) {
-				if (i == j) {
-					continue;
-				}
-				if (overlapRelation.isUndefined(i, j)) {
-					undefined = true;
-					break;
-				}
-			}
-			if (undefined) {
-				break;
-			}
-		}
-		if (undefined) {
-			logger.trace("skip: {}", parentFaceIndices);
-			return null;
-		}
+        var undefined = false;
+        for (var i : parentFaceIndices) {
+            for (var j : parentFaceIndices) {
+                if (i == j) {
+                    continue;
+                }
+                if (overlapRelation.isUndefined(i, j)) {
+                    undefined = true;
+                    break;
+                }
+            }
+            if (undefined) {
+                break;
+            }
+        }
+        if (undefined) {
+            logger.trace("skip: {}", parentFaceIndices);
+            return null;
+        }
 
-		var sortedParentFaceIDs = parentFaceIndices.stream()
-				.sorted((a, b) -> {
-					if (a == b) {
-						return 0;
-					}
-					return overlapRelation.isLower(a, b) ? 1 : -1;
-				}).toList();
+        var sortedParentFaceIDs = parentFaceIndices.stream()
+                .sorted((a, b) -> {
+                    if (a == b) {
+                        return 0;
+                    }
+                    return overlapRelation.isLower(a, b) ? 1 : -1;
+                }).toList();
 
-		var isOk = checkTransitivity(overlapRelation, sortedParentFaceIDs);
+        var isOk = checkTransitivity(overlapRelation, sortedParentFaceIDs);
 
-		if (!isOk) {
-			logger.debug("invalid parent face order {}", sortedParentFaceIDs);
-			return sortedParentFaceIDs;
-		}
+        if (!isOk) {
+            logger.debug("invalid parent face order {}", sortedParentFaceIDs);
+            return sortedParentFaceIDs;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Check the transitivity of faces.
-	 *
-	 * @param overlapRelation
-	 * @param order
-	 *            indices of faces top to bottom
-	 * @return true if valid
-	 */
-	private boolean checkTransitivity(final OverlapRelation overlapRelation, final List<Integer> order) {
-		var length = order.size();
-		for (int a = 0; a < length - 1; a++) {
-			int f1 = order.get(a);
-			for (int b = a + 1; b < length; b++) {
-				int f2 = order.get(b);
+    /**
+     * Check the transitivity of faces.
+     *
+     * @param overlapRelation
+     * @param order
+     *            indices of faces top to bottom
+     * @return true if valid
+     */
+    private boolean checkTransitivity(final OverlapRelation overlapRelation, final List<Integer> order) {
+        var length = order.size();
+        for (int a = 0; a < length - 1; a++) {
+            int f1 = order.get(a);
+            for (int b = a + 1; b < length; b++) {
+                int f2 = order.get(b);
 
-				if (overlapRelation.isLower(f1, f2)) {
-					logger.trace("wrong: ({},{})", f1, f2);
-					return false;
-				}
-			}
-		}
+                if (overlapRelation.isLower(f1, f2)) {
+                    logger.trace("wrong: ({},{})", f1, f2);
+                    return false;
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

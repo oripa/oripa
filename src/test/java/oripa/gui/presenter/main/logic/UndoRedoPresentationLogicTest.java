@@ -41,50 +41,50 @@ import oripa.gui.view.ViewScreenUpdater;
 @ExtendWith(MockitoExtension.class)
 class UndoRedoPresentationLogicTest {
 
-	@InjectMocks
-	UndoRedoPresentationLogic presentationLogic;
+    @InjectMocks
+    UndoRedoPresentationLogic presentationLogic;
 
-	@Mock
-	ViewScreenUpdater screenUpdater;
+    @Mock
+    ViewScreenUpdater screenUpdater;
 
-	@Mock
-	MouseActionHolder mouseActionHolder;
+    @Mock
+    MouseActionHolder mouseActionHolder;
 
-	@Mock
-	PaintContext paintContext;
+    @Mock
+    PaintContext paintContext;
 
-	@Nested
-	class TestUndo {
+    @Nested
+    class TestUndo {
 
-		@Test
-		void undoLogicShouldBeCalled() {
+        @Test
+        void undoLogicShouldBeCalled() {
 
-			GraphicMouseAction action = mock();
-			when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
+            GraphicMouseAction action = mock();
+            when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
 
-			presentationLogic.undo();
+            presentationLogic.undo();
 
-			verify(action).undo(paintContext);
-			verify(screenUpdater).updateScreen();
+            verify(action).undo(paintContext);
+            verify(screenUpdater).updateScreen();
 
-		}
-	}
+        }
+    }
 
-	@Nested
-	class TestRedo {
+    @Nested
+    class TestRedo {
 
-		@Test
-		void redoLogicShouldBeCalled() {
+        @Test
+        void redoLogicShouldBeCalled() {
 
-			GraphicMouseAction action = mock();
-			when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
+            GraphicMouseAction action = mock();
+            when(mouseActionHolder.getMouseAction()).thenReturn(Optional.of(action));
 
-			presentationLogic.redo();
+            presentationLogic.redo();
 
-			verify(action).redo(paintContext);
-			verify(screenUpdater).updateScreen();
+            verify(action).redo(paintContext);
+            verify(screenUpdater).updateScreen();
 
-		}
-	}
+        }
+    }
 
 }

@@ -22,58 +22,58 @@ import oripa.vecmath.Vector2d;
 
 public class Line {
 
-	private final Vector2d p; // Passing through point
-	private final Vector2d dir; // Unit direction vector
+    private final Vector2d p; // Passing through point
+    private final Vector2d dir; // Unit direction vector
 
-	public Line(final Vector2d p, final Vector2d dir) {
-		this.p = p;
-		this.dir = dir.normalize();
-	}
+    public Line(final Vector2d p, final Vector2d dir) {
+        this.p = p;
+        this.dir = dir.normalize();
+    }
 
-	/**
-	 * Returns a reference point on this line.
-	 *
-	 * @return
-	 */
-	public Vector2d getPoint() {
-		return p;
-	}
+    /**
+     * Returns a reference point on this line.
+     *
+     * @return
+     */
+    public Vector2d getPoint() {
+        return p;
+    }
 
-	/**
-	 * Returns unit vector of this line's direction.
-	 *
-	 * @return
-	 */
-	public Vector2d getDirection() {
-		return dir;
-	}
+    /**
+     * Returns unit vector of this line's direction.
+     *
+     * @return
+     */
+    public Vector2d getDirection() {
+        return dir;
+    }
 
-	/**
-	 * True if the given line is parallel to this line.
-	 *
-	 * @param line
-	 * @return
-	 */
-	public boolean isParallel(final Line line) {
-		return dir.isParallel(line.dir);
-	}
+    /**
+     * True if the given line is parallel to this line.
+     *
+     * @param line
+     * @return
+     */
+    public boolean isParallel(final Line line) {
+        return dir.isParallel(line.dir);
+    }
 
-	/**
-	 * Returns {@code true} if the given line is parallel to this line and the
-	 * point on the given line is also on this line.
-	 *
-	 * @param line
-	 * @param eps
-	 * @return {@code true} if the given line is equal to this line.
-	 */
-	public boolean equals(final Line line, final double eps) {
-		return dir.isParallel(line.dir)
-				&& (p.equals(line.p, eps) || p.subtract(line.p).isParallel(line.dir));
-	}
+    /**
+     * Returns {@code true} if the given line is parallel to this line and the
+     * point on the given line is also on this line.
+     *
+     * @param line
+     * @param eps
+     * @return {@code true} if the given line is equal to this line.
+     */
+    public boolean equals(final Line line, final double eps) {
+        return dir.isParallel(line.dir)
+                && (p.equals(line.p, eps) || p.subtract(line.p).isParallel(line.dir));
+    }
 
-	@Override
-	public String toString() {
-		return "[p=" + p + ", dir=" + dir + "]";
-	}
+    @Override
+    public String toString() {
+        return "[p=" + p + ", dir=" + dir + "]";
+    }
 
 }

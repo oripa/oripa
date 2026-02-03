@@ -40,60 +40,60 @@ import oripa.persistence.foldformat.FrameClass;
  */
 public class LoaderFOLD implements DocLoader {
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.doc.Loader#load(java.lang.String)
-	 */
-	@Override
-	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.persistent.doc.Loader#load(java.lang.String)
+     */
+    @Override
+    public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
 
-		var gson = new Gson();
-		CreasePatternFOLDFormat foldFormat;
+        var gson = new Gson();
+        CreasePatternFOLDFormat foldFormat;
 
-		try {
-			foldFormat = gson.fromJson(
-					Files.readString(Paths.get(filePath)),
-					CreasePatternFOLDFormat.class);
-		} catch (JsonSyntaxException e) {
-			throw new WrongDataFormatException(
-					"The file does not follow JSON style."
-							+ " Note that FOLD format is based on JSON.",
-					e);
-		}
+        try {
+            foldFormat = gson.fromJson(
+                    Files.readString(Paths.get(filePath)),
+                    CreasePatternFOLDFormat.class);
+        } catch (JsonSyntaxException e) {
+            throw new WrongDataFormatException(
+                    "The file does not follow JSON style."
+                            + " Note that FOLD format is based on JSON.",
+                    e);
+        }
 
-		if (!foldFormat.frameClassesContains(FrameClass.CREASE_PATTERN)) {
-			throw new WrongDataFormatException(
-					"frame_classes does not contain " + FrameClass.CREASE_PATTERN + ".");
-		}
+        if (!foldFormat.frameClassesContains(FrameClass.CREASE_PATTERN)) {
+            throw new WrongDataFormatException(
+                    "frame_classes does not contain " + FrameClass.CREASE_PATTERN + ".");
+        }
 
-		if (foldFormat.getEdgesVertices() == null) {
-			throw new WrongDataFormatException("edges_vertices property is needed in the file.");
-		}
-		if (foldFormat.getEdgesAssignment() == null) {
-			throw new WrongDataFormatException("edges_assignment property is needed in the file.");
-		}
-		if (foldFormat.getVerticesCoords() == null) {
-			throw new WrongDataFormatException("vertices_coords property is needed in the file.");
-		}
+        if (foldFormat.getEdgesVertices() == null) {
+            throw new WrongDataFormatException("edges_vertices property is needed in the file.");
+        }
+        if (foldFormat.getEdgesAssignment() == null) {
+            throw new WrongDataFormatException("edges_assignment property is needed in the file.");
+        }
+        if (foldFormat.getVerticesCoords() == null) {
+            throw new WrongDataFormatException("vertices_coords property is needed in the file.");
+        }
 
-		var converter = new CreasePatternElementConverter();
-		var lines = converter.fromEdges(
-				foldFormat.getEdgesVertices(),
-				foldFormat.getEdgesAssignment(),
-				foldFormat.getVerticesCoords());
+        var converter = new CreasePatternElementConverter();
+        var lines = converter.fromEdges(
+                foldFormat.getEdgesVertices(),
+                foldFormat.getEdgesAssignment(),
+                foldFormat.getVerticesCoords());
 
-		var factory = new CreasePatternFactory();
-		var cp = factory.createCreasePattern(lines);
+        var factory = new CreasePatternFactory();
+        var cp = factory.createCreasePattern(lines);
 
-		var property = new Property()
-				.setEditorName(foldFormat.getFileAuthor())
-				.setTitle(foldFormat.getFrameTitle())
-				.setMemo(foldFormat.getFrameDescription());
+        var property = new Property()
+                .setEditorName(foldFormat.getFileAuthor())
+                .setTitle(foldFormat.getFrameTitle())
+                .setMemo(foldFormat.getFrameDescription());
 
-		var doc = Doc.forLoading(cp, property);
+        var doc = Doc.forLoading(cp, property);
 
-		return Optional.of(doc);
-	}
+        return Optional.of(doc);
+    }
 
 }

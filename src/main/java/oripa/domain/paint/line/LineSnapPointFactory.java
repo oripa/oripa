@@ -31,23 +31,23 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class LineSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		Vector2d p0, p1;
-		p0 = context.getVertex(0);
-		p1 = context.getVertex(1);
+    public Collection<Vector2d> createSnapPoints(final PaintContext context) {
+        Vector2d p0, p1;
+        p0 = context.getVertex(0);
+        p1 = context.getVertex(1);
 
-		var creasePattern = context.getCreasePattern();
+        var creasePattern = context.getCreasePattern();
 
-		var snapPointFactory = new SnapPointFactory();
+        var snapPointFactory = new SnapPointFactory();
 
-		Collection<Vector2d> snapPoints = new ArrayList<>(
-				snapPointFactory.createSnapPoints(creasePattern, new Line(p0, p0.subtract(p1)),
-						context.getPointEps()));
+        Collection<Vector2d> snapPoints = new ArrayList<>(
+                snapPointFactory.createSnapPoints(creasePattern, new Line(p0, p0.subtract(p1)),
+                        context.getPointEps()));
 
-		snapPoints.add(p0);
-		snapPoints.add(p1);
+        snapPoints.add(p0);
+        snapPoints.add(p1);
 
-		return snapPoints.stream().distinct().toList();
-	}
+        return snapPoints.stream().distinct().toList();
+    }
 
 }

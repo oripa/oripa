@@ -23,7 +23,7 @@ package oripa.gui.view.model;
  *
  */
 public interface ModelGraphics {
-	ObjectGraphicDrawer getBufferObjectDrawer();
+    ObjectGraphicDrawer getBufferObjectDrawer();
 
-	void drawBufferImage();
+    void drawBufferImage();
 }

@@ -32,52 +32,52 @@ import oripa.gui.view.foldability.FoldabilityCheckFrameView;
  */
 public class FoldabilityCheckFramePresenterFactory {
 
-	private final CreasePatternViewContext creasePatternViewContext;
-	private final OrigamiModelFactory modelFactory;
+    private final CreasePatternViewContext creasePatternViewContext;
+    private final OrigamiModelFactory modelFactory;
 
-	@Inject
-	public FoldabilityCheckFramePresenterFactory(
-			final CreasePatternViewContext creasePatternViewContext,
-			final OrigamiModelFactory modelFactory
+    @Inject
+    public FoldabilityCheckFramePresenterFactory(
+            final CreasePatternViewContext creasePatternViewContext,
+            final OrigamiModelFactory modelFactory
 
-	) {
-		this.creasePatternViewContext = creasePatternViewContext;
-		this.modelFactory = modelFactory;
-	}
+    ) {
+        this.creasePatternViewContext = creasePatternViewContext;
+        this.modelFactory = modelFactory;
+    }
 
-	public FoldabilityCheckFramePresenter create(
-			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern,
-			final double pointEps) {
+    public FoldabilityCheckFramePresenter create(
+            final FoldabilityCheckFrameView view,
+            final CreasePattern creasePattern,
+            final double pointEps) {
 
-		OrigamiModel origamiModel;
+        OrigamiModel origamiModel;
 
-		origamiModel = modelFactory.createOrigamiModel(
-				creasePattern,
-				pointEps);
+        origamiModel = modelFactory.createOrigamiModel(
+                creasePattern,
+                pointEps);
 
-		return create(
-				view,
-				creasePattern,
-				origamiModel,
-				new EstimationResultRules(),
-				pointEps);
+        return create(
+                view,
+                creasePattern,
+                origamiModel,
+                new EstimationResultRules(),
+                pointEps);
 
-	}
+    }
 
-	public FoldabilityCheckFramePresenter create(
-			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern,
-			final OrigamiModel origamiModel,
-			final EstimationResultRules estimationRules,
-			final double pointEps) {
+    public FoldabilityCheckFramePresenter create(
+            final FoldabilityCheckFrameView view,
+            final CreasePattern creasePattern,
+            final OrigamiModel origamiModel,
+            final EstimationResultRules estimationRules,
+            final double pointEps) {
 
-		return new FoldabilityCheckFramePresenter(
-				view,
-				origamiModel,
-				estimationRules,
-				creasePattern,
-				creasePatternViewContext.isZeroLineWidth(),
-				pointEps);
-	}
+        return new FoldabilityCheckFramePresenter(
+                view,
+                origamiModel,
+                estimationRules,
+                creasePattern,
+                creasePatternViewContext.isZeroLineWidth(),
+                pointEps);
+    }
 }

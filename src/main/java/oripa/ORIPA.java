@@ -40,41 +40,41 @@ import oripa.inject.PaintDomainModule;
 import oripa.inject.PluginModule;
 
 public class ORIPA {
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public static void main(final String[] args) {
+    public static void main(final String[] args) {
 
-		if (args.length > 0) {
-			new CommandLineInterfaceMain().run(args);
-			return;
-		}
+        if (args.length > 0) {
+            new CommandLineInterfaceMain().run(args);
+            return;
+        }
 
-		SwingUtilities.invokeLater(() -> {
-			try {
+        SwingUtilities.invokeLater(() -> {
+            try {
 
-				// Construction of the main frame
+                // Construction of the main frame
 
-				var injector = Guice.createInjector(
-						new PluginModule(),
-						new MainViewSwingModule(),
-						new MainViewOripaModule(),
-						new BindingModule(),
-						new CreasePatternPresenterModule(),
-						new FileAccessServiceModule(),
-						new PaintDomainModule(),
-						new FileHistoryModule());
+                var injector = Guice.createInjector(
+                        new PluginModule(),
+                        new MainViewSwingModule(),
+                        new MainViewOripaModule(),
+                        new BindingModule(),
+                        new CreasePatternPresenterModule(),
+                        new FileAccessServiceModule(),
+                        new PaintDomainModule(),
+                        new FileHistoryModule());
 
-				var mainFrame = injector.getInstance(MainFrameView.class);
-				mainFrame.initializeFrameBounds();
+                var mainFrame = injector.getInstance(MainFrameView.class);
+                mainFrame.initializeFrameBounds();
 
-				var presenter = injector.getInstance(
-						MainFramePresenter.class);
-				presenter.setViewVisible(true);
-			} catch (Exception e) {
-				logger.error("Failed to start. {}", e);
-			}
+                var presenter = injector.getInstance(
+                        MainFramePresenter.class);
+                presenter.setViewVisible(true);
+            } catch (Exception e) {
+                logger.error("Failed to start. {}", e);
+            }
 
-		});
-	}
+        });
+    }
 
 }

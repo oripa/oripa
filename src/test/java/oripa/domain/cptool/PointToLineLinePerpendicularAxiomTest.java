@@ -31,17 +31,17 @@ import oripa.vecmath.Vector2d;
  */
 class PointToLineLinePerpendicularAxiomTest {
 
-	@Test
-	void test45Degrees() {
+    @Test
+    void test45Degrees() {
 
-		var p = new Vector2d(0, 5);
-		var s = new Segment(new Vector2d(-10, 0), new Vector2d(10, 0));
-		var perpendicular = new Segment(new Vector2d(0, 10), new Vector2d(10, 0));
+        var p = new Vector2d(0, 5);
+        var s = new Segment(new Vector2d(-10, 0), new Vector2d(10, 0));
+        var perpendicular = new Segment(new Vector2d(0, 10), new Vector2d(10, 0));
 
-		var lineOpt = new PointToLineLinePerpendicularAxiom().createFoldLine(p, s, perpendicular);
+        var lineOpt = new PointToLineLinePerpendicularAxiom().createFoldLine(p, s, perpendicular);
 
-		assertTrue(lineOpt.isPresent());
+        assertTrue(lineOpt.isPresent());
 
-		assertEquals(1, lineOpt.get().getDirection().getSlope(), 1e-8);
-	}
+        assertEquals(1, lineOpt.get().getDirection().getSlope(), 1e-8);
+    }
 }

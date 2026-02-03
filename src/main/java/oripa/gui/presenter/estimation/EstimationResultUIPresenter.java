@@ -38,81 +38,81 @@ import oripa.util.BitSet;
  *
  */
 public class EstimationResultUIPresenter {
-	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUIPresenter.class);
+    private static final Logger logger = LoggerFactory.getLogger(EstimationResultUIPresenter.class);
 
-	private final EstimationResultUIView view;
+    private final EstimationResultUIView view;
 
-	private final EstimationResultFilePresentationLogic estimationResultFilePresenter;
+    private final EstimationResultFilePresentationLogic estimationResultFilePresenter;
 
-	private String lastFilePath;
-	private final Consumer<String> lastFilePathChangeListener;
+    private String lastFilePath;
+    private final Consumer<String> lastFilePathChangeListener;
 
-	private final FoldedModelSVGConfigFileAccess svgConfigFileAccess = new FoldedModelSVGConfigFileAccess();
+    private final FoldedModelSVGConfigFileAccess svgConfigFileAccess = new FoldedModelSVGConfigFileAccess();
 
-	public EstimationResultUIPresenter(
-			final EstimationResultUIView view,
-			final EstimationResultFilePresentationLogic estimationResultFilePresenter,
-			final String lastFilePath,
-			final Consumer<String> lastFilePathChangeListener) {
-		this.view = view;
+    public EstimationResultUIPresenter(
+            final EstimationResultUIView view,
+            final EstimationResultFilePresentationLogic estimationResultFilePresenter,
+            final String lastFilePath,
+            final Consumer<String> lastFilePathChangeListener) {
+        this.view = view;
 
-		this.estimationResultFilePresenter = estimationResultFilePresenter;
+        this.estimationResultFilePresenter = estimationResultFilePresenter;
 
-		this.lastFilePath = lastFilePath;
-		this.lastFilePathChangeListener = lastFilePathChangeListener;
+        this.lastFilePath = lastFilePath;
+        this.lastFilePathChangeListener = lastFilePathChangeListener;
 
-		loadSVGConfig();
+        loadSVGConfig();
 
-		addListener();
-	}
+        addListener();
+    }
 
-	private void addListener() {
-		view.addSaveSVGConfigButtonListener(this::saveSVGConfig);
-		view.addExportButtonListener(this::export);
-		view.setFilterInitializationListener(this::createSubfaceToOverlapRelationIndices);
-	}
+    private void addListener() {
+        view.addSaveSVGConfigButtonListener(this::saveSVGConfig);
+        view.addExportButtonListener(this::export);
+        view.setFilterInitializationListener(this::createSubfaceToOverlapRelationIndices);
+    }
 
-	/**
-	 * open export dialog for current folded estimation
-	 */
-	private void export() {
-		try {
+    /**
+     * open export dialog for current folded estimation
+     */
+    private void export() {
+        try {
 
-			lastFilePath = estimationResultFilePresenter.export(view, lastFilePath);
+            lastFilePath = estimationResultFilePresenter.export(view, lastFilePath);
 
-			lastFilePathChangeListener.accept(lastFilePath);
+            lastFilePathChangeListener.accept(lastFilePath);
 
-		} catch (Exception ex) {
-			logger.error("error: ", ex);
-			view.showExportErrorMessage(ex);
-		}
-	}
+        } catch (Exception ex) {
+            logger.error("error: ", ex);
+            view.showExportErrorMessage(ex);
+        }
+    }
 
-	private void saveSVGConfig() {
-		try {
-			svgConfigFileAccess.save(estimationResultFilePresenter.createSVGConfig(view));
-		} catch (Exception e) {
-			view.showErrorMessage(e);
-		}
-	}
+    private void saveSVGConfig() {
+        try {
+            svgConfigFileAccess.save(estimationResultFilePresenter.createSVGConfig(view));
+        } catch (Exception e) {
+            view.showErrorMessage(e);
+        }
+    }
 
-	private void loadSVGConfig() {
-		try {
-			var configOpt = svgConfigFileAccess.load();
+    private void loadSVGConfig() {
+        try {
+            var configOpt = svgConfigFileAccess.load();
 
-			var config = configOpt.orElse(new FoldedModelSVGConfig());
+            var config = configOpt.orElse(new FoldedModelSVGConfig());
 
-			view.setSVGFaceStrokeWidth(config.getFaceStrokeWidth());
-			view.setSVGPrecreaseStrokeWidth(config.getPrecreaseStrokeWidth());
+            view.setSVGFaceStrokeWidth(config.getFaceStrokeWidth());
+            view.setSVGPrecreaseStrokeWidth(config.getPrecreaseStrokeWidth());
 
-		} catch (Exception e) {
-			view.showErrorMessage(e);
-		}
-	}
+        } catch (Exception e) {
+            view.showErrorMessage(e);
+        }
+    }
 
-	private Map<Integer, List<BitSet>> createSubfaceToOverlapRelationIndices(
-			final FoldedModel foldedModel) {
-		return new SubfaceToOverlapRelationIndicesFactory().create(foldedModel);
-	}
+    private Map<Integer, List<BitSet>> createSubfaceToOverlapRelationIndices(
+            final FoldedModel foldedModel) {
+        return new SubfaceToOverlapRelationIndicesFactory().create(foldedModel);
+    }
 
 }

@@ -25,24 +25,24 @@ import oripa.domain.cptool.OverlappingLineExtractor;
  *
  */
 public class CloseTempOutlineFactory {
-	private final IsOnTempOutlineLoop isOnTempOutlineLoop;
-	private final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
-	private final OverlappingLineExtractor overlappingExtractor;
+    private final IsOnTempOutlineLoop isOnTempOutlineLoop;
+    private final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
+    private final OverlappingLineExtractor overlappingExtractor;
 
-	/**
-	 * Constructor
-	 */
-	public CloseTempOutlineFactory(final IsOnTempOutlineLoop isOnTempOutlineLoop,
-			final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop,
-			final OverlappingLineExtractor overlappingExtractor) {
-		this.isOnTempOutlineLoop = isOnTempOutlineLoop;
-		this.isOutsideOfTempOutlineLoop = isOutsideOfTempOutlineLoop;
-		this.overlappingExtractor = overlappingExtractor;
-	}
+    /**
+     * Constructor
+     */
+    public CloseTempOutlineFactory(final IsOnTempOutlineLoop isOnTempOutlineLoop,
+            final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop,
+            final OverlappingLineExtractor overlappingExtractor) {
+        this.isOnTempOutlineLoop = isOnTempOutlineLoop;
+        this.isOutsideOfTempOutlineLoop = isOutsideOfTempOutlineLoop;
+        this.overlappingExtractor = overlappingExtractor;
+    }
 
-	public CloseTempOutline create() {
-		return new CloseTempOutline(
-				new OutsideLineRemover(isOnTempOutlineLoop, isOutsideOfTempOutlineLoop),
-				new OutlineAdder(overlappingExtractor));
-	}
+    public CloseTempOutline create() {
+        return new CloseTempOutline(
+                new OutsideLineRemover(isOnTempOutlineLoop, isOutsideOfTempOutlineLoop),
+                new OutlineAdder(overlappingExtractor));
+    }
 }

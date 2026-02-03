@@ -45,151 +45,151 @@ import oripa.value.OriLine;
  *
  */
 public class FoldabilityScreenPresenter {
-	private static final Logger logger = LoggerFactory.getLogger(FoldabilityScreenPresenter.class);
+    private static final Logger logger = LoggerFactory.getLogger(FoldabilityScreenPresenter.class);
 
-	private final FoldabilityScreenView view;
-	private final OrigamiModel origamiModel;
-	private final Collection<OriLine> creasePattern;
-	private final boolean zeroLineWidth;
+    private final FoldabilityScreenView view;
+    private final OrigamiModel origamiModel;
+    private final Collection<OriLine> creasePattern;
+    private final boolean zeroLineWidth;
 
-	private Collection<OriVertex> violatingVertices;
-	private Collection<OriFace> violatingFaces;
-	private Collection<OriLine> overlappingLines;
+    private Collection<OriVertex> violatingVertices;
+    private Collection<OriFace> violatingFaces;
+    private Collection<OriLine> overlappingLines;
 
-	private final EstimationResultRules estimationResultRules;
+    private final EstimationResultRules estimationResultRules;
 
-	private final FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
+    private final FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 
-	private final double pointEps;
+    private final double pointEps;
 
-	public FoldabilityScreenPresenter(
-			final FoldabilityScreenView view,
-			final OrigamiModel origamiModel,
-			final EstimationResultRules estimationResultRules,
-			final Collection<OriLine> creasePattern,
-			final boolean zeroLineWidth,
-			final double pointEps) {
-		this.view = view;
+    public FoldabilityScreenPresenter(
+            final FoldabilityScreenView view,
+            final OrigamiModel origamiModel,
+            final EstimationResultRules estimationResultRules,
+            final Collection<OriLine> creasePattern,
+            final boolean zeroLineWidth,
+            final double pointEps) {
+        this.view = view;
 
-		this.origamiModel = origamiModel;
-		this.creasePattern = creasePattern.stream()
-				.map(OriLine::new).toList();
+        this.origamiModel = origamiModel;
+        this.creasePattern = creasePattern.stream()
+                .map(OriLine::new).toList();
 
-		this.estimationResultRules = estimationResultRules;
+        this.estimationResultRules = estimationResultRules;
 
-		this.zeroLineWidth = zeroLineWidth;
-		this.pointEps = pointEps;
+        this.zeroLineWidth = zeroLineWidth;
+        this.pointEps = pointEps;
 
-		setModel();
+        setModel();
 
-		setListeners();
-	}
+        setListeners();
+    }
 
-	private void setModel() {
+    private void setModel() {
 
-		violatingVertices = foldabilityChecker.findViolatingVertices(
-				origamiModel.getVertices());
+        violatingVertices = foldabilityChecker.findViolatingVertices(
+                origamiModel.getVertices());
 
-		view.setViolatingVertices(violatingVertices);
+        view.setViolatingVertices(violatingVertices);
 
-		var estimationViolationFaces = getEstimationViolationFaces();
+        var estimationViolationFaces = getEstimationViolationFaces();
 
-		violatingFaces = Stream.concat(
-				foldabilityChecker.findViolatingFaces(origamiModel.getFaces()).stream(),
-				estimationViolationFaces.stream())
-				.distinct()
-				.toList();
+        violatingFaces = Stream.concat(
+                foldabilityChecker.findViolatingFaces(origamiModel.getFaces()).stream(),
+                estimationViolationFaces.stream())
+                .distinct()
+                .toList();
 
-		view.setViolatingFaces(violatingFaces);
+        view.setViolatingFaces(violatingFaces);
 
-		var overlappingLineExtractor = new OverlappingLineExtractor();
-		overlappingLines = overlappingLineExtractor.extract(creasePattern, pointEps);
+        var overlappingLineExtractor = new OverlappingLineExtractor();
+        overlappingLines = overlappingLineExtractor.extract(creasePattern, pointEps);
 
-		var domain = RectangleDomain.createFromSegments(creasePattern);
-		view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
+        var domain = RectangleDomain.createFromSegments(creasePattern);
+        view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
-	}
+    }
 
-	private List<OriFace> getEstimationViolationFaces() {
-		var faces = origamiModel.getFaces();
+    private List<OriFace> getEstimationViolationFaces() {
+        var faces = origamiModel.getFaces();
 
-		List<Rule<OriFace>> estimationViolationRules = estimationResultRules == null ? List.of()
-				: estimationResultRules.getAllRules();
+        List<Rule<OriFace>> estimationViolationRules = estimationResultRules == null ? List.of()
+                : estimationResultRules.getAllRules();
 
-		logger.debug("# of est. rules = {}", estimationViolationRules.size());
+        logger.debug("# of est. rules = {}", estimationViolationRules.size());
 
-		var estimationViolationFaces = estimationViolationRules.stream()
-				.flatMap(rule -> faces.stream().filter(rule::violates))
-				.toList();
+        var estimationViolationFaces = estimationViolationRules.stream()
+                .flatMap(rule -> faces.stream().filter(rule::violates))
+                .toList();
 
-		logger.debug("# of est. violation faces = {}", estimationViolationFaces.size());
+        logger.debug("# of est. violation faces = {}", estimationViolationFaces.size());
 
-		return estimationViolationFaces;
-	}
+        return estimationViolationFaces;
+    }
 
-	private void setListeners() {
-		view.setPaintComponentListener(this::paintComponent);
+    private void setListeners() {
+        view.setPaintComponentListener(this::paintComponent);
 
-	}
+    }
 
-	private void paintComponent(final PaintComponentGraphics p) {
+    private void paintComponent(final PaintComponentGraphics p) {
 
-		var bufferObjDrawer = p.getBufferObjectDrawer();
-		var objDrawer = p.getObjectDrawer();
+        var bufferObjDrawer = p.getBufferObjectDrawer();
+        var objDrawer = p.getObjectDrawer();
 
-		if (!zeroLineWidth) {
-			bufferObjDrawer.setAntiAlias(true);
-		}
+        if (!zeroLineWidth) {
+            bufferObjDrawer.setAntiAlias(true);
+        }
 
-		var scale = view.getScale();
+        var scale = view.getScale();
 
-		drawCreasePattern(bufferObjDrawer, scale);
+        drawCreasePattern(bufferObjDrawer, scale);
 
-		drawFoldability(bufferObjDrawer, scale);
+        drawFoldability(bufferObjDrawer, scale);
 
-		p.drawBufferImage();
+        p.drawBufferImage();
 
-		drawVertexViolationNames(objDrawer);
-	}
+        drawVertexViolationNames(objDrawer);
+    }
 
-	private void drawCreasePattern(final ObjectGraphicDrawer objDrawer, final double scale) {
-		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
+    private void drawCreasePattern(final ObjectGraphicDrawer objDrawer, final double scale) {
+        CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
-		drawer.highlightOverlappingLines(objDrawer, overlappingLines, scale);
+        drawer.highlightOverlappingLines(objDrawer, overlappingLines, scale);
 
-		drawer.drawAllLines(objDrawer, creasePattern, scale, zeroLineWidth);
-		drawer.drawCreaseVertices(objDrawer, creasePattern, scale);
-	}
+        drawer.drawAllLines(objDrawer, creasePattern, scale, zeroLineWidth);
+        drawer.drawCreaseVertices(objDrawer, creasePattern, scale);
+    }
 
-	private void drawFoldability(final ObjectGraphicDrawer objDrawer, final double scale) {
-		FoldabilityGraphicDrawer drawer = new FoldabilityGraphicDrawer();
+    private void drawFoldability(final ObjectGraphicDrawer objDrawer, final double scale) {
+        FoldabilityGraphicDrawer drawer = new FoldabilityGraphicDrawer();
 
-		drawer.draw(objDrawer, origamiModel, violatingFaces, violatingVertices, scale);
-	}
+        drawer.draw(objDrawer, origamiModel, violatingFaces, violatingVertices, scale);
+    }
 
-	private void drawVertexViolationNames(final ObjectGraphicDrawer drawer) {
-		var pickedViolatingVertexOpt = view.getPickedViolatingVertex();
+    private void drawVertexViolationNames(final ObjectGraphicDrawer drawer) {
+        var pickedViolatingVertexOpt = view.getPickedViolatingVertex();
 
-		var texts = new ArrayList<String>();
+        var texts = new ArrayList<String>();
 
-		pickedViolatingVertexOpt.ifPresent(pickedViolatingVertex -> {
-			var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
-			texts.addAll(violationNames);
-		});
+        pickedViolatingVertexOpt.ifPresent(pickedViolatingVertex -> {
+            var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
+            texts.addAll(violationNames);
+        });
 
-		var pickedViolatingFaceOpt = view.getPickedViolatingFace();
+        var pickedViolatingFaceOpt = view.getPickedViolatingFace();
 
-		pickedViolatingFaceOpt.ifPresent(pickedViolatingFace -> {
-			var violationNames = estimationResultRules.getViolationNames(pickedViolatingFace);
+        pickedViolatingFaceOpt.ifPresent(pickedViolatingFace -> {
+            var violationNames = estimationResultRules.getViolationNames(pickedViolatingFace);
 
-			texts.addAll(violationNames);
-		});
+            texts.addAll(violationNames);
+        });
 
-		drawer.drawString("error(s): " + String.join(", ", texts), 0, 10);
+        drawer.drawString("error(s): " + String.join(", ", texts), 0, 10);
 
-	}
+    }
 
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
-	}
+    public void setViewVisible(final boolean visible) {
+        view.setVisible(visible);
+    }
 }

@@ -33,16 +33,16 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public class FoldedModelSVGConfigReader {
-	public FoldedModelSVGConfig read(final String path) throws IOException, WrongDataFormatException {
-		var gson = new Gson();
-		try {
-			return gson.fromJson(
-					Files.readString(Paths.get(path)),
-					FoldedModelSVGConfig.class);
-		} catch (JsonSyntaxException e) {
-			throw new WrongDataFormatException(
-					"The file does not follow JSON style.",
-					e);
-		}
-	}
+    public FoldedModelSVGConfig read(final String path) throws IOException, WrongDataFormatException {
+        var gson = new Gson();
+        try {
+            return gson.fromJson(
+                    Files.readString(Paths.get(path)),
+                    FoldedModelSVGConfig.class);
+        } catch (JsonSyntaxException e) {
+            throw new WrongDataFormatException(
+                    "The file does not follow JSON style.",
+                    e);
+        }
+    }
 }

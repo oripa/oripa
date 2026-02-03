@@ -26,21 +26,21 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class LineSnapPointsSetterCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final LineSnapPointFactory snapPointFactory;
+    private final PaintContext context;
+    private final LineSnapPointFactory snapPointFactory;
 
-	public LineSnapPointsSetterCommand(final PaintContext context,
-			final LineSnapPointFactory snapPointFactory) {
-		this.context = context;
-		this.snapPointFactory = snapPointFactory;
-	}
+    public LineSnapPointsSetterCommand(final PaintContext context,
+            final LineSnapPointFactory snapPointFactory) {
+        this.context = context;
+        this.snapPointFactory = snapPointFactory;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 2;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 2;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		context.setSnapPoints(snapPointFactory.createSnapPoints(context));
-	}
+        context.setSnapPoints(snapPointFactory.createSnapPoints(context));
+    }
 }

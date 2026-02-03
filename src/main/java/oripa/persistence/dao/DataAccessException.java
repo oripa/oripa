@@ -24,12 +24,12 @@ package oripa.persistence.dao;
  */
 @SuppressWarnings("serial")
 public class DataAccessException extends RuntimeException {
-	public DataAccessException(final Exception cause) {
-		super(cause);
-	}
+    public DataAccessException(final Exception cause) {
+        super(cause);
+    }
 
-	public DataAccessException(final String message) {
-		super(message);
-	}
+    public DataAccessException(final String message) {
+        super(message);
+    }
 
 }

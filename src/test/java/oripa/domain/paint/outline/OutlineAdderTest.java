@@ -47,57 +47,57 @@ import oripa.vecmath.Vector2d;
  */
 @ExtendWith(MockitoExtension.class)
 class OutlineAdderTest {
-	@InjectMocks
-	private OutlineAdder adder;
+    @InjectMocks
+    private OutlineAdder adder;
 
-	@Mock
-	private OverlappingLineExtractor overlappingExtractor;
+    @Mock
+    private OverlappingLineExtractor overlappingExtractor;
 
-	@Mock
-	private Painter painter;
+    @Mock
+    private Painter painter;
 
-	@Captor
-	private ArgumentCaptor<Collection<OriLine>> removedLinesCaptor;
-	@Captor
-	private ArgumentCaptor<Collection<OriLine>> addedLinesCaptor;
+    @Captor
+    private ArgumentCaptor<Collection<OriLine>> removedLinesCaptor;
+    @Captor
+    private ArgumentCaptor<Collection<OriLine>> addedLinesCaptor;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.paint.outline.OutlineAdder#addOutlines(oripa.domain.cptool.Painter, java.util.Collection)}.
-	 */
-	@Test
-	void testAddOutlines() {
-		var l0 = new OriLine(0, 0, 1, 0, OriLine.Type.MOUNTAIN);
-		var l1 = new OriLine(1, 0, 1, 1, OriLine.Type.MOUNTAIN);
-		var l2 = new OriLine(1, 1, 0, 1, OriLine.Type.MOUNTAIN);
-		var l3 = new OriLine(0, 1, 0, 0, OriLine.Type.MOUNTAIN);
-		var l4 = new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.MOUNTAIN);
+    /**
+     * Test method for
+     * {@link oripa.domain.paint.outline.OutlineAdder#addOutlines(oripa.domain.cptool.Painter, java.util.Collection)}.
+     */
+    @Test
+    void testAddOutlines() {
+        var l0 = new OriLine(0, 0, 1, 0, OriLine.Type.MOUNTAIN);
+        var l1 = new OriLine(1, 0, 1, 1, OriLine.Type.MOUNTAIN);
+        var l2 = new OriLine(1, 1, 0, 1, OriLine.Type.MOUNTAIN);
+        var l3 = new OriLine(0, 1, 0, 0, OriLine.Type.MOUNTAIN);
+        var l4 = new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.MOUNTAIN);
 
-		var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
-				l0, l1, l2, l3, l4));
-		final double eps = 1e-5;
+        var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
+                l0, l1, l2, l3, l4));
+        final double eps = 1e-5;
 
-		when(painter.getCreasePattern()).thenReturn(creasePattern);
-		when(painter.getPointEps()).thenReturn(eps);
+        when(painter.getCreasePattern()).thenReturn(creasePattern);
+        when(painter.getPointEps()).thenReturn(eps);
 
-		var l0Cut = new OriLine(l0.getP0(), l0.getP1(), OriLine.Type.CUT);
-		var l1Cut = new OriLine(l1.getP0(), l1.getP1(), OriLine.Type.CUT);
+        var l0Cut = new OriLine(l0.getP0(), l0.getP1(), OriLine.Type.CUT);
+        var l1Cut = new OriLine(l1.getP0(), l1.getP1(), OriLine.Type.CUT);
 
-		when(overlappingExtractor.extract(anyCollection(), eq(l0Cut), eq(eps))).thenReturn(List.of(l0));
-		when(overlappingExtractor.extract(anyCollection(), eq(l1Cut), eq(eps))).thenReturn(List.of(l1));
-		when(overlappingExtractor.extract(anyCollection(), not(or(eq(l0Cut), eq(l1Cut))), eq(eps)))
-				.thenReturn(List.of());
+        when(overlappingExtractor.extract(anyCollection(), eq(l0Cut), eq(eps))).thenReturn(List.of(l0));
+        when(overlappingExtractor.extract(anyCollection(), eq(l1Cut), eq(eps))).thenReturn(List.of(l1));
+        when(overlappingExtractor.extract(anyCollection(), not(or(eq(l0Cut), eq(l1Cut))), eq(eps)))
+                .thenReturn(List.of());
 
-		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
+        var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
 
-		adder.addOutlines(painter, outlineVertices);
+        adder.addOutlines(painter, outlineVertices);
 
-		verify(painter).removeLines(removedLinesCaptor.capture());
-		verify(painter).addLines(addedLinesCaptor.capture());
+        verify(painter).removeLines(removedLinesCaptor.capture());
+        verify(painter).addLines(addedLinesCaptor.capture());
 
-		assertEquals(2, removedLinesCaptor.getValue().size());
-		assertEquals(outlineVertices.size(), addedLinesCaptor.getValue().size());
+        assertEquals(2, removedLinesCaptor.getValue().size());
+        assertEquals(outlineVertices.size(), addedLinesCaptor.getValue().size());
 
-	}
+    }
 
 }

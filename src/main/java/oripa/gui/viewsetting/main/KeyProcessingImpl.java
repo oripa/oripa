@@ -34,36 +34,36 @@ import oripa.gui.view.main.KeyProcessing;
 @Singleton
 public class KeyProcessingImpl implements KeyProcessing {
 
-	private final Consumer<Boolean> changeActionIfCopyAndPaste;
-	private final ViewScreenUpdater screenUpdater;
+    private final Consumer<Boolean> changeActionIfCopyAndPaste;
+    private final ViewScreenUpdater screenUpdater;
 
-	@Qualifier
-	@Target({ FIELD, PARAMETER, METHOD })
-	@Retention(RUNTIME)
-	public @interface KeyOnOffListener {
-	}
+    @Qualifier
+    @Target({ FIELD, PARAMETER, METHOD })
+    @Retention(RUNTIME)
+    public @interface KeyOnOffListener {
+    }
 
-	@Inject
-	public KeyProcessingImpl(@KeyOnOffListener final Consumer<Boolean> keyOnOffListener,
-			final ViewScreenUpdater screenUpdater) {
-		this.changeActionIfCopyAndPaste = keyOnOffListener;
-		this.screenUpdater = screenUpdater;
-	}
+    @Inject
+    public KeyProcessingImpl(@KeyOnOffListener final Consumer<Boolean> keyOnOffListener,
+            final ViewScreenUpdater screenUpdater) {
+        this.changeActionIfCopyAndPaste = keyOnOffListener;
+        this.screenUpdater = screenUpdater;
+    }
 
-	@Override
-	public void controlKeyPressed() {
-		changeActionIfCopyAndPaste.accept(true);
-		screenUpdater.updateScreen();
-	}
+    @Override
+    public void controlKeyPressed() {
+        changeActionIfCopyAndPaste.accept(true);
+        screenUpdater.updateScreen();
+    }
 
-	@Override
-	public void escapeKeyPressed() {
-		screenUpdater.updateScreen();
-	}
+    @Override
+    public void escapeKeyPressed() {
+        screenUpdater.updateScreen();
+    }
 
-	@Override
-	public void keyReleased() {
-		changeActionIfCopyAndPaste.accept(false);
-		screenUpdater.updateScreen();
-	}
+    @Override
+    public void keyReleased() {
+        changeActionIfCopyAndPaste.accept(false);
+        screenUpdater.updateScreen();
+    }
 }

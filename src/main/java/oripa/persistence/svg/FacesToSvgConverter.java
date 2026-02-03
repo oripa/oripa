@@ -34,82 +34,82 @@ import oripa.vecmath.Vector2d;
  */
 public class FacesToSvgConverter extends SvgConverter {
 
-	/**
-	 * Line and polygon styles
-	 */
-	String frontFaceStyle = "";
-	String backFaceStyle = "";
-	String precreaseLineStyle = "";
+    /**
+     * Line and polygon styles
+     */
+    String frontFaceStyle = "";
+    String backFaceStyle = "";
+    String precreaseLineStyle = "";
 
-	public void initDomain(final List<OriFace> faces, final double paperSize) {
-		domain = RectangleDomain.createFromPoints(
-				faces.stream()
-						.flatMap(OriFace::halfedgeStream)
-						.map(OriHalfedge::getPosition)
-						.toList());
+    public void initDomain(final List<OriFace> faces, final double paperSize) {
+        domain = RectangleDomain.createFromPoints(
+                faces.stream()
+                        .flatMap(OriFace::halfedgeStream)
+                        .map(OriHalfedge::getPosition)
+                        .toList());
 
-		scaleToFitDomain = SVG_SIZE / paperSize;
-	}
+        scaleToFitDomain = SVG_SIZE / paperSize;
+    }
 
-	public void setFaceStyles(final String bothFacesStyle) {
-		setFaceStyles(bothFacesStyle, bothFacesStyle);
-	}
+    public void setFaceStyles(final String bothFacesStyle) {
+        setFaceStyles(bothFacesStyle, bothFacesStyle);
+    }
 
-	public void setFaceStyles(final String frontFaceStyle, final String backFaceStyle) {
-		this.frontFaceStyle = frontFaceStyle;
-		this.backFaceStyle = backFaceStyle;
-	}
+    public void setFaceStyles(final String frontFaceStyle, final String backFaceStyle) {
+        this.frontFaceStyle = frontFaceStyle;
+        this.backFaceStyle = backFaceStyle;
+    }
 
-	public void setPrecreaseLineStyle(final String precreaseLineStyle) {
-		this.precreaseLineStyle = precreaseLineStyle;
-	}
+    public void setPrecreaseLineStyle(final String precreaseLineStyle) {
+        this.precreaseLineStyle = precreaseLineStyle;
+    }
 
-	public String getSvgFaces(final List<OriFace> faces) {
-		StringBuilder svgBuilder = new StringBuilder();
+    public String getSvgFaces(final List<OriFace> faces) {
+        StringBuilder svgBuilder = new StringBuilder();
 
-		faces.forEach(oriFace -> svgBuilder.append(getSvgFace(oriFace)));
+        faces.forEach(oriFace -> svgBuilder.append(getSvgFace(oriFace)));
 
-		putInGroup(svgBuilder);
-		return svgBuilder.toString();
-	}
+        putInGroup(svgBuilder);
+        return svgBuilder.toString();
+    }
 
-	private StringBuilder getSvgFace(final OriFace face) {
-		StringBuilder faceBuilder = new StringBuilder();
-		List<Vector2d> points = mapPointsToDomain(face);
+    private StringBuilder getSvgFace(final OriFace face) {
+        StringBuilder faceBuilder = new StringBuilder();
+        List<Vector2d> points = mapPointsToDomain(face);
 
-		String polygonStyle = face.isFaceFront() ? frontFaceStyle : backFaceStyle;
+        String polygonStyle = face.isFaceFront() ? frontFaceStyle : backFaceStyle;
 
-		faceBuilder.append(getFacePathTag(points, polygonStyle));
+        faceBuilder.append(getFacePathTag(points, polygonStyle));
 
-		face.precreaseStream().forEach(oriLine -> faceBuilder.append(getPrecreaseLineTag(oriLine)));
+        face.precreaseStream().forEach(oriLine -> faceBuilder.append(getPrecreaseLineTag(oriLine)));
 
-		if (face.hasPrecreases()) {
-			putInGroup(faceBuilder);
-		}
+        if (face.hasPrecreases()) {
+            putInGroup(faceBuilder);
+        }
 
-		return faceBuilder;
-	}
+        return faceBuilder;
+    }
 
-	private List<Vector2d> mapPointsToDomain(final OriFace face) {
-		return face.halfedgeStream()
-				.map(OriHalfedge::getPosition)
-				.map(this::mapToDomain)
-				.distinct()
-				.toList();
-	}
+    private List<Vector2d> mapPointsToDomain(final OriFace face) {
+        return face.halfedgeStream()
+                .map(OriHalfedge::getPosition)
+                .map(this::mapToDomain)
+                .distinct()
+                .toList();
+    }
 
-	/**
-	 * Calculates the coordinates of the precrease Line and returns a builder
-	 * containing the "line" tag
-	 *
-	 * @param oriLine
-	 *            Precrease line
-	 * @return builder containing the SVG line Tag
-	 */
-	private StringBuilder getPrecreaseLineTag(final OriLine oriLine) {
-		Vector2d startPoint = mapToDomain(oriLine.getP0());
-		Vector2d endPoint = mapToDomain(oriLine.getP1());
-		return SVGUtils.getLinePathTag(startPoint, endPoint, precreaseLineStyle);
-	}
+    /**
+     * Calculates the coordinates of the precrease Line and returns a builder
+     * containing the "line" tag
+     *
+     * @param oriLine
+     *            Precrease line
+     * @return builder containing the SVG line Tag
+     */
+    private StringBuilder getPrecreaseLineTag(final OriLine oriLine) {
+        Vector2d startPoint = mapToDomain(oriLine.getP0());
+        Vector2d endPoint = mapToDomain(oriLine.getP1());
+        return SVGUtils.getLinePathTag(startPoint, endPoint, precreaseLineStyle);
+    }
 
 }

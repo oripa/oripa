@@ -23,10 +23,10 @@ package oripa.gui.view;
  *
  */
 public interface FrameView extends View {
-	@Override
-	default View getTopLevelView() {
-		return null;
-	}
+    @Override
+    default View getTopLevelView() {
+        return null;
+    }
 
-	void dispose();
+    void dispose();
 }

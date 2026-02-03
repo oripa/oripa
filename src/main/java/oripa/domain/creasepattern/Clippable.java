@@ -29,8 +29,8 @@ import oripa.value.OriLine;
  */
 public interface Clippable<T> {
 
-	Collection<T> clip(RectangleDomain domain, double pointEps);
+    Collection<T> clip(RectangleDomain domain, double pointEps);
 
-	Collection<OriLine> clipAlong(final OriLine line, final double eps);
+    Collection<OriLine> clipAlong(final OriLine line, final double eps);
 
 }

@@ -24,10 +24,10 @@ package oripa.gui.view.creasepattern;
  */
 public interface PaintComponentGraphics {
 
-	ObjectGraphicDrawer getObjectDrawer();
+    ObjectGraphicDrawer getObjectDrawer();
 
-	ObjectGraphicDrawer getBufferObjectDrawer();
+    ObjectGraphicDrawer getBufferObjectDrawer();
 
-	void drawBufferImage();
+    void drawBufferImage();
 
 }

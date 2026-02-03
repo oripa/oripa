@@ -28,6 +28,6 @@ import oripa.value.OriLine;
  */
 public interface OverlappingLineMerger {
 
-	Collection<OriLine> mergeIgnoringType(Collection<OriLine> inputLines, double eps);
+    Collection<OriLine> mergeIgnoringType(Collection<OriLine> inputLines, double eps);
 
 }

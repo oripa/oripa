@@ -36,49 +36,49 @@ import oripa.gui.viewchange.ChangeViewSetting;
  *
  */
 public interface GraphicMouseActionPlugin {
-	void setMainFrameSetting(MainFrameSetting setting);
+    void setMainFrameSetting(MainFrameSetting setting);
 
-	void setUIPanelSetting(UIPanelSetting setting);
+    void setUIPanelSetting(UIPanelSetting setting);
 
-	/**
-	 *
-	 * @return the text shown in the UI panel.
-	 */
-	String getName();
+    /**
+     *
+     * @return the text shown in the UI panel.
+     */
+    String getName();
 
-	/**
-	 *
-	 * @return {@link ChangeViewSetting} that sets a hint text of this plugin's
-	 *         action to {@link MainFrameSetting}.
-	 */
-	ChangeViewSetting getChangeHint();
+    /**
+     *
+     * @return {@link ChangeViewSetting} that sets a hint text of this plugin's
+     *         action to {@link MainFrameSetting}.
+     */
+    ChangeViewSetting getChangeHint();
 
-	/**
-	 *
-	 * @return {@link ChangeViewSetting} that configures visibilities of view
-	 *         panels by setting values to {@link UIPanelSetting}.
-	 */
-	ChangeViewSetting getChangeOnSelected();
+    /**
+     *
+     * @return {@link ChangeViewSetting} that configures visibilities of view
+     *         panels by setting values to {@link UIPanelSetting}.
+     */
+    ChangeViewSetting getChangeOnSelected();
 
-	/**
-	 * This method should return {@link GraphicMouseAction} that satisfies the
-	 * conditions below:
-	 * <ul>
-	 * <li>{@code getEditMode()} should return {@link EditMode#INPUT}.</li>
-	 * <li>It should manage undo/redo registration by
-	 * {@link CreasePatternUndoManager} that is provided by {@code paintContext}
-	 * given as a parameter of each method. Typically you need do that in
-	 * {@link GraphicMouseAction#onLeftClick(CreasePatternViewContext, PaintContext, boolean)}
-	 * and
-	 * {@link GraphicMouseAction#onRightClick(CreasePatternViewContext, PaintContext, boolean)}.</li>
-	 * </ul>
-	 *
-	 * It is recommended to extend {@link AbstractGraphicMouseAction} and use
-	 * {@link ActionState}, which offers a variant of State pattern to follow
-	 * the requirements easily.
-	 *
-	 * @return {@link GraphicMouseAction}.
-	 */
-	GraphicMouseAction getGraphicMouseAction();
+    /**
+     * This method should return {@link GraphicMouseAction} that satisfies the
+     * conditions below:
+     * <ul>
+     * <li>{@code getEditMode()} should return {@link EditMode#INPUT}.</li>
+     * <li>It should manage undo/redo registration by
+     * {@link CreasePatternUndoManager} that is provided by {@code paintContext}
+     * given as a parameter of each method. Typically you need do that in
+     * {@link GraphicMouseAction#onLeftClick(CreasePatternViewContext, PaintContext, boolean)}
+     * and
+     * {@link GraphicMouseAction#onRightClick(CreasePatternViewContext, PaintContext, boolean)}.</li>
+     * </ul>
+     *
+     * It is recommended to extend {@link AbstractGraphicMouseAction} and use
+     * {@link ActionState}, which offers a variant of State pattern to follow
+     * the requirements easily.
+     *
+     * @return {@link GraphicMouseAction}.
+     */
+    GraphicMouseAction getGraphicMouseAction();
 
 }

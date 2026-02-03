@@ -32,41 +32,41 @@ import oripa.vecmath.Vector2d;
  */
 public class AngleSnapAction extends AbstractGraphicMouseAction {
 
-	public AngleSnapAction() {
-		super();
+    public AngleSnapAction() {
+        super();
 
-		setActionState(new SelectingStartPoint());
-	}
+        setActionState(new SelectingStartPoint());
+    }
 
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		setActionState(new SelectingStartPoint());
-	}
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        setActionState(new SelectingStartPoint());
+    }
 
-	@Override
-	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		if (paintContext.getVertexCount() == 0) {
-			return super.onMove(viewContext, paintContext, differentAction);
-		}
+    @Override
+    public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
+        if (paintContext.getVertexCount() == 0) {
+            return super.onMove(viewContext, paintContext, differentAction);
+        }
 
-		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
+        var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
 
-		snapPointOpt.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
+        snapPointOpt.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
 
-		return snapPointOpt;
-	}
+        return snapPointOpt;
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
-		if (paintContext.getVertexCount() == 1) {
-			drawSnapPoints(drawer, viewContext, paintContext);
-		}
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
+        if (paintContext.getVertexCount() == 1) {
+            drawSnapPoints(drawer, viewContext, paintContext);
+        }
 
-		drawTemporaryLine(drawer, viewContext, paintContext);
-		drawPickCandidateVertex(drawer, viewContext, paintContext);
+        drawTemporaryLine(drawer, viewContext, paintContext);
+        drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-		super.onDraw(drawer, viewContext, paintContext);
-	}
+        super.onDraw(drawer, viewContext, paintContext);
+    }
 }

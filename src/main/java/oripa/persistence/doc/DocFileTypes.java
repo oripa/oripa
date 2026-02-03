@@ -25,32 +25,32 @@ import oripa.persistence.dao.FileType;
  *
  */
 public class DocFileTypes {
-	public static FileType<Doc> opx() {
-		return new FileType<>(CreasePatternFileTypeKey.OPX);
-	}
+    public static FileType<Doc> opx() {
+        return new FileType<>(CreasePatternFileTypeKey.OPX);
+    }
 
-	public static FileType<Doc> fold() {
-		return new FileType<>(CreasePatternFileTypeKey.FOLD);
-	}
+    public static FileType<Doc> fold() {
+        return new FileType<>(CreasePatternFileTypeKey.FOLD);
+    }
 
-	public static FileType<Doc> pictutre() {
-		return new FileType<>(CreasePatternFileTypeKey.PICT);
-	}
+    public static FileType<Doc> pictutre() {
+        return new FileType<>(CreasePatternFileTypeKey.PICT);
+    }
 
-	public static FileType<Doc> dxf() {
-		return new FileType<>(CreasePatternFileTypeKey.DXF);
-	}
+    public static FileType<Doc> dxf() {
+        return new FileType<>(CreasePatternFileTypeKey.DXF);
+    }
 
-	public static FileType<Doc> cp() {
-		return new FileType<>(CreasePatternFileTypeKey.CP);
-	}
+    public static FileType<Doc> cp() {
+        return new FileType<>(CreasePatternFileTypeKey.CP);
+    }
 
-	public static FileType<Doc> svg() {
-		return new FileType<>(CreasePatternFileTypeKey.SVG);
-	}
+    public static FileType<Doc> svg() {
+        return new FileType<>(CreasePatternFileTypeKey.SVG);
+    }
 
-	public static FileType<Doc> pdf() {
-		return new FileType<>(CreasePatternFileTypeKey.PDF);
-	}
+    public static FileType<Doc> pdf() {
+        return new FileType<>(CreasePatternFileTypeKey.PDF);
+    }
 
 }

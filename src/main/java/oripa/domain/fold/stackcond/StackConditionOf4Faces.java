@@ -54,20 +54,20 @@ import oripa.domain.fold.origeom.OverlapRelation;
  *
  */
 public record StackConditionOf4Faces(
-		int upper1,
-		int lower1,
-		int upper2,
-		int lower2
+        int upper1,
+        int lower1,
+        int upper2,
+        int lower2
 
 ) {
 
-	public boolean isDetermined(final OverlapRelation overlapRelation) {
-		return !overlapRelation.isUndefined(lower1, upper1) &&
-				!overlapRelation.isUndefined(lower1, lower2) &&
-				!overlapRelation.isUndefined(lower1, upper2) &&
-				!overlapRelation.isUndefined(upper1, lower2) &&
-				!overlapRelation.isUndefined(upper1, upper2) &&
-				!overlapRelation.isUndefined(lower2, upper2);
-	}
+    public boolean isDetermined(final OverlapRelation overlapRelation) {
+        return !overlapRelation.isUndefined(lower1, upper1) &&
+                !overlapRelation.isUndefined(lower1, lower2) &&
+                !overlapRelation.isUndefined(lower1, upper2) &&
+                !overlapRelation.isUndefined(upper1, lower2) &&
+                !overlapRelation.isUndefined(upper1, upper2) &&
+                !overlapRelation.isUndefined(lower2, upper2);
+    }
 
 }

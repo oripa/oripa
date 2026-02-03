@@ -29,16 +29,16 @@ import oripa.vecmath.Vector2d;
 @Deprecated
 public class PseudoRayFactory {
 
-	public Segment create(final Ray ray, final double paperSize) {
-		var v = ray.getEndPoint();
-		var d = ray.getDirection().multiply(paperSize * 4);
+    public Segment create(final Ray ray, final double paperSize) {
+        var v = ray.getEndPoint();
+        var d = ray.getDirection().multiply(paperSize * 4);
 
-		var ev = v.add(d);
+        var ev = v.add(d);
 
-		return new Segment(v, ev);
-	}
+        return new Segment(v, ev);
+    }
 
-	public Segment create(final Vector2d v, final double angle, final double paperSize) {
-		return create(new Ray(v, angle), paperSize);
-	}
+    public Segment create(final Vector2d v, final double angle, final double paperSize) {
+        return create(new Ray(v, angle), paperSize);
+    }
 }

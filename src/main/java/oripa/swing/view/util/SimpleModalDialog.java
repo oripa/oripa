@@ -30,20 +30,20 @@ import javax.swing.JLabel;
  */
 public class SimpleModalDialog extends JDialog {
 
-	private final int WIDTH = 200;
-	private final int HEIGHT = 100;
+    private final int WIDTH = 200;
+    private final int HEIGHT = 100;
 
-	public SimpleModalDialog(final JFrame parent, final String title, final String text) {
-		super(parent, true);
+    public SimpleModalDialog(final JFrame parent, final String title, final String text) {
+        super(parent, true);
 
-		setTitle(title);
+        setTitle(title);
 
-		setLayout(new GridBagLayout());
-		add(new JLabel(text));
+        setLayout(new GridBagLayout());
+        add(new JLabel(text));
 
-		setSize(WIDTH, HEIGHT);
-		setLocationRelativeTo(parent);
+        setSize(WIDTH, HEIGHT);
+        setLocationRelativeTo(parent);
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-	}
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
 }

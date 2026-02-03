@@ -12,26 +12,26 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CommandStatePopper<GroupEnum> implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(CommandStatePopper.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommandStatePopper.class);
 
-	private final StateManager<GroupEnum> stateManager;
-	private final GroupEnum editMode;
+    private final StateManager<GroupEnum> stateManager;
+    private final GroupEnum editMode;
 
-	/**
-	 * Constructor
-	 */
-	public CommandStatePopper(final StateManager<GroupEnum> stateManager, final GroupEnum editMode) {
-		this.stateManager = stateManager;
-		this.editMode = editMode;
-	}
+    /**
+     * Constructor
+     */
+    public CommandStatePopper(final StateManager<GroupEnum> stateManager, final GroupEnum editMode) {
+        this.stateManager = stateManager;
+        this.editMode = editMode;
+    }
 
-	@Override
-	public void run() {
-		Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.popLastOf(editMode);
+    @Override
+    public void run() {
+        Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.popLastOf(editMode);
 
-		currentOpt.ifPresent(current -> {
-			logger.debug("pop {} command state: {}", editMode, current);
-			current.performActions();
-		});
-	}
+        currentOpt.ifPresent(current -> {
+            logger.debug("pop {} command state: {}", editMode, current);
+            current.performActions();
+        });
+    }
 }

@@ -33,102 +33,102 @@ import oripa.vecmath.Vector2d;
  */
 class PBisecInputStatesTest extends InputStatesTestBase {
 
-	@BeforeEach
-	void setUp() {
-		setUp(SelectingFirstVertexForBisector.class);
-	}
+    @BeforeEach
+    void setUp() {
+        setUp(SelectingFirstVertexForBisector.class);
+    }
 
-	private <T> void assertCurrentState(final int expectedVertexCount, final int expectedLineCount,
-			final Class<T> expectedClass) {
-		assertEquals(expectedVertexCount, context.getVertexCount());
-		assertEquals(expectedLineCount, context.getLineCount());
-		assertInstanceOf(expectedClass, state);
-	}
+    private <T> void assertCurrentState(final int expectedVertexCount, final int expectedLineCount,
+            final Class<T> expectedClass) {
+        assertEquals(expectedVertexCount, context.getVertexCount());
+        assertEquals(expectedLineCount, context.getLineCount());
+        assertInstanceOf(expectedClass, state);
+    }
 
-	@Test
-	void testUndo_firstPointState() {
-		state = state.undo(context);
-		assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
-	}
+    @Test
+    void testUndo_firstPointState() {
+        state = state.undo(context);
+        assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
+    }
 
-	@Nested
-	class FirstPointIsSelected {
-		Vector2d candidate1 = new Vector2d(0, 0);
+    @Nested
+    class FirstPointIsSelected {
+        Vector2d candidate1 = new Vector2d(0, 0);
 
-		@BeforeEach
-		void doAction() {
-			PBisecInputStatesTest.this.doAction(candidate1);
-		}
+        @BeforeEach
+        void doAction() {
+            PBisecInputStatesTest.this.doAction(candidate1);
+        }
 
-		@Test
-		void testAfterDoAction() {
-			assertCurrentState(1, 0, SelectingSecondVertexForBisector.class);
-		}
+        @Test
+        void testAfterDoAction() {
+            assertCurrentState(1, 0, SelectingSecondVertexForBisector.class);
+        }
 
-		@Test
-		void testUndo_secondPointState() {
-			state = state.undo(context);
-			assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
-		}
+        @Test
+        void testUndo_secondPointState() {
+            state = state.undo(context);
+            assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
+        }
 
-		@Nested
-		class SecondPointIsSelected {
-			Vector2d candidate2 = new Vector2d(2, 0);
+        @Nested
+        class SecondPointIsSelected {
+            Vector2d candidate2 = new Vector2d(2, 0);
 
-			@BeforeEach
-			void doAction() {
-				PBisecInputStatesTest.this.doAction(candidate2);
-			}
+            @BeforeEach
+            void doAction() {
+                PBisecInputStatesTest.this.doAction(candidate2);
+            }
 
-			@Test
-			void testAfterDoAction() {
-				assertCurrentState(2, 0, SelectingFirstEndPoint.class);
-				assertSnapPointExists();
-			}
+            @Test
+            void testAfterDoAction() {
+                assertCurrentState(2, 0, SelectingFirstEndPoint.class);
+                assertSnapPointExists();
+            }
 
-			@Test
-			void testUndo_firstSnapState() {
-				state = state.undo(context);
-				assertCurrentState(1, 0, SelectingSecondVertexForBisector.class);
-			}
+            @Test
+            void testUndo_firstSnapState() {
+                state = state.undo(context);
+                assertCurrentState(1, 0, SelectingSecondVertexForBisector.class);
+            }
 
-			@Nested
-			class FirstSnapIsSelected {
-				Vector2d candidate3 = new Vector2d(0, 0);
+            @Nested
+            class FirstSnapIsSelected {
+                Vector2d candidate3 = new Vector2d(0, 0);
 
-				@BeforeEach
-				void doAction() {
-					PBisecInputStatesTest.this.doAction(candidate3);
-				}
+                @BeforeEach
+                void doAction() {
+                    PBisecInputStatesTest.this.doAction(candidate3);
+                }
 
-				@Test
-				void testAfterDoAction() {
-					assertCurrentState(3, 0, SelectingSecondEndPoint.class);
-				}
+                @Test
+                void testAfterDoAction() {
+                    assertCurrentState(3, 0, SelectingSecondEndPoint.class);
+                }
 
-				@Test
-				void testUndo_secondSnapState() {
-					state = state.undo(context);
-					assertCurrentState(2, 0, SelectingFirstEndPoint.class);
-				}
+                @Test
+                void testUndo_secondSnapState() {
+                    state = state.undo(context);
+                    assertCurrentState(2, 0, SelectingFirstEndPoint.class);
+                }
 
-				@Nested
-				class SecondSnapIsSelected {
-					Vector2d candidate4 = new Vector2d(1, 5);
+                @Nested
+                class SecondSnapIsSelected {
+                    Vector2d candidate4 = new Vector2d(1, 5);
 
-					@BeforeEach
-					void doAction() {
-						PBisecInputStatesTest.this.doAction(candidate4);
-					}
+                    @BeforeEach
+                    void doAction() {
+                        PBisecInputStatesTest.this.doAction(candidate4);
+                    }
 
-					@Test
-					void testAfterDoAction() {
-						assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
-						assertNewLineInput();
-					}
-				}
-			}
+                    @Test
+                    void testAfterDoAction() {
+                        assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
+                        assertNewLineInput();
+                    }
+                }
+            }
 
-		}
-	}
+        }
+    }
 }

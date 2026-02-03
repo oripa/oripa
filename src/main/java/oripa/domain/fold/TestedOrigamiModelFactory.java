@@ -33,32 +33,32 @@ import oripa.value.OriLine;
  *
  */
 public class TestedOrigamiModelFactory {
-	OrigamiModelFactory factory = new OrigamiModelFactory();
-	FoldabilityChecker checker = new FoldabilityChecker();
+    OrigamiModelFactory factory = new OrigamiModelFactory();
+    FoldabilityChecker checker = new FoldabilityChecker();
 
-	/**
-	 * Constructs the half-edge based data structure which describes relation
-	 * among faces and edges and store it into {@code OrigamiModel}. This is a
-	 * preparation for estimating folded shape with layers: this method removes
-	 * meaningless vertices.
-	 *
-	 * @param creasePattern
-	 * @return A model data converted from crease pattern.
-	 */
-	public OrigamiModel createOrigamiModel(
-			final Collection<OriLine> creasePattern, final double pointEps) {
-		var origamiModel = factory.createOrigamiModel(creasePattern, pointEps);
-		origamiModel.setLocallyFlatFoldable(checker.testLocalFlatFoldability(origamiModel));
+    /**
+     * Constructs the half-edge based data structure which describes relation
+     * among faces and edges and store it into {@code OrigamiModel}. This is a
+     * preparation for estimating folded shape with layers: this method removes
+     * meaningless vertices.
+     *
+     * @param creasePattern
+     * @return A model data converted from crease pattern.
+     */
+    public OrigamiModel createOrigamiModel(
+            final Collection<OriLine> creasePattern, final double pointEps) {
+        var origamiModel = factory.createOrigamiModel(creasePattern, pointEps);
+        origamiModel.setLocallyFlatFoldable(checker.testLocalFlatFoldability(origamiModel));
 
-		return origamiModel;
-	}
+        return origamiModel;
+    }
 
-	public List<OrigamiModel> createOrigamiModels(
-			final Collection<OriLine> creasePattern, final double pointEps) {
-		var origamiModels = factory.createOrigamiModels(creasePattern, pointEps);
-		origamiModels.forEach(model -> model.setLocallyFlatFoldable(checker.testLocalFlatFoldability(model)));
+    public List<OrigamiModel> createOrigamiModels(
+            final Collection<OriLine> creasePattern, final double pointEps) {
+        var origamiModels = factory.createOrigamiModels(creasePattern, pointEps);
+        origamiModels.forEach(model -> model.setLocallyFlatFoldable(checker.testLocalFlatFoldability(model)));
 
-		return origamiModels;
-	}
+        return origamiModels;
+    }
 
 }

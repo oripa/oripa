@@ -26,15 +26,15 @@ import oripa.util.Command;
  *
  */
 public class AllItemUnselecterCommand implements Command {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public AllItemUnselecterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public AllItemUnselecterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		context.getPainter().resetSelectedOriLines();
-		context.clear(false);
-	}
+    @Override
+    public void execute() {
+        context.getPainter().resetSelectedOriLines();
+        context.clear(false);
+    }
 }

@@ -28,10 +28,10 @@ import oripa.gui.view.model.ModelViewFrameView;
  *
  */
 public interface SubFrameFactory {
-	FoldabilityCheckFrameView createFoldabilityFrame(FrameView parent);
+    FoldabilityCheckFrameView createFoldabilityFrame(FrameView parent);
 
-	ModelViewFrameView createModelViewFrame(
-			FrameView parent);
+    ModelViewFrameView createModelViewFrame(
+            FrameView parent);
 
-	EstimationResultFrameView createResultFrame(FrameView parent);
+    EstimationResultFrameView createResultFrame(FrameView parent);
 }

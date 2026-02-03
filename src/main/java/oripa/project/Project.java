@@ -42,93 +42,93 @@ import oripa.persistence.doc.DocFileTypes;
 @Singleton
 public class Project implements PropertyHolder {
 
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	/**
-	 * Project property
-	 */
-	private Property property = new Property();
+    /**
+     * Project property
+     */
+    private Property property = new Property();
 
-	private String dataFilePath = "";
+    private String dataFilePath = "";
 
-	private static final List<FileType<Doc>> projectFileTypes = List.of(
-			DocFileTypes.opx(),
-			DocFileTypes.fold());
+    private static final List<FileType<Doc>> projectFileTypes = List.of(
+            DocFileTypes.opx(),
+            DocFileTypes.fold());
 
-	public static List<FileType<Doc>> projectFileTypes() {
-		return projectFileTypes;
-	}
+    public static List<FileType<Doc>> projectFileTypes() {
+        return projectFileTypes;
+    }
 
-	public static boolean projectFileTypeMatch(final String path) {
-		if (path == null || path.isEmpty()) {
-			return false;
-		}
-		return projectFileTypes.stream().anyMatch(type -> type.extensionsMatch(path));
-	}
+    public static boolean projectFileTypeMatch(final String path) {
+        if (path == null || path.isEmpty()) {
+            return false;
+        }
+        return projectFileTypes.stream().anyMatch(type -> type.extensionsMatch(path));
+    }
 
-	public Project() {
-	}
+    public Project() {
+    }
 
-	public Project(final Property property, final String filePath) {
-		setProperty(property);
-		dataFilePath = filePath;
-	}
+    public Project(final Property property, final String filePath) {
+        setProperty(property);
+        dataFilePath = filePath;
+    }
 
-	public void clear() {
-		property = new Property();
-		dataFilePath = "";
-	}
+    public void clear() {
+        property = new Property();
+        dataFilePath = "";
+    }
 
-	public String getDataFilePath() {
-		return dataFilePath;
-	}
+    public String getDataFilePath() {
+        return dataFilePath;
+    }
 
-	public void setDataFilePath(final String path) {
-		dataFilePath = path;
-	}
+    public void setDataFilePath(final String path) {
+        dataFilePath = path;
+    }
 
-	public Optional<String> getDataFileName() {
-		if (dataFilePath == null || dataFilePath.isEmpty()) {
-			return Optional.empty();
-		}
+    public Optional<String> getDataFileName() {
+        if (dataFilePath == null || dataFilePath.isEmpty()) {
+            return Optional.empty();
+        }
 
-		File file = new File(dataFilePath);
-		String fileName = file.getName();
+        File file = new File(dataFilePath);
+        String fileName = file.getName();
 
-		return Optional.of(fileName);
+        return Optional.of(fileName);
 
-	}
+    }
 
-	public Optional<FileType<Doc>> getProjectFileType() {
+    public Optional<FileType<Doc>> getProjectFileType() {
 
-		var typeOpt = projectFileTypes.stream()
-				.filter(type -> type.extensionsMatch(dataFilePath))
-				.findFirst();
+        var typeOpt = projectFileTypes.stream()
+                .filter(type -> type.extensionsMatch(dataFilePath))
+                .findFirst();
 
-		logger.debug("project file type: {}", typeOpt);
+        logger.debug("project file type: {}", typeOpt);
 
-		return typeOpt;
-	}
+        return typeOpt;
+    }
 
-	public boolean isProjectFile() {
-		return projectFileTypeMatch(dataFilePath);
-	}
+    public boolean isProjectFile() {
+        return projectFileTypeMatch(dataFilePath);
+    }
 
-	/**
-	 * @return property
-	 */
-	@Override
-	public Property getProperty() {
-		return property;
-	}
+    /**
+     * @return property
+     */
+    @Override
+    public Property getProperty() {
+        return property;
+    }
 
-	/**
-	 * @param property
-	 *            Sets property
-	 */
-	@Override
-	public void setProperty(final Property property) {
-		this.property = property;
-	}
+    /**
+     * @param property
+     *            Sets property
+     */
+    @Override
+    public void setProperty(final Property property) {
+        this.property = property;
+    }
 
 }

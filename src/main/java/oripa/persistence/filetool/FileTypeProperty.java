@@ -26,26 +26,26 @@ import java.util.Arrays;
  */
 public interface FileTypeProperty<Data> {
 
-	/**
-	 *
-	 * @return extensions for this file type. Each extension is supposed to be
-	 *         without period (.). For example, "jpg" is acceptable but ".jpg"
-	 *         is not.
-	 */
-	String[] getExtensions();
+    /**
+     *
+     * @return extensions for this file type. Each extension is supposed to be
+     *         without period (.). For example, "jpg" is acceptable but ".jpg"
+     *         is not.
+     */
+    String[] getExtensions();
 
-	default boolean extensionsMatch(final String filePath) {
-		if (filePath == null) {
-			return false;
-		}
-		return Arrays.asList(getExtensions()).stream()
-				.anyMatch(extension -> filePath.endsWith("." + extension));
-	}
+    default boolean extensionsMatch(final String filePath) {
+        if (filePath == null) {
+            return false;
+        }
+        return Arrays.asList(getExtensions()).stream()
+                .anyMatch(extension -> filePath.endsWith("." + extension));
+    }
 
-	/**
-	 * @return a text for identifying file type.
-	 */
-	String getKeyText();
+    /**
+     * @return a text for identifying file type.
+     */
+    String getKeyText();
 
-	Integer getOrder();
+    Integer getOrder();
 }

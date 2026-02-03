@@ -25,22 +25,22 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
  *
  */
 public class StopWatch {
-	private long startTime = Long.MAX_VALUE;
+    private long startTime = Long.MAX_VALUE;
 
-	public StopWatch(final boolean startImmediately) {
-		if (startImmediately) {
-			start();
-		}
-	}
+    public StopWatch(final boolean startImmediately) {
+        if (startImmediately) {
+            start();
+        }
+    }
 
-	public void start() {
-		startTime = System.nanoTime();
-	}
+    public void start() {
+        startTime = System.nanoTime();
+    }
 
-	public long getMilliSec() {
-		if (startTime == Long.MAX_VALUE) {
-			throw new IllegalStateException("do start()!");
-		}
-		return NANOSECONDS.toMillis(System.nanoTime() - startTime);
-	}
+    public long getMilliSec() {
+        if (startTime == Long.MAX_VALUE) {
+            throw new IllegalStateException("do start()!");
+        }
+        return NANOSECONDS.toMillis(System.nanoTime() - startTime);
+    }
 }

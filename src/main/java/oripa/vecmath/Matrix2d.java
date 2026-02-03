@@ -27,60 +27,60 @@ import oripa.util.MathUtil;
  *
  */
 public class Matrix2d {
-	private final double v00;
-	private final double v01;
-	private final double v10;
-	private final double v11;
+    private final double v00;
+    private final double v01;
+    private final double v10;
+    private final double v11;
 
-	public Matrix2d(final double v00, final double v01, final double v10, final double v11) {
-		this.v00 = v00;
-		this.v01 = v01;
-		this.v10 = v10;
-		this.v11 = v11;
-	}
+    public Matrix2d(final double v00, final double v01, final double v10, final double v11) {
+        this.v00 = v00;
+        this.v01 = v01;
+        this.v10 = v10;
+        this.v11 = v11;
+    }
 
-	public Vector2d product(final Vector2d v) {
-		var p = rowVector(0);
-		var q = rowVector(1);
+    public Vector2d product(final Vector2d v) {
+        var p = rowVector(0);
+        var q = rowVector(1);
 
-		return new Vector2d(p.dot(v), q.dot(v));
-	}
+        return new Vector2d(p.dot(v), q.dot(v));
+    }
 
-	Vector2d rowVector(final int i) {
-		if (i == 0) {
-			return new Vector2d(v00, v01);
-		} else if (i == 1) {
-			return new Vector2d(v10, v11);
-		} else {
-			throw new IllegalArgumentException("This matrix only has 2 rows");
-		}
-	}
+    Vector2d rowVector(final int i) {
+        if (i == 0) {
+            return new Vector2d(v00, v01);
+        } else if (i == 1) {
+            return new Vector2d(v10, v11);
+        } else {
+            throw new IllegalArgumentException("This matrix only has 2 rows");
+        }
+    }
 
-	public double determinant() {
-		return v00 * v11 - v01 * v10;
-	}
+    public double determinant() {
+        return v00 * v11 - v01 * v10;
+    }
 
-	public boolean isRegular() {
-		var p = rowVector(0).normalize();
-		var q = rowVector(1).normalize();
+    public boolean isRegular() {
+        var p = rowVector(0).normalize();
+        var q = rowVector(1).normalize();
 
-		final double eps = MathUtil.normalizedValueEps();
+        final double eps = MathUtil.normalizedValueEps();
 
-		return Math.abs(p.getX() * q.getY() - p.getY() * q.getX()) > eps;
-	}
+        return Math.abs(p.getX() * q.getY() - p.getY() * q.getX()) > eps;
+    }
 
-	public Optional<Matrix2d> inverse() {
-		if (!isRegular()) {
-			return Optional.empty();
-		}
+    public Optional<Matrix2d> inverse() {
+        if (!isRegular()) {
+            return Optional.empty();
+        }
 
-		var det = determinant();
+        var det = determinant();
 
-		return Optional.of(new Matrix2d(
-				v11 / det,
-				-v01 / det,
-				-v10 / det,
-				v00 / det));
-	}
+        return Optional.of(new Matrix2d(
+                v11 / det,
+                -v01 / det,
+                -v10 / det,
+                v00 / det));
+    }
 
 }

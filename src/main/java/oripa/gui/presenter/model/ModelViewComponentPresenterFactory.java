@@ -29,21 +29,21 @@ import oripa.gui.view.util.CallbackOnUpdate;
  */
 public class ModelViewComponentPresenterFactory {
 
-	private final CutModelOutlinesHolder cutModelOutlineHolder;
+    private final CutModelOutlinesHolder cutModelOutlineHolder;
 
-	@Inject
-	public ModelViewComponentPresenterFactory(final CutModelOutlinesHolder cutModelOutlineHolder) {
-		this.cutModelOutlineHolder = cutModelOutlineHolder;
-	}
+    @Inject
+    public ModelViewComponentPresenterFactory(final CutModelOutlinesHolder cutModelOutlineHolder) {
+        this.cutModelOutlineHolder = cutModelOutlineHolder;
+    }
 
-	public ModelViewScreenPresenter createScreenPresenter(
-			final ModelViewScreenView view,
-			final CallbackOnUpdate onUpdateScissorsLine,
-			final double eps) {
-		return new ModelViewScreenPresenter(
-				view,
-				cutModelOutlineHolder,
-				onUpdateScissorsLine,
-				eps);
-	}
+    public ModelViewScreenPresenter createScreenPresenter(
+            final ModelViewScreenView view,
+            final CallbackOnUpdate onUpdateScissorsLine,
+            final double eps) {
+        return new ModelViewScreenPresenter(
+                view,
+                cutModelOutlineHolder,
+                onUpdateScissorsLine,
+                eps);
+    }
 }

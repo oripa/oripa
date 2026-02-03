@@ -30,27 +30,27 @@ import org.slf4j.LoggerFactory;
  *
  */
 class BitBlockByteMatrixTest {
-	static Logger logger = LoggerFactory.getLogger(BitBlockByteMatrixTest.class);
+    static Logger logger = LoggerFactory.getLogger(BitBlockByteMatrixTest.class);
 
-	BitBlockByteMatrix matrix;
+    BitBlockByteMatrix matrix;
 
-	@BeforeEach
-	void setUp() {
-		matrix = new BitBlockByteMatrix(200, 100, 2);
-	}
+    @BeforeEach
+    void setUp() {
+        matrix = new BitBlockByteMatrix(200, 100, 2);
+    }
 
-	@Test
-	void testSetAndGet() {
-		assertSetAndGet(0, 0, (byte) 0x01);
-		assertSetAndGet(0, 63, (byte) 0x02);
-		assertSetAndGet(1, 2, (byte) 0x03);
-		assertSetAndGet(199, 99, (byte) 0x02);
+    @Test
+    void testSetAndGet() {
+        assertSetAndGet(0, 0, (byte) 0x01);
+        assertSetAndGet(0, 63, (byte) 0x02);
+        assertSetAndGet(1, 2, (byte) 0x03);
+        assertSetAndGet(199, 99, (byte) 0x02);
 
-	}
+    }
 
-	void assertSetAndGet(final int i, final int j, final byte value) {
-		matrix.set(i, j, value);
-		logger.debug(matrix.toBinaryString());
-		assertEquals(value, matrix.get(i, j));
-	}
+    void assertSetAndGet(final int i, final int j, final byte value) {
+        matrix.set(i, j, value);
+        logger.debug(matrix.toBinaryString());
+        assertEquals(value, matrix.get(i, j));
+    }
 }

@@ -35,50 +35,50 @@ import oripa.domain.fold.halfedge.OrigamiModelFactory;
  *
  */
 public class SplitFacesToSubFacesConverter {
-	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	/**
-	 *
-	 * @param splitFaces
-	 *            result of
-	 *            {@link OrigamiModelFactory#buildOrigamiForSubfaces(java.util.Collection, double, double)}
-	 *            where the parameter collection contains edges after fold.
-	 * @return
-	 */
-	public List<SubFace> convertToSubFaces(final Collection<OriFace> splitFaces, final Collection<OriVertex> vertices,
-			final double eps) {
-		Collection<OriFace> faces = new ArrayList<>(
-				splitFaces.stream()
-						.map(face -> face.remove180degreeVertices(eps))
-						.map(face -> face.removeDuplicatedVertices(eps))
-						.filter(face -> face.halfedgeCount() >= 3)
-						.toList());
+    /**
+     *
+     * @param splitFaces
+     *            result of
+     *            {@link OrigamiModelFactory#buildOrigamiForSubfaces(java.util.Collection, double, double)}
+     *            where the parameter collection contains edges after fold.
+     * @return
+     */
+    public List<SubFace> convertToSubFaces(final Collection<OriFace> splitFaces, final Collection<OriVertex> vertices,
+            final double eps) {
+        Collection<OriFace> faces = new ArrayList<>(
+                splitFaces.stream()
+                        .map(face -> face.remove180degreeVertices(eps))
+                        .map(face -> face.removeDuplicatedVertices(eps))
+                        .filter(face -> face.halfedgeCount() >= 3)
+                        .toList());
 
-		removeOuterFace(faces, vertices, eps);
+        removeOuterFace(faces, vertices, eps);
 
-		return new ArrayList<SubFace>(
-				faces.stream()
-						.map(face -> new SubFace(face, eps))
-						.toList());
-	}
+        return new ArrayList<SubFace>(
+                faces.stream()
+                        .map(face -> new SubFace(face, eps))
+                        .toList());
+    }
 
-	private void removeOuterFace(final Collection<OriFace> faces, final Collection<OriVertex> vertices,
-			final double eps) {
+    private void removeOuterFace(final Collection<OriFace> faces, final Collection<OriVertex> vertices,
+            final double eps) {
 
-		logger.debug("try to remove outer face");
-		logger.debug("before: {} faces", faces.size());
+        logger.debug("try to remove outer face");
+        logger.debug("before: {} faces", faces.size());
 
-		var outerFaceOpt = faces.stream()
-				.filter(face -> vertices.stream()
-						.allMatch(v -> face.includesInclusively(v.getPosition(), eps * 5)))
-				.findFirst();
-		if (outerFaceOpt.isPresent()) {
-			var outerFace = outerFaceOpt.get();
-			logger.debug("remove {}", outerFace);
-			faces.removeIf(face -> face == outerFace);
-		}
+        var outerFaceOpt = faces.stream()
+                .filter(face -> vertices.stream()
+                        .allMatch(v -> face.includesInclusively(v.getPosition(), eps * 5)))
+                .findFirst();
+        if (outerFaceOpt.isPresent()) {
+            var outerFace = outerFaceOpt.get();
+            logger.debug("remove {}", outerFace);
+            faces.removeIf(face -> face == outerFace);
+        }
 
-		logger.debug("after: {} faces", faces.size());
-	}
+        logger.debug("after: {} faces", faces.size());
+    }
 
 }

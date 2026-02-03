@@ -23,5 +23,5 @@ package oripa.domain.cptool.compgeom;
  *
  */
 public interface InterceptGettable {
-	double getIntercept();
+    double getIntercept();
 }

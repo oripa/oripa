@@ -19,5 +19,5 @@
 package oripa.persistence.foldformat;
 
 public class FileClass {
-	public static final String SINGLE_MODEL = "singleModel";
+    public static final String SINGLE_MODEL = "singleModel";
 }

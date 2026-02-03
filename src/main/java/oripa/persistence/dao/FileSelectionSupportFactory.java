@@ -26,7 +26,7 @@ import oripa.persistence.filetool.FileAccessSupport;
  */
 public class FileSelectionSupportFactory {
 
-	public <Data> FileSelectionSupport<Data> create(final FileAccessSupport<Data> accessSupport) {
-		return new FileSelectionSupport<Data>(accessSupport);
-	}
+    public <Data> FileSelectionSupport<Data> create(final FileAccessSupport<Data> accessSupport) {
+        return new FileSelectionSupport<Data>(accessSupport);
+    }
 }

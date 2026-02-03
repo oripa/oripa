@@ -23,27 +23,27 @@ package oripa.gui.presenter.creasepattern;
  *
  */
 public class CreasePatternPresentationContext {
-	private final CreasePatternViewContext viewContext;
-	private final MouseActionHolder actionHolder;
-	private final TypeForChangeContext typeForChangeContext;
+    private final CreasePatternViewContext viewContext;
+    private final MouseActionHolder actionHolder;
+    private final TypeForChangeContext typeForChangeContext;
 
-	public CreasePatternPresentationContext(final CreasePatternViewContext viewContext,
-			final MouseActionHolder actionHolder,
-			final TypeForChangeContext typeForChangeContext) {
-		this.viewContext = viewContext;
-		this.actionHolder = actionHolder;
-		this.typeForChangeContext = typeForChangeContext;
-	}
+    public CreasePatternPresentationContext(final CreasePatternViewContext viewContext,
+            final MouseActionHolder actionHolder,
+            final TypeForChangeContext typeForChangeContext) {
+        this.viewContext = viewContext;
+        this.actionHolder = actionHolder;
+        this.typeForChangeContext = typeForChangeContext;
+    }
 
-	public CreasePatternViewContext getViewContext() {
-		return viewContext;
-	}
+    public CreasePatternViewContext getViewContext() {
+        return viewContext;
+    }
 
-	public MouseActionHolder getActionHolder() {
-		return actionHolder;
-	}
+    public MouseActionHolder getActionHolder() {
+        return actionHolder;
+    }
 
-	public TypeForChangeContext getTypeForChangeContext() {
-		return typeForChangeContext;
-	}
+    public TypeForChangeContext getTypeForChangeContext() {
+        return typeForChangeContext;
+    }
 }

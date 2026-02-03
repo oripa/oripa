@@ -27,20 +27,20 @@ import oripa.domain.paint.core.PickingLine;
  */
 public class SelectingLine extends PickingLine {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingFirstVertex.class);
-		setNextClass(SelectingSecondVertex.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingFirstVertex.class);
+        setNextClass(SelectingSecondVertex.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
 
-	}
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popVertex();
+    }
 
 }

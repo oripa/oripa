@@ -28,18 +28,18 @@ import oripa.persistence.entity.loader.FoldedModelLoaderFOLD;
  *
  */
 public class FoldedModelCounter {
-	private static final Logger logger = LoggerFactory.getLogger(FoldedModelCounter.class);
+    private static final Logger logger = LoggerFactory.getLogger(FoldedModelCounter.class);
 
-	public int count(final String inputFilePath) {
-		var inputFileLoader = new FoldedModelLoaderFOLD();
-		try {
-			var inputModelEntityOpt = inputFileLoader.load(inputFilePath);
+    public int count(final String inputFilePath) {
+        var inputFileLoader = new FoldedModelLoaderFOLD();
+        try {
+            var inputModelEntityOpt = inputFileLoader.load(inputFilePath);
 
-			return inputModelEntityOpt.orElseThrow().getOverlapRelations().size();
-		} catch (Exception e) {
-			logger.error("count error.", e);
-		}
-		return -1;
-	}
+            return inputModelEntityOpt.orElseThrow().getOverlapRelations().size();
+        } catch (Exception e) {
+            logger.error("count error.", e);
+        }
+        return -1;
+    }
 
 }

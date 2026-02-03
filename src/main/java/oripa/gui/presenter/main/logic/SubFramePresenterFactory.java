@@ -41,72 +41,72 @@ import oripa.gui.view.model.ModelViewFrameView;
  *
  */
 public class SubFramePresenterFactory {
-	private final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory;
-	private final ModelViewFramePresenterFactory modelViewFramePresenterFactory;
+    private final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory;
+    private final ModelViewFramePresenterFactory modelViewFramePresenterFactory;
 
-	private final EstimationResultFramePresenterFactory estimationResultFramePresenterFactory;
+    private final EstimationResultFramePresenterFactory estimationResultFramePresenterFactory;
 
-	@Inject
-	public SubFramePresenterFactory(
-			final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory,
-			final ModelViewFramePresenterFactory modelViewFramePresenterFactory,
-			final EstimationResultFramePresenterFactory estimationResultFramePresenterFactory) {
+    @Inject
+    public SubFramePresenterFactory(
+            final FoldabilityCheckFramePresenterFactory foldabilityCheckFramePresenterFactory,
+            final ModelViewFramePresenterFactory modelViewFramePresenterFactory,
+            final EstimationResultFramePresenterFactory estimationResultFramePresenterFactory) {
 
-		this.foldabilityCheckFramePresenterFactory = foldabilityCheckFramePresenterFactory;
-		this.modelViewFramePresenterFactory = modelViewFramePresenterFactory;
-		this.estimationResultFramePresenterFactory = estimationResultFramePresenterFactory;
-	}
+        this.foldabilityCheckFramePresenterFactory = foldabilityCheckFramePresenterFactory;
+        this.modelViewFramePresenterFactory = modelViewFramePresenterFactory;
+        this.estimationResultFramePresenterFactory = estimationResultFramePresenterFactory;
+    }
 
-	public ModelViewFramePresenter createModelViewFramePresenter(
-			final ModelViewFrameView view,
-			final List<OrigamiModel> origamiModels,
-			final double eps) {
-		return modelViewFramePresenterFactory.create(
-				view,
-				origamiModels,
-				eps);
-	}
+    public ModelViewFramePresenter createModelViewFramePresenter(
+            final ModelViewFrameView view,
+            final List<OrigamiModel> origamiModels,
+            final double eps) {
+        return modelViewFramePresenterFactory.create(
+                view,
+                origamiModels,
+                eps);
+    }
 
-	public EstimationResultFramePresenter createEstimationResultFramePresenter(
-			final EstimationResultFrameView view,
-			final List<FoldedModel> foldedModels,
-			final double eps,
-			final String lastFilePath,
-			final Consumer<String> lastFilePathChangeListener) {
+    public EstimationResultFramePresenter createEstimationResultFramePresenter(
+            final EstimationResultFrameView view,
+            final List<FoldedModel> foldedModels,
+            final double eps,
+            final String lastFilePath,
+            final Consumer<String> lastFilePathChangeListener) {
 
-		return estimationResultFramePresenterFactory.create(
-				view,
-				foldedModels,
-				eps,
-				lastFilePath,
-				lastFilePathChangeListener);
-	}
+        return estimationResultFramePresenterFactory.create(
+                view,
+                foldedModels,
+                eps,
+                lastFilePath,
+                lastFilePathChangeListener);
+    }
 
-	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
-			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern,
-			final double pointEps) {
+    public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
+            final FoldabilityCheckFrameView view,
+            final CreasePattern creasePattern,
+            final double pointEps) {
 
-		return foldabilityCheckFramePresenterFactory.create(
-				view,
-				creasePattern,
-				pointEps);
+        return foldabilityCheckFramePresenterFactory.create(
+                view,
+                creasePattern,
+                pointEps);
 
-	}
+    }
 
-	public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
-			final FoldabilityCheckFrameView view,
-			final CreasePattern creasePattern,
-			final OrigamiModel origamiModel,
-			final EstimationResultRules estimationRules,
-			final double pointEps) {
+    public FoldabilityCheckFramePresenter createFoldabilityCheckFrameViewPresenter(
+            final FoldabilityCheckFrameView view,
+            final CreasePattern creasePattern,
+            final OrigamiModel origamiModel,
+            final EstimationResultRules estimationRules,
+            final double pointEps) {
 
-		return foldabilityCheckFramePresenterFactory.create(
-				view,
-				creasePattern,
-				origamiModel,
-				estimationRules,
-				pointEps);
-	}
+        return foldabilityCheckFramePresenterFactory.create(
+                view,
+                creasePattern,
+                origamiModel,
+                estimationRules,
+                pointEps);
+    }
 
 }

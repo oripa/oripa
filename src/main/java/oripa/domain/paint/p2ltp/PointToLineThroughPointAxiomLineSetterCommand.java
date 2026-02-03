@@ -28,26 +28,26 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  */
 public class PointToLineThroughPointAxiomLineSetterCommand extends ValidatablePaintCommand {
 
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public PointToLineThroughPointAxiomLineSetterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public PointToLineThroughPointAxiomLineSetterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int vertexCount = 2;
-		final int lineCount = 1;
+    @Override
+    public void execute() {
+        final int vertexCount = 2;
+        final int lineCount = 1;
 
-		validateCounts(context, vertexCount, lineCount);
+        validateCounts(context, vertexCount, lineCount);
 
-		var p = context.getVertex(0);
-		var c = context.getVertex(1);
-		var segment = context.getLine(0);
+        var p = context.getVertex(0);
+        var c = context.getVertex(1);
+        var segment = context.getLine(0);
 
-		var foldLines = new PointToLineThroughPointAxiom().createFoldLine(p, c, segment, context.getPointEps());
+        var foldLines = new PointToLineThroughPointAxiom().createFoldLine(p, c, segment, context.getPointEps());
 
-		context.setSolutionLines(foldLines);
-	}
+        context.setSolutionLines(foldLines);
+    }
 
 }

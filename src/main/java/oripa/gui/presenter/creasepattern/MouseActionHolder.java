@@ -29,25 +29,25 @@ import jakarta.inject.Singleton;
 @Singleton
 public class MouseActionHolder {
 
-	/**
-	 *
-	 */
-	private GraphicMouseAction action;
+    /**
+     *
+     */
+    private GraphicMouseAction action;
 
-	/**
-	 *
-	 * @param a
-	 *            mouse action behavior
-	 */
-	public void setMouseAction(final GraphicMouseAction a) {
-		action = a;
-	}
+    /**
+     *
+     * @param a
+     *            mouse action behavior
+     */
+    public void setMouseAction(final GraphicMouseAction a) {
+        action = a;
+    }
 
-	/**
-	 *
-	 * @return current mouse action behavior
-	 */
-	public Optional<GraphicMouseAction> getMouseAction() {
-		return Optional.ofNullable(action);
-	}
+    /**
+     *
+     * @return current mouse action behavior
+     */
+    public Optional<GraphicMouseAction> getMouseAction() {
+        return Optional.ofNullable(action);
+    }
 }

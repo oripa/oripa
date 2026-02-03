@@ -44,181 +44,181 @@ import oripa.gui.view.model.ModelViewFrameView;
  *
  */
 public class SubFramePresentationLogic {
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final UIPanelView view;
-	private final PainterScreenPresenter mainScreenPresenter;
-	private final ModelIndexChangeSupport modelIndexChangeSupport;
-	private final SubFrameFactory subFrameFactory;
+    private final UIPanelView view;
+    private final PainterScreenPresenter mainScreenPresenter;
+    private final ModelIndexChangeSupport modelIndexChangeSupport;
+    private final SubFrameFactory subFrameFactory;
 
-	private final SubFramePresenterFactory subFramePresenterFactory;
+    private final SubFramePresenterFactory subFramePresenterFactory;
 
-	private final ModelComputationFacadeFactory computationFacadeFactory;
-	private ComputationResult computationResult;
+    private final ModelComputationFacadeFactory computationFacadeFactory;
+    private ComputationResult computationResult;
 
-	private final PaintContext paintContext;
+    private final PaintContext paintContext;
 
-	private String lastResultFilePath;
+    private String lastResultFilePath;
 
-	@Inject
-	public SubFramePresentationLogic(
-			final UIPanelView view,
-			final PainterScreenPresenter mainScreenPresenter,
-			final ModelIndexChangeSupport modelIndexChangeSupport,
-			final SubFrameFactory subFrameFactory,
-			final SubFramePresenterFactory subFramePresenterFactory,
-			final ModelComputationFacadeFactory computationFacadeFactory,
-			final PaintContext paintContext) {
+    @Inject
+    public SubFramePresentationLogic(
+            final UIPanelView view,
+            final PainterScreenPresenter mainScreenPresenter,
+            final ModelIndexChangeSupport modelIndexChangeSupport,
+            final SubFrameFactory subFrameFactory,
+            final SubFramePresenterFactory subFramePresenterFactory,
+            final ModelComputationFacadeFactory computationFacadeFactory,
+            final PaintContext paintContext) {
 
-		this.view = view;
-		this.mainScreenPresenter = mainScreenPresenter;
-		this.modelIndexChangeSupport = modelIndexChangeSupport;
-		this.subFrameFactory = subFrameFactory;
-		this.subFramePresenterFactory = subFramePresenterFactory;
-		this.computationFacadeFactory = computationFacadeFactory;
-		this.paintContext = paintContext;
+        this.view = view;
+        this.mainScreenPresenter = mainScreenPresenter;
+        this.modelIndexChangeSupport = modelIndexChangeSupport;
+        this.subFrameFactory = subFrameFactory;
+        this.subFramePresenterFactory = subFramePresenterFactory;
+        this.computationFacadeFactory = computationFacadeFactory;
+        this.paintContext = paintContext;
 
-	}
+    }
 
-	/**
-	 * display window with foldability checks
-	 */
-	public void showCheckerWindow() {
-		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
-		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-				frame,
-				paintContext.getCreasePattern(),
-				paintContext.getPointEps());
+    /**
+     * display window with foldability checks
+     */
+    public void showCheckerWindow() {
+        var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
+        var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
+                frame,
+                paintContext.getCreasePattern(),
+                paintContext.getPointEps());
 
-		presenter.setViewVisible(true);
-	}
+        presenter.setViewVisible(true);
+    }
 
-	private void showCheckerWindow(final OrigamiModel origamiModel, final EstimationResultRules estimationRules) {
-		var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
-		var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-				frame,
-				paintContext.getCreasePattern(),
-				origamiModel,
-				estimationRules,
-				paintContext.getPointEps());
+    private void showCheckerWindow(final OrigamiModel origamiModel, final EstimationResultRules estimationRules) {
+        var frame = subFrameFactory.createFoldabilityFrame((FrameView) view.getTopLevelView());
+        var presenter = subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
+                frame,
+                paintContext.getCreasePattern(),
+                origamiModel,
+                estimationRules,
+                paintContext.getPointEps());
 
-		presenter.setViewVisible(true);
-	}
+        presenter.setViewVisible(true);
+    }
 
-	public void computeModels() {
-		var modelComputation = computationFacadeFactory.createModelComputationFacade(
-				view,
-				paintContext.getPointEps());
+    public void computeModels() {
+        var modelComputation = computationFacadeFactory.createModelComputationFacade(
+                view,
+                paintContext.getPointEps());
 
-		CreasePattern creasePattern = paintContext.getCreasePattern();
+        CreasePattern creasePattern = paintContext.getCreasePattern();
 
-		var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
+        var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
 
-		try {
-			computationResult = modelComputation.computeModels(
-					origamiModels,
-					getComputationType());
-		} catch (Exception e) {
-			computationResult = null;
-			throw e;
-		}
-	}
+        try {
+            computationResult = modelComputation.computeModels(
+                    origamiModels,
+                    getComputationType());
+        } catch (Exception e) {
+            computationResult = null;
+            throw e;
+        }
+    }
 
-	private ComputationType getComputationType() {
-		return ComputationType.fromString(view.getComputationType()).get();
-	}
+    private ComputationType getComputationType() {
+        return ComputationType.fromString(view.getComputationType()).get();
+    }
 
-	public void showFoldedModelWindows() {
-		var parent = (FrameView) view.getTopLevelView();
+    public void showFoldedModelWindows() {
+        var parent = (FrameView) view.getTopLevelView();
 
-		if (!computationResult.allLocallyFlatFoldable()) {
-			view.showLocalFlatFoldabilityViolationMessage();
-			showCheckerWindow();
-			return;
-		}
+        if (!computationResult.allLocallyFlatFoldable()) {
+            view.showLocalFlatFoldabilityViolationMessage();
+            showCheckerWindow();
+            return;
+        }
 
-		var origamiModels = computationResult.origamiModels();
-		var foldedModels = computationResult.foldedModels();
+        var origamiModels = computationResult.origamiModels();
+        var foldedModels = computationResult.foldedModels();
 
-		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent);
+        ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent);
 
-		var modelViewPresenter = subFramePresenterFactory.createModelViewFramePresenter(
-				modelViewFrame,
-				origamiModels,
-				paintContext.getPointEps());
-		modelViewPresenter.setViewVisible(true);
+        var modelViewPresenter = subFramePresenterFactory.createModelViewFramePresenter(
+                modelViewFrame,
+                origamiModels,
+                paintContext.getPointEps());
+        modelViewPresenter.setViewVisible(true);
 
-		EstimationResultFrameView resultFrame = null;
+        EstimationResultFrameView resultFrame = null;
 
-		if (getComputationType().isLayerOrdering()) {
-			if (!computationResult.allGloballyFlatFoldable()) {
-				// wrong crease pattern exists.
-				view.showNoAnswerMessage();
-				logger.debug("estimation rules: {}", computationResult.getEstimationResultRules());
-				showCheckerWindow(
-						computationResult.getMergedOrigamiModel(),
-						computationResult.getEstimationResultRules());
-			} else {
-				logger.info("foldable layer layout is found.");
+        if (getComputationType().isLayerOrdering()) {
+            if (!computationResult.allGloballyFlatFoldable()) {
+                // wrong crease pattern exists.
+                view.showNoAnswerMessage();
+                logger.debug("estimation rules: {}", computationResult.getEstimationResultRules());
+                showCheckerWindow(
+                        computationResult.getMergedOrigamiModel(),
+                        computationResult.getEstimationResultRules());
+            } else {
+                logger.info("foldable layer layout is found.");
 
-				resultFrame = subFrameFactory.createResultFrame(parent);
+                resultFrame = subFrameFactory.createResultFrame(parent);
 
-				resultFrame.setColors(
-						view.getEstimationResultFrontColor(),
-						view.getEstimationResultBackColor());
-				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
-				// resultFrame.repaint();
+                resultFrame.setColors(
+                        view.getEstimationResultFrontColor(),
+                        view.getEstimationResultBackColor());
+                resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
+                // resultFrame.repaint();
 
-				var resultFramePresenter = subFramePresenterFactory.createEstimationResultFramePresenter(
-						resultFrame,
-						foldedModels,
-						paintContext.getPointEps(),
-						lastResultFilePath,
-						path -> lastResultFilePath = path);
+                var resultFramePresenter = subFramePresenterFactory.createEstimationResultFramePresenter(
+                        resultFrame,
+                        foldedModels,
+                        paintContext.getPointEps(),
+                        lastResultFilePath,
+                        path -> lastResultFilePath = path);
 
-				resultFramePresenter.setViewVisible(true);
-			}
-		}
+                resultFramePresenter.setViewVisible(true);
+            }
+        }
 
-		putModelIndexChangeListener(modelViewFrame, resultFrame, foldedModels);
+        putModelIndexChangeListener(modelViewFrame, resultFrame, foldedModels);
 
-		modelViewPresenter.setViewVisible(true);
-	}
+        modelViewPresenter.setViewVisible(true);
+    }
 
-	private void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
-			final EstimationResultFrameView resultFrame,
-			final List<FoldedModel> foldedModels) {
-		modelIndexChangeSupport.removeListeners();
+    private void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
+            final EstimationResultFrameView resultFrame,
+            final List<FoldedModel> foldedModels) {
+        modelIndexChangeSupport.removeListeners();
 
-		if (modelViewFrame == null || resultFrame == null) {
-			return;
-		}
-		// bind change event from view to presenter support
-		modelViewFrame.putModelIndexChangeListener(modelIndexChangeSupport,
-				e -> {
-					logger.debug("modelViewFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
-					modelIndexChangeSupport.setIndex((int) e.getNewValue());
-				});
-		resultFrame.putModelIndexChangeListener(modelIndexChangeSupport,
-				e -> {
-					logger.debug("resultFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
-					modelIndexChangeSupport.setIndex((int) e.getNewValue());
-				});
+        if (modelViewFrame == null || resultFrame == null) {
+            return;
+        }
+        // bind change event from view to presenter support
+        modelViewFrame.putModelIndexChangeListener(modelIndexChangeSupport,
+                e -> {
+                    logger.debug("modelViewFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
+                    modelIndexChangeSupport.setIndex((int) e.getNewValue());
+                });
+        resultFrame.putModelIndexChangeListener(modelIndexChangeSupport,
+                e -> {
+                    logger.debug("resultFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
+                    modelIndexChangeSupport.setIndex((int) e.getNewValue());
+                });
 
-		// bind change event from presenter support to view/presenter
-		modelIndexChangeSupport.putListener(modelViewFrame, e -> {
-			modelViewFrame.selectModel((Integer) e.getNewValue());
-		});
-		modelIndexChangeSupport.putListener(resultFrame, e -> {
-			resultFrame.selectModel((Integer) e.getNewValue());
-		});
-		modelIndexChangeSupport.putListener(mainScreenPresenter, e -> {
-			var domain = foldedModels.get((int) e.getNewValue()).origamiModel().createPaperDomain();
-			logger.debug("model index change: update domain {}", domain);
-			mainScreenPresenter.setPaperDomainOfModel(domain);
-		});
+        // bind change event from presenter support to view/presenter
+        modelIndexChangeSupport.putListener(modelViewFrame, e -> {
+            modelViewFrame.selectModel((Integer) e.getNewValue());
+        });
+        modelIndexChangeSupport.putListener(resultFrame, e -> {
+            resultFrame.selectModel((Integer) e.getNewValue());
+        });
+        modelIndexChangeSupport.putListener(mainScreenPresenter, e -> {
+            var domain = foldedModels.get((int) e.getNewValue()).origamiModel().createPaperDomain();
+            logger.debug("model index change: update domain {}", domain);
+            mainScreenPresenter.setPaperDomainOfModel(domain);
+        });
 
-		modelIndexChangeSupport.setIndex(0);
-	}
+        modelIndexChangeSupport.setIndex(0);
+    }
 
 }

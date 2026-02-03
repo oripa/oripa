@@ -22,10 +22,10 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
 class FaceDisplayModifier {
-	public void setCurrentPositionsToDisplayPositions(final OrigamiModel origamiModel) {
-		origamiModel.getFaces().stream()
-				.flatMap(OriFace::halfedgeStream).forEach(he -> {
-					he.setPositionForDisplay(he.getPosition());
-				});
-	}
+    public void setCurrentPositionsToDisplayPositions(final OrigamiModel origamiModel) {
+        origamiModel.getFaces().stream()
+                .flatMap(OriFace::halfedgeStream).forEach(he -> {
+                    he.setPositionForDisplay(he.getPosition());
+                });
+    }
 }

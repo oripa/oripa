@@ -4,11 +4,11 @@ import oripa.domain.paint.mirror.SelectingLineForMirror;
 
 public class MirrorCopyAction extends SelectLineAction {
 
-	public MirrorCopyAction() {
+    public MirrorCopyAction() {
 
-		setEditMode(EditMode.INPUT);
-		setNeedSelect(true);
+        setEditMode(EditMode.INPUT);
+        setNeedSelect(true);
 
-		setActionState(new SelectingLineForMirror());
-	}
+        setActionState(new SelectingLineForMirror());
+    }
 }

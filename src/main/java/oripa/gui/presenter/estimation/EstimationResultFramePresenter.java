@@ -28,39 +28,39 @@ import oripa.gui.view.estimation.EstimationResultFrameView;
  *
  */
 public class EstimationResultFramePresenter {
-	private final EstimationResultFrameView view;
+    private final EstimationResultFrameView view;
 
-	private final List<FoldedModel> foldedModels;
-	private FoldedModel foldedModel;
-	private final double eps;
+    private final List<FoldedModel> foldedModels;
+    private FoldedModel foldedModel;
+    private final double eps;
 
-	public EstimationResultFramePresenter(
-			final EstimationResultFrameView view,
-			final List<FoldedModel> foldedModels,
-			final double eps) {
-		this.view = view;
+    public EstimationResultFramePresenter(
+            final EstimationResultFrameView view,
+            final List<FoldedModel> foldedModels,
+            final double eps) {
+        this.view = view;
 
-		this.foldedModels = foldedModels;
+        this.foldedModels = foldedModels;
 
-		this.eps = eps;
+        this.eps = eps;
 
-		addListeners();
+        addListeners();
 
-		setToView();
-	}
+        setToView();
+    }
 
-	private void setToView() {
-		view.setModelCount(foldedModels.size());
-	}
+    private void setToView() {
+        view.setModelCount(foldedModels.size());
+    }
 
-	private void addListeners() {
-		view.addModelSwitchListener(index -> {
-			foldedModel = foldedModels.get(index);
-			view.setModel(foldedModel, eps);
-		});
-	}
+    private void addListeners() {
+        view.addModelSwitchListener(index -> {
+            foldedModel = foldedModels.get(index);
+            view.setModel(foldedModel, eps);
+        });
+    }
 
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
-	}
+    public void setViewVisible(final boolean visible) {
+        view.setVisible(visible);
+    }
 }

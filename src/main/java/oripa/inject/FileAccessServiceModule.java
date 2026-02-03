@@ -36,47 +36,47 @@ import oripa.util.file.FileFactory;
  */
 public class FileAccessServiceModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
+    @Override
+    protected void configure() {
 
-	}
+    }
 
-	@Provides
-	FileSelectionSupportSelector<OrigamiModel> createOrigamiModelSelector(
-			final OrigamiModelFileSelectionSupportSelectorFactory selectorFactory,
-			final FileFactory fileFactory) {
-		return selectorFactory.create(fileFactory);
-	}
+    @Provides
+    FileSelectionSupportSelector<OrigamiModel> createOrigamiModelSelector(
+            final OrigamiModelFileSelectionSupportSelectorFactory selectorFactory,
+            final FileFactory fileFactory) {
+        return selectorFactory.create(fileFactory);
+    }
 
-	@Provides
-	FileDAO<OrigamiModel> createOrigamiModelFileDAO(
-			final FileSelectionSupportSelector<OrigamiModel> selector,
-			final FileFactory fileFactory) {
-		return new FileDAO<OrigamiModel>(selector, fileFactory);
-	}
+    @Provides
+    FileDAO<OrigamiModel> createOrigamiModelFileDAO(
+            final FileSelectionSupportSelector<OrigamiModel> selector,
+            final FileFactory fileFactory) {
+        return new FileDAO<OrigamiModel>(selector, fileFactory);
+    }
 
-	@Provides
-	FileAccessService<OrigamiModel> createOrigamiModelService(final FileDAO<OrigamiModel> dao) {
-		return new FileAccessService<OrigamiModel>(dao);
-	}
+    @Provides
+    FileAccessService<OrigamiModel> createOrigamiModelService(final FileDAO<OrigamiModel> dao) {
+        return new FileAccessService<OrigamiModel>(dao);
+    }
 
-	@Provides
-	FileSelectionSupportSelector<Doc> createDocSelector(
-			final DocFileSelectionSupportSelectorFactory selectorFactory,
-			final FileFactory fileFactory) {
-		return selectorFactory.create(fileFactory);
-	}
+    @Provides
+    FileSelectionSupportSelector<Doc> createDocSelector(
+            final DocFileSelectionSupportSelectorFactory selectorFactory,
+            final FileFactory fileFactory) {
+        return selectorFactory.create(fileFactory);
+    }
 
-	@Provides
-	FileDAO<Doc> createDocFileDAO(
-			final FileSelectionSupportSelector<Doc> selector,
-			final FileFactory fileFactory) {
-		return new FileDAO<Doc>(selector, fileFactory);
-	}
+    @Provides
+    FileDAO<Doc> createDocFileDAO(
+            final FileSelectionSupportSelector<Doc> selector,
+            final FileFactory fileFactory) {
+        return new FileDAO<Doc>(selector, fileFactory);
+    }
 
-	@Provides
-	FileAccessService<Doc> createDocService(final FileDAO<Doc> dao) {
-		return new FileAccessService<Doc>(dao);
-	}
+    @Provides
+    FileAccessService<Doc> createDocService(final FileDAO<Doc> dao) {
+        return new FileAccessService<Doc>(dao);
+    }
 
 }

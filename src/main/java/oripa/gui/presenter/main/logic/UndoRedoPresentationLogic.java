@@ -28,29 +28,29 @@ import oripa.gui.view.ViewScreenUpdater;
  *
  */
 public class UndoRedoPresentationLogic {
-	private final ViewScreenUpdater screenUpdater;
-	private final MouseActionHolder mouseActionHolder;
-	private final PaintContext paintContext;
+    private final ViewScreenUpdater screenUpdater;
+    private final MouseActionHolder mouseActionHolder;
+    private final PaintContext paintContext;
 
-	@Inject
-	public UndoRedoPresentationLogic(
-			final ViewScreenUpdater screenUpdater,
-			final MouseActionHolder mouseActionHolder,
-			final PaintContext paintContext) {
+    @Inject
+    public UndoRedoPresentationLogic(
+            final ViewScreenUpdater screenUpdater,
+            final MouseActionHolder mouseActionHolder,
+            final PaintContext paintContext) {
 
-		this.screenUpdater = screenUpdater;
-		this.mouseActionHolder = mouseActionHolder;
-		this.paintContext = paintContext;
-	}
+        this.screenUpdater = screenUpdater;
+        this.mouseActionHolder = mouseActionHolder;
+        this.paintContext = paintContext;
+    }
 
-	public void undo() {
-		mouseActionHolder.getMouseAction().orElseThrow().undo(paintContext);
-		screenUpdater.updateScreen();
-	}
+    public void undo() {
+        mouseActionHolder.getMouseAction().orElseThrow().undo(paintContext);
+        screenUpdater.updateScreen();
+    }
 
-	public void redo() {
-		mouseActionHolder.getMouseAction().orElseThrow().redo(paintContext);
-		screenUpdater.updateScreen();
-	}
+    public void redo() {
+        mouseActionHolder.getMouseAction().orElseThrow().redo(paintContext);
+        screenUpdater.updateScreen();
+    }
 
 }

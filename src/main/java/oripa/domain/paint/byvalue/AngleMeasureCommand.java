@@ -27,31 +27,31 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class AngleMeasureCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final ByValueContext valueSetting;
+    private final PaintContext context;
+    private final ByValueContext valueSetting;
 
-	public AngleMeasureCommand(final PaintContext context, final ByValueContext valueSetting) {
-		this.context = context;
-		this.valueSetting = valueSetting;
-	}
+    public AngleMeasureCommand(final PaintContext context, final ByValueContext valueSetting) {
+        this.context = context;
+        this.valueSetting = valueSetting;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 3;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 3;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		Vector2d first = context.getVertex(0);
-		Vector2d second = context.getVertex(1);
-		Vector2d third = context.getVertex(2);
+        Vector2d first = context.getVertex(0);
+        Vector2d second = context.getVertex(1);
+        Vector2d third = context.getVertex(2);
 
-		Vector2d dir1 = third.subtract(second);
-		Vector2d dir2 = first.subtract(second);
+        Vector2d dir1 = third.subtract(second);
+        Vector2d dir2 = first.subtract(second);
 
-		double deg_angle = Math.toDegrees(dir1.angle(dir2));
+        double deg_angle = Math.toDegrees(dir1.angle(dir2));
 
-		valueSetting.setAngle(deg_angle);
+        valueSetting.setAngle(deg_angle);
 
-		context.clear(false);
-	}
+        context.clear(false);
+    }
 }

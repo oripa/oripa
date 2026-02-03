@@ -23,19 +23,19 @@ package oripa.gui.view.file;
  *
  */
 public class FileFilterProperty {
-	private final String description;
-	private final String[] extensions;
+    private final String description;
+    private final String[] extensions;
 
-	public FileFilterProperty(final String description, final String... extensions) {
-		this.description = description;
-		this.extensions = extensions;
-	}
+    public FileFilterProperty(final String description, final String... extensions) {
+        this.description = description;
+        this.extensions = extensions;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String[] getExtensions() {
-		return extensions;
-	}
+    public String[] getExtensions() {
+        return extensions;
+    }
 }

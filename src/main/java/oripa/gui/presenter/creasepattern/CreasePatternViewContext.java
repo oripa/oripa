@@ -26,59 +26,59 @@ import oripa.vecmath.Vector2d;
  *
  */
 public interface CreasePatternViewContext {
-	// =================================================================================
-	// Properties not used by action state
-	// =================================================================================
-	// ---------------------------------------------------------------
-	// Mouse position
-	/**
-	 *
-	 * @return the point of mouse on screen
-	 */
-	Vector2d getLogicalMousePoint();
+    // =================================================================================
+    // Properties not used by action state
+    // =================================================================================
+    // ---------------------------------------------------------------
+    // Mouse position
+    /**
+     *
+     * @return the point of mouse on screen
+     */
+    Vector2d getLogicalMousePoint();
 
-	/**
-	 *
-	 * @param logicalPoint
-	 *            set the point of mouse on screen
-	 */
-	void setLogicalMousePoint(Vector2d logicalPoint);
+    /**
+     *
+     * @param logicalPoint
+     *            set the point of mouse on screen
+     */
+    void setLogicalMousePoint(Vector2d logicalPoint);
 
-	// ---------------------------------------------------------------
-	// View-related things
+    // ---------------------------------------------------------------
+    // View-related things
 
-	void setScale(double scale);
+    void setScale(double scale);
 
-	double getScale();
+    double getScale();
 
-	/**
-	 * Should update grid by calling {@link PaintContext#updateGrids()} if
-	 * {@code gridVisible} is true, and should clear grid if {@code gridVisible}
-	 * is false.
-	 *
-	 * @param dispGrid
-	 */
-	void setGridVisible(boolean gridVisible);
+    /**
+     * Should update grid by calling {@link PaintContext#updateGrids()} if
+     * {@code gridVisible} is true, and should clear grid if {@code gridVisible}
+     * is false.
+     *
+     * @param dispGrid
+     */
+    void setGridVisible(boolean gridVisible);
 
-	boolean isGridVisible();
+    boolean isGridVisible();
 
-	void setMVLineVisible(boolean visible);
+    void setMVLineVisible(boolean visible);
 
-	boolean isMVLineVisible();
+    boolean isMVLineVisible();
 
-	void setVertexVisible(boolean visible);
+    void setVertexVisible(boolean visible);
 
-	boolean isVertexVisible();
+    boolean isVertexVisible();
 
-	void setAuxLineVisible(boolean visible);
+    void setAuxLineVisible(boolean visible);
 
-	boolean isAuxLineVisible();
+    boolean isAuxLineVisible();
 
-	void setCrossLineVisible(boolean visible);
+    void setCrossLineVisible(boolean visible);
 
-	boolean isCrossLineVisible();
+    boolean isCrossLineVisible();
 
-	void setZeroLineWidth(final boolean zeroLineWidth);
+    void setZeroLineWidth(final boolean zeroLineWidth);
 
-	boolean isZeroLineWidth();
+    boolean isZeroLineWidth();
 }

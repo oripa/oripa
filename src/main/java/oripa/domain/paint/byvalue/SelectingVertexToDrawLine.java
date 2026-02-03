@@ -8,32 +8,32 @@ import oripa.domain.paint.core.PickingVertex;
 import oripa.util.Command;
 
 public class SelectingVertexToDrawLine extends PickingVertex {
-	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexToDrawLine.class);
+    private static final Logger logger = LoggerFactory.getLogger(SelectingVertexToDrawLine.class);
 
-	private final ByValueContext valueSetting;
+    private final ByValueContext valueSetting;
 
-	/**
-	 * Constructor
-	 */
-	public SelectingVertexToDrawLine(final ByValueContext valueSetting) {
-		super();
-		this.valueSetting = valueSetting;
-	}
+    /**
+     * Constructor
+     */
+    public SelectingVertexToDrawLine(final ByValueContext valueSetting) {
+        super();
+        this.valueSetting = valueSetting;
+    }
 
-	@Override
-	protected void initialize() {
+    @Override
+    protected void initialize() {
 
-	}
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		logger.debug("start onResult()");
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        logger.debug("start onResult()");
 
-		Command command = new LineByValueCommand(context, valueSetting);
-		command.execute();
+        Command command = new LineByValueCommand(context, valueSetting);
+        command.execute();
 
-		logger.debug("end onResult()");
+        logger.debug("end onResult()");
 
-	}
+    }
 
 }

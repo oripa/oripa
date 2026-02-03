@@ -29,20 +29,20 @@ import org.junit.jupiter.api.Test;
  */
 class MaekawaTheoremTest {
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.foldability.MaekawaTheorem#holds(oripa.domain.fold.halfedge.OriVertex)}.
-	 */
-	@Test
-	void testHolds_birdFoot() {
-		var vertex = OriVertexFactoryForTest.createBirdFootSpy();
-		var maekawa = new MaekawaTheorem();
+    /**
+     * Test method for
+     * {@link oripa.domain.fold.foldability.MaekawaTheorem#holds(oripa.domain.fold.halfedge.OriVertex)}.
+     */
+    @Test
+    void testHolds_birdFoot() {
+        var vertex = OriVertexFactoryForTest.createBirdFootSpy();
+        var maekawa = new MaekawaTheorem();
 
-		assertTrue(maekawa.holds(vertex));
+        assertTrue(maekawa.holds(vertex));
 
-		lenient().when(vertex.getEdge(0).isValley()).thenReturn(true);
-		lenient().when(vertex.getEdge(0).isMountain()).thenReturn(false);
+        lenient().when(vertex.getEdge(0).isValley()).thenReturn(true);
+        lenient().when(vertex.getEdge(0).isMountain()).thenReturn(false);
 
-		assertFalse(maekawa.holds(vertex));
-	}
+        assertFalse(maekawa.holds(vertex));
+    }
 }

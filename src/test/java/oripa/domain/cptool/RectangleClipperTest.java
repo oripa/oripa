@@ -31,77 +31,77 @@ import oripa.value.OriLine;
  *
  */
 class RectangleClipperTest {
-	static final double EPS = 1e-8;
+    static final double EPS = 1e-8;
 
-	RectangleClipper clipper = new RectangleClipper(0, 0, 100, 100, EPS);
+    RectangleClipper clipper = new RectangleClipper(0, 0, 100, 100, EPS);
 
-	@Test
-	void testClip() {
+    @Test
+    void testClip() {
 
-		// entirely inside
-		var segmentInRectangle = new Segment(1, 1, 99, 99);
-		assertClip(segmentInRectangle, segmentInRectangle);
+        // entirely inside
+        var segmentInRectangle = new Segment(1, 1, 99, 99);
+        assertClip(segmentInRectangle, segmentInRectangle);
 
-		// touches two edges
-		var segmentTouchingRectangle = new Segment(0, 1, 100, 99);
-		assertClip(segmentTouchingRectangle, segmentTouchingRectangle);
+        // touches two edges
+        var segmentTouchingRectangle = new Segment(0, 1, 100, 99);
+        assertClip(segmentTouchingRectangle, segmentTouchingRectangle);
 
-		// left to inside
-		assertClip(new Segment(0, 50, 50, 50), new Segment(-1, 50, 50, 50));
+        // left to inside
+        assertClip(new Segment(0, 50, 50, 50), new Segment(-1, 50, 50, 50));
 
-		// right to inside
-		assertClip(new Segment(100, 50, 50, 50), new Segment(50, 50, 101, 50));
+        // right to inside
+        assertClip(new Segment(100, 50, 50, 50), new Segment(50, 50, 101, 50));
 
-		// top to inside
-		assertClip(new Segment(50, 0, 50, 50), new Segment(50, -1, 50, 50));
+        // top to inside
+        assertClip(new Segment(50, 0, 50, 50), new Segment(50, -1, 50, 50));
 
-		// bottom to inside
-		assertClip(new Segment(50, 100, 50, 50), new Segment(50, 50, 50, 101));
+        // bottom to inside
+        assertClip(new Segment(50, 100, 50, 50), new Segment(50, 50, 50, 101));
 
-		// outside to outside with intersection
-		// - diagonal
-		assertClip(new Segment(0, 0, 100, 100), new Segment(-1, -1, 101, 101));
-		// - vertical
-		assertClip(new Segment(50, 0, 50, 100), new Segment(50, -1, 50, 101));
+        // outside to outside with intersection
+        // - diagonal
+        assertClip(new Segment(0, 0, 100, 100), new Segment(-1, -1, 101, 101));
+        // - vertical
+        assertClip(new Segment(50, 0, 50, 100), new Segment(50, -1, 50, 101));
 
-		// outside to outside without intersection
-		assertClipFails(new Segment(-100, -100, 100, -1));
+        // outside to outside without intersection
+        assertClipFails(new Segment(-100, -100, 100, -1));
 
-	}
+    }
 
-	void assertClip(final Segment expected, final Segment segment) {
-		var clippedOpt = clipper.clip(new OriLine(segment, OriLine.Type.MOUNTAIN));
-		AssertionUtil.assertSegmentEquals(
-				expected, clippedOpt.orElseThrow(), (a, b) -> a.equals(b, EPS));
-	}
+    void assertClip(final Segment expected, final Segment segment) {
+        var clippedOpt = clipper.clip(new OriLine(segment, OriLine.Type.MOUNTAIN));
+        AssertionUtil.assertSegmentEquals(
+                expected, clippedOpt.orElseThrow(), (a, b) -> a.equals(b, EPS));
+    }
 
-	void assertClipFails(final Segment segment) {
-		var clippedOpt = clipper.clip(new OriLine(segment, OriLine.Type.MOUNTAIN));
-		assertTrue(clippedOpt.isEmpty());
+    void assertClipFails(final Segment segment) {
+        var clippedOpt = clipper.clip(new OriLine(segment, OriLine.Type.MOUNTAIN));
+        assertTrue(clippedOpt.isEmpty());
 
-	}
+    }
 
-	@Test
-	void testIntersects_segmentTouchesRectangle() {
-		// mid point touches the corner (100, 100)
-		assertIntersects(new Segment(0, 200, 200, 0));
+    @Test
+    void testIntersects_segmentTouchesRectangle() {
+        // mid point touches the corner (100, 100)
+        assertIntersects(new Segment(0, 200, 200, 0));
 
-		// end point touches the corner (0, 0)
-		assertIntersects(new Segment(-10, 0, 0, 0));
+        // end point touches the corner (0, 0)
+        assertIntersects(new Segment(-10, 0, 0, 0));
 
-		// end point touches the left edge
-		assertIntersects(new Segment(-10, 10, 0, 9));
+        // end point touches the left edge
+        assertIntersects(new Segment(-10, 10, 0, 9));
 
-	}
+    }
 
-	@Test
-	void testIntersects_segmentCrossesDifferentEdges() {
-		// top to right
-		assertIntersects(new Segment(50, -1, 101, 60));
-	}
+    @Test
+    void testIntersects_segmentCrossesDifferentEdges() {
+        // top to right
+        assertIntersects(new Segment(50, -1, 101, 60));
+    }
 
-	void assertIntersects(final Segment segment) {
-		assertTrue(clipper.intersects(new OriLine(segment, OriLine.Type.MOUNTAIN)));
-	}
+    void assertIntersects(final Segment segment) {
+        assertTrue(clipper.intersects(new OriLine(segment, OriLine.Type.MOUNTAIN)));
+    }
 
 }

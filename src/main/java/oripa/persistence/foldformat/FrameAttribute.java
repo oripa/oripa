@@ -19,5 +19,5 @@
 package oripa.persistence.foldformat;
 
 public class FrameAttribute {
-	public static final String TWO_DIMENSION = "2D";
+    public static final String TWO_DIMENSION = "2D";
 }

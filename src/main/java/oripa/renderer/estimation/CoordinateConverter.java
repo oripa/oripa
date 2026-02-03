@@ -27,100 +27,100 @@ import oripa.vecmath.Vector3d;
  *
  */
 public class CoordinateConverter {
-	private final double imageHeight;
-	private final double imageWidth;
+    private final double imageHeight;
+    private final double imageWidth;
 
-	private final RectangleDomain domain;
+    private final RectangleDomain domain;
 
-	private double scale;
+    private double scale;
 
-	private DistortionMethod distortionMethod = DistortionMethod.NONE;
-	private Vector2d distortionParameter = new Vector2d(0, 0);
-	private final double cameraZ = 20;
-	private final double zDiff = 0.5;
+    private DistortionMethod distortionMethod = DistortionMethod.NONE;
+    private Vector2d distortionParameter = new Vector2d(0, 0);
+    private final double cameraZ = 20;
+    private final double zDiff = 0.5;
 
-	public CoordinateConverter(final RectangleDomain domain, final double imageWidth, final double imageHeight) {
-		this.domain = domain;
-		this.imageWidth = imageWidth;
-		this.imageHeight = imageHeight;
-	}
+    public CoordinateConverter(final RectangleDomain domain, final double imageWidth, final double imageHeight) {
+        this.domain = domain;
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
+    }
 
-	public Vector2d convert(final Vector2d pos, final Integer depth, final Vector2d cpPos) {
-		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
+    public Vector2d convert(final Vector2d pos, final Integer depth, final Vector2d cpPos) {
+        Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 
-		var p = pos.subtract(center).multiply(scale);
+        var p = pos.subtract(center).multiply(scale);
 
-		Vector2d distorted = distort(p, depth, cpPos);
+        Vector2d distorted = distort(p, depth, cpPos);
 
-		double disX = distorted.getX();
-		double disY = distorted.getY();
+        double disX = distorted.getX();
+        double disY = distorted.getY();
 
-		double tX = disX + imageWidth * 0.5;
-		double tY = disY + imageHeight * 0.5;
+        double tX = disX + imageWidth * 0.5;
+        double tY = disY + imageHeight * 0.5;
 
-		return new Vector2d(tX, tY);
-	}
+        return new Vector2d(tX, tY);
+    }
 
-	private Vector2d distort(final Vector2d pos, final Integer depth, final Vector2d cpPos) {
-		return switch (distortionMethod) {
-		case DEPTH -> distortByDepth(pos, depth);
-		case MORISUE -> distortByMorisueMethod(pos, cpPos);
-		case NONE -> pos;
-		default -> pos;
-		};
+    private Vector2d distort(final Vector2d pos, final Integer depth, final Vector2d cpPos) {
+        return switch (distortionMethod) {
+        case DEPTH -> distortByDepth(pos, depth);
+        case MORISUE -> distortByMorisueMethod(pos, cpPos);
+        case NONE -> pos;
+        default -> pos;
+        };
 
-	}
+    }
 
-	private Vector2d distortByDepth(final Vector2d pos, final int depth) {
-		var cameraXY = this.distortionParameter
-				.multiply(Math.max(domain.getWidth(), domain.getHeight()) * 4);
+    private Vector2d distortByDepth(final Vector2d pos, final int depth) {
+        var cameraXY = this.distortionParameter
+                .multiply(Math.max(domain.getWidth(), domain.getHeight()) * 4);
 
-		var d = new Vector3d(
-				pos.getX() - cameraXY.getX(),
-				pos.getY() - cameraXY.getY(),
-				cameraZ + Math.log(1 + depth) * zDiff)
-						.normalization();
+        var d = new Vector3d(
+                pos.getX() - cameraXY.getX(),
+                pos.getY() - cameraXY.getY(),
+                cameraZ + Math.log(1 + depth) * zDiff)
+                        .normalization();
 
-		d = d.multiply(cameraZ / d.getZ());
+        d = d.multiply(cameraZ / d.getZ());
 
-		return new Vector2d(
-				cameraXY.getX() + d.getX(),
-				cameraXY.getY() + d.getY());
-	}
+        return new Vector2d(
+                cameraXY.getX() + d.getX(),
+                cameraXY.getY() + d.getY());
+    }
 
-	/**
-	 * See
-	 * https://github.com/kei-morisue/flat-folder/blob/main/General_Distortion.pdf
-	 *
-	 * @param pos
-	 * @param cpPos
-	 * @return
-	 */
-	private Vector2d distortByMorisueMethod(final Vector2d pos, final Vector2d cpPos) {
+    /**
+     * See
+     * https://github.com/kei-morisue/flat-folder/blob/main/General_Distortion.pdf
+     *
+     * @param pos
+     * @param cpPos
+     * @return
+     */
+    private Vector2d distortByMorisueMethod(final Vector2d pos, final Vector2d cpPos) {
 
-		double theta = 0.1 * distortionParameter.getX();
-		double scale = 1 + distortionParameter.getY() / 5;
+        double theta = 0.1 * distortionParameter.getX();
+        double scale = 1 + distortionParameter.getY() / 5;
 
-		// rotation part can be arbitrary matrix but rotation is good so far.
-		var diff = cpPos.rotate(theta)
-				.multiply(scale)
-				.subtract(cpPos);
+        // rotation part can be arbitrary matrix but rotation is good so far.
+        var diff = cpPos.rotate(theta)
+                .multiply(scale)
+                .subtract(cpPos);
 
-		var distorted = pos.add(diff);
+        var distorted = pos.add(diff);
 
-		return distorted;
-	}
+        return distorted;
+    }
 
-	public void setDistortionMethod(final DistortionMethod method) {
-		distortionMethod = method;
-	}
+    public void setDistortionMethod(final DistortionMethod method) {
+        distortionMethod = method;
+    }
 
-	public void setDistortionParameter(final Vector2d d) {
-		distortionParameter = d;
-	}
+    public void setDistortionParameter(final Vector2d d) {
+        distortionParameter = d;
+    }
 
-	public void setScale(final double scale) {
-		this.scale = scale;
-	}
+    public void setScale(final double scale) {
+        this.scale = scale;
+    }
 
 }

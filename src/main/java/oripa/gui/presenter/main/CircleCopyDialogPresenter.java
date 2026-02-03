@@ -31,58 +31,58 @@ import oripa.util.Command;
  */
 public class CircleCopyDialogPresenter {
 
-	private final CircleCopyDialogView view;
-	private final PaintContext paintContext;
-	private final ViewScreenUpdater screenUpdater;
+    private final CircleCopyDialogView view;
+    private final PaintContext paintContext;
+    private final ViewScreenUpdater screenUpdater;
 
-	public CircleCopyDialogPresenter(
-			final CircleCopyDialogView view,
-			final PaintContext paintContext,
-			final ViewScreenUpdater screenUpdater) {
+    public CircleCopyDialogPresenter(
+            final CircleCopyDialogView view,
+            final PaintContext paintContext,
+            final ViewScreenUpdater screenUpdater) {
 
-		this.view = view;
-		this.paintContext = paintContext;
-		this.screenUpdater = screenUpdater;
+        this.view = view;
+        this.paintContext = paintContext;
+        this.screenUpdater = screenUpdater;
 
-		setParameterToView();
+        setParameterToView();
 
-		view.setOKButtonListener(this::doCircleCopy);
-	}
+        view.setOKButtonListener(this::doCircleCopy);
+    }
 
-	private void setParameterToView() {
-		var parameter = paintContext.getCircleCopyParameter();
+    private void setParameterToView() {
+        var parameter = paintContext.getCircleCopyParameter();
 
-		if (parameter == null) {
-			return;
-		}
+        if (parameter == null) {
+            return;
+        }
 
-		view.setCenterX(parameter.centerX());
-		view.setCenterY(parameter.centerY());
-		view.setAngleDegree(parameter.angleDegree());
-		view.setCopyCount(parameter.copyCount());
+        view.setCenterX(parameter.centerX());
+        view.setCenterY(parameter.centerY());
+        view.setAngleDegree(parameter.angleDegree());
+        view.setCopyCount(parameter.copyCount());
 
-	}
+    }
 
-	private boolean doCircleCopy() {
-		var parameter = new CircleCopyParameter(
-				view.getCenterX(), view.getCenterY(), view.getAngleDegree(), view.getCopyCount());
+    private boolean doCircleCopy() {
+        var parameter = new CircleCopyParameter(
+                view.getCenterX(), view.getCenterY(), view.getAngleDegree(), view.getCopyCount());
 
-		if (parameter.copyCount() <= 0) {
-			view.showWrongCopyCountMessage();
-			return false;
-		}
+        if (parameter.copyCount() <= 0) {
+            view.showWrongCopyCountMessage();
+            return false;
+        }
 
-		paintContext.setCircleCopyParameter(parameter);
+        paintContext.setCircleCopyParameter(parameter);
 
-		Command command = new CircleCopyCommand(paintContext);
-		command.execute();
+        Command command = new CircleCopyCommand(paintContext);
+        command.execute();
 
-		screenUpdater.updateScreen();
+        screenUpdater.updateScreen();
 
-		return true;
-	}
+        return true;
+    }
 
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
-	}
+    public void setViewVisible(final boolean visible) {
+        view.setVisible(visible);
+    }
 }

@@ -21,87 +21,87 @@ import oripa.gui.viewchange.ChangeViewSetting;
  *
  */
 public class PaintBoundState extends ApplicationState<EditMode> {
-	private Runnable errorHandler;
-	private Supplier<Boolean> errorDetecter;
+    private Runnable errorHandler;
+    private Supplier<Boolean> errorDetecter;
 
-	/**
-	 * set paint action and hint updater without error handler.
-	 *
-	 */
-	public PaintBoundState(
-			final StateManager<EditMode> stateManager,
-			final EditMode editMode,
-			final MouseActionSetter actionSetter,
-			final ChangeViewSetting changeHint,
-			final Runnable[] actions) {
-		super(editMode, actions);
+    /**
+     * set paint action and hint updater without error handler.
+     *
+     */
+    public PaintBoundState(
+            final StateManager<EditMode> stateManager,
+            final EditMode editMode,
+            final MouseActionSetter actionSetter,
+            final ChangeViewSetting changeHint,
+            final Runnable[] actions) {
+        super(editMode, actions);
 
-		addBasicListeners(stateManager, actionSetter, changeHint);
-	}
+        addBasicListeners(stateManager, actionSetter, changeHint);
+    }
 
-	/**
-	 * set paint action and hint updater.
-	 *
-	 * @param errorDetecter
-	 *            Detects error. returns true if an error occurs.
-	 * @param errorHandler
-	 *            a callback for error handling.
-	 */
-	public PaintBoundState(
-			final StateManager<EditMode> stateManager,
-			final Supplier<Boolean> errorDetecter,
-			final Runnable errorHandler,
-			final EditMode editMode,
-			final MouseActionSetter actionSetter,
-			final ChangeViewSetting changeHint,
-			final Runnable[] actions) {
+    /**
+     * set paint action and hint updater.
+     *
+     * @param errorDetecter
+     *            Detects error. returns true if an error occurs.
+     * @param errorHandler
+     *            a callback for error handling.
+     */
+    public PaintBoundState(
+            final StateManager<EditMode> stateManager,
+            final Supplier<Boolean> errorDetecter,
+            final Runnable errorHandler,
+            final EditMode editMode,
+            final MouseActionSetter actionSetter,
+            final ChangeViewSetting changeHint,
+            final Runnable[] actions) {
 
-		super(editMode, actions);
+        super(editMode, actions);
 
-		addBasicListeners(stateManager, actionSetter, changeHint);
+        addBasicListeners(stateManager, actionSetter, changeHint);
 
-		this.errorHandler = errorHandler;
-		this.errorDetecter = errorDetecter;
-	}
+        this.errorHandler = errorHandler;
+        this.errorDetecter = errorDetecter;
+    }
 
-	private void addBasicListeners(
-			final StateManager<EditMode> stateManager,
-			final MouseActionSetter actionSetter,
-			final ChangeViewSetting changeHint) {
+    private void addBasicListeners(
+            final StateManager<EditMode> stateManager,
+            final MouseActionSetter actionSetter,
+            final ChangeViewSetting changeHint) {
 
-		// add a listener to push this state to the history stack.
-		addAction(new StatePusher<EditMode>(this, stateManager));
+        // add a listener to push this state to the history stack.
+        addAction(new StatePusher<EditMode>(this, stateManager));
 
-		// add a listener to change paint action.
-		addAction(actionSetter);
+        // add a listener to change paint action.
+        addAction(actionSetter);
 
-		if (changeHint != null) {
-			// add view updater
-			addAction(changeHint::changeViewSetting);
-		}
+        if (changeHint != null) {
+            // add view updater
+            addAction(changeHint::changeViewSetting);
+        }
 
-	}
+    }
 
-	public void setErrorListeners(final Supplier<Boolean> detecter, final Runnable handler) {
-		errorDetecter = detecter;
-		errorHandler = handler;
-	}
+    public void setErrorListeners(final Supplier<Boolean> detecter, final Runnable handler) {
+        errorDetecter = detecter;
+        errorHandler = handler;
+    }
 
-	/**
-	 * This method first detects error by {@code errorDetecter}. Then
-	 * {@code errorHandler.run()} is called if an error occurs. If no error
-	 * occurs or {@code errorDetecter} is not given, it sets given paint action
-	 * to a current paint mode.
-	 */
-	@Override
-	public void performActions() {
-		if (errorDetecter != null) {
-			if (errorDetecter.get()) {
-				errorHandler.run();
-				return;
-			}
-		}
+    /**
+     * This method first detects error by {@code errorDetecter}. Then
+     * {@code errorHandler.run()} is called if an error occurs. If no error
+     * occurs or {@code errorDetecter} is not given, it sets given paint action
+     * to a current paint mode.
+     */
+    @Override
+    public void performActions() {
+        if (errorDetecter != null) {
+            if (errorDetecter.get()) {
+                errorHandler.run();
+                return;
+            }
+        }
 
-		super.performActions();
-	}
+        super.performActions();
+    }
 }

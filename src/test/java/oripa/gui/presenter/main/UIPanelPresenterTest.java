@@ -48,108 +48,108 @@ import oripa.gui.view.main.UIPanelView;
 @ExtendWith(MockitoExtension.class)
 class UIPanelPresenterTest {
 
-	@Mock
-	UIPanelView view;
+    @Mock
+    UIPanelView view;
 
-	@Mock
-	SubFramePresentationLogic subFramePresentationLogic;
+    @Mock
+    SubFramePresentationLogic subFramePresentationLogic;
 
-	@Mock
-	UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
-	@Mock
-	GridDivNumPresentationLogic gridDivNumPresentationLogic;
+    @Mock
+    UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
+    @Mock
+    GridDivNumPresentationLogic gridDivNumPresentationLogic;
 
-	@Mock
-	ValuePanelPresentationLogic valuePanelPresentationLogic;
+    @Mock
+    ValuePanelPresentationLogic valuePanelPresentationLogic;
 
-	@Mock
-	PainterScreenSetting mainScreenSetting;
+    @Mock
+    PainterScreenSetting mainScreenSetting;
 
-	@Mock
-	TypeForChangeContext typeForChangeContext;
+    @Mock
+    TypeForChangeContext typeForChangeContext;
 
-	@Nested
-	class TestAddPlugin {
-		@Test
-		void pluginShouldBeAdded() {
+    @Nested
+    class TestAddPlugin {
+        @Test
+        void pluginShouldBeAdded() {
 
-			setupTypeForChangeContext();
+            setupTypeForChangeContext();
 
-			GraphicMouseActionPlugin plugin = mock();
-			var plugins = List.of(plugin);
+            GraphicMouseActionPlugin plugin = mock();
+            var plugins = List.of(plugin);
 
-			var presenter = construct();
-			presenter.addPlugins(plugins);
+            var presenter = construct();
+            presenter.addPlugins(plugins);
 
-			verify(paintMenuListenerRegistration).addPlugins(plugins);
-		}
+            verify(paintMenuListenerRegistration).addPlugins(plugins);
+        }
 
-	}
+    }
 
-	@Nested
-	class TestShowCheckerWindow {
-		@Captor
-		ArgumentCaptor<Runnable> listenerCaptor;
+    @Nested
+    class TestShowCheckerWindow {
+        @Captor
+        ArgumentCaptor<Runnable> listenerCaptor;
 
-		@Test
-		void showCheckerWindowLogicShouldBeShown() {
-			setupTypeForChangeContext();
+        @Test
+        void showCheckerWindowLogicShouldBeShown() {
+            setupTypeForChangeContext();
 
-			construct();
+            construct();
 
-			verify(view).addCheckWindowButtonListener(listenerCaptor.capture());
+            verify(view).addCheckWindowButtonListener(listenerCaptor.capture());
 
-			listenerCaptor.getValue().run();
+            listenerCaptor.getValue().run();
 
-			verify(subFramePresentationLogic).showCheckerWindow();
+            verify(subFramePresentationLogic).showCheckerWindow();
 
-		}
-	}
+        }
+    }
 
-	@Nested
-	class TestShowFoldedModelWindows {
-		@Captor
-		ArgumentCaptor<Runnable> showWindowCaptor;
+    @Nested
+    class TestShowFoldedModelWindows {
+        @Captor
+        ArgumentCaptor<Runnable> showWindowCaptor;
 
-		@Test
-		void showFoldedModelWindowsLogicShouldBeCalled() {
-			setupTypeForChangeContext();
+        @Test
+        void showFoldedModelWindowsLogicShouldBeCalled() {
+            setupTypeForChangeContext();
 
-			construct();
+            construct();
 
-			verify(view).setShowFoldedModelWindowsListener(showWindowCaptor.capture());
+            verify(view).setShowFoldedModelWindowsListener(showWindowCaptor.capture());
 
-			showWindowCaptor.getValue().run();
+            showWindowCaptor.getValue().run();
 
-			verify(subFramePresentationLogic).showFoldedModelWindows();
-		}
+            verify(subFramePresentationLogic).showFoldedModelWindows();
+        }
 
-	}
+    }
 
-	UIPanelPresenter construct() {
+    UIPanelPresenter construct() {
 
-		return new UIPanelPresenter(
-				view,
-				subFramePresentationLogic,
-				paintMenuListenerRegistration,
-				gridDivNumPresentationLogic,
-				valuePanelPresentationLogic,
-				typeForChangeContext,
-				mainScreenSetting);
-	}
+        return new UIPanelPresenter(
+                view,
+                subFramePresentationLogic,
+                paintMenuListenerRegistration,
+                gridDivNumPresentationLogic,
+                valuePanelPresentationLogic,
+                typeForChangeContext,
+                mainScreenSetting);
+    }
 
-	void setupTypeForChangeContext() {
-		when(typeForChangeContext.getTypeFrom()).thenReturn(mock());
-		when(typeForChangeContext.getTypeTo()).thenReturn(mock());
-	}
+    void setupTypeForChangeContext() {
+        when(typeForChangeContext.getTypeFrom()).thenReturn(mock());
+        when(typeForChangeContext.getTypeTo()).thenReturn(mock());
+    }
 
-	void setupFrameView() {
-		when(view.getTopLevelView()).thenReturn(mock(FrameView.class));
-	}
+    void setupFrameView() {
+        when(view.getTopLevelView()).thenReturn(mock(FrameView.class));
+    }
 
-	@Test
-	void test() {
-		assertNotNull("Not yet implemented");
-	}
+    @Test
+    void test() {
+        assertNotNull("Not yet implemented");
+    }
 
 }

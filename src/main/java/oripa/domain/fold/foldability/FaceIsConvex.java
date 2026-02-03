@@ -29,30 +29,30 @@ import oripa.util.rule.AbstractRule;
  */
 public class FaceIsConvex extends AbstractRule<OriFace> {
 
-	public FaceIsConvex() {
-		super("convex");
-	}
+    public FaceIsConvex() {
+        super("convex");
+    }
 
-	@Override
-	public boolean holds(final OriFace face) {
+    @Override
+    public boolean holds(final OriFace face) {
 
-		if (face.halfedgeCount() == 3) {
-			return true;
-		}
+        if (face.halfedgeCount() == 3) {
+            return true;
+        }
 
-		OriHalfedge baseHe = face.getHalfedge(0);
-		boolean baseFlg = GeomUtil.isStrictlyCCW(baseHe.getPrevious().getPosition(),
-				baseHe.getPosition(), baseHe.getNext().getPosition());
+        OriHalfedge baseHe = face.getHalfedge(0);
+        boolean baseFlg = GeomUtil.isStrictlyCCW(baseHe.getPrevious().getPosition(),
+                baseHe.getPosition(), baseHe.getNext().getPosition());
 
-		for (int i = 1; i < face.halfedgeCount(); i++) {
-			OriHalfedge he = face.getHalfedge(i);
-			if (GeomUtil.isStrictlyCCW(he.getPrevious().getPosition(), he.getPosition(),
-					he.getNext().getPosition()) != baseFlg) {
-				return false;
-			}
+        for (int i = 1; i < face.halfedgeCount(); i++) {
+            OriHalfedge he = face.getHalfedge(i);
+            if (GeomUtil.isStrictlyCCW(he.getPrevious().getPosition(), he.getPosition(),
+                    he.getNext().getPosition()) != baseFlg) {
+                return false;
+            }
 
-		}
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

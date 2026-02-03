@@ -31,47 +31,47 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class GraphicItemConverter {
-	public Line2D.Double toLine2D(final OriLine line) {
-		var g2dLine = new Line2D.Double();
+    public Line2D.Double toLine2D(final OriLine line) {
+        var g2dLine = new Line2D.Double();
 
-		var p0 = line.getP0();
-		var p1 = line.getP1();
+        var p0 = line.getP0();
+        var p1 = line.getP1();
 
-		g2dLine.x1 = p0.getX();
-		g2dLine.y1 = p0.getY();
+        g2dLine.x1 = p0.getX();
+        g2dLine.y1 = p0.getY();
 
-		g2dLine.x2 = p1.getX();
-		g2dLine.y2 = p1.getY();
+        g2dLine.x2 = p1.getX();
+        g2dLine.y2 = p1.getY();
 
-		return g2dLine;
-	}
+        return g2dLine;
+    }
 
-	public Line2D.Double toLine2D(final Vector2d p0, final Vector2d p1) {
-		return new Line2D.Double(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-	}
+    public Line2D.Double toLine2D(final Vector2d p0, final Vector2d p1) {
+        return new Line2D.Double(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+    }
 
-	public Rectangle2D.Double toRectangle2D(final Vector2d vertex, final double vertexSize) {
-		final double vertexHalfSize = vertexSize / 2;
-		return new Rectangle2D.Double(
-				vertex.getX() - vertexHalfSize, vertex.getY() - vertexHalfSize,
-				vertexSize, vertexSize);
-	}
+    public Rectangle2D.Double toRectangle2D(final Vector2d vertex, final double vertexSize) {
+        final double vertexHalfSize = vertexSize / 2;
+        return new Rectangle2D.Double(
+                vertex.getX() - vertexHalfSize, vertex.getY() - vertexHalfSize,
+                vertexSize, vertexSize);
+    }
 
-	public Rectangle2D.Double toRectangle2D(final Vector2d p0, final Vector2d p1) {
-		double sx = Math.min(p0.getX(), p1.getX());
-		double sy = Math.min(p0.getY(), p1.getY());
-		double w = Math.abs(p0.getX() - p1.getX());
-		double h = Math.abs(p0.getY() - p1.getY());
-		return new Rectangle2D.Double(sx, sy, w, h);
-	}
+    public Rectangle2D.Double toRectangle2D(final Vector2d p0, final Vector2d p1) {
+        double sx = Math.min(p0.getX(), p1.getX());
+        double sy = Math.min(p0.getY(), p1.getY());
+        double w = Math.abs(p0.getX() - p1.getX());
+        double h = Math.abs(p0.getY() - p1.getY());
+        return new Rectangle2D.Double(sx, sy, w, h);
+    }
 
-	public Path2D.Double toPath2D(final List<Vector2d> vertices) {
-		var path = new Path2D.Double();
-		path.moveTo(vertices.get(0).getX(), vertices.get(0).getY());
-		for (int i = 1; i < vertices.size(); i++) {
-			path.lineTo(vertices.get(i).getX(), vertices.get(i).getY());
-		}
-		path.closePath();
-		return path;
-	}
+    public Path2D.Double toPath2D(final List<Vector2d> vertices) {
+        var path = new Path2D.Double();
+        path.moveTo(vertices.get(0).getX(), vertices.get(0).getY());
+        for (int i = 1; i < vertices.size(); i++) {
+            path.lineTo(vertices.get(i).getX(), vertices.get(i).getY());
+        }
+        path.closePath();
+        return path;
+    }
 }

@@ -42,119 +42,119 @@ import oripa.gui.view.main.UIPanelView;
  *
  */
 public class UIPanelPresenter {
-	private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
+    private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
 
-	private final UIPanelView view;
+    private final UIPanelView view;
 
-	private final SubFramePresentationLogic subFramePresentationLogic;
-	private final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
-	private final GridDivNumPresentationLogic gridDivNumPresentationLogic;
-	private final ValuePanelPresentationLogic valuePanelPresentationLogic;
+    private final SubFramePresentationLogic subFramePresentationLogic;
+    private final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration;
+    private final GridDivNumPresentationLogic gridDivNumPresentationLogic;
+    private final ValuePanelPresentationLogic valuePanelPresentationLogic;
 
-	private final TypeForChange[] alterLineComboDataFrom = {
-			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
-			TypeForChange.AUX, TypeForChange.CUT };
-	private final TypeForChange[] alterLineComboDataTo = {
-			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
-			TypeForChange.AUX, TypeForChange.CUT, TypeForChange.DELETE, };
+    private final TypeForChange[] alterLineComboDataFrom = {
+            TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
+            TypeForChange.AUX, TypeForChange.CUT };
+    private final TypeForChange[] alterLineComboDataTo = {
+            TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
+            TypeForChange.AUX, TypeForChange.CUT, TypeForChange.DELETE, };
 
-	private final ComputationType[] computationTypeComboData = {
-			ComputationType.FULL, ComputationType.FIRST_ONLY, ComputationType.X_RAY };
+    private final ComputationType[] computationTypeComboData = {
+            ComputationType.FULL, ComputationType.FIRST_ONLY, ComputationType.X_RAY };
 
-	private final PainterScreenSetting mainScreenSetting;
+    private final PainterScreenSetting mainScreenSetting;
 
-	@Inject
-	public UIPanelPresenter(final UIPanelView view,
-			final SubFramePresentationLogic subFramePresentationLogic,
-			final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration,
-			final GridDivNumPresentationLogic gridDivNumPresentationLogic,
-			final ValuePanelPresentationLogic valuePanelPresentationLogic,
-			final TypeForChangeContext typeForChangeContext,
-			final PainterScreenSetting mainScreenSetting) {
+    @Inject
+    public UIPanelPresenter(final UIPanelView view,
+            final SubFramePresentationLogic subFramePresentationLogic,
+            final UIPanelPaintMenuListenerRegistration paintMenuListenerRegistration,
+            final GridDivNumPresentationLogic gridDivNumPresentationLogic,
+            final ValuePanelPresentationLogic valuePanelPresentationLogic,
+            final TypeForChangeContext typeForChangeContext,
+            final PainterScreenSetting mainScreenSetting) {
 
-		this.view = view;
+        this.view = view;
 
-		this.subFramePresentationLogic = subFramePresentationLogic;
+        this.subFramePresentationLogic = subFramePresentationLogic;
 
-		this.paintMenuListenerRegistration = paintMenuListenerRegistration;
-		this.gridDivNumPresentationLogic = gridDivNumPresentationLogic;
-		this.valuePanelPresentationLogic = valuePanelPresentationLogic;
+        this.paintMenuListenerRegistration = paintMenuListenerRegistration;
+        this.gridDivNumPresentationLogic = gridDivNumPresentationLogic;
+        this.valuePanelPresentationLogic = valuePanelPresentationLogic;
 
-		this.mainScreenSetting = mainScreenSetting;
+        this.mainScreenSetting = mainScreenSetting;
 
-		Stream.of(alterLineComboDataFrom).forEach(item -> view.addItemOfAlterLineComboFrom(item.toString()));
-		Stream.of(alterLineComboDataTo).forEach(item -> view.addItemOfAlterLineComboTo(item.toString()));
-		Stream.of(computationTypeComboData).forEach(item -> view.addItemOfComputationTypeCombo(item.toString()));
-		Stream.of(AngleStep.values()).forEach(item -> view.addItemOfAngleStepCombo(item.toString()));
+        Stream.of(alterLineComboDataFrom).forEach(item -> view.addItemOfAlterLineComboFrom(item.toString()));
+        Stream.of(alterLineComboDataTo).forEach(item -> view.addItemOfAlterLineComboTo(item.toString()));
+        Stream.of(computationTypeComboData).forEach(item -> view.addItemOfComputationTypeCombo(item.toString()));
+        Stream.of(AngleStep.values()).forEach(item -> view.addItemOfAngleStepCombo(item.toString()));
 
-		addListeners();
+        addListeners();
 
-		typeForChangeContext.setTypeFrom(alterLineComboDataFrom[0]);
-		typeForChangeContext.setTypeTo(alterLineComboDataTo[0]);
+        typeForChangeContext.setTypeFrom(alterLineComboDataFrom[0]);
+        typeForChangeContext.setTypeTo(alterLineComboDataTo[0]);
 
-		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
-				typeForChangeContext.getTypeFrom().toString(),
-				typeForChangeContext.getTypeTo().toString(),
-				ComputationType.FULL.toString());
+        view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
+                typeForChangeContext.getTypeFrom().toString(),
+                typeForChangeContext.getTypeTo().toString(),
+                ComputationType.FULL.toString());
 
-		updateValuePanelFractionDigits();
-	}
+        updateValuePanelFractionDigits();
+    }
 
-	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
-		paintMenuListenerRegistration.addPlugins(plugins);
-	}
+    public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
+        paintMenuListenerRegistration.addPlugins(plugins);
+    }
 
-	private void addListeners() {
+    private void addListeners() {
 
-		paintMenuListenerRegistration.register();
+        paintMenuListenerRegistration.register();
 
-		// ------------------------------------------------------------
-		// grid setting
+        // ------------------------------------------------------------
+        // grid setting
 
-		view.addDispGridCheckBoxListener(checked -> {
-			mainScreenSetting.setGridVisible(checked);
-		});
-		view.addGridSmallButtonListener(gridDivNumPresentationLogic::makeGridSizeHalf);
-		view.addGridLargeButtonListener(gridDivNumPresentationLogic::makeGridSizeTwiceLarge);
-		view.addGridChangeButtonListener(gridDivNumPresentationLogic::updateGridDivNum);
+        view.addDispGridCheckBoxListener(checked -> {
+            mainScreenSetting.setGridVisible(checked);
+        });
+        view.addGridSmallButtonListener(gridDivNumPresentationLogic::makeGridSizeHalf);
+        view.addGridLargeButtonListener(gridDivNumPresentationLogic::makeGridSizeTwiceLarge);
+        view.addGridChangeButtonListener(gridDivNumPresentationLogic::updateGridDivNum);
 
-		// Triangular grid mode wiring (matches grid size logic)
-		view.addDispTriangularGridCheckBoxListener(gridDivNumPresentationLogic::setTriangularGridMode);
+        // Triangular grid mode wiring (matches grid size logic)
+        view.addDispTriangularGridCheckBoxListener(gridDivNumPresentationLogic::setTriangularGridMode);
 
-		// ------------------------------------------------------------
-		// display setting
+        // ------------------------------------------------------------
+        // display setting
 
-		view.addDispVertexCheckBoxListener(checked -> {
-			logger.debug("vertexVisible at listener: {}", checked);
-			mainScreenSetting.setVertexVisible(checked);
-		});
+        view.addDispVertexCheckBoxListener(checked -> {
+            logger.debug("vertexVisible at listener: {}", checked);
+            mainScreenSetting.setVertexVisible(checked);
+        });
 
-		view.addDispMVLinesCheckBoxListener(checked -> {
-			logger.debug("mvLineVisible at listener: {}", checked);
-			mainScreenSetting.setMVLineVisible(checked);
-		});
+        view.addDispMVLinesCheckBoxListener(checked -> {
+            logger.debug("mvLineVisible at listener: {}", checked);
+            mainScreenSetting.setMVLineVisible(checked);
+        });
 
-		view.addDispAuxLinesCheckBoxListener(checked -> {
-			logger.debug("auxLineVisible at listener: {}", checked);
-			mainScreenSetting.setAuxLineVisible(checked);
-		});
+        view.addDispAuxLinesCheckBoxListener(checked -> {
+            logger.debug("auxLineVisible at listener: {}", checked);
+            mainScreenSetting.setAuxLineVisible(checked);
+        });
 
-		view.addZeroLineWidthCheckBoxListener(checked -> {
-			mainScreenSetting.setZeroLineWidth(checked);
-		});
+        view.addZeroLineWidthCheckBoxListener(checked -> {
+            mainScreenSetting.setZeroLineWidth(checked);
+        });
 
-		// ------------------------------------------------------------
-		// fold
+        // ------------------------------------------------------------
+        // fold
 
-		view.addCheckWindowButtonListener(subFramePresentationLogic::showCheckerWindow);
-		view.setModelComputationListener(subFramePresentationLogic::computeModels);
-		view.setShowFoldedModelWindowsListener(subFramePresentationLogic::showFoldedModelWindows);
-	}
+        view.addCheckWindowButtonListener(subFramePresentationLogic::showCheckerWindow);
+        view.setModelComputationListener(subFramePresentationLogic::computeModels);
+        view.setShowFoldedModelWindowsListener(subFramePresentationLogic::showFoldedModelWindows);
+    }
 
-	/**
-	 * Updates text fields' format setting based on eps in context.
-	 */
-	public void updateValuePanelFractionDigits() {
-		valuePanelPresentationLogic.updateValuePanelFractionDigits();
-	}
+    /**
+     * Updates text fields' format setting based on eps in context.
+     */
+    public void updateValuePanelFractionDigits() {
+        valuePanelPresentationLogic.updateValuePanelFractionDigits();
+    }
 }

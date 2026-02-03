@@ -33,72 +33,72 @@ import oripa.domain.fold.halfedge.OrigamiModelFactory;
  *
  */
 public class SubFacesFactory {
-	private static final Logger logger = LoggerFactory.getLogger(SubFacesFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(SubFacesFactory.class);
 
-	private final OrigamiModelFactory modelFactory;
-	private final FacesToCreasePatternConverter facesToCPConverter;
-	private final SplitFacesToSubFacesConverter facesToSubFacesConverter;
-	private final ParentFacesCollector parentCollector;
+    private final OrigamiModelFactory modelFactory;
+    private final FacesToCreasePatternConverter facesToCPConverter;
+    private final SplitFacesToSubFacesConverter facesToSubFacesConverter;
+    private final ParentFacesCollector parentCollector;
 
-	/**
-	 * Constructs this object with injections.
-	 *
-	 * @param facesToCPConverter
-	 *            is used to convert the faces after fold to lines.
-	 * @param modelFactory
-	 *            is used to create subfaces' outlines as faces.
-	 * @param facesToSubFacesConverter
-	 *            is used to convert the outline faces to subfaces.
-	 * @param parentCollector
-	 *            is used to collect parent faces of each subface.
-	 */
-	public SubFacesFactory(
-			final FacesToCreasePatternConverter facesToCPConverter,
-			final OrigamiModelFactory modelFactory,
-			final SplitFacesToSubFacesConverter facesToSubFacesConverter,
-			final ParentFacesCollector parentCollector) {
-		this.modelFactory = modelFactory;
-		this.facesToCPConverter = facesToCPConverter;
-		this.facesToSubFacesConverter = facesToSubFacesConverter;
-		this.parentCollector = parentCollector;
-	}
+    /**
+     * Constructs this object with injections.
+     *
+     * @param facesToCPConverter
+     *            is used to convert the faces after fold to lines.
+     * @param modelFactory
+     *            is used to create subfaces' outlines as faces.
+     * @param facesToSubFacesConverter
+     *            is used to convert the outline faces to subfaces.
+     * @param parentCollector
+     *            is used to collect parent faces of each subface.
+     */
+    public SubFacesFactory(
+            final FacesToCreasePatternConverter facesToCPConverter,
+            final OrigamiModelFactory modelFactory,
+            final SplitFacesToSubFacesConverter facesToSubFacesConverter,
+            final ParentFacesCollector parentCollector) {
+        this.modelFactory = modelFactory;
+        this.facesToCPConverter = facesToCPConverter;
+        this.facesToSubFacesConverter = facesToSubFacesConverter;
+        this.parentCollector = parentCollector;
+    }
 
-	/**
-	 * Creates subfaces from the faces after fold.
-	 *
-	 * @param faces
-	 *            extracted from the drawn crease pattern. This method assumes
-	 *            that the faces hold the coordinates after folding.
-	 *
-	 * @param paperSize
-	 *            size of the sheet of paper.
-	 * @return subfaces prepared for layer ordering estimation.
-	 */
-	public List<SubFace> createSubFaces(
-			final List<OriFace> faces, final double paperSize, final double eps) {
-		logger.debug("createSubFaces() start");
+    /**
+     * Creates subfaces from the faces after fold.
+     *
+     * @param faces
+     *            extracted from the drawn crease pattern. This method assumes
+     *            that the faces hold the coordinates after folding.
+     *
+     * @param paperSize
+     *            size of the sheet of paper.
+     * @return subfaces prepared for layer ordering estimation.
+     */
+    public List<SubFace> createSubFaces(
+            final List<OriFace> faces, final double paperSize, final double eps) {
+        logger.debug("createSubFaces() start");
 
-		var creasePattern = facesToCPConverter.convertToCreasePattern(faces, paperSize, eps);
+        var creasePattern = facesToCPConverter.convertToCreasePattern(faces, paperSize, eps);
 
-		// By this construction, we get faces that are composed of the edges
-		// after folding where the edges are split at cross points in the crease
-		// pattern. (layering is not considered)
-		// We call such face a subface hereafter.
-		var splitFaceOrigamiModel = modelFactory.buildOrigamiForSubfaces(creasePattern, paperSize, eps);
+        // By this construction, we get faces that are composed of the edges
+        // after folding where the edges are split at cross points in the crease
+        // pattern. (layering is not considered)
+        // We call such face a subface hereafter.
+        var splitFaceOrigamiModel = modelFactory.buildOrigamiForSubfaces(creasePattern, paperSize, eps);
 
-		var subfaces = facesToSubFacesConverter.convertToSubFaces(
-				splitFaceOrigamiModel.getFaces(), splitFaceOrigamiModel.getVertices(), eps);
+        var subfaces = facesToSubFacesConverter.convertToSubFaces(
+                splitFaceOrigamiModel.getFaces(), splitFaceOrigamiModel.getVertices(), eps);
 
-		// Stores the face reference of given crease pattern into the subface
-		// that is contained in the face.
-		int i = 0;
-		for (SubFace sub : subfaces) {
-			sub.addParentFaces(parentCollector.collect(faces, sub, eps));
-			logger.trace("{} {} #parentFace={}", i++, sub.getOutline(), sub.getParentFaceCount());
-		}
+        // Stores the face reference of given crease pattern into the subface
+        // that is contained in the face.
+        int i = 0;
+        for (SubFace sub : subfaces) {
+            sub.addParentFaces(parentCollector.collect(faces, sub, eps));
+            logger.trace("{} {} #parentFace={}", i++, sub.getOutline(), sub.getParentFaceCount());
+        }
 
-		// extract distinct subfaces by comparing face list's items.
-		// -> this logic is not necessary because subface is maximal.
+        // extract distinct subfaces by comparing face list's items.
+        // -> this logic is not necessary because subface is maximal.
 //		ArrayList<SubFace> distinctSubFaces = new ArrayList<>();
 //		for (SubFace sub : subFaces) {
 //			if (distinctSubFaces.stream()
@@ -107,8 +107,8 @@ public class SubFacesFactory {
 //			}
 //		}
 
-		logger.debug("createSubFaces() end: {} subfaces", subfaces.size());
+        logger.debug("createSubFaces() end: {} subfaces", subfaces.size());
 
-		return subfaces;
-	}
+        return subfaces;
+    }
 }

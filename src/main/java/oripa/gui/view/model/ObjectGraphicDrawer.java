@@ -28,26 +28,26 @@ import oripa.vecmath.Vector2d;
  *
  */
 public interface ObjectGraphicDrawer {
-	void selectScissorsLineColor();
+    void selectScissorsLineColor();
 
-	void setTranslucent(final boolean translucent);
+    void setTranslucent(final boolean translucent);
 
-	void selectEdgeColor();
+    void selectEdgeColor();
 
-	void selectFaceColor();
+    void selectFaceColor();
 
-	void selectDefaultStroke(final double scale);
+    void selectDefaultStroke(final double scale);
 
-	void selectScissorsLineStroke(final double scale);
+    void selectScissorsLineStroke(final double scale);
 
-	void selectPaperBoundaryStroke(final double scale);
+    void selectPaperBoundaryStroke(final double scale);
 
-	void selectFaceEdgeStroke(final double scale);
+    void selectFaceEdgeStroke(final double scale);
 
-	void drawLine(OriLine line);
+    void drawLine(OriLine line);
 
-	void drawLine(Vector2d p0, Vector2d p1);
+    void drawLine(Vector2d p0, Vector2d p1);
 
-	void fillFace(final List<Vector2d> vertices);
+    void fillFace(final List<Vector2d> vertices);
 
 }

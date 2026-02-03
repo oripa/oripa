@@ -29,27 +29,27 @@ import oripa.util.Command;
  */
 public class SelectingEndPoint extends PickingVertex {
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingStartPoint.class);
-		setNextClass(SelectingStartPoint.class);
-	}
+    @Override
+    protected void initialize() {
+        setPreviousClass(SelectingStartPoint.class);
+        setNextClass(SelectingStartPoint.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
 
-		if (context.getVertexCount() != 2) {
-			throw new IllegalStateException("wrong state: impossible vertex selection.");
-		}
+        if (context.getVertexCount() != 2) {
+            throw new IllegalStateException("wrong state: impossible vertex selection.");
+        }
 
-		Command command = new PickedVerticesConnectionLineAdderCommand(context);
-		command.execute();
-	}
+        Command command = new PickedVerticesConnectionLineAdderCommand(context);
+        command.execute();
+    }
 
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-		context.clearSnapPoints();
-	}
+    @Override
+    protected void undoAction(final PaintContext context) {
+        context.popVertex();
+        context.clearSnapPoints();
+    }
 
 }

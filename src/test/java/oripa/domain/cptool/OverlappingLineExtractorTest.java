@@ -35,119 +35,119 @@ import oripa.value.OriLine;
  *
  */
 class OverlappingLineExtractorTest {
-	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractorTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractorTest.class);
 
-	private OverlappingLineExtractor extractor;
+    private OverlappingLineExtractor extractor;
 
-	static final double EPS = 1e-5;
+    static final double EPS = 1e-5;
 
-	@BeforeEach
-	void setUp() {
-		extractor = new OverlappingLineExtractor();
-	}
+    @BeforeEach
+    void setUp() {
+        extractor = new OverlappingLineExtractor();
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.OverlappingLineExtractor#extract(java.util.Collection)}.
-	 */
-	@Test
-	void testExtract_all() {
-		var overlap1 = new OriLine(0, 0, 10, 10, OriLine.Type.MOUNTAIN);
-		var overlap2 = new OriLine(0, 0, 50, 50, OriLine.Type.MOUNTAIN);
-		var lines = List.of(overlap1, overlap2,
-				new OriLine(10, 10, 20, 0, OriLine.Type.MOUNTAIN));
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.OverlappingLineExtractor#extract(java.util.Collection)}.
+     */
+    @Test
+    void testExtract_all() {
+        var overlap1 = new OriLine(0, 0, 10, 10, OriLine.Type.MOUNTAIN);
+        var overlap2 = new OriLine(0, 0, 50, 50, OriLine.Type.MOUNTAIN);
+        var lines = List.of(overlap1, overlap2,
+                new OriLine(10, 10, 20, 0, OriLine.Type.MOUNTAIN));
 
-		var overlaps = extractor.extract(lines, EPS);
+        var overlaps = extractor.extract(lines, EPS);
 
-		assertEquals(2, overlaps.size());
+        assertEquals(2, overlaps.size());
 
-		assertTrue(overlaps.contains(overlap1));
-		assertTrue(overlaps.contains(overlap2));
-	}
+        assertTrue(overlaps.contains(overlap1));
+        assertTrue(overlaps.contains(overlap2));
+    }
 
-	@Test
-	void testExtract_all_verticals() {
-		var overlap1 = new OriLine(0, 0, 0, 10, OriLine.Type.MOUNTAIN);
-		var overlap2 = new OriLine(0, 5, 0, 50, OriLine.Type.MOUNTAIN);
-		var lines = List.of(overlap1, overlap2,
-				new OriLine(0, 55, 0, 60, OriLine.Type.MOUNTAIN));
+    @Test
+    void testExtract_all_verticals() {
+        var overlap1 = new OriLine(0, 0, 0, 10, OriLine.Type.MOUNTAIN);
+        var overlap2 = new OriLine(0, 5, 0, 50, OriLine.Type.MOUNTAIN);
+        var lines = List.of(overlap1, overlap2,
+                new OriLine(0, 55, 0, 60, OriLine.Type.MOUNTAIN));
 
-		var overlaps = extractor.extract(lines, EPS);
+        var overlaps = extractor.extract(lines, EPS);
 
-		assertEquals(2, overlaps.size());
+        assertEquals(2, overlaps.size());
 
-		assertTrue(overlaps.contains(overlap1));
-		assertTrue(overlaps.contains(overlap2));
-	}
+        assertTrue(overlaps.contains(overlap1));
+        assertTrue(overlaps.contains(overlap2));
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.OverlappingLineExtractor#extract(java.util.Collection, oripa.value.OriLine)}.
-	 */
-	@Test
-	void testExtract_ofSpecifiedLine() {
-		var overlap1 = new OriLine(0, 0, 10, 10, OriLine.Type.MOUNTAIN);
-		var overlap2 = new OriLine(0, 0, 50, 50, OriLine.Type.MOUNTAIN);
-		var lines = List.of(overlap1, overlap2,
-				new OriLine(10, 10, 20, 0, OriLine.Type.MOUNTAIN));
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.OverlappingLineExtractor#extract(java.util.Collection, oripa.value.OriLine)}.
+     */
+    @Test
+    void testExtract_ofSpecifiedLine() {
+        var overlap1 = new OriLine(0, 0, 10, 10, OriLine.Type.MOUNTAIN);
+        var overlap2 = new OriLine(0, 0, 50, 50, OriLine.Type.MOUNTAIN);
+        var lines = List.of(overlap1, overlap2,
+                new OriLine(10, 10, 20, 0, OriLine.Type.MOUNTAIN));
 
-		var overlaps = extractor.extract(lines, overlap1, EPS);
+        var overlaps = extractor.extract(lines, overlap1, EPS);
 
-		assertEquals(2, overlaps.size());
+        assertEquals(2, overlaps.size());
 
-		assertTrue(overlaps.contains(overlap1));
-		assertTrue(overlaps.contains(overlap2));
-	}
+        assertTrue(overlaps.contains(overlap1));
+        assertTrue(overlaps.contains(overlap2));
+    }
 
-	@Test
-	void should_detect_overlap_for_two_partially_overlapping_lines() {
-		var overlap1 = new OriLine(0, 0, 200, 0, OriLine.Type.MOUNTAIN);
-		var overlap2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
-		var lines = List.of(overlap1, overlap2);
+    @Test
+    void should_detect_overlap_for_two_partially_overlapping_lines() {
+        var overlap1 = new OriLine(0, 0, 200, 0, OriLine.Type.MOUNTAIN);
+        var overlap2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
+        var lines = List.of(overlap1, overlap2);
 
-		var overlaps = extractor.extract(lines, EPS);
+        var overlaps = extractor.extract(lines, EPS);
 
-		assertEquals(2, overlaps.size());
+        assertEquals(2, overlaps.size());
 
-		assertTrue(overlaps.contains(overlap1));
-		assertTrue(overlaps.contains(overlap2));
-	}
+        assertTrue(overlaps.contains(overlap1));
+        assertTrue(overlaps.contains(overlap2));
+    }
 
-	@Test
-	void testExtractOverlapsGroupedBySupport() {
-		var overlap1_1 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
-		var overlap1_2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
-		var overlap1_3 = new OriLine(100, 0, 200, 0, OriLine.Type.MOUNTAIN);
+    @Test
+    void testExtractOverlapsGroupedBySupport() {
+        var overlap1_1 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
+        var overlap1_2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
+        var overlap1_3 = new OriLine(100, 0, 200, 0, OriLine.Type.MOUNTAIN);
 
-		var overlap2_1 = new OriLine(0, 0, 0, 100, OriLine.Type.MOUNTAIN);
-		var overlap2_2 = new OriLine(0, 0, 0, 100, OriLine.Type.MOUNTAIN);
+        var overlap2_1 = new OriLine(0, 0, 0, 100, OriLine.Type.MOUNTAIN);
+        var overlap2_2 = new OriLine(0, 0, 0, 100, OriLine.Type.MOUNTAIN);
 
-		var overlapGroups = extractor
-				.extractOverlapsGroupedBySupport(List.of(overlap1_1, overlap1_2, overlap1_3, overlap2_1, overlap2_2),
-						EPS);
+        var overlapGroups = extractor
+                .extractOverlapsGroupedBySupport(List.of(overlap1_1, overlap1_2, overlap1_3, overlap2_1, overlap2_2),
+                        EPS);
 
-		assertEquals(2, overlapGroups.size());
+        assertEquals(2, overlapGroups.size());
 
-		for (var overlaps : overlapGroups) {
-			if (overlaps.contains(overlap1_1)) {
-				assertEquals(2, overlaps.size());
-				assertTrue(overlaps.contains(overlap1_2));
-				assertFalse(overlaps.contains(overlap1_3));
-			}
-			if (overlaps.contains(overlap2_1)) {
-				assertTrue(overlaps.contains(overlap2_2));
-			}
-		}
-	}
+        for (var overlaps : overlapGroups) {
+            if (overlaps.contains(overlap1_1)) {
+                assertEquals(2, overlaps.size());
+                assertTrue(overlaps.contains(overlap1_2));
+                assertFalse(overlaps.contains(overlap1_3));
+            }
+            if (overlaps.contains(overlap2_1)) {
+                assertTrue(overlaps.contains(overlap2_2));
+            }
+        }
+    }
 
-	@Test
-	void should_not_detect_overlap_for_two_disjoint_segments_on_the_same_line() {
-		var overlap1 = new OriLine(-200, 0, 0, 0, OriLine.Type.MOUNTAIN);
-		var overlap2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
-		var lines = List.of(overlap1, overlap2);
+    @Test
+    void should_not_detect_overlap_for_two_disjoint_segments_on_the_same_line() {
+        var overlap1 = new OriLine(-200, 0, 0, 0, OriLine.Type.MOUNTAIN);
+        var overlap2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
+        var lines = List.of(overlap1, overlap2);
 
-		var overlaps = extractor.extract(lines, EPS);
+        var overlaps = extractor.extract(lines, EPS);
 
-		assertEquals(0, overlaps.size());
-	}
+        assertEquals(0, overlaps.size());
+    }
 }

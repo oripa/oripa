@@ -38,41 +38,41 @@ import oripa.domain.fold.origeom.OriGeomUtil;
  *
  */
 public class FaceIndicesOnHalfEdgeFactory {
-	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public Map<OriHalfedge, Set<Integer>> create(
-			final List<OriFace> faces,
-			final double eps) {
+    public Map<OriHalfedge, Set<Integer>> create(
+            final List<OriFace> faces,
+            final double eps) {
 
-		Map<OriHalfedge, Set<Integer>> indices = new HashMap<>();
+        Map<OriHalfedge, Set<Integer>> indices = new HashMap<>();
 
-		var halfedges = new ArrayList<OriHalfedge>();
+        var halfedges = new ArrayList<OriHalfedge>();
 
-		for (var face : faces) {
-			for (var halfedge : face.halfedgeIterable()) {
-				halfedges.add(halfedge);
-				Set<Integer> indexSet = new HashSet<Integer>();
-				indices.put(halfedge, indexSet);
-			}
-		}
+        for (var face : faces) {
+            for (var halfedge : face.halfedgeIterable()) {
+                halfedges.add(halfedge);
+                Set<Integer> indexSet = new HashSet<Integer>();
+                indices.put(halfedge, indexSet);
+            }
+        }
 
-		halfedges.parallelStream().forEach(halfedge -> {
-			for (var face : faces) {
-				var indexSet = indices.get(halfedge);
-				if (OriGeomUtil.isHalfedgeCrossFace(face, halfedge, eps)) {
-					indexSet.add(face.getFaceID());
-				}
-			}
-		});
+        halfedges.parallelStream().forEach(halfedge -> {
+            for (var face : faces) {
+                var indexSet = indices.get(halfedge);
+                if (OriGeomUtil.isHalfedgeCrossFace(face, halfedge, eps)) {
+                    indexSet.add(face.getFaceID());
+                }
+            }
+        });
 
-		int count = 0;
-		for (var indexSet : indices.values()) {
-			count += indexSet.size();
-		}
+        int count = 0;
+        for (var indexSet : indices.values()) {
+            count += indexSet.size();
+        }
 
-		logger.debug("#faceOnHalfEdge = {}", count);
+        logger.debug("#faceOnHalfEdge = {}", count);
 
-		return indices;
-	}
+        return indices;
+    }
 
 }

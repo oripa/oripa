@@ -30,56 +30,56 @@ import oripa.vecmath.Vector2d;
  *
  */
 public final class Geometry {
-	private static final Logger logger = LoggerFactory.getLogger(Geometry.class);
+    private static final Logger logger = LoggerFactory.getLogger(Geometry.class);
 
-	private static class AngleWithIndices {
-		public double angle;
-		public int u, v;
+    private static class AngleWithIndices {
+        public double angle;
+        public int u, v;
 
-		public AngleWithIndices(final int u, final int v, final List<List<Double>> coords) {
-			this.u = u;
-			this.v = v;
+        public AngleWithIndices(final int u, final int v, final List<List<Double>> coords) {
+            this.u = u;
+            this.v = v;
 
-			var uCoord = coords.get(u);
-			var vCoord = coords.get(v);
+            var uCoord = coords.get(u);
+            var vCoord = coords.get(v);
 
-			var dir = Vector2d.fromList(vCoord).subtract(Vector2d.fromList(uCoord));
+            var dir = Vector2d.fromList(vCoord).subtract(Vector2d.fromList(uCoord));
 
-			angle = Math.atan2(dir.getY(), dir.getX());
+            angle = Math.atan2(dir.getY(), dir.getX());
 
-			logger.trace("dir = (" + dir.getX() + ", " + dir.getY() + ")");
-			logger.trace("angle = " + angle);
-		}
+            logger.trace("dir = (" + dir.getX() + ", " + dir.getY() + ")");
+            logger.trace("angle = " + angle);
+        }
 
-		/*
-		 * (non Javadoc)
-		 *
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			return "(angle, u, v): " + "(" + angle + "," + u + "," + v + ")";
-		}
+        /*
+         * (non Javadoc)
+         *
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return "(angle, u, v): " + "(" + angle + "," + u + "," + v + ")";
+        }
 
-	}
+    }
 
-	/**
-	 * sort by angle in counter-clockwise direction.
-	 *
-	 * @param vertex
-	 * @param verticesAroundAVertex
-	 * @param coords
-	 * @return
-	 */
-	public static List<Integer> sortByAngle(final int vertex,
-			final List<Integer> verticesAroundAVertex,
-			final List<List<Double>> coords) {
+    /**
+     * sort by angle in counter-clockwise direction.
+     *
+     * @param vertex
+     * @param verticesAroundAVertex
+     * @param coords
+     * @return
+     */
+    public static List<Integer> sortByAngle(final int vertex,
+            final List<Integer> verticesAroundAVertex,
+            final List<List<Double>> coords) {
 
-		return verticesAroundAVertex.stream()
-				.map(v -> new AngleWithIndices(vertex, v, coords))
-				.sorted((a1, a2) -> (int) Math.signum(a1.angle - a2.angle))
-				.map(a -> a.v)
-				.toList();
-	}
+        return verticesAroundAVertex.stream()
+                .map(v -> new AngleWithIndices(vertex, v, coords))
+                .sorted((a1, a2) -> (int) Math.signum(a1.angle - a2.angle))
+                .map(a -> a.v)
+                .toList();
+    }
 
 }

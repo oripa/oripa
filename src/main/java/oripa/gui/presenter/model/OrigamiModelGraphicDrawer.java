@@ -34,50 +34,50 @@ import oripa.value.OriLine;
  *
  */
 public class OrigamiModelGraphicDrawer {
-	private static final Logger logger = LoggerFactory.getLogger(OrigamiModelGraphicDrawer.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrigamiModelGraphicDrawer.class);
 
-	public void draw(final ObjectGraphicDrawer drawer,
-			final OrigamiModel origamiModel,
-			final OriLine scissorsLine,
-			final ModelDisplayMode modelDisplayMode,
-			final double scale) {
-		List<OriFace> faces = origamiModel.getFaces();
+    public void draw(final ObjectGraphicDrawer drawer,
+            final OrigamiModel origamiModel,
+            final OriLine scissorsLine,
+            final ModelDisplayMode modelDisplayMode,
+            final double scale) {
+        List<OriFace> faces = origamiModel.getFaces();
 
-		drawer.selectDefaultStroke(scale);
-		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
-			drawer.setTranslucent(true);
-		}
-		for (OriFace face : faces) {
-			logger.trace("face: " + face);
-			switch (modelDisplayMode) {
-			case FILL_ALPHA:
-				drawer.selectFaceColor();
-				drawer.fillFace(face.createOutlineVerticesAfterFolding());
-				break;
-			case FILL_NONE:
-			}
+        drawer.selectDefaultStroke(scale);
+        if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
+            drawer.setTranslucent(true);
+        }
+        for (OriFace face : faces) {
+            logger.trace("face: " + face);
+            switch (modelDisplayMode) {
+            case FILL_ALPHA:
+                drawer.selectFaceColor();
+                drawer.fillFace(face.createOutlineVerticesAfterFolding());
+                break;
+            case FILL_NONE:
+            }
 
-			drawer.selectEdgeColor();
-			face.halfedgeStream().forEach(he -> {
-				var pairOpt = he.getPair();
+            drawer.selectEdgeColor();
+            face.halfedgeStream().forEach(he -> {
+                var pairOpt = he.getPair();
 
-				pairOpt.ifPresentOrElse(
-						pair -> drawer.selectFaceEdgeStroke(scale),
-						() -> drawer.selectPaperBoundaryStroke(scale));
+                pairOpt.ifPresentOrElse(
+                        pair -> drawer.selectFaceEdgeStroke(scale),
+                        () -> drawer.selectPaperBoundaryStroke(scale));
 
-				var position = he.getPositionForDisplay();
-				var nextPosition = he.getNext().getPositionForDisplay();
-				drawer.drawLine(position, nextPosition);
-			});
-		}
+                var position = he.getPositionForDisplay();
+                var nextPosition = he.getNext().getPositionForDisplay();
+                drawer.drawLine(position, nextPosition);
+            });
+        }
 
-		if (scissorsLine != null) {
-			drawer.setTranslucent(false);
-			drawer.selectScissorsLineStroke(scale);
-			drawer.selectScissorsLineColor();
+        if (scissorsLine != null) {
+            drawer.setTranslucent(false);
+            drawer.selectScissorsLineStroke(scale);
+            drawer.selectScissorsLineColor();
 
-			drawer.drawLine(scissorsLine);
-		}
+            drawer.drawLine(scissorsLine);
+        }
 
-	}
+    }
 }

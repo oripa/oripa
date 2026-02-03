@@ -27,24 +27,24 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class VertexDeleterCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public VertexDeleterCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public VertexDeleterCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 1;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 1;
+        final int correctLineCount = 0;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Painter painter = context.getPainter();
-		painter.removeVertex(context.popVertex().get());
+        Painter painter = context.getPainter();
+        painter.removeVertex(context.popVertex().get());
 
-		context.clear(false);
-	}
+        context.clear(false);
+    }
 
 }

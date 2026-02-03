@@ -34,85 +34,85 @@ import oripa.vecmath.Vector2d;
  *
  */
 class VertexColorMapFactory {
-	/**
-	 *
-	 * @param face
-	 *            a face to be colored
-	 * @param frontColorFactor
-	 *            front-side color normalized as the values are 0.0 ~ 1.0 for
-	 *            each index. value at 0 is for red, value at 1 is for green,
-	 *            and value at 2 is for blue.
-	 * @param backColorFactor
-	 *            back-side color normalized as the values are 0.0 ~ 1.0 for
-	 *            each index. value at 0 is for red, value at 1 is for green,
-	 *            and value at 2 is for blue.
-	 *
-	 * @param flip
-	 *            {@code true} if the model is flipped.
-	 * @return a mapping halfedges of the given face to normalized colors.
-	 */
-	public Map<OriHalfedge, FloatingRGB> createVertexColors(
-			final OriFace face,
-			final List<Double> frontColorFactor,
-			final List<Double> backColorFactor,
-			final boolean flip) {
-		var domain = RectangleDomain.createFromPoints(
-				face.halfedgeStream()
-						.map(OriHalfedge::getPosition)
-						.toList());
+    /**
+     *
+     * @param face
+     *            a face to be colored
+     * @param frontColorFactor
+     *            front-side color normalized as the values are 0.0 ~ 1.0 for
+     *            each index. value at 0 is for red, value at 1 is for green,
+     *            and value at 2 is for blue.
+     * @param backColorFactor
+     *            back-side color normalized as the values are 0.0 ~ 1.0 for
+     *            each index. value at 0 is for red, value at 1 is for green,
+     *            and value at 2 is for blue.
+     *
+     * @param flip
+     *            {@code true} if the model is flipped.
+     * @return a mapping halfedges of the given face to normalized colors.
+     */
+    public Map<OriHalfedge, FloatingRGB> createVertexColors(
+            final OriFace face,
+            final List<Double> frontColorFactor,
+            final List<Double> backColorFactor,
+            final boolean flip) {
+        var domain = RectangleDomain.createFromPoints(
+                face.halfedgeStream()
+                        .map(OriHalfedge::getPosition)
+                        .toList());
 
-		double minX = domain.getLeft();
-		double minY = domain.getTop();
+        double minX = domain.getLeft();
+        double minY = domain.getTop();
 
-		double faceWidth = sqrt(domain.getWidth() * domain.getWidth()
-				+ domain.getHeight() * domain.getHeight());
+        double faceWidth = sqrt(domain.getWidth() * domain.getWidth()
+                + domain.getHeight() * domain.getHeight());
 
-		var map = new HashMap<OriHalfedge, FloatingRGB>();
+        var map = new HashMap<OriHalfedge, FloatingRGB>();
 
-		for (OriHalfedge he : face.halfedgeIterable()) {
-			double val = 0;
-			var edge = he.getEdge();
+        for (OriHalfedge he : face.halfedgeIterable()) {
+            double val = 0;
+            var edge = he.getEdge();
 
-			if (edge == null) {
-				throw new IllegalArgumentException("null edge in a face " + face);
-			}
+            if (edge == null) {
+                throw new IllegalArgumentException("null edge in a face " + face);
+            }
 
-			if (edge.isMountain()) {
-				val += 1;
-			} else if (edge.isValley()) {
-				val -= 1;
-			}
+            if (edge.isMountain()) {
+                val += 1;
+            } else if (edge.isValley()) {
+                val -= 1;
+            }
 
-			var prevEdge = he.getPrevious().getEdge();
-			if (prevEdge.isMountain()) {
-				val += 1;
-			} else if (prevEdge.isValley()) {
-				val -= 1;
-			}
+            var prevEdge = he.getPrevious().getEdge();
+            if (prevEdge.isMountain()) {
+                val += 1;
+            } else if (prevEdge.isValley()) {
+                val -= 1;
+            }
 
-			double vv = (val + 2) / 4.0;
-			double v = (0.75 + vv * 0.25);
+            double vv = (val + 2) / 4.0;
+            double v = (0.75 + vv * 0.25);
 
-			var position = he.getPosition();
-			var d = new Vector2d(position.getX() - minX, position.getY() - minY).length();
-			v *= 0.9 + 0.15 * d / faceWidth;
+            var position = he.getPosition();
+            var d = new Vector2d(position.getX() - minX, position.getY() - minY).length();
+            v *= 0.9 + 0.15 * d / faceWidth;
 
-			v = Math.min(1, v);
+            v = Math.min(1, v);
 
-			if (face.isFaceFront() ^ flip) {
-				map.put(he, new FloatingRGB(
-						v * frontColorFactor.get(0),
-						v * frontColorFactor.get(1),
-						v * frontColorFactor.get(2)));
-			} else {
-				map.put(he, new FloatingRGB(
-						v * backColorFactor.get(0),
-						v * backColorFactor.get(1),
-						v * backColorFactor.get(2)));
-			}
-		}
+            if (face.isFaceFront() ^ flip) {
+                map.put(he, new FloatingRGB(
+                        v * frontColorFactor.get(0),
+                        v * frontColorFactor.get(1),
+                        v * frontColorFactor.get(2)));
+            } else {
+                map.put(he, new FloatingRGB(
+                        v * backColorFactor.get(0),
+                        v * backColorFactor.get(1),
+                        v * backColorFactor.get(2)));
+            }
+        }
 
-		return map;
-	}
+        return map;
+    }
 
 }

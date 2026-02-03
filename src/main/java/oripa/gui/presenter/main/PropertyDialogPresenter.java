@@ -28,41 +28,41 @@ import oripa.gui.view.main.PropertyDialogView;
  */
 public class PropertyDialogPresenter {
 
-	private final PropertyDialogView view;
+    private final PropertyDialogView view;
 
-	private final PropertyHolder propertyHolder;
+    private final PropertyHolder propertyHolder;
 
-	public PropertyDialogPresenter(final PropertyDialogView view, final PropertyHolder propertyHolder) {
-		this.view = view;
-		this.propertyHolder = propertyHolder;
+    public PropertyDialogPresenter(final PropertyDialogView view, final PropertyHolder propertyHolder) {
+        this.view = view;
+        this.propertyHolder = propertyHolder;
 
-		view.addOKButtonListener(this::setValuesToDomain);
+        view.addOKButtonListener(this::setValuesToDomain);
 
-		setValuesToView();
-	}
+        setValuesToView();
+    }
 
-	private void setValuesToView() {
-		var property = propertyHolder.getProperty();
+    private void setValuesToView() {
+        var property = propertyHolder.getProperty();
 
-		view.setModelTitle(property.getTitle());
-		view.setEditorName(property.getEditorName());
-		view.setOriginalAutor(property.getOriginalAuthorName());
-		view.setReference(property.getReference());
-		view.setMemo(property.getMemo());
-	}
+        view.setModelTitle(property.getTitle());
+        view.setEditorName(property.getEditorName());
+        view.setOriginalAutor(property.getOriginalAuthorName());
+        view.setReference(property.getReference());
+        view.setMemo(property.getMemo());
+    }
 
-	private void setValuesToDomain() {
-		var prop = new Property()
-				.setTitle(view.getModelTitle())
-				.setEditorName(view.getEditorName())
-				.setOriginalAuthorName(view.getOriginalAuthor())
-				.setReference(view.getReference())
-				.setMemo(view.getMemo());
+    private void setValuesToDomain() {
+        var prop = new Property()
+                .setTitle(view.getModelTitle())
+                .setEditorName(view.getEditorName())
+                .setOriginalAuthorName(view.getOriginalAuthor())
+                .setReference(view.getReference())
+                .setMemo(view.getMemo());
 
-		propertyHolder.setProperty(prop);
-	}
+        propertyHolder.setProperty(prop);
+    }
 
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
-	}
+    public void setViewVisible(final boolean visible) {
+        view.setVisible(visible);
+    }
 }

@@ -27,31 +27,31 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 
 public class CreasePatternGraphics implements PaintComponentGraphics {
-	private final Graphics g;
-	private final Graphics2D bufferg;
-	private final Image bufferImage;
-	private final ImageObserver screen;
+    private final Graphics g;
+    private final Graphics2D bufferg;
+    private final Image bufferImage;
+    private final ImageObserver screen;
 
-	public CreasePatternGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage,
-			final ImageObserver screen) {
-		this.g = g;
-		this.bufferg = bufferg;
-		this.bufferImage = bufferImage;
-		this.screen = screen;
-	}
+    public CreasePatternGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage,
+            final ImageObserver screen) {
+        this.g = g;
+        this.bufferg = bufferg;
+        this.bufferImage = bufferImage;
+        this.screen = screen;
+    }
 
-	@Override
-	public ObjectGraphicDrawer getObjectDrawer() {
-		return new CreasePatternObjectDrawer((Graphics2D) g);
-	}
+    @Override
+    public ObjectGraphicDrawer getObjectDrawer() {
+        return new CreasePatternObjectDrawer((Graphics2D) g);
+    }
 
-	@Override
-	public ObjectGraphicDrawer getBufferObjectDrawer() {
-		return new CreasePatternObjectDrawer(bufferg);
-	}
+    @Override
+    public ObjectGraphicDrawer getBufferObjectDrawer() {
+        return new CreasePatternObjectDrawer(bufferg);
+    }
 
-	@Override
-	public void drawBufferImage() {
-		g.drawImage(bufferImage, 0, 0, screen);
-	}
+    @Override
+    public void drawBufferImage() {
+        g.drawImage(bufferImage, 0, 0, screen);
+    }
 }

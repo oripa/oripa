@@ -30,9 +30,9 @@ import oripa.gui.view.main.MainFrameView;
  */
 public class FileHistoryModule extends AbstractModule {
 
-	@Provides
-	@MaxSize
-	int provideMaxSize(final MainFrameView view) {
-		return view.getFileMenuSize();
-	}
+    @Provides
+    @MaxSize
+    int provideMaxSize(final MainFrameView view) {
+        return view.getFileMenuSize();
+    }
 }

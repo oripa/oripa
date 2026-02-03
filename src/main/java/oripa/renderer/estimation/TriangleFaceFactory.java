@@ -26,17 +26,17 @@ import java.util.List;
  *
  */
 class TriangleFaceFactory {
-	public List<TriangleFace> createAll(final Face face) {
-		var triangles = new ArrayList<TriangleFace>();
+    public List<TriangleFace> createAll(final Face face) {
+        var triangles = new ArrayList<TriangleFace>();
 
-		int heNum = face.halfedgeCount();
-		for (int i = 1; i < heNum - 1; i++) {
-			TriangleFace tri = new TriangleFace(face, List.of(0, i, i + 1));
-			triangles.add(tri);
-		}
+        int heNum = face.halfedgeCount();
+        for (int i = 1; i < heNum - 1; i++) {
+            TriangleFace tri = new TriangleFace(face, List.of(0, i, i + 1));
+            triangles.add(tri);
+        }
 
-		triangles.forEach(triangle -> triangle.initializePositions());
+        triangles.forEach(triangle -> triangle.initializePositions());
 
-		return triangles;
-	}
+        return triangles;
+    }
 }

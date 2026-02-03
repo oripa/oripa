@@ -25,7 +25,7 @@ import oripa.domain.cptool.TypeForChange;
  *
  */
 public interface TypeForChangeGettable {
-	TypeForChange getTypeFrom();
+    TypeForChange getTypeFrom();
 
-	TypeForChange getTypeTo();
+    TypeForChange getTypeTo();
 }

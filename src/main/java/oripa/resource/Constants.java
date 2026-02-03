@@ -22,11 +22,11 @@ import java.io.File;
 
 public class Constants {
 
-	public static final double DEFAULT_PAPER_SIZE = 400;
-	public static final int DEFAULT_GRID_DIV_NUM = 4;
-	public static final String USER_HOME_DIR_PATH = System.getProperty("user.home");
-	public static final String INI_FILE_PATH = USER_HOME_DIR_PATH + File.separator + "oripa.ini";
-	public static final String FOLDED_SVG_CONFIG_PATH = USER_HOME_DIR_PATH + File.separator + "oripa-folded-svg.config";
-	public static final boolean FOR_STUDY = false;
-	public static final int MRUFILE_NUM = 10;
+    public static final double DEFAULT_PAPER_SIZE = 400;
+    public static final int DEFAULT_GRID_DIV_NUM = 4;
+    public static final String USER_HOME_DIR_PATH = System.getProperty("user.home");
+    public static final String INI_FILE_PATH = USER_HOME_DIR_PATH + File.separator + "oripa.ini";
+    public static final String FOLDED_SVG_CONFIG_PATH = USER_HOME_DIR_PATH + File.separator + "oripa-folded-svg.config";
+    public static final boolean FOR_STUDY = false;
+    public static final int MRUFILE_NUM = 10;
 }

@@ -28,28 +28,28 @@ import oripa.gui.view.DialogView;
  */
 public interface ArrayCopyDialogView extends DialogView {
 
-	int getRowCount();
+    int getRowCount();
 
-	void setRowCount(int rowCount);
+    void setRowCount(int rowCount);
 
-	int getColumnCount();
+    int getColumnCount();
 
-	void setColumnCount(int columnCount);
+    void setColumnCount(int columnCount);
 
-	double getIntervalX();
+    double getIntervalX();
 
-	void setIntervalX(double intervalX);
+    void setIntervalX(double intervalX);
 
-	double getIntervalY();
+    double getIntervalY();
 
-	void setIntervalY(double intervalY);
+    void setIntervalY(double intervalY);
 
-	boolean shouldFillUp();
+    boolean shouldFillUp();
 
-	void setFillUp(boolean fillUp);
+    void setFillUp(boolean fillUp);
 
-	void setOKButtonListener(Supplier<Boolean> listener);
+    void setOKButtonListener(Supplier<Boolean> listener);
 
-	void showWrongInputMessage();
+    void showWrongInputMessage();
 
 }

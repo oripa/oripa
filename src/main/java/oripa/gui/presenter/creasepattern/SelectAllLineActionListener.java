@@ -27,25 +27,25 @@ import oripa.util.Command;
  *
  */
 public class SelectAllLineActionListener implements Runnable {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	/**
-	 * Constructor
-	 */
-	public SelectAllLineActionListener(final PaintContext context) {
-		this.context = context;
-	}
+    /**
+     * Constructor
+     */
+    public SelectAllLineActionListener(final PaintContext context) {
+        this.context = context;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void run() {
-		Command command = new AllLineSelecterCommand(context);
-		command.execute();
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void run() {
+        Command command = new AllLineSelecterCommand(context);
+        command.execute();
+    }
 
 }

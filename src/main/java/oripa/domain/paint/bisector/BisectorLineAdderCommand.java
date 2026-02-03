@@ -27,32 +27,32 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class BisectorLineAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public BisectorLineAdderCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public BisectorLineAdderCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 3;
-		final int correctLineCount = 1;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 3;
+        final int correctLineCount = 1;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		var first = context.getVertex(0);
-		var second = context.getVertex(1);
-		var third = context.getVertex(2);
+        var first = context.getVertex(0);
+        var second = context.getVertex(1);
+        var third = context.getVertex(2);
 
-		var line = context.getLine(0);
+        var line = context.getLine(0);
 
-		context.clear(false);
+        context.clear(false);
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Painter painter = context.getPainter();
+        Painter painter = context.getPainter();
 
-		painter.addBisectorLine(
-				first, second, third,
-				line, context.getLineTypeOfNewLines());
-	}
+        painter.addBisectorLine(
+                first, second, third,
+                line, context.getLineTypeOfNewLines());
+    }
 }

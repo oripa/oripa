@@ -33,29 +33,29 @@ import oripa.util.file.FileFactory;
  */
 public class FoldedModelFileSelectionPresenterFactory {
 
-	private final FileChooserFactory fileChooserFactory;
-	private final FileFactory fileFactory;
-	private final ExtensionCorrector extensionCorrector;
+    private final FileChooserFactory fileChooserFactory;
+    private final FileFactory fileFactory;
+    private final ExtensionCorrector extensionCorrector;
 
-	@Inject
-	public FoldedModelFileSelectionPresenterFactory(
-			final FileChooserFactory fileChooserFactory,
-			final FileFactory fileFactory,
-			final ExtensionCorrector extensionCorrector) {
-		this.fileChooserFactory = fileChooserFactory;
-		this.fileFactory = fileFactory;
-		this.extensionCorrector = extensionCorrector;
-	}
+    @Inject
+    public FoldedModelFileSelectionPresenterFactory(
+            final FileChooserFactory fileChooserFactory,
+            final FileFactory fileFactory,
+            final ExtensionCorrector extensionCorrector) {
+        this.fileChooserFactory = fileChooserFactory;
+        this.fileFactory = fileFactory;
+        this.extensionCorrector = extensionCorrector;
+    }
 
-	public FileSelectionPresenter<FoldedModelEntity> create(
-			final FrameView parent,
-			final FileSelectionService<FoldedModelEntity> fileSelectionService) {
-		return new FileSelectionPresenter<FoldedModelEntity>(
-				parent,
-				fileChooserFactory,
-				fileFactory,
-				fileSelectionService,
-				extensionCorrector);
+    public FileSelectionPresenter<FoldedModelEntity> create(
+            final FrameView parent,
+            final FileSelectionService<FoldedModelEntity> fileSelectionService) {
+        return new FileSelectionPresenter<FoldedModelEntity>(
+                parent,
+                fileChooserFactory,
+                fileFactory,
+                fileSelectionService,
+                extensionCorrector);
 
-	}
+    }
 }

@@ -37,149 +37,149 @@ import oripa.value.OriLine;
  *
  */
 class LineAdderTest {
-	private static Logger logger = LoggerFactory.getLogger(LineAdderTest.class);
+    private static Logger logger = LoggerFactory.getLogger(LineAdderTest.class);
 
-	public static final OriLine DIAGONAL_LINE = new OriLine(-200, -200, 200, 200, OriLine.Type.MOUNTAIN);
-	private LineAdder adder;
+    public static final OriLine DIAGONAL_LINE = new OriLine(-200, -200, 200, 200, OriLine.Type.MOUNTAIN);
+    private LineAdder adder;
 
-	private static final double POINT_EPS = 1e-5;
+    private static final double POINT_EPS = 1e-5;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.LineAdder#addLine(oripa.value.OriLine, java.util.Collection)}.
-	 */
-	@Test
-	void testAddLine() {
-		var creasePattern = new ArrayList<>(List.of(
-				new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN),
-				new OriLine(0, 50, 100, 50, OriLine.Type.AUX)));
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.LineAdder#addLine(oripa.value.OriLine, java.util.Collection)}.
+     */
+    @Test
+    void testAddLine() {
+        var creasePattern = new ArrayList<>(List.of(
+                new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN),
+                new OriLine(0, 50, 100, 50, OriLine.Type.AUX)));
 
-		var line = new OriLine(20, 50, 20, -10, OriLine.Type.VALLEY);
+        var line = new OriLine(20, 50, 20, -10, OriLine.Type.VALLEY);
 
-		adder.addLine(line, creasePattern, POINT_EPS);
+        adder.addLine(line, creasePattern, POINT_EPS);
 
-		assertEquals(6, creasePattern.size());
-	}
+        assertEquals(6, creasePattern.size());
+    }
 
-	@BeforeEach
-	void setUp() {
-		adder = new LineAdder();
-	}
+    @BeforeEach
+    void setUp() {
+        adder = new LineAdder();
+    }
 
-	@Test
-	void should_split_existing_lines_if_new_line_crosses_them() {
-		// Given
-		var creasePattern = new ArrayList<>(List.of(DIAGONAL_LINE));
-		var line = new OriLine(200, 0, -200, 0, OriLine.Type.VALLEY);
+    @Test
+    void should_split_existing_lines_if_new_line_crosses_them() {
+        // Given
+        var creasePattern = new ArrayList<>(List.of(DIAGONAL_LINE));
+        var line = new OriLine(200, 0, -200, 0, OriLine.Type.VALLEY);
 
-		// When
-		adder.addLine(line, creasePattern, POINT_EPS);
+        // When
+        adder.addLine(line, creasePattern, POINT_EPS);
 
-		// Then
-		assertEquals(4, creasePattern.size());
-		assertTrue(creasePattern.contains(new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
-		assertTrue(creasePattern.contains(new OriLine(0, 0, 200, 200, OriLine.Type.MOUNTAIN)));
-		assertTrue(creasePattern.contains(new OriLine(200, 0, 0, 0, OriLine.Type.VALLEY)));
-		assertTrue(creasePattern.contains(new OriLine(0, 0, -200, 0, OriLine.Type.VALLEY)));
-	}
+        // Then
+        assertEquals(4, creasePattern.size());
+        assertTrue(creasePattern.contains(new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
+        assertTrue(creasePattern.contains(new OriLine(0, 0, 200, 200, OriLine.Type.MOUNTAIN)));
+        assertTrue(creasePattern.contains(new OriLine(200, 0, 0, 0, OriLine.Type.VALLEY)));
+        assertTrue(creasePattern.contains(new OriLine(0, 0, -200, 0, OriLine.Type.VALLEY)));
+    }
 
-	@Test
-	void should_remove_duplicated_segments_if_two_lines_of_same_type_are_overlapping() {
-		// Given
-		var creasePattern = new ArrayList<>(List.of(new OriLine(0, 0, 200, 0, OriLine.Type.VALLEY)));
-		var line = new OriLine(0, 0, 100, 0, OriLine.Type.VALLEY);
+    @Test
+    void should_remove_duplicated_segments_if_two_lines_of_same_type_are_overlapping() {
+        // Given
+        var creasePattern = new ArrayList<>(List.of(new OriLine(0, 0, 200, 0, OriLine.Type.VALLEY)));
+        var line = new OriLine(0, 0, 100, 0, OriLine.Type.VALLEY);
 
-		// When
-		adder.addLine(line, creasePattern, POINT_EPS);
+        // When
+        adder.addLine(line, creasePattern, POINT_EPS);
 
-		logger.debug(creasePattern.toString());
-		// Then
-		assertEquals(2, creasePattern.size());
-		assertTrue(creasePattern.contains(new OriLine(0, 0, 100, 0, OriLine.Type.VALLEY)));
-		assertTrue(creasePattern.contains(new OriLine(100, 0, 200, 0, OriLine.Type.VALLEY)));
-	}
+        logger.debug(creasePattern.toString());
+        // Then
+        assertEquals(2, creasePattern.size());
+        assertTrue(creasePattern.contains(new OriLine(0, 0, 100, 0, OriLine.Type.VALLEY)));
+        assertTrue(creasePattern.contains(new OriLine(100, 0, 200, 0, OriLine.Type.VALLEY)));
+    }
 
-	@Test
-	void should_split_existing_lines_if_new_line_touches_them() {
-		// Given
-		var creasePattern = new ArrayList<>(List.of(DIAGONAL_LINE));
-		var line = new OriLine(200, 0, 0, 0, OriLine.Type.VALLEY);
+    @Test
+    void should_split_existing_lines_if_new_line_touches_them() {
+        // Given
+        var creasePattern = new ArrayList<>(List.of(DIAGONAL_LINE));
+        var line = new OriLine(200, 0, 0, 0, OriLine.Type.VALLEY);
 
-		// When
-		adder.addLine(line, creasePattern, POINT_EPS);
+        // When
+        adder.addLine(line, creasePattern, POINT_EPS);
 
-		// Then
-		assertEquals(3, creasePattern.size());
-		assertTrue(creasePattern.contains(new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
-		assertTrue(creasePattern.contains(new OriLine(0, 0, 200, 200, OriLine.Type.MOUNTAIN)));
-		assertTrue(creasePattern.contains(new OriLine(200, 0, 0, 0, OriLine.Type.VALLEY)));
-	}
+        // Then
+        assertEquals(3, creasePattern.size());
+        assertTrue(creasePattern.contains(new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
+        assertTrue(creasePattern.contains(new OriLine(0, 0, 200, 200, OriLine.Type.MOUNTAIN)));
+        assertTrue(creasePattern.contains(new OriLine(200, 0, 0, 0, OriLine.Type.VALLEY)));
+    }
 
-	@Test
-	void should_replace_overlapping_parts() {
-		// Given
-		var creasePattern = new ArrayList<>(List.of(new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
-		var line = new OriLine(-100, -100, 100, 100, OriLine.Type.VALLEY);
+    @Test
+    void should_replace_overlapping_parts() {
+        // Given
+        var creasePattern = new ArrayList<>(List.of(new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
+        var line = new OriLine(-100, -100, 100, 100, OriLine.Type.VALLEY);
 
-		// When
-		adder.addLine(line, creasePattern, POINT_EPS);
+        // When
+        adder.addLine(line, creasePattern, POINT_EPS);
 
-		// Then
-		assertEquals(3, creasePattern.size());
-		assertTrue(creasePattern.contains(new OriLine(-200, -200, -100, -100, OriLine.Type.MOUNTAIN)));
-		assertTrue(creasePattern.contains(new OriLine(-100, -100, 0, 0, OriLine.Type.VALLEY)));
-		assertTrue(creasePattern.contains(new OriLine(0, 0, 100, 100, OriLine.Type.VALLEY)));
-	}
+        // Then
+        assertEquals(3, creasePattern.size());
+        assertTrue(creasePattern.contains(new OriLine(-200, -200, -100, -100, OriLine.Type.MOUNTAIN)));
+        assertTrue(creasePattern.contains(new OriLine(-100, -100, 0, 0, OriLine.Type.VALLEY)));
+        assertTrue(creasePattern.contains(new OriLine(0, 0, 100, 100, OriLine.Type.VALLEY)));
+    }
 
-	@Test
-	void should_remove_multiple_fully_overlapping_line_with_splits() {
-		// Given
-		var creasePattern = new ArrayList<>(List.of(
-				new OriLine[] { new OriLine(-100, 0, -50, 0, OriLine.Type.VALLEY),
-						new OriLine(0, 0, 50, 0, OriLine.Type.VALLEY),
-						new OriLine(100, 0, 150, 0, OriLine.Type.VALLEY) }));
+    @Test
+    void should_remove_multiple_fully_overlapping_line_with_splits() {
+        // Given
+        var creasePattern = new ArrayList<>(List.of(
+                new OriLine[] { new OriLine(-100, 0, -50, 0, OriLine.Type.VALLEY),
+                        new OriLine(0, 0, 50, 0, OriLine.Type.VALLEY),
+                        new OriLine(100, 0, 150, 0, OriLine.Type.VALLEY) }));
 
-		var line = new OriLine(-200, 0, 200, 0, OriLine.Type.MOUNTAIN);
+        var line = new OriLine(-200, 0, 200, 0, OriLine.Type.MOUNTAIN);
 
-		// When
-		adder.addLine(line, creasePattern, POINT_EPS);
+        // When
+        adder.addLine(line, creasePattern, POINT_EPS);
 
-		// Then
-		assertEquals(7, creasePattern.size());
-		logger.debug(creasePattern.toString());
+        // Then
+        assertEquals(7, creasePattern.size());
+        logger.debug(creasePattern.toString());
 
-		var lastX = -200;
-		for (int x = -100; x <= 150; x += 50) {
-			assertTrue(creasePattern.contains(new OriLine(lastX, 0, x, 0, OriLine.Type.MOUNTAIN)));
-			lastX = x;
-		}
-	}
+        var lastX = -200;
+        for (int x = -100; x <= 150; x += 50) {
+            assertTrue(creasePattern.contains(new OriLine(lastX, 0, x, 0, OriLine.Type.MOUNTAIN)));
+            lastX = x;
+        }
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.LineAdder#addAll(java.util.Collection, java.util.Collection)}.
-	 */
-	@Test
-	void testAddAll() {
-		var creasePattern = new ArrayList<>(List.of(
-				new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN),
-				new OriLine(0, 50, 100, 50, OriLine.Type.AUX)));
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.LineAdder#addAll(java.util.Collection, java.util.Collection)}.
+     */
+    @Test
+    void testAddAll() {
+        var creasePattern = new ArrayList<>(List.of(
+                new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN),
+                new OriLine(0, 50, 100, 50, OriLine.Type.AUX)));
 
-		var line1 = new OriLine(20, 50, 20, -10, OriLine.Type.VALLEY);
-		var line2 = new OriLine(40, 50, 40, 0, OriLine.Type.VALLEY);
+        var line1 = new OriLine(20, 50, 20, -10, OriLine.Type.VALLEY);
+        var line2 = new OriLine(40, 50, 40, 0, OriLine.Type.VALLEY);
 
-		adder.addAll(List.of(line1, line2), creasePattern, POINT_EPS);
+        adder.addAll(List.of(line1, line2), creasePattern, POINT_EPS);
 
-		assertEquals(9, creasePattern.size());
-		assertTypeCount(3, creasePattern, OriLine.Type.VALLEY);
-		assertTypeCount(3, creasePattern, OriLine.Type.MOUNTAIN);
-		assertTypeCount(3, creasePattern, OriLine.Type.AUX);
-	}
+        assertEquals(9, creasePattern.size());
+        assertTypeCount(3, creasePattern, OriLine.Type.VALLEY);
+        assertTypeCount(3, creasePattern, OriLine.Type.MOUNTAIN);
+        assertTypeCount(3, creasePattern, OriLine.Type.AUX);
+    }
 
-	void assertTypeCount(final long expectedCount, final Collection<OriLine> creasePattern,
-			final OriLine.Type type) {
-		assertEquals(expectedCount,
-				creasePattern.stream().filter(line -> line.getType() == type).count());
-	}
+    void assertTypeCount(final long expectedCount, final Collection<OriLine> creasePattern,
+            final OriLine.Type type) {
+        assertEquals(expectedCount,
+                creasePattern.stream().filter(line -> line.getType() == type).count());
+    }
 
 }

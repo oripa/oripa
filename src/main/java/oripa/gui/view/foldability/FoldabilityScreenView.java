@@ -33,19 +33,19 @@ import oripa.gui.view.creasepattern.PaintComponentGraphics;
  */
 public interface FoldabilityScreenView extends ScreenView {
 
-	void updateCenterOfPaper(double x, double y);
+    void updateCenterOfPaper(double x, double y);
 
-	double getScale();
+    double getScale();
 
-	void setViolatingVertices(Collection<OriVertex> vertices);
+    void setViolatingVertices(Collection<OriVertex> vertices);
 
-	Optional<OriVertex> getPickedViolatingVertex();
+    Optional<OriVertex> getPickedViolatingVertex();
 
-	Optional<OriFace> getPickedViolatingFace();
+    Optional<OriFace> getPickedViolatingFace();
 
-	void setViolatingFaces(Collection<OriFace> faces);
+    void setViolatingFaces(Collection<OriFace> faces);
 //
 //	void setOverlappingLines(Collection<OriLine> lines);
 
-	public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener);
+    public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener);
 }

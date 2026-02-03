@@ -29,45 +29,45 @@ import java.util.List;
  *
  */
 class OptionParser {
-	public static class Keys {
-		public static final String FRONT_COLOR = "frontColor";
-		public static final String BACK_COLOR = "backColor";
-	}
+    public static class Keys {
+        public static final String FRONT_COLOR = "frontColor";
+        public static final String BACK_COLOR = "backColor";
+    }
 
-	private static final String HEAD_COMMENT_START = "////";
-	public static final String HEAD_COMMENT = HEAD_COMMENT_START
-			+ "The lines starting with // are configurations for ORIPA. Do not edit manually.";
+    private static final String HEAD_COMMENT_START = "////";
+    public static final String HEAD_COMMENT = HEAD_COMMENT_START
+            + "The lines starting with // are configurations for ORIPA. Do not edit manually.";
 
-	private static final String OPTION_START = "//";
+    private static final String OPTION_START = "//";
 
-	public boolean matchHeadCommentStart(final String line) {
-		return line.startsWith(HEAD_COMMENT_START);
-	}
+    public boolean matchHeadCommentStart(final String line) {
+        return line.startsWith(HEAD_COMMENT_START);
+    }
 
-	public boolean matchOptionStart(final String line) {
-		return line.startsWith(OPTION_START);
-	}
+    public boolean matchOptionStart(final String line) {
+        return line.startsWith(OPTION_START);
+    }
 
-	public Option parse(final String line) {
-		var trimmed = line.split(OPTION_START)[1].trim();
-		var keyValue = trimmed.split("\\s*:\\s*");
+    public Option parse(final String line) {
+        var trimmed = line.split(OPTION_START)[1].trim();
+        var keyValue = trimmed.split("\\s*:\\s*");
 
-		return new Option(keyValue[0], keyValue[1]);
-	}
+        return new Option(keyValue[0], keyValue[1]);
+    }
 
-	public List<Option> parse(final List<String> lines) {
-		return lines.stream()
-				.map(this::parse)
-				.toList();
-	}
+    public List<Option> parse(final List<String> lines) {
+        return lines.stream()
+                .map(this::parse)
+                .toList();
+    }
 
-	public String createLine(final Option option) {
-		return OPTION_START + option.key() + ":" + option.value();
-	}
+    public String createLine(final Option option) {
+        return OPTION_START + option.key() + ":" + option.value();
+    }
 
-	public List<String> createLines(final List<Option> options) {
-		return options.stream()
-				.map(this::createLine)
-				.toList();
-	}
+    public List<String> createLines(final List<Option> options) {
+        return options.stream()
+                .map(this::createLine)
+                .toList();
+    }
 }

@@ -50,204 +50,204 @@ import oripa.gui.view.model.ModelViewFrameView;
 @ExtendWith(MockitoExtension.class)
 public class SubFramePresentationLogicTest {
 
-	@InjectMocks
-	SubFramePresentationLogic presentationLogic;
+    @InjectMocks
+    SubFramePresentationLogic presentationLogic;
 
-	@Mock
-	UIPanelView view;
+    @Mock
+    UIPanelView view;
 
-	@Mock
-	ModelIndexChangeSupport modelIndexChangeSupport;
+    @Mock
+    ModelIndexChangeSupport modelIndexChangeSupport;
 
-	@Mock
-	SubFrameFactory subFrameFactory;
-	@Mock
-	SubFramePresenterFactory subFramePresenterFactory;
+    @Mock
+    SubFrameFactory subFrameFactory;
+    @Mock
+    SubFramePresenterFactory subFramePresenterFactory;
 
-	@Mock
-	ModelComputationFacadeFactory modelComputationFacadeFactory;
+    @Mock
+    ModelComputationFacadeFactory modelComputationFacadeFactory;
 
-	@Mock
-	PaintContext paintContext;
+    @Mock
+    PaintContext paintContext;
 
-	@Nested
-	class TestShowCheckerWindow {
+    @Nested
+    class TestShowCheckerWindow {
 
-		@Test
-		void windowShouldBeShown() {
+        @Test
+        void windowShouldBeShown() {
 
-			setupFrameView();
+            setupFrameView();
 
-			FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
+            FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
 
-			FoldabilityCheckFramePresenter foldabilityPresenter = mock();
-			when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-					eq(foldabilityFrame),
-					any(),
-					anyDouble()))
-							.thenReturn(foldabilityPresenter);
+            FoldabilityCheckFramePresenter foldabilityPresenter = mock();
+            when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
+                    eq(foldabilityFrame),
+                    any(),
+                    anyDouble()))
+                            .thenReturn(foldabilityPresenter);
 
-			presentationLogic.showCheckerWindow();
+            presentationLogic.showCheckerWindow();
 
-			verify(foldabilityPresenter).setViewVisible(true);
+            verify(foldabilityPresenter).setViewVisible(true);
 
-		}
-	}
+        }
+    }
 
-	FoldabilityCheckFrameView setupFoldabilityWindow() {
-		FoldabilityCheckFrameView foldabilityFrame = mock();
-		when(subFrameFactory.createFoldabilityFrame(any())).thenReturn(foldabilityFrame);
+    FoldabilityCheckFrameView setupFoldabilityWindow() {
+        FoldabilityCheckFrameView foldabilityFrame = mock();
+        when(subFrameFactory.createFoldabilityFrame(any())).thenReturn(foldabilityFrame);
 
-		when(paintContext.getCreasePattern()).thenReturn(mock());
-		when(paintContext.getPointEps()).thenReturn(0.1);
+        when(paintContext.getCreasePattern()).thenReturn(mock());
+        when(paintContext.getPointEps()).thenReturn(0.1);
 
-		return foldabilityFrame;
-	}
+        return foldabilityFrame;
+    }
 
-	@Nested
-	class TestShowFoldedModelWindows {
+    @Nested
+    class TestShowFoldedModelWindows {
 
-		@Test
-		void windowsShouldBeShownWhenNoComputationError() {
+        @Test
+        void windowsShouldBeShownWhenNoComputationError() {
 
-			setupFrameView();
+            setupFrameView();
 
-			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
+            try (var computationTypeStatic = mockStatic(ComputationType.class)) {
 
-				computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
-						.thenReturn(Optional.of(ComputationType.FULL));
+                computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
+                        .thenReturn(Optional.of(ComputationType.FULL));
 
-				setupModelComputation(true, true);
+                setupModelComputation(true, true);
 
-				ModelViewFrameView modelFrame = mock();
-				when(subFrameFactory.createModelViewFrame(any())).thenReturn(modelFrame);
+                ModelViewFrameView modelFrame = mock();
+                when(subFrameFactory.createModelViewFrame(any())).thenReturn(modelFrame);
 
-				ModelViewFramePresenter modelPresenter = mock();
-				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
-						.thenReturn(modelPresenter);
+                ModelViewFramePresenter modelPresenter = mock();
+                when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
+                        .thenReturn(modelPresenter);
 
-				EstimationResultFrameView estimationFrame = mock();
-				when(subFrameFactory.createResultFrame(any())).thenReturn(estimationFrame);
+                EstimationResultFrameView estimationFrame = mock();
+                when(subFrameFactory.createResultFrame(any())).thenReturn(estimationFrame);
 
-				EstimationResultFramePresenter estimationPresenter = mock();
-				when(subFramePresenterFactory.createEstimationResultFramePresenter(
-						eq(estimationFrame),
-						any(),
-						anyDouble(),
-						// actually string but the value is not instantiated in
-						// this test.
-						isNull(),
-						any())).thenReturn(estimationPresenter);
+                EstimationResultFramePresenter estimationPresenter = mock();
+                when(subFramePresenterFactory.createEstimationResultFramePresenter(
+                        eq(estimationFrame),
+                        any(),
+                        anyDouble(),
+                        // actually string but the value is not instantiated in
+                        // this test.
+                        isNull(),
+                        any())).thenReturn(estimationPresenter);
 
-				presentationLogic.computeModels();
-				presentationLogic.showFoldedModelWindows();
+                presentationLogic.computeModels();
+                presentationLogic.showFoldedModelWindows();
 
-				verify(modelPresenter, atLeastOnce()).setViewVisible(true);
-				verify(estimationPresenter, atLeastOnce()).setViewVisible(true);
-			}
-		}
+                verify(modelPresenter, atLeastOnce()).setViewVisible(true);
+                verify(estimationPresenter, atLeastOnce()).setViewVisible(true);
+            }
+        }
 
-		@Test
-		void modelWindowAndFoldabilityWindowWhenNotGloballyFlatFoldable() {
+        @Test
+        void modelWindowAndFoldabilityWindowWhenNotGloballyFlatFoldable() {
 
-			setupFrameView();
+            setupFrameView();
 
-			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
+            try (var computationTypeStatic = mockStatic(ComputationType.class)) {
 
-				computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
-						.thenReturn(Optional.of(ComputationType.FULL));
+                computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
+                        .thenReturn(Optional.of(ComputationType.FULL));
 
-				var computationResult = setupModelComputation(true, false);
-				when(computationResult.getEstimationResultRules()).thenReturn(mock());
+                var computationResult = setupModelComputation(true, false);
+                when(computationResult.getEstimationResultRules()).thenReturn(mock());
 
-				ModelViewFrameView modelFrame = mock();
-				when(subFrameFactory.createModelViewFrame(any())).thenReturn(modelFrame);
+                ModelViewFrameView modelFrame = mock();
+                when(subFrameFactory.createModelViewFrame(any())).thenReturn(modelFrame);
 
-				ModelViewFramePresenter modelPresenter = mock();
-				when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
-						.thenReturn(modelPresenter);
+                ModelViewFramePresenter modelPresenter = mock();
+                when(subFramePresenterFactory.createModelViewFramePresenter(eq(modelFrame), any(), anyDouble()))
+                        .thenReturn(modelPresenter);
 
-				FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
+                FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
 
-				FoldabilityCheckFramePresenter foldabilityPresenter = mock();
-				when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-						eq(foldabilityFrame),
-						any(),
-						any(),
-						any(),
-						anyDouble()))
-								.thenReturn(foldabilityPresenter);
+                FoldabilityCheckFramePresenter foldabilityPresenter = mock();
+                when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
+                        eq(foldabilityFrame),
+                        any(),
+                        any(),
+                        any(),
+                        anyDouble()))
+                                .thenReturn(foldabilityPresenter);
 
-				presentationLogic.computeModels();
-				presentationLogic.showFoldedModelWindows();
+                presentationLogic.computeModels();
+                presentationLogic.showFoldedModelWindows();
 
-				verify(view).showNoAnswerMessage();
+                verify(view).showNoAnswerMessage();
 
-				verify(foldabilityPresenter).setViewVisible(true);
-				verify(modelPresenter, atLeastOnce()).setViewVisible(true);
-			}
-		}
+                verify(foldabilityPresenter).setViewVisible(true);
+                verify(modelPresenter, atLeastOnce()).setViewVisible(true);
+            }
+        }
 
-		@Test
-		void foldabilityWindowWhenNotLocallyFlatFoldable() {
+        @Test
+        void foldabilityWindowWhenNotLocallyFlatFoldable() {
 
-			setupFrameView();
+            setupFrameView();
 
-			try (var computationTypeStatic = mockStatic(ComputationType.class)) {
+            try (var computationTypeStatic = mockStatic(ComputationType.class)) {
 
-				computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
-						.thenReturn(Optional.of(ComputationType.FULL));
+                computationTypeStatic.when(() -> ComputationType.fromString(anyString()))
+                        .thenReturn(Optional.of(ComputationType.FULL));
 
-				setupModelComputation(false, false);
+                setupModelComputation(false, false);
 
-				FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
+                FoldabilityCheckFrameView foldabilityFrame = setupFoldabilityWindow();
 
-				FoldabilityCheckFramePresenter foldabilityPresenter = mock();
-				when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
-						eq(foldabilityFrame),
-						any(),
-						anyDouble()))
-								.thenReturn(foldabilityPresenter);
+                FoldabilityCheckFramePresenter foldabilityPresenter = mock();
+                when(subFramePresenterFactory.createFoldabilityCheckFrameViewPresenter(
+                        eq(foldabilityFrame),
+                        any(),
+                        anyDouble()))
+                                .thenReturn(foldabilityPresenter);
 
-				presentationLogic.computeModels();
-				presentationLogic.showFoldedModelWindows();
+                presentationLogic.computeModels();
+                presentationLogic.showFoldedModelWindows();
 
-				verify(view).showLocalFlatFoldabilityViolationMessage();
+                verify(view).showLocalFlatFoldabilityViolationMessage();
 
-				verify(foldabilityPresenter).setViewVisible(true);
-			}
-		}
+                verify(foldabilityPresenter).setViewVisible(true);
+            }
+        }
 
-		ComputationResult setupModelComputation(final boolean locallyFlatFoldable,
-				final boolean globallyFlatFoldable) {
-			when(view.getComputationType()).thenReturn("type");
+        ComputationResult setupModelComputation(final boolean locallyFlatFoldable,
+                final boolean globallyFlatFoldable) {
+            when(view.getComputationType()).thenReturn("type");
 
-			when(paintContext.getPointEps()).thenReturn(0.1);
-			when(paintContext.getCreasePattern()).thenReturn(mock());
+            when(paintContext.getPointEps()).thenReturn(0.1);
+            when(paintContext.getCreasePattern()).thenReturn(mock());
 
-			ComputationResult computationResult = mock();
+            ComputationResult computationResult = mock();
 
-			if (locallyFlatFoldable) {
-				when(computationResult.allLocallyFlatFoldable()).thenReturn(locallyFlatFoldable);
-				when(computationResult.origamiModels()).thenReturn(mock());
-				when(computationResult.foldedModels()).thenReturn(mock());
-				when(computationResult.allGloballyFlatFoldable()).thenReturn(globallyFlatFoldable);
-			}
+            if (locallyFlatFoldable) {
+                when(computationResult.allLocallyFlatFoldable()).thenReturn(locallyFlatFoldable);
+                when(computationResult.origamiModels()).thenReturn(mock());
+                when(computationResult.foldedModels()).thenReturn(mock());
+                when(computationResult.allGloballyFlatFoldable()).thenReturn(globallyFlatFoldable);
+            }
 
-			ModelComputationFacade computationFacade = mock();
-			when(computationFacade.buildOrigamiModels(any())).thenReturn(mock());
-			when(computationFacade.computeModels(any(), any())).thenReturn(computationResult);
+            ModelComputationFacade computationFacade = mock();
+            when(computationFacade.buildOrigamiModels(any())).thenReturn(mock());
+            when(computationFacade.computeModels(any(), any())).thenReturn(computationResult);
 
-			when(modelComputationFacadeFactory.createModelComputationFacade(eq(view), anyDouble()))
-					.thenReturn(computationFacade);
+            when(modelComputationFacadeFactory.createModelComputationFacade(eq(view), anyDouble()))
+                    .thenReturn(computationFacade);
 
-			return computationResult;
-		}
+            return computationResult;
+        }
 
-	}
+    }
 
-	void setupFrameView() {
-		when(view.getTopLevelView()).thenReturn(mock(FrameView.class));
-	}
+    void setupFrameView() {
+        when(view.getTopLevelView()).thenReturn(mock(FrameView.class));
+    }
 
 }

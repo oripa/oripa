@@ -27,27 +27,27 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class VertexAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public VertexAdderCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public VertexAdderCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 1;
-		final int correctLineCount = 1;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 1;
+        final int correctLineCount = 1;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Painter painter = context.getPainter();
+        Painter painter = context.getPainter();
 
-		if (!painter.addVertexOnLine(
-				context.popLine().get(), context.popVertex().get())) {
-			context.creasePatternUndo().undo();
-		}
+        if (!painter.addVertexOnLine(
+                context.popLine().get(), context.popVertex().get())) {
+            context.creasePatternUndo().undo();
+        }
 
-		context.clear(false);
-	}
+        context.clear(false);
+    }
 }

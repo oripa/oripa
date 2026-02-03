@@ -33,44 +33,44 @@ import oripa.gui.view.model.ModelViewFrameView;
  */
 public class ModelViewFramePresenterFactory {
 
-	private final ScreenUpdater mainScreenUpdater;
+    private final ScreenUpdater mainScreenUpdater;
 
-	private final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory;
+    private final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory;
 
-	private final ModelViewFilePresentationLogic filePresentationLogic;
+    private final ModelViewFilePresentationLogic filePresentationLogic;
 
-	private final PainterScreenSetting mainScreenSetting;
+    private final PainterScreenSetting mainScreenSetting;
 
-	@Inject
-	public ModelViewFramePresenterFactory(
-			final ScreenUpdater mainScreenUpdater,
-			final PainterScreenSetting mainScreenSetting,
-			final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory,
-			final ModelViewFilePresentationLogic filePresentationLogic) {
-		this.mainScreenUpdater = mainScreenUpdater;
+    @Inject
+    public ModelViewFramePresenterFactory(
+            final ScreenUpdater mainScreenUpdater,
+            final PainterScreenSetting mainScreenSetting,
+            final ModelViewComponentPresenterFactory modelViewComponentPresenterFactory,
+            final ModelViewFilePresentationLogic filePresentationLogic) {
+        this.mainScreenUpdater = mainScreenUpdater;
 
-		this.mainScreenSetting = mainScreenSetting;
+        this.mainScreenSetting = mainScreenSetting;
 
-		this.modelViewComponentPresenterFactory = modelViewComponentPresenterFactory;
-		this.filePresentationLogic = filePresentationLogic;
+        this.modelViewComponentPresenterFactory = modelViewComponentPresenterFactory;
+        this.filePresentationLogic = filePresentationLogic;
 
-	}
+    }
 
-	public ModelViewFramePresenter create(
-			final ModelViewFrameView view,
-			final List<OrigamiModel> origamiModels,
-			final double eps) {
-		var screen = modelViewComponentPresenterFactory.createScreenPresenter(
-				view.getModelScreenView(),
-				mainScreenUpdater::updateScreen,
-				eps);
+    public ModelViewFramePresenter create(
+            final ModelViewFrameView view,
+            final List<OrigamiModel> origamiModels,
+            final double eps) {
+        var screen = modelViewComponentPresenterFactory.createScreenPresenter(
+                view.getModelScreenView(),
+                mainScreenUpdater::updateScreen,
+                eps);
 
-		return new ModelViewFramePresenter(
-				view,
-				filePresentationLogic,
-				mainScreenSetting,
-				origamiModels,
-				eps);
-	}
+        return new ModelViewFramePresenter(
+                view,
+                filePresentationLogic,
+                mainScreenSetting,
+                origamiModels,
+                eps);
+    }
 
 }

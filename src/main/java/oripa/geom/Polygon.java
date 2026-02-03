@@ -32,263 +32,263 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class Polygon {
-	private final List<Vector2d> vertices;
-	private final Vector2d centroid;
+    private final List<Vector2d> vertices;
+    private final Vector2d centroid;
 
-	private List<Polygon> triangles;
-	private List<RectangleDomain> triangleBounds;
+    private List<Polygon> triangles;
+    private List<RectangleDomain> triangleBounds;
 
-	public Polygon(final List<Vector2d> vertices) {
+    public Polygon(final List<Vector2d> vertices) {
 //		if (vertices.size() < 3) {
 //			throw new IllegalArgumentException("#vertices should be 3 or larger.");
 //		}
 
-		this.vertices = List.copyOf(vertices);
+        this.vertices = List.copyOf(vertices);
 
-		centroid = GeomUtil.computeCentroid(vertices).orElse(null);
-	}
+        centroid = GeomUtil.computeCentroid(vertices).orElse(null);
+    }
 
-	public Polygon(final Polygon polygon) {
-		this(polygon.vertices);
-	}
+    public Polygon(final Polygon polygon) {
+        this(polygon.vertices);
+    }
 
-	/**
-	 * returns a new polygon with no vertex duplication and no 180 degree angle
-	 * vertex. null if the result is not polygon.
-	 *
-	 * @param eps
-	 * @return
-	 */
-	public Polygon simplify(final double eps) {
-		var vertices = removeDuplications(this.vertices, eps);
-		vertices = remove180degreeVertices(vertices, eps);
+    /**
+     * returns a new polygon with no vertex duplication and no 180 degree angle
+     * vertex. null if the result is not polygon.
+     *
+     * @param eps
+     * @return
+     */
+    public Polygon simplify(final double eps) {
+        var vertices = removeDuplications(this.vertices, eps);
+        vertices = remove180degreeVertices(vertices, eps);
 
-		if (vertices.size() < 3) {
-			return null;
-		}
+        if (vertices.size() < 3) {
+            return null;
+        }
 
-		return new Polygon(vertices);
-	}
+        return new Polygon(vertices);
+    }
 
-	private List<Vector2d> removeDuplications(final List<Vector2d> vertices, final double eps) {
-		return vertices.stream()
-				.filter(v -> vertices.stream()
-						.noneMatch(u -> v != u && v.equals(u, eps)))
-				.toList();
-	}
+    private List<Vector2d> removeDuplications(final List<Vector2d> vertices, final double eps) {
+        return vertices.stream()
+                .filter(v -> vertices.stream()
+                        .noneMatch(u -> v != u && v.equals(u, eps)))
+                .toList();
+    }
 
-	/**
-	 * this method breaks the edge informations in each vertex.
-	 *
-	 * @return
-	 */
-	private List<Vector2d> remove180degreeVertices(final List<Vector2d> vertices, final double eps) {
-		int count = vertices.size();
-		var toDelete = new ArrayList<Vector2d>();
+    /**
+     * this method breaks the edge informations in each vertex.
+     *
+     * @return
+     */
+    private List<Vector2d> remove180degreeVertices(final List<Vector2d> vertices, final double eps) {
+        int count = vertices.size();
+        var toDelete = new ArrayList<Vector2d>();
 
-		for (int i = 0; i < count; i++) {
-			var v0 = vertices.get(i);
-			var v1 = getCircular(vertices, i + 1);
-			var v2 = getCircular(vertices, i + 2);
+        for (int i = 0; i < count; i++) {
+            var v0 = vertices.get(i);
+            var v1 = getCircular(vertices, i + 1);
+            var v2 = getCircular(vertices, i + 2);
 
-			if (GeomUtil.CCWcheck(v0, v1, v2) == 0) {
-				toDelete.add(v1);
-			}
-		}
+            if (GeomUtil.CCWcheck(v0, v1, v2) == 0) {
+                toDelete.add(v1);
+            }
+        }
 
-		return vertices.stream()
-				.filter(Predicate.not(toDelete::contains))
-				.toList();
-	}
+        return vertices.stream()
+                .filter(Predicate.not(toDelete::contains))
+                .toList();
+    }
 
-	/**
-	 * Area by The shoelace formula
-	 *
-	 * @return Positive value if vertices' loop is in counterclockwise
-	 *         direction. Negative value if vertices' loop is in clockwise
-	 *         direction.
-	 */
-	public double area() {
-		double a = 0;
-		for (int i = 0; i < verticesCount(); i++) {
-			var v0 = vertices.get(i);
-			var v1 = getCircular(vertices, i + 1);
-			a += (v1.getY() + v0.getY()) * (v0.getX() - v1.getX());
-		}
-		return a / 2;
-	}
+    /**
+     * Area by The shoelace formula
+     *
+     * @return Positive value if vertices' loop is in counterclockwise
+     *         direction. Negative value if vertices' loop is in clockwise
+     *         direction.
+     */
+    public double area() {
+        double a = 0;
+        for (int i = 0; i < verticesCount(); i++) {
+            var v0 = vertices.get(i);
+            var v1 = getCircular(vertices, i + 1);
+            a += (v1.getY() + v0.getY()) * (v0.getX() - v1.getX());
+        }
+        return a / 2;
+    }
 
-	public Vector2d getVertex(final int i) {
-		return vertices.get(i);
-	}
+    public Vector2d getVertex(final int i) {
+        return vertices.get(i);
+    }
 
-	public int verticesCount() {
-		return vertices.size();
-	}
+    public int verticesCount() {
+        return vertices.size();
+    }
 
-	public Segment getEdge(final int i) {
-		return new Segment(vertices.get(i), vertices.get((i + 1) % verticesCount()));
-	}
+    public Segment getEdge(final int i) {
+        return new Segment(vertices.get(i), vertices.get((i + 1) % verticesCount()));
+    }
 
-	/**
-	 *
-	 * @return centroid of this polygon. can be null.
-	 */
-	public Vector2d getCentroid() {
-		return centroid;
-	}
+    /**
+     *
+     * @return centroid of this polygon. can be null.
+     */
+    public Vector2d getCentroid() {
+        return centroid;
+    }
 
-	/**
-	 *
-	 * @return inner points of subface
-	 */
-	public List<Vector2d> getInnerPoints(final double eps) {
-		if (verticesCount() < 3) {
-			return List.of();
-		}
-		buildTriangles(eps);
-		return triangles.stream().map(Polygon::getCentroid).toList();
-	}
+    /**
+     *
+     * @return inner points of subface
+     */
+    public List<Vector2d> getInnerPoints(final double eps) {
+        if (verticesCount() < 3) {
+            return List.of();
+        }
+        buildTriangles(eps);
+        return triangles.stream().map(Polygon::getCentroid).toList();
+    }
 
-	/**
-	 * Whether v is inclusively on this polygon (inside or on the edges).
-	 * Assumes this polygon is convex.
-	 *
-	 * @param v
-	 *            point to be tested.
-	 * @return true if v is inside or on the edges of this face.
-	 */
-	public boolean includesInclusively(final Vector2d v, final double eps) {
-		// If it's on the face's edge, return true
-		if (isOnEdge(v, eps)) {
-			return true;
-		}
+    /**
+     * Whether v is inclusively on this polygon (inside or on the edges).
+     * Assumes this polygon is convex.
+     *
+     * @param v
+     *            point to be tested.
+     * @return true if v is inside or on the edges of this face.
+     */
+    public boolean includesInclusively(final Vector2d v, final double eps) {
+        // If it's on the face's edge, return true
+        if (isOnEdge(v, eps)) {
+            return true;
+        }
 
-		return isInside(v, eps);
-	}
+        return isInside(v, eps);
+    }
 
-	/**
-	 * Whether v is strictly inside of this polygon. Assumes this polygon is
-	 * convex.
-	 *
-	 * @param v
-	 *            point to be tested.
-	 * @return true if v is strictly inside of this face.
-	 */
-	public boolean includesExclusively(final Vector2d v, final double eps) {
-		// If it's on the face's edge, return false
-		if (isOnEdge(v, eps)) {
-			return false;
-		}
+    /**
+     * Whether v is strictly inside of this polygon. Assumes this polygon is
+     * convex.
+     *
+     * @param v
+     *            point to be tested.
+     * @return true if v is strictly inside of this face.
+     */
+    public boolean includesExclusively(final Vector2d v, final double eps) {
+        // If it's on the face's edge, return false
+        if (isOnEdge(v, eps)) {
+            return false;
+        }
 
-		return isInside(v, eps);
-	}
+        return isInside(v, eps);
+    }
 
-	/**
-	 * Whether v is on edge of polygon.
-	 *
-	 * @param v
-	 *            point to be tested.
-	 * @param eps
-	 * @param getPosition
-	 *            a function to get the position of face's vertex from
-	 *            half-edge. That is, you can designate using position before
-	 *            fold or the one after fold.
-	 * @return
-	 */
-	private boolean isOnEdge(final Vector2d v, final double eps) {
-		int n = verticesCount();
-		// If it's on the polygon's edge, return true
-		for (int i = 0; i < n; i++) {
-			if (GeomUtil.distancePointToSegment(v, vertices.get(i),
-					vertices.get((i + 1) % n)) < eps) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Whether v is on edge of polygon.
+     *
+     * @param v
+     *            point to be tested.
+     * @param eps
+     * @param getPosition
+     *            a function to get the position of face's vertex from
+     *            half-edge. That is, you can designate using position before
+     *            fold or the one after fold.
+     * @return
+     */
+    private boolean isOnEdge(final Vector2d v, final double eps) {
+        int n = verticesCount();
+        // If it's on the polygon's edge, return true
+        for (int i = 0; i < n; i++) {
+            if (GeomUtil.distancePointToSegment(v, vertices.get(i),
+                    vertices.get((i + 1) % n)) < eps) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private boolean isInside(final Vector2d v, final double eps) {
-		buildTriangles(eps);
+    private boolean isInside(final Vector2d v, final double eps) {
+        buildTriangles(eps);
 
-		return IntStream.range(0, triangles.size())
-				.filter(i -> triangleBounds.get(i).contains(v))
-				.mapToObj(triangles::get)
-				.anyMatch(triangle -> triangle.isOnEdge(v, eps) || triangle.isInsideConvex(v));
-	}
+        return IntStream.range(0, triangles.size())
+                .filter(i -> triangleBounds.get(i).contains(v))
+                .mapToObj(triangles::get)
+                .anyMatch(triangle -> triangle.isOnEdge(v, eps) || triangle.isInsideConvex(v));
+    }
 
-	/**
-	 * Triangulates this polygon if it has not been done.
-	 *
-	 * @param eps
-	 */
-	public void buildTriangles(final double eps) {
-		if (triangles == null) {
-			var triangulator = new TwoEarTriangulation();
+    /**
+     * Triangulates this polygon if it has not been done.
+     *
+     * @param eps
+     */
+    public void buildTriangles(final double eps) {
+        if (triangles == null) {
+            var triangulator = new TwoEarTriangulation();
 
-			if (area() < 0) {
-				triangles = triangulator.triangulate(new Polygon(vertices.reversed()), eps);
-			} else {
-				triangles = triangulator.triangulate(this, eps);
-			}
+            if (area() < 0) {
+                triangles = triangulator.triangulate(new Polygon(vertices.reversed()), eps);
+            } else {
+                triangles = triangulator.triangulate(this, eps);
+            }
 
-			if (triangles.isEmpty()) {
-				throw new IllegalStateException("Failed to triangulate a polygon.");
-			}
+            if (triangles.isEmpty()) {
+                throw new IllegalStateException("Failed to triangulate a polygon.");
+            }
 
-			triangleBounds = triangles.stream()
-					.map(t -> RectangleDomain.createFromPoints(t.vertices))
-					.toList();
+            triangleBounds = triangles.stream()
+                    .map(t -> RectangleDomain.createFromPoints(t.vertices))
+                    .toList();
 
-		}
+        }
 
-	}
+    }
 
-	/**
-	 * Whether v is inside of this polygon. This method is very sensitive to the
-	 * case that v is very close to the edge. Assumes this polygon is convex.
-	 *
-	 * @param v
-	 *            point to be tested.
-	 * @param getPosition
-	 *            a function to get the position of face's vertex from
-	 *            half-edge. That is, you can designate using position before
-	 *            fold or the one after fold.
-	 * @return true if v inside of this face.
-	 */
-	private boolean isInsideConvex(final Vector2d v) {
-		int n = verticesCount();
+    /**
+     * Whether v is inside of this polygon. This method is very sensitive to the
+     * case that v is very close to the edge. Assumes this polygon is convex.
+     *
+     * @param v
+     *            point to be tested.
+     * @param getPosition
+     *            a function to get the position of face's vertex from
+     *            half-edge. That is, you can designate using position before
+     *            fold or the one after fold.
+     * @return true if v inside of this face.
+     */
+    private boolean isInsideConvex(final Vector2d v) {
+        int n = verticesCount();
 
-		var baseEdge = getEdge(0);
-		boolean baseFlg = GeomUtil.isStrictlyCCW(baseEdge.getP0(),
-				baseEdge.getP1(), v);
+        var baseEdge = getEdge(0);
+        boolean baseFlg = GeomUtil.isStrictlyCCW(baseEdge.getP0(),
+                baseEdge.getP1(), v);
 
-		for (int i = 1; i < n; i++) {
-			var he = getEdge(i);
-			if (GeomUtil.isStrictlyCCW(he.getP0(), he.getP1(),
-					v) != baseFlg) {
-				return false;
-			}
-		}
+        for (int i = 1; i < n; i++) {
+            var he = getEdge(i);
+            if (GeomUtil.isStrictlyCCW(he.getP0(), he.getP1(),
+                    v) != baseFlg) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Whether this face includes {@code line} entirely. The inclusion test is
-	 * inclusive. Assumes this polygon is convex.
-	 *
-	 * @param segment
-	 * @return {@code true} if {@code face} includes {@code line} entirely.
-	 */
-	public boolean includesInclusively(final Segment segment, final double eps) {
-		return includesInclusively(segment.getP0(), eps)
-				&& includesInclusively(segment.getP1(), eps);
-	}
+    /**
+     * Whether this face includes {@code line} entirely. The inclusion test is
+     * inclusive. Assumes this polygon is convex.
+     *
+     * @param segment
+     * @return {@code true} if {@code face} includes {@code line} entirely.
+     */
+    public boolean includesInclusively(final Segment segment, final double eps) {
+        return includesInclusively(segment.getP0(), eps)
+                && includesInclusively(segment.getP1(), eps);
+    }
 
-	@Override
-	public String toString() {
-		return vertices.toString();
-	}
+    @Override
+    public String toString() {
+        return vertices.toString();
+    }
 
 }

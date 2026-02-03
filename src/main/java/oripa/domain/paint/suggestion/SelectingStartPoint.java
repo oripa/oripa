@@ -26,13 +26,13 @@ import oripa.domain.paint.core.PickingVertex;
  *
  */
 public class SelectingStartPoint extends PickingVertex {
-	@Override
-	protected void initialize() {
-		setNextClass(SelectingEndPoint.class);
-	}
+    @Override
+    protected void initialize() {
+        setNextClass(SelectingEndPoint.class);
+    }
 
-	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		new SuggestionSnapPointsSetterCommand(context).execute();
-	}
+    @Override
+    protected void onResult(final PaintContext context, final boolean doSpecial) {
+        new SuggestionSnapPointsSetterCommand(context).execute();
+    }
 }

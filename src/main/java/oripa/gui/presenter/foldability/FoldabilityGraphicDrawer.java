@@ -31,39 +31,39 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
  *
  */
 public class FoldabilityGraphicDrawer {
-	public void draw(
-			final ObjectGraphicDrawer drawer,
-			final OrigamiModel origamiModel,
-			final Collection<OriFace> violatingFaces,
-			final Collection<OriVertex> violatingVertices,
-			final double scale) {
-		List<OriFace> faces = origamiModel.getFaces();
+    public void draw(
+            final ObjectGraphicDrawer drawer,
+            final OrigamiModel origamiModel,
+            final Collection<OriFace> violatingFaces,
+            final Collection<OriVertex> violatingVertices,
+            final double scale) {
+        List<OriFace> faces = origamiModel.getFaces();
 
-		for (OriFace face : faces) {
-			if (violatingFaces.contains(face)) {
-				drawer.selectViolatingFaceColor();
-			} else {
-				drawer.selectNormalFaceColor();
-			}
-			drawer.fillFace(face.createOutlineVerticesBeforeFolding());
+        for (OriFace face : faces) {
+            if (violatingFaces.contains(face)) {
+                drawer.selectViolatingFaceColor();
+            } else {
+                drawer.selectNormalFaceColor();
+            }
+            drawer.fillFace(face.createOutlineVerticesBeforeFolding());
 
-			var id = face.getFaceID();
-			if (id >= 0) {
-				var centroidOpt = face.getCentroidBeforeFolding();
-				centroidOpt.ifPresent(centroid -> drawer
-						.drawString(Integer.toString(id),
-								(float) centroid.getX(),
-								(float) centroid.getY(),
-								scale));
-			}
-		}
+            var id = face.getFaceID();
+            if (id >= 0) {
+                var centroidOpt = face.getCentroidBeforeFolding();
+                centroidOpt.ifPresent(centroid -> drawer
+                        .drawString(Integer.toString(id),
+                                (float) centroid.getX(),
+                                (float) centroid.getY(),
+                                scale));
+            }
+        }
 
-		drawer.selectViolatingVertexColor();
-		for (OriVertex v : violatingVertices) {
-			drawer.selectViolatingVertexSize(scale);
-			var position = v.getPositionBeforeFolding();
-			drawer.drawVertex(position);
-		}
+        drawer.selectViolatingVertexColor();
+        for (OriVertex v : violatingVertices) {
+            drawer.selectViolatingVertexSize(scale);
+            var position = v.getPositionBeforeFolding();
+            drawer.drawVertex(position);
+        }
 
 //	if (bDrawFaceID) {
 //		g2d.setColor(Color.BLACK);
@@ -77,7 +77,7 @@ public class FoldabilityGraphicDrawer {
 //		List<OriVertex> vertices = origamiModel.getVertices();
 //		paintForStudy(g2d, faces, vertices);
 //	}
-	}
+    }
 
 //private void paintForStudy(final Graphics2D g2d, final Collection<OriFace> faces,
 //		final Collection<OriVertex> vertices) {

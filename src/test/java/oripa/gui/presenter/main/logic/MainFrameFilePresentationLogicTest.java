@@ -55,324 +55,324 @@ import oripa.util.file.FileFactory;
 @ExtendWith(MockitoExtension.class)
 class MainFrameFilePresentationLogicTest {
 
-	@InjectMocks
-	MainFrameFilePresentationLogic presentationLogic;
+    @InjectMocks
+    MainFrameFilePresentationLogic presentationLogic;
 
-	@Mock
-	MainFrameView view;
+    @Mock
+    MainFrameView view;
 
-	@Mock
-	FileAccessPresentationLogic fileAccessPresentationLogic;
+    @Mock
+    FileAccessPresentationLogic fileAccessPresentationLogic;
 
-	@Mock
-	DocFileAccess docFileAccess;
+    @Mock
+    DocFileAccess docFileAccess;
 
-	@Mock
-	Project project;
+    @Mock
+    Project project;
 
-	@Mock
-	FileHistory fileHistory;
+    @Mock
+    FileHistory fileHistory;
 
-	@Mock
-	FileFactory fileFactory;
+    @Mock
+    FileFactory fileFactory;
 
-	@Mock
-	MainDialogPresenterFactory dialogPresenterFactory;
+    @Mock
+    MainDialogPresenterFactory dialogPresenterFactory;
 
-	@Nested
-	class TestModifySavingActions {
-		@Captor
-		ArgumentCaptor<Supplier<Object>> foldConfigCaptor;
+    @Nested
+    class TestModifySavingActions {
+        @Captor
+        ArgumentCaptor<Supplier<Object>> foldConfigCaptor;
 
-		@Test
-		void saveConfigurationOfFOLDShouldBeDone() {
-			// execute
-			presentationLogic.modifySavingActions();
+        @Test
+        void saveConfigurationOfFOLDShouldBeDone() {
+            // execute
+            presentationLogic.modifySavingActions();
 
-			verify(docFileAccess).setupFOLDConfigForSaving();
-		}
-	}
+            verify(docFileAccess).setupFOLDConfigForSaving();
+        }
+    }
 
-	@Nested
-	class TestSsveFileToCurrentPath {
-		@Test
-		void succeeds() {
-			var path = "path";
+    @Nested
+    class TestSsveFileToCurrentPath {
+        @Test
+        void succeeds() {
+            var path = "path";
 
-			when(project.getDataFilePath()).thenReturn(path);
-			FileType<Doc> type = mock();
+            when(project.getDataFilePath()).thenReturn(path);
+            FileType<Doc> type = mock();
 
-			// execute
-			presentationLogic.saveFileToCurrentPath(type);
+            // execute
+            presentationLogic.saveFileToCurrentPath(type);
 
-			verify(fileAccessPresentationLogic).saveFile(path, type);
-		}
-	}
+            verify(fileAccessPresentationLogic).saveFile(path, type);
+        }
+    }
 
-	@Nested
-	class TestSaveFileUsingGUI {
-		@SuppressWarnings("unchecked")
-		@Test
-		void succeedsWhenFileIsSelected() {
+    @Nested
+    class TestSaveFileUsingGUI {
+        @SuppressWarnings("unchecked")
+        @Test
+        void succeedsWhenFileIsSelected() {
 
-			when(fileHistory.getLastDirectory()).thenReturn("directory");
+            when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			when(project.getDataFileName()).thenReturn(Optional.of("file name"));
+            when(project.getDataFileName()).thenReturn(Optional.of("file name"));
 
-			File defaultFile = mock();
-			when(defaultFile.getPath()).thenReturn("path");
-			when(fileFactory.create("directory", "file name")).thenReturn(defaultFile);
+            File defaultFile = mock();
+            when(defaultFile.getPath()).thenReturn("path");
+            when(fileFactory.create("directory", "file name")).thenReturn(defaultFile);
 
-			DocFileSelectionPresenter selectionPresenter = mock();
-			String selectedPath = "selected path";
-			FileSelectionResult<Doc> selectionResult = FileSelectionResult
-					.createSelectedForSave(
-							selectedPath,
-							mock());
-			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            DocFileSelectionPresenter selectionPresenter = mock();
+            String selectedPath = "selected path";
+            FileSelectionResult<Doc> selectionResult = FileSelectionResult
+                    .createSelectedForSave(
+                            selectedPath,
+                            mock());
+            when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
+            when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
 
-			// execute
+            // execute
 
-			var returnedPath = presentationLogic.saveFileUsingGUI();
+            var returnedPath = presentationLogic.saveFileUsingGUI();
 
-			assertEquals(selectedPath, returnedPath);
-		}
+            assertEquals(selectedPath, returnedPath);
+        }
 
-		@SuppressWarnings("unchecked")
-		@Test
-		void newFileOpxWhenProjectIsNotLoaded() {
+        @SuppressWarnings("unchecked")
+        @Test
+        void newFileOpxWhenProjectIsNotLoaded() {
 
-			when(fileHistory.getLastDirectory()).thenReturn("directory");
+            when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			when(project.getDataFileName()).thenReturn(Optional.empty());
+            when(project.getDataFileName()).thenReturn(Optional.empty());
 
-			File defaultFile = mock();
-			when(defaultFile.getPath()).thenReturn("path");
-			when(fileFactory.create("directory", "newFile.opx")).thenReturn(defaultFile);
+            File defaultFile = mock();
+            when(defaultFile.getPath()).thenReturn("path");
+            when(fileFactory.create("directory", "newFile.opx")).thenReturn(defaultFile);
 
-			DocFileSelectionPresenter selectionPresenter = mock();
-			String selectedPath = "selected path";
-			FileSelectionResult<Doc> selectionResult = FileSelectionResult
-					.createSelectedForSave(
-							selectedPath,
-							mock());
-			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            DocFileSelectionPresenter selectionPresenter = mock();
+            String selectedPath = "selected path";
+            FileSelectionResult<Doc> selectionResult = FileSelectionResult
+                    .createSelectedForSave(
+                            selectedPath,
+                            mock());
+            when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
+            when(fileAccessPresentationLogic.saveFile(eq(selectedPath), any())).thenReturn(selectedPath);
 
-			// execute
+            // execute
 
-			var returnedPath = presentationLogic.saveFileUsingGUI();
+            var returnedPath = presentationLogic.saveFileUsingGUI();
 
-			assertEquals(selectedPath, returnedPath);
-		}
+            assertEquals(selectedPath, returnedPath);
+        }
 
-		@SuppressWarnings("unchecked")
-		@Test
-		void noChangesWhenCanceled() {
+        @SuppressWarnings("unchecked")
+        @Test
+        void noChangesWhenCanceled() {
 
-			when(fileHistory.getLastDirectory()).thenReturn("directory");
+            when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			when(project.getDataFileName()).thenReturn(Optional.of("file name"));
-			when(project.getDataFilePath()).thenReturn("project path");
+            when(project.getDataFileName()).thenReturn(Optional.of("file name"));
+            when(project.getDataFilePath()).thenReturn("project path");
 
-			File defaultFile = mock();
-			when(defaultFile.getPath()).thenReturn("path");
-			when(fileFactory.create("directory", "file name")).thenReturn(defaultFile);
+            File defaultFile = mock();
+            when(defaultFile.getPath()).thenReturn("path");
+            when(fileFactory.create("directory", "file name")).thenReturn(defaultFile);
 
-			DocFileSelectionPresenter selectionPresenter = mock();
-			FileSelectionResult<Doc> selectionResult = FileSelectionResult
-					.createCanceled();
-			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            DocFileSelectionPresenter selectionPresenter = mock();
+            FileSelectionResult<Doc> selectionResult = FileSelectionResult
+                    .createCanceled();
+            when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			// execute
+            // execute
 
-			var selectedPath = presentationLogic.saveFileUsingGUI();
+            var selectedPath = presentationLogic.saveFileUsingGUI();
 
-			verify(docFileAccess, never()).saveFile(any(), anyString(), any());
+            verify(docFileAccess, never()).saveFile(any(), anyString(), any());
 
-			assertEquals("project path", selectedPath);
-		}
+            assertEquals("project path", selectedPath);
+        }
 
-		@SuppressWarnings("unchecked")
-		@Test
-		void noChangesWhenDataAccessErrors() {
+        @SuppressWarnings("unchecked")
+        @Test
+        void noChangesWhenDataAccessErrors() {
 
-			when(fileHistory.getLastDirectory()).thenReturn("directory");
+            when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			String projectPath = "project path";
-			when(project.getDataFileName()).thenReturn(Optional.of("file name"));
-			when(project.getDataFilePath()).thenReturn(projectPath);
+            String projectPath = "project path";
+            when(project.getDataFileName()).thenReturn(Optional.of("file name"));
+            when(project.getDataFilePath()).thenReturn(projectPath);
 
-			File defaultFile = mock();
-			when(defaultFile.getPath()).thenReturn("path");
-			when(fileFactory.create("directory", "file name")).thenReturn(defaultFile);
+            File defaultFile = mock();
+            when(defaultFile.getPath()).thenReturn("path");
+            when(fileFactory.create("directory", "file name")).thenReturn(defaultFile);
 
-			DocFileSelectionPresenter selectionPresenter = mock();
-			FileSelectionResult<Doc> selectionResult = FileSelectionResult
-					.createSelectedForSave(
-							"selected path",
-							mock());
-			when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            DocFileSelectionPresenter selectionPresenter = mock();
+            FileSelectionResult<Doc> selectionResult = FileSelectionResult
+                    .createSelectedForSave(
+                            "selected path",
+                            mock());
+            when(selectionPresenter.saveUsingGUI("path")).thenReturn(selectionResult);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			doThrow(DataAccessException.class).when(fileAccessPresentationLogic).saveFile(anyString(), any());
+            doThrow(DataAccessException.class).when(fileAccessPresentationLogic).saveFile(anyString(), any());
 
-			// execute
+            // execute
 
-			var returnedPath = presentationLogic.saveFileUsingGUI();
+            var returnedPath = presentationLogic.saveFileUsingGUI();
 
-			assertEquals(projectPath, returnedPath);
-		}
+            assertEquals(projectPath, returnedPath);
+        }
 
-	}
+    }
 
-	@Nested
-	class TestExportFileUsingGUIWithModelCheck {
-		@Test
-		void succeedsWhenCheckIsPassed() throws IOException {
-			when(fileHistory.getLastDirectory()).thenReturn("directory");
+    @Nested
+    class TestExportFileUsingGUIWithModelCheck {
+        @Test
+        void succeedsWhenCheckIsPassed() throws IOException {
+            when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			DocFileSelectionPresenter selectionPresenter = mock();
-			String selectedPath = "selected path";
-			FileSelectionResult<Doc> selectionResult = FileSelectionResult
-					.createSelectedForSave(
-							selectedPath,
-							mock());
+            DocFileSelectionPresenter selectionPresenter = mock();
+            String selectedPath = "selected path";
+            FileSelectionResult<Doc> selectionResult = FileSelectionResult
+                    .createSelectedForSave(
+                            selectedPath,
+                            mock());
 
-			when(selectionPresenter.saveFileWithModelCheck(
-					anyString(), any(), any()))
-							.thenReturn(selectionResult);
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            when(selectionPresenter.saveFileWithModelCheck(
+                    anyString(), any(), any()))
+                            .thenReturn(selectionResult);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			FileType<Doc> type = mock();
+            FileType<Doc> type = mock();
 
-			// execute
+            // execute
 
-			presentationLogic.exportFileUsingGUIWithModelCheck(type);
+            presentationLogic.exportFileUsingGUIWithModelCheck(type);
 
-			verify(fileAccessPresentationLogic).saveFile(anyString(), eq(type));
-		}
+            verify(fileAccessPresentationLogic).saveFile(anyString(), eq(type));
+        }
 
-		@Test
-		void noCHangessWhenCanceledByUserOrCheck() throws IOException {
-			when(fileHistory.getLastDirectory()).thenReturn("directory");
+        @Test
+        void noCHangessWhenCanceledByUserOrCheck() throws IOException {
+            when(fileHistory.getLastDirectory()).thenReturn("directory");
 
-			DocFileSelectionPresenter selectionPresenter = mock();
-			FileSelectionResult<Doc> selectionResult = FileSelectionResult
-					.createCanceled();
+            DocFileSelectionPresenter selectionPresenter = mock();
+            FileSelectionResult<Doc> selectionResult = FileSelectionResult
+                    .createCanceled();
 
-			when(selectionPresenter.saveFileWithModelCheck(
-					anyString(), any(), any()))
-							.thenReturn(selectionResult);
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            when(selectionPresenter.saveFileWithModelCheck(
+                    anyString(), any(), any()))
+                            .thenReturn(selectionResult);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			FileType<Doc> type = mock();
+            FileType<Doc> type = mock();
 
-			// execute
+            // execute
 
-			presentationLogic.exportFileUsingGUIWithModelCheck(type);
+            presentationLogic.exportFileUsingGUIWithModelCheck(type);
 
-			verify(fileAccessPresentationLogic, never()).saveFile(anyString(), eq(type));
-		}
+            verify(fileAccessPresentationLogic, never()).saveFile(anyString(), eq(type));
+        }
 
-	}
+    }
 
-	@Nested
-	class TestLoadFile {
+    @Nested
+    class TestLoadFile {
 
-		@Test
-		void succeedsWhenFileIsLoaded() {
+        @Test
+        void succeedsWhenFileIsLoaded() {
 
-			String path = "path";
+            String path = "path";
 
-			when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(path);
+            when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(path);
 
-			// execute
+            // execute
 
-			var loadedPath = presentationLogic.loadFile(path);
+            var loadedPath = presentationLogic.loadFile(path);
 
-			assertEquals(path, loadedPath);
-		}
+            assertEquals(path, loadedPath);
+        }
 
-		@Test
-		void noChangesWhenFileIsNotLoaded() {
+        @Test
+        void noChangesWhenFileIsNotLoaded() {
 
-			String path = "path";
-			// couldn't load
-			when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(null);
+            String path = "path";
+            // couldn't load
+            when(fileAccessPresentationLogic.loadFile(eq(path))).thenReturn(null);
 
-			// execute
+            // execute
 
-			var loadedPath = presentationLogic.loadFile(path);
+            var loadedPath = presentationLogic.loadFile(path);
 
-			assertNull(loadedPath);
+            assertNull(loadedPath);
 
-		}
+        }
 
-	}
+    }
 
-	@Nested
-	class TestLoadFileUsingGUI {
+    @Nested
+    class TestLoadFileUsingGUI {
 
-		@Test
-		void succeedsWhenFileIsLoaded() {
+        @Test
+        void succeedsWhenFileIsLoaded() {
 
-			var lastPath = "last path";
-			when(fileHistory.getLastPath()).thenReturn(lastPath);
+            var lastPath = "last path";
+            when(fileHistory.getLastPath()).thenReturn(lastPath);
 
-			var selectedPath = "path";
+            var selectedPath = "path";
 
-			FileSelectionResult<Doc> selection = FileSelectionResult.createSelectedForLoad(selectedPath);
-			DocFileSelectionPresenter selectionPresenter = mock();
-			when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
+            FileSelectionResult<Doc> selection = FileSelectionResult.createSelectedForLoad(selectedPath);
+            DocFileSelectionPresenter selectionPresenter = mock();
+            when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
 
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			// execute
+            // execute
 
-			presentationLogic.loadFileUsingGUI();
+            presentationLogic.loadFileUsingGUI();
 
-			verify(fileAccessPresentationLogic).loadFile(eq(selectedPath));
+            verify(fileAccessPresentationLogic).loadFile(eq(selectedPath));
 
-		}
-	}
+        }
+    }
 
-	@Nested
-	class TestImport {
+    @Nested
+    class TestImport {
 
-		@Test
-		void succeedsWhenFileIsLoaded() {
+        @Test
+        void succeedsWhenFileIsLoaded() {
 
-			var lastPath = "last path";
-			when(fileHistory.getLastPath()).thenReturn(lastPath);
+            var lastPath = "last path";
+            when(fileHistory.getLastPath()).thenReturn(lastPath);
 
-			var selectedPath = "path";
+            var selectedPath = "path";
 
-			FileSelectionResult<Doc> selection = FileSelectionResult.createSelectedForLoad(selectedPath);
-			DocFileSelectionPresenter selectionPresenter = mock();
-			when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
+            FileSelectionResult<Doc> selection = FileSelectionResult.createSelectedForLoad(selectedPath);
+            DocFileSelectionPresenter selectionPresenter = mock();
+            when(selectionPresenter.loadUsingGUI(lastPath)).thenReturn(selection);
 
-			when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
-					.thenReturn(selectionPresenter);
+            when(dialogPresenterFactory.createDocFileSelectionPresenter(eq(view), any()))
+                    .thenReturn(selectionPresenter);
 
-			// execute
-			presentationLogic.importFileUsingGUI();
+            // execute
+            presentationLogic.importFileUsingGUI();
 
-			verify(fileAccessPresentationLogic).importFile(eq(selectedPath));
-		}
-	}
+            verify(fileAccessPresentationLogic).importFile(eq(selectedPath));
+        }
+    }
 
 }

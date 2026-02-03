@@ -29,29 +29,29 @@ import oripa.value.OriLine;
  *
  */
 public class VerticalLineAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public VerticalLineAdderCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public VerticalLineAdderCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 1;
-		final int correctLineCount = 1;
-		validateCounts(context, correctVertexCount, correctLineCount);
+    @Override
+    public void execute() {
+        final int correctVertexCount = 1;
+        final int correctLineCount = 1;
+        validateCounts(context, correctVertexCount, correctLineCount);
 
-		OriLine vl = new OriLine(GeomUtil.getVerticalSegment(
-				context.getVertex(0), context.getLine(0)), context.getLineTypeOfNewLines());
+        OriLine vl = new OriLine(GeomUtil.getVerticalSegment(
+                context.getVertex(0), context.getLine(0)), context.getLineTypeOfNewLines());
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		Painter painter = context.getPainter();
-		painter.addLine(vl);
+        Painter painter = context.getPainter();
+        painter.addLine(vl);
 
-		context.clear(false);
+        context.clear(false);
 
-		context.refreshCreasePattern();
-	}
+        context.refreshCreasePattern();
+    }
 
 }

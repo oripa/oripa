@@ -37,91 +37,91 @@ import oripa.util.rule.SingleRuleParallelConjunction;
  *
  */
 public class FoldabilityChecker {
-	private static final Logger logger = LoggerFactory.getLogger(FoldabilityChecker.class);
+    private static final Logger logger = LoggerFactory.getLogger(FoldabilityChecker.class);
 
-	private enum VertexRule {
-		BOUNDARY_COUNT(new BoundaryCount()),
-		MAEKAWA(new MaekawaTheorem()),
-		KAWASAKI(new KawasakiTheorem()),
-		BIG_LITTLE_BIG(new BigLittleBigLemma()),
-		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma()),
-		FOLDABILITY(new VertexFoldability());
+    private enum VertexRule {
+        BOUNDARY_COUNT(new BoundaryCount()),
+        MAEKAWA(new MaekawaTheorem()),
+        KAWASAKI(new KawasakiTheorem()),
+        BIG_LITTLE_BIG(new BigLittleBigLemma()),
+        GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma()),
+        FOLDABILITY(new VertexFoldability());
 
-		private final Rule<OriVertex> rule;
-		private final String name;
-		private final SingleRuleParallelConjunction<OriVertex> conjunction;
+        private final Rule<OriVertex> rule;
+        private final String name;
+        private final SingleRuleParallelConjunction<OriVertex> conjunction;
 
-		private VertexRule(final Rule<OriVertex> rule) {
-			this.rule = rule;
-			this.name = rule.getName();
-			conjunction = new SingleRuleParallelConjunction<>(rule);
-		}
+        private VertexRule(final Rule<OriVertex> rule) {
+            this.rule = rule;
+            this.name = rule.getName();
+            conjunction = new SingleRuleParallelConjunction<>(rule);
+        }
 
-		public Rule<OriVertex> getRule() {
-			return rule;
-		}
+        public Rule<OriVertex> getRule() {
+            return rule;
+        }
 
-		public String getName() {
-			return name;
-		}
+        public String getName() {
+            return name;
+        }
 
-		public SingleRuleParallelConjunction<OriVertex> getConjunction() {
-			return conjunction;
-		}
-	}
+        public SingleRuleParallelConjunction<OriVertex> getConjunction() {
+            return conjunction;
+        }
+    }
 
-	private final SingleRuleParallelConjunction<OriFace> convexRuleConjunction = new SingleRuleParallelConjunction<>(
-			new FaceIsConvex());
+    private final SingleRuleParallelConjunction<OriFace> convexRuleConjunction = new SingleRuleParallelConjunction<>(
+            new FaceIsConvex());
 
-	/**
-	 * Tests local flat foldability of each vertex and face.
-	 *
-	 * @param origamiModel
-	 * @return true if the given {@code origamiModel} is locally flat foldable.
-	 */
-	public boolean testLocalFlatFoldability(final OrigamiModel origamiModel) {
-		return Stream.of(VertexRule.values()).parallel()
-				.allMatch(rule -> rule.getConjunction().holds(origamiModel.getVertices()))
-				&& convexRuleConjunction.holds(origamiModel.getFaces());
-	}
+    /**
+     * Tests local flat foldability of each vertex and face.
+     *
+     * @param origamiModel
+     * @return true if the given {@code origamiModel} is locally flat foldable.
+     */
+    public boolean testLocalFlatFoldability(final OrigamiModel origamiModel) {
+        return Stream.of(VertexRule.values()).parallel()
+                .allMatch(rule -> rule.getConjunction().holds(origamiModel.getVertices()))
+                && convexRuleConjunction.holds(origamiModel.getFaces());
+    }
 
-	/**
-	 * Tests local flat foldability of given vertex.
-	 *
-	 * @param origamiModel
-	 * @return true if the given {@code origamiModel} is locally flat foldable.
-	 */
-	public boolean testLocalFlatFoldability(final OriVertex vertex) {
-		return Stream.of(VertexRule.values()).parallel()
-				.allMatch(rule -> rule.getRule().holds(vertex));
-	}
+    /**
+     * Tests local flat foldability of given vertex.
+     *
+     * @param origamiModel
+     * @return true if the given {@code origamiModel} is locally flat foldable.
+     */
+    public boolean testLocalFlatFoldability(final OriVertex vertex) {
+        return Stream.of(VertexRule.values()).parallel()
+                .allMatch(rule -> rule.getRule().holds(vertex));
+    }
 
-	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
-		var watch = new StopWatch(true);
+    public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
+        var watch = new StopWatch(true);
 
-		var result = Arrays.asList(VertexRule.values()).parallelStream()
-				.flatMap(rule -> rule.getConjunction().findViolations(vertices).parallelStream())
-				.toList();
+        var result = Arrays.asList(VertexRule.values()).parallelStream()
+                .flatMap(rule -> rule.getConjunction().findViolations(vertices).parallelStream())
+                .toList();
 
-		logger.debug("findViolatingVertices: " + watch.getMilliSec() + "[ms]");
+        logger.debug("findViolatingVertices: " + watch.getMilliSec() + "[ms]");
 
-		return result;
-	}
+        return result;
+    }
 
-	public Collection<String> getVertexViolationNames(final OriVertex vertex) {
-		return Arrays.asList(VertexRule.values()).stream()
-				.filter(rule -> rule.getRule().violates(vertex))
-				.map(rule -> rule.getName())
-				.toList();
-	}
+    public Collection<String> getVertexViolationNames(final OriVertex vertex) {
+        return Arrays.asList(VertexRule.values()).stream()
+                .filter(rule -> rule.getRule().violates(vertex))
+                .map(rule -> rule.getName())
+                .toList();
+    }
 
-	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
-		var watch = new StopWatch(true);
+    public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
+        var watch = new StopWatch(true);
 
-		var result = convexRuleConjunction.findViolations(faces);
+        var result = convexRuleConjunction.findViolations(faces);
 
-		logger.debug("findViolatingFaces: " + watch.getMilliSec() + "[ms]");
+        logger.debug("findViolatingFaces: " + watch.getMilliSec() + "[ms]");
 
-		return result;
-	}
+        return result;
+    }
 }

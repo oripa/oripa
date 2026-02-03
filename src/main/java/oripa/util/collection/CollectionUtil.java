@@ -31,109 +31,109 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public class CollectionUtil {
-	public static <T> T getCircular(final List<T> list, final int index) {
-		return list.get((index + list.size()) % list.size());
-	}
+    public static <T> T getCircular(final List<T> list, final int index) {
+        return list.get((index + list.size()) % list.size());
+    }
 
-	public static <T> Set<T> newConcurrentHashSet() {
-		return ConcurrentHashMap.newKeySet();
-	}
+    public static <T> Set<T> newConcurrentHashSet() {
+        return ConcurrentHashMap.newKeySet();
+    }
 
-	public static <T> Set<T> newConcurrentHashSet(final Collection<T> values) {
-		Set<T> set = ConcurrentHashMap.newKeySet();
-		set.addAll(values);
+    public static <T> Set<T> newConcurrentHashSet(final Collection<T> values) {
+        Set<T> set = ConcurrentHashMap.newKeySet();
+        set.addAll(values);
 
-		return set;
-	}
+        return set;
+    }
 
-	/**
-	 * Returns a shallow copy of the specified range of the given list. The copy
-	 * is modifiable.
-	 *
-	 * @param fromIndex
-	 *            inclusive.
-	 * @param toIndex
-	 *            exclusive.
-	 */
-	public static <T> List<T> partialCopy(final List<T> list, final int fromIndex, final int toIndex) {
-		return new ArrayList<T>(list.subList(fromIndex, toIndex));
-	}
+    /**
+     * Returns a shallow copy of the specified range of the given list. The copy
+     * is modifiable.
+     *
+     * @param fromIndex
+     *            inclusive.
+     * @param toIndex
+     *            exclusive.
+     */
+    public static <T> List<T> partialCopy(final List<T> list, final int fromIndex, final int toIndex) {
+        return new ArrayList<T>(list.subList(fromIndex, toIndex));
+    }
 
-	/**
-	 * Returns a view of the portion of the given map whose keys are greater
-	 * than or equal to {@code fromKey} and strictly less than {@code toKey}.
-	 * Changes in the returned map are reflected in the given map, and
-	 * vice-versa.
-	 *
-	 * @param <K>
-	 * @param <V>
-	 * @param map
-	 * @param fromKey
-	 *            inclusive.
-	 * @param toKey
-	 *            exclusive.
-	 * @return
-	 */
-	public static <K, V> NavigableMap<K, V> rangeMap(final NavigableMap<K, V> map,
-			final K fromKey, final K toKey) {
-		return map.subMap(fromKey, true, toKey, false);
-	}
+    /**
+     * Returns a view of the portion of the given map whose keys are greater
+     * than or equal to {@code fromKey} and strictly less than {@code toKey}.
+     * Changes in the returned map are reflected in the given map, and
+     * vice-versa.
+     *
+     * @param <K>
+     * @param <V>
+     * @param map
+     * @param fromKey
+     *            inclusive.
+     * @param toKey
+     *            exclusive.
+     * @return
+     */
+    public static <K, V> NavigableMap<K, V> rangeMap(final NavigableMap<K, V> map,
+            final K fromKey, final K toKey) {
+        return map.subMap(fromKey, true, toKey, false);
+    }
 
-	/**
-	 * Returns a view of the portion of the given map whose keys are greater
-	 * than or equal to {@code fromKey} and less than or equal to {@code toKey}.
-	 * Changes in the returned map are reflected in the given map, and
-	 * vice-versa.
-	 *
-	 * @param <K>
-	 * @param <V>
-	 * @param map
-	 * @param fromKey
-	 *            inclusive.
-	 * @param toKey
-	 *            inclusive.
-	 * @return
-	 */
-	public static <K, V> NavigableMap<K, V> rangeMapInclusive(final NavigableMap<K, V> map,
-			final K fromKey, final K toKey) {
-		return map.subMap(fromKey, true, toKey, true);
-	}
+    /**
+     * Returns a view of the portion of the given map whose keys are greater
+     * than or equal to {@code fromKey} and less than or equal to {@code toKey}.
+     * Changes in the returned map are reflected in the given map, and
+     * vice-versa.
+     *
+     * @param <K>
+     * @param <V>
+     * @param map
+     * @param fromKey
+     *            inclusive.
+     * @param toKey
+     *            inclusive.
+     * @return
+     */
+    public static <K, V> NavigableMap<K, V> rangeMapInclusive(final NavigableMap<K, V> map,
+            final K fromKey, final K toKey) {
+        return map.subMap(fromKey, true, toKey, true);
+    }
 
-	/**
-	 * Returns a view of the portion of the given map whose keys are greater
-	 * than {@code fromKey} and less than {@code toKey}. Changes in the returned
-	 * map are reflected in the given map, and vice-versa.
-	 *
-	 * @param <K>
-	 * @param <V>
-	 * @param map
-	 * @param fromKey
-	 *            exclusive.
-	 * @param toKey
-	 *            exclusive.
-	 * @return
-	 */
-	public static <K, V> NavigableMap<K, V> rangeMapExclusive(final NavigableMap<K, V> map,
-			final K fromKey, final K toKey) {
-		return map.subMap(fromKey, false, toKey, false);
-	}
+    /**
+     * Returns a view of the portion of the given map whose keys are greater
+     * than {@code fromKey} and less than {@code toKey}. Changes in the returned
+     * map are reflected in the given map, and vice-versa.
+     *
+     * @param <K>
+     * @param <V>
+     * @param map
+     * @param fromKey
+     *            exclusive.
+     * @param toKey
+     *            exclusive.
+     * @return
+     */
+    public static <K, V> NavigableMap<K, V> rangeMapExclusive(final NavigableMap<K, V> map,
+            final K fromKey, final K toKey) {
+        return map.subMap(fromKey, false, toKey, false);
+    }
 
-	/**
-	 * Returns a view of the portion of the given set whose values are greater
-	 * than or equal to {@code from} and less than or equal to {@code to}.
-	 * Changes in the returned set are reflected in the given set, and
-	 * vice-versa.
-	 *
-	 * @param <T>
-	 * @param set
-	 * @param from
-	 *            inclusive.
-	 * @param to
-	 *            inclusive.
-	 * @return
-	 */
-	public static <T> NavigableSet<T> rangeSetInclusive(final NavigableSet<T> set,
-			final T from, final T to) {
-		return set.subSet(from, true, to, true);
-	}
+    /**
+     * Returns a view of the portion of the given set whose values are greater
+     * than or equal to {@code from} and less than or equal to {@code to}.
+     * Changes in the returned set are reflected in the given set, and
+     * vice-versa.
+     *
+     * @param <T>
+     * @param set
+     * @param from
+     *            inclusive.
+     * @param to
+     *            inclusive.
+     * @return
+     */
+    public static <T> NavigableSet<T> rangeSetInclusive(final NavigableSet<T> set,
+            final T from, final T to) {
+        return set.subSet(from, true, to, true);
+    }
 }

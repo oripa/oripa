@@ -31,47 +31,47 @@ import oripa.value.OriPoint;
  */
 class LineDividerTest {
 
-	static final double EPS = 1e-4;
+    static final double EPS = 1e-4;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.LineDivider#divideLine(oripa.value.OriLine, javax.vecmath.Vector2d, double)}.
-	 */
-	@Test
-	void testDivideLine_shouldBeDivided() {
-		var line = new OriLine(0, 0, 100, 100, OriLine.Type.MOUNTAIN);
-		var dividingPoint = new OriPoint(50, 50);
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.LineDivider#divideLine(oripa.value.OriLine, javax.vecmath.Vector2d, double)}.
+     */
+    @Test
+    void testDivideLine_shouldBeDivided() {
+        var line = new OriLine(0, 0, 100, 100, OriLine.Type.MOUNTAIN);
+        var dividingPoint = new OriPoint(50, 50);
 
-		var divider = new LineDivider();
+        var divider = new LineDivider();
 
-		var divided = divider.divideLine(line, dividingPoint, EPS);
+        var divided = divider.divideLine(line, dividingPoint, EPS);
 
-		assertFalse(divided.isEmpty());
-		assertEquals(2, divided.size());
-	}
+        assertFalse(divided.isEmpty());
+        assertEquals(2, divided.size());
+    }
 
-	@Test
-	void testDivideLine_shouldNotBeDivided_closeToEndPoint() {
-		var line = new OriLine(0, 0, 100, 100, OriLine.Type.MOUNTAIN);
-		var dividingPoint = new OriPoint(1e-5, 1e-5);
+    @Test
+    void testDivideLine_shouldNotBeDivided_closeToEndPoint() {
+        var line = new OriLine(0, 0, 100, 100, OriLine.Type.MOUNTAIN);
+        var dividingPoint = new OriPoint(1e-5, 1e-5);
 
-		var divider = new LineDivider();
+        var divider = new LineDivider();
 
-		var divided = divider.divideLine(line, dividingPoint, EPS);
+        var divided = divider.divideLine(line, dividingPoint, EPS);
 
-		assertTrue(divided.isEmpty());
-	}
+        assertTrue(divided.isEmpty());
+    }
 
-	@Test
-	void testDivideLine_shouldNotBeDivided_farFromLine() {
-		var line = new OriLine(0, 0, 100, 100, OriLine.Type.MOUNTAIN);
-		var dividingPoint = new OriPoint(30, 40);
+    @Test
+    void testDivideLine_shouldNotBeDivided_farFromLine() {
+        var line = new OriLine(0, 0, 100, 100, OriLine.Type.MOUNTAIN);
+        var dividingPoint = new OriPoint(30, 40);
 
-		var divider = new LineDivider();
+        var divider = new LineDivider();
 
-		var divided = divider.divideLine(line, dividingPoint, EPS);
+        var divided = divider.divideLine(line, dividingPoint, EPS);
 
-		assertTrue(divided.isEmpty());
-	}
+        assertTrue(divided.isEmpty());
+    }
 
 }

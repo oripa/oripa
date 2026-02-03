@@ -27,24 +27,24 @@ import oripa.vecmath.Vector2d;
 
 public abstract class SvgConverter {
 
-	protected RectangleDomain domain;
-	protected double scaleToFitDomain;
+    protected RectangleDomain domain;
+    protected double scaleToFitDomain;
 
-	/**
-	 * @param point
-	 *            initial point
-	 * @return point mapped in the domain
-	 */
-	protected Vector2d mapToDomain(final Vector2d point) {
+    /**
+     * @param point
+     *            initial point
+     * @return point mapped in the domain
+     */
+    protected Vector2d mapToDomain(final Vector2d point) {
 
-		double x = (point.getX() - domain.getCenterX()) * scaleToFitDomain + SVG_HALF_SIZE;
-		double y = -(point.getY() - domain.getCenterY()) * scaleToFitDomain + SVG_HALF_SIZE;
+        double x = (point.getX() - domain.getCenterX()) * scaleToFitDomain + SVG_HALF_SIZE;
+        double y = -(point.getY() - domain.getCenterY()) * scaleToFitDomain + SVG_HALF_SIZE;
 
-		return new Vector2d(x, y);
-	}
+        return new Vector2d(x, y);
+    }
 
-	protected Vector2d mapToDomain(final OriPoint oriPoint) {
-		return mapToDomain(new Vector2d(oriPoint.getX(), oriPoint.getY()));
-	}
+    protected Vector2d mapToDomain(final OriPoint oriPoint) {
+        return mapToDomain(new Vector2d(oriPoint.getX(), oriPoint.getY()));
+    }
 
 }

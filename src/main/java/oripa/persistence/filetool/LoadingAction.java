@@ -5,14 +5,14 @@ import java.util.Optional;
 
 public class LoadingAction<Data> {
 
-	private final Loader<Data> loader;
+    private final Loader<Data> loader;
 
-	public LoadingAction(final Loader<Data> l) {
-		loader = l;
-	}
+    public LoadingAction(final Loader<Data> l) {
+        loader = l;
+    }
 
-	public Optional<Data> load(final String path) throws FileVersionError, IOException, WrongDataFormatException {
-		return loader.load(path);
-	}
+    public Optional<Data> load(final String path) throws FileVersionError, IOException, WrongDataFormatException {
+        return loader.load(path);
+    }
 
 }

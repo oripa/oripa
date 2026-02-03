@@ -32,27 +32,27 @@ import oripa.vecmath.Vector2d;
  */
 public interface ModelViewScreenView extends ScreenView {
 
-	void setModelDisplayMode(ModelDisplayMode mode);
+    void setModelDisplayMode(ModelDisplayMode mode);
 
-	ModelDisplayMode getModelDisplayMode();
+    ModelDisplayMode getModelDisplayMode();
 
-	boolean isScissorsLineVisible();
+    boolean isScissorsLineVisible();
 
-	double getScale();
+    double getScale();
 
-	double getScissorsLineAngleDegree();
+    double getScissorsLineAngleDegree();
 
-	double getScissorsLinePosition();
+    double getScissorsLinePosition();
 
-	Vector2d getModelCenter();
+    Vector2d getModelCenter();
 
-	void setModel(OrigamiModel origamiModel, int boundSize);
+    void setModel(OrigamiModel origamiModel, int boundSize);
 
-	Optional<OrigamiModel> getModel();
+    Optional<OrigamiModel> getModel();
 
-	void setPaintComponentListener(Consumer<ModelGraphics> listener);
+    void setPaintComponentListener(Consumer<ModelGraphics> listener);
 
-	void setScissorsLineChangeListener(Runnable listener);
+    void setScissorsLineChangeListener(Runnable listener);
 
-	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
+    void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
 }

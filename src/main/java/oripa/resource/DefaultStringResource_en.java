@@ -28,12 +28,12 @@ import java.util.ListResourceBundle;
  */
 public class DefaultStringResource_en extends ListResourceBundle {
 
-	static final Object[][] strings = {
-			{ StringID.Default.FILE_NAME_ID, "NoTitle" },
-	};
+    static final Object[][] strings = {
+            { StringID.Default.FILE_NAME_ID, "NoTitle" },
+    };
 
-	@Override
-	protected Object[][] getContents() {
-		return strings;
-	}
+    @Override
+    protected Object[][] getContents() {
+        return strings;
+    }
 }

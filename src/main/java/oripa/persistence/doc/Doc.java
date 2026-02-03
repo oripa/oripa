@@ -26,39 +26,39 @@ import oripa.domain.projectprop.Property;
  *
  */
 public class Doc {
-	/**
-	 * Crease Pattern
-	 */
-	private final CreasePattern creasePattern;
+    /**
+     * Crease Pattern
+     */
+    private final CreasePattern creasePattern;
 
-	/**
-	 * Project property
-	 */
-	private final Property property;
+    /**
+     * Project property
+     */
+    private final Property property;
 
-	public static Doc forSaving(final CreasePattern creasePattern, final Property property) {
-		return new Doc(creasePattern, property);
-	}
+    public static Doc forSaving(final CreasePattern creasePattern, final Property property) {
+        return new Doc(creasePattern, property);
+    }
 
-	public static Doc forLoading(final CreasePattern creasePattern) {
-		return new Doc(creasePattern, new Property());
-	}
+    public static Doc forLoading(final CreasePattern creasePattern) {
+        return new Doc(creasePattern, new Property());
+    }
 
-	public static Doc forLoading(final CreasePattern creasePattern, final Property property) {
-		return new Doc(creasePattern, property);
-	}
+    public static Doc forLoading(final CreasePattern creasePattern, final Property property) {
+        return new Doc(creasePattern, property);
+    }
 
-	private Doc(final CreasePattern creasePattern, final Property property) {
-		this.creasePattern = creasePattern;
-		this.property = property;
-	}
+    private Doc(final CreasePattern creasePattern, final Property property) {
+        this.creasePattern = creasePattern;
+        this.property = property;
+    }
 
-	public CreasePattern getCreasePattern() {
-		return creasePattern;
-	}
+    public CreasePattern getCreasePattern() {
+        return creasePattern;
+    }
 
-	public Property getProperty() {
-		return property;
-	}
+    public Property getProperty() {
+        return property;
+    }
 
 }

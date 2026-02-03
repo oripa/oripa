@@ -31,24 +31,24 @@ import oripa.vecmath.Vector2d;
  */
 public class DefaultPaperFactory {
 
-	/**
-	 * Returns boundary of square ((-200, -200), (200, 200))
-	 *
-	 * @return
-	 */
-	public List<OriLine> create() {
-		var leftTop = new Vector2d(-200, -200);
-		var rightTop = new Vector2d(200, -200);
-		var leftBottom = new Vector2d(-200, 200);
-		var rightBottom = new Vector2d(200, 200);
+    /**
+     * Returns boundary of square ((-200, -200), (200, 200))
+     *
+     * @return
+     */
+    public List<OriLine> create() {
+        var leftTop = new Vector2d(-200, -200);
+        var rightTop = new Vector2d(200, -200);
+        var leftBottom = new Vector2d(-200, 200);
+        var rightBottom = new Vector2d(200, 200);
 
-		// Square paper
-		var creasePattern = new ArrayList<>(List.of(
-				new OriLine(leftTop, rightTop, Type.CUT),
-				new OriLine(leftTop, leftBottom, Type.CUT),
-				new OriLine(leftBottom, rightBottom, Type.CUT),
-				new OriLine(rightTop, rightBottom, Type.CUT)));
+        // Square paper
+        var creasePattern = new ArrayList<>(List.of(
+                new OriLine(leftTop, rightTop, Type.CUT),
+                new OriLine(leftTop, leftBottom, Type.CUT),
+                new OriLine(leftBottom, rightBottom, Type.CUT),
+                new OriLine(rightTop, rightBottom, Type.CUT)));
 
-		return creasePattern;
-	}
+        return creasePattern;
+    }
 }

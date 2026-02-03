@@ -39,39 +39,39 @@ import oripa.vecmath.Vector2d;
  */
 @ExtendWith(MockitoExtension.class)
 class CloseTempOutlineTest {
-	@InjectMocks
-	private CloseTempOutline closer;
-	@Mock
-	private OutlineAdder adder;
-	@Mock
-	private OutsideLineRemover remover;
-	@Mock
-	private Painter painter;
+    @InjectMocks
+    private CloseTempOutline closer;
+    @Mock
+    private OutlineAdder adder;
+    @Mock
+    private OutsideLineRemover remover;
+    @Mock
+    private Painter painter;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.paint.outline.CloseTempOutline#execute(java.util.Collection)}.
-	 */
-	@Test
-	void testExecute() {
+    /**
+     * Test method for
+     * {@link oripa.domain.paint.outline.CloseTempOutline#execute(java.util.Collection)}.
+     */
+    @Test
+    void testExecute() {
 //		var creasePattern = mock(CreasePatternInterface.class);
-		var l0 = new OriLine(0, 0, 1, 0, OriLine.Type.MOUNTAIN);
-		var l1 = new OriLine(1, 0, 1, 1, OriLine.Type.MOUNTAIN);
-		var l2 = new OriLine(1, 1, 0, 1, OriLine.Type.MOUNTAIN);
-		var l3 = new OriLine(0, 1, 0, 0, OriLine.Type.MOUNTAIN);
-		var l4 = new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.MOUNTAIN);
+        var l0 = new OriLine(0, 0, 1, 0, OriLine.Type.MOUNTAIN);
+        var l1 = new OriLine(1, 0, 1, 1, OriLine.Type.MOUNTAIN);
+        var l2 = new OriLine(1, 1, 0, 1, OriLine.Type.MOUNTAIN);
+        var l3 = new OriLine(0, 1, 0, 0, OriLine.Type.MOUNTAIN);
+        var l4 = new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.MOUNTAIN);
 
-		var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
-				l0, l1, l2, l3, l4));
+        var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
+                l0, l1, l2, l3, l4));
 
-		when(painter.getCreasePattern()).thenReturn(creasePattern);
+        when(painter.getCreasePattern()).thenReturn(creasePattern);
 
-		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
+        var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
 
-		closer.execute(outlineVertices, painter);
+        closer.execute(outlineVertices, painter);
 
-		verify(adder).addOutlines(painter, outlineVertices);
-		verify(remover).removeLinesOutsideOfOutlines(painter, outlineVertices);
-	}
+        verify(adder).addOutlines(painter, outlineVertices);
+        verify(remover).removeLinesOutsideOfOutlines(painter, outlineVertices);
+    }
 
 }

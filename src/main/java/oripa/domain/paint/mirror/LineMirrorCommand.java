@@ -27,26 +27,26 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class LineMirrorCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public LineMirrorCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public LineMirrorCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+    @Override
+    public void execute() {
+        validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		var axisOpt = context.popLine();
+        var axisOpt = context.popLine();
 
-		Painter painter = context.getPainter();
-		painter.mirrorCopyBy(axisOpt.get(), context.getPickedLines());
+        Painter painter = context.getPainter();
+        painter.mirrorCopyBy(axisOpt.get(), context.getPickedLines());
 
-		context.clear(true);
+        context.clear(true);
 
-		context.refreshCreasePattern();
-	}
+        context.refreshCreasePattern();
+    }
 
 }

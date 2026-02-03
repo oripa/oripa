@@ -35,92 +35,92 @@ import oripa.value.OriPoint;
  *
  */
 public class SharedPointsMapFactory<P extends PointAndOriLine> {
-	private static final Logger logger = LoggerFactory.getLogger(SharedPointsMapFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(SharedPointsMapFactory.class);
 
-	private ArrayList<P> createPoints(
-			final ArrayList<OriLine> lines,
-			final BiFunction<OriPoint, OriLine, P> factory) {
-		var points = new ArrayList<P>(lines.size() * 2);
+    private ArrayList<P> createPoints(
+            final ArrayList<OriLine> lines,
+            final BiFunction<OriPoint, OriLine, P> factory) {
+        var points = new ArrayList<P>(lines.size() * 2);
 
-		for (var line : lines) {
-			points.add(factory.apply(line.getOriPoint0(), line));
-			points.add(factory.apply(line.getOriPoint1(), line));
-		}
+        for (var line : lines) {
+            points.add(factory.apply(line.getOriPoint0(), line));
+            points.add(factory.apply(line.getOriPoint1(), line));
+        }
 
 //		points.sort(Comparator.comparing(PointAndOriLine::getX));
 
-		return points;
-	}
+        return points;
+    }
 
-	/**
-	 * the returned map keeps the both side of each line as an object holding
-	 * the end point and the line. The map key is ordered by x-coordinate first
-	 * and then by y-coordinate. In the values of each key are ordered by
-	 * y-coordinate. The lines in returned map values and the one given to the
-	 * factory are canonicalized, i.e., line.getP0() is smaller than
-	 * line.getP1().
-	 *
-	 * @param creasePattern
-	 * @param factory
-	 * @param eps
-	 * @return
-	 */
-	public SharedPointsMap<P> create(
-			final Collection<OriLine> creasePattern,
-			final BiFunction<OriPoint, OriLine, P> factory,
-			final double eps) {
-		// Sweep-line approach
-		// (sweep along x axis)
+    /**
+     * the returned map keeps the both side of each line as an object holding
+     * the end point and the line. The map key is ordered by x-coordinate first
+     * and then by y-coordinate. In the values of each key are ordered by
+     * y-coordinate. The lines in returned map values and the one given to the
+     * factory are canonicalized, i.e., line.getP0() is smaller than
+     * line.getP1().
+     *
+     * @param creasePattern
+     * @param factory
+     * @param eps
+     * @return
+     */
+    public SharedPointsMap<P> create(
+            final Collection<OriLine> creasePattern,
+            final BiFunction<OriPoint, OriLine, P> factory,
+            final double eps) {
+        // Sweep-line approach
+        // (sweep along x axis)
 
-		var canonicalLines = creasePattern.stream()
-				.map(OriLine::createCanonical)
-				.collect(Collectors.toCollection(ArrayList::new));
+        var canonicalLines = creasePattern.stream()
+                .map(OriLine::createCanonical)
+                .collect(Collectors.toCollection(ArrayList::new));
 
-		var xOrderPoints = createPoints(canonicalLines, factory);
-		var hashFactory = new HashFactory();
-		var xOrderHash = hashFactory.create(xOrderPoints, P::getX, eps);
+        var xOrderPoints = createPoints(canonicalLines, factory);
+        var hashFactory = new HashFactory();
+        var xOrderHash = hashFactory.create(xOrderPoints, P::getX, eps);
 
-		for (var byX : xOrderHash) {
-			byX.sort(Comparator.comparing(P::getY));
-		}
+        for (var byX : xOrderHash) {
+            byX.sort(Comparator.comparing(P::getY));
+        }
 
-		// this map keeps the both sides of each line as an object holding the
-		// end point and the line.
-		var sharedPointsMap = new SharedPointsMap<P>(factory);
+        // this map keeps the both sides of each line as an object holding the
+        // end point and the line.
+        var sharedPointsMap = new SharedPointsMap<P>(factory);
 
-		var setCount = 0;
-		// build a map and set keyPoint
-		for (var byX : xOrderHash) {
-			var yHash = hashFactory.create(byX, P::getY, eps);
-			for (var xyPoints : yHash) {
-				if (xyPoints.isEmpty()) {
-					continue;
-				}
-				var keyPoint = xyPoints.get(0).getPoint();
-				sharedPointsMap.put(keyPoint, xyPoints);
-				xyPoints.forEach(p -> p.setKeyPoint(keyPoint));
-				setCount += xyPoints.size();
-			}
-		}
+        var setCount = 0;
+        // build a map and set keyPoint
+        for (var byX : xOrderHash) {
+            var yHash = hashFactory.create(byX, P::getY, eps);
+            for (var xyPoints : yHash) {
+                if (xyPoints.isEmpty()) {
+                    continue;
+                }
+                var keyPoint = xyPoints.get(0).getPoint();
+                sharedPointsMap.put(keyPoint, xyPoints);
+                xyPoints.forEach(p -> p.setKeyPoint(keyPoint));
+                setCount += xyPoints.size();
+            }
+        }
 
-		if (setCount != creasePattern.size() * 2) {
-			logger.error("wrong hashing. map creation fails.");
-		}
+        if (setCount != creasePattern.size() * 2) {
+            logger.error("wrong hashing. map creation fails.");
+        }
 
-		// set oppositeKeyPoint
-		sharedPointsMap.forEach((keyPoint, points) -> {
-			for (P point : points) {
-				sharedPointsMap.findOppositeKeyPoint(point, keyPoint, eps)
-						.ifPresentOrElse(
-								opposite -> point.setOppositeKeyPoint(opposite),
-								() -> logger.error(
-										"failed to get opposite key point of {}, eps:{}, line: {}",
-										keyPoint,
-										eps,
-										point.getLine()));
-			}
-		});
+        // set oppositeKeyPoint
+        sharedPointsMap.forEach((keyPoint, points) -> {
+            for (P point : points) {
+                sharedPointsMap.findOppositeKeyPoint(point, keyPoint, eps)
+                        .ifPresentOrElse(
+                                opposite -> point.setOppositeKeyPoint(opposite),
+                                () -> logger.error(
+                                        "failed to get opposite key point of {}, eps:{}, line: {}",
+                                        keyPoint,
+                                        eps,
+                                        point.getLine()));
+            }
+        });
 
-		return sharedPointsMap;
-	}
+        return sharedPointsMap;
+    }
 }

@@ -24,14 +24,14 @@ package oripa.resource;
  */
 public interface ButtonIconResource {
 
-	/**
-	 * returns the resource path of the icon for default state.
-	 */
-	String getIconResourcePath();
+    /**
+     * returns the resource path of the icon for default state.
+     */
+    String getIconResourcePath();
 
-	/**
-	 * returns the resource path of the icon for selected state.
-	 */
-	String getSelectedIconResourcePath();
+    /**
+     * returns the resource path of the icon for selected state.
+     */
+    String getSelectedIconResourcePath();
 
 }

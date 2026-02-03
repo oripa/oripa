@@ -39,36 +39,36 @@ import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
  */
 @ExtendWith(MockitoExtension.class)
 class SplitFacesToSubFacesConverterTest {
-	@InjectMocks
-	private SplitFacesToSubFacesConverter converter;
+    @InjectMocks
+    private SplitFacesToSubFacesConverter converter;
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.fold.subface.SplitFacesToSubFacesConverter#convertToSubFaces(java.util.List)}.
-	 */
-	@Test
-	void testConvertToSubFaces() {
-		var splitFace1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
-		var splitFace2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
+    /**
+     * Test method for
+     * {@link oripa.domain.fold.subface.SplitFacesToSubFacesConverter#convertToSubFaces(java.util.List)}.
+     */
+    @Test
+    void testConvertToSubFaces() {
+        var splitFace1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
+        var splitFace2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
 
-		when(splitFace1.remove180degreeVertices(anyDouble())).thenReturn(splitFace1);
-		when(splitFace1.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace1);
-		when(splitFace1.halfedgeCount()).thenReturn(4);
+        when(splitFace1.remove180degreeVertices(anyDouble())).thenReturn(splitFace1);
+        when(splitFace1.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace1);
+        when(splitFace1.halfedgeCount()).thenReturn(4);
 
-		when(splitFace2.remove180degreeVertices(anyDouble())).thenReturn(splitFace2);
-		when(splitFace2.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace2);
-		when(splitFace2.halfedgeCount()).thenReturn(4);
+        when(splitFace2.remove180degreeVertices(anyDouble())).thenReturn(splitFace2);
+        when(splitFace2.removeDuplicatedVertices(anyDouble())).thenReturn(splitFace2);
+        when(splitFace2.halfedgeCount()).thenReturn(4);
 
-		OriVertex vertex = mock();
-		Collection<OriVertex> vertices = List.of(vertex);
+        OriVertex vertex = mock();
+        Collection<OriVertex> vertices = List.of(vertex);
 
-		var splitFaces = List.of(splitFace1, splitFace2);
+        var splitFaces = List.of(splitFace1, splitFace2);
 
-		var subFaces = converter.convertToSubFaces(splitFaces, vertices, 1e-6);
+        var subFaces = converter.convertToSubFaces(splitFaces, vertices, 1e-6);
 
-		for (int i = 0; i < subFaces.size(); i++) {
-			assertSame(splitFaces.get(i), subFaces.get(i).getOutline());
-		}
-	}
+        for (int i = 0; i < subFaces.size(); i++) {
+            assertSame(splitFaces.get(i), subFaces.get(i).getOutline());
+        }
+    }
 
 }

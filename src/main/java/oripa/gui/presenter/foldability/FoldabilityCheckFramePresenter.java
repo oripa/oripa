@@ -31,28 +31,28 @@ import oripa.value.OriLine;
  */
 public class FoldabilityCheckFramePresenter {
 
-	private final FoldabilityCheckFrameView view;
+    private final FoldabilityCheckFrameView view;
 
-	public FoldabilityCheckFramePresenter(
-			final FoldabilityCheckFrameView view,
-			final OrigamiModel origamiModel,
-			final EstimationResultRules estimationRules,
-			final Collection<OriLine> creasePattern,
-			final boolean zeroLineWidth,
-			final double pointEps) {
+    public FoldabilityCheckFramePresenter(
+            final FoldabilityCheckFrameView view,
+            final OrigamiModel origamiModel,
+            final EstimationResultRules estimationRules,
+            final Collection<OriLine> creasePattern,
+            final boolean zeroLineWidth,
+            final double pointEps) {
 
-		this.view = view;
+        this.view = view;
 
-		var screenPresenter = new FoldabilityScreenPresenter(
-				view.getFoldabilityScreenView(),
-				origamiModel,
-				estimationRules,
-				creasePattern,
-				zeroLineWidth,
-				pointEps);
-	}
+        var screenPresenter = new FoldabilityScreenPresenter(
+                view.getFoldabilityScreenView(),
+                origamiModel,
+                estimationRules,
+                creasePattern,
+                zeroLineWidth,
+                pointEps);
+    }
 
-	public void setViewVisible(final boolean visible) {
-		view.setVisible(visible);
-	}
+    public void setViewVisible(final boolean visible) {
+        view.setVisible(visible);
+    }
 }

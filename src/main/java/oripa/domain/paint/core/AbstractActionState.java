@@ -23,115 +23,115 @@ import oripa.domain.paint.PaintContext;
  *
  */
 public abstract class AbstractActionState implements ActionState {
-	private static Logger logger = LoggerFactory.getLogger(AbstractActionState.class);
+    private static Logger logger = LoggerFactory.getLogger(AbstractActionState.class);
 
-	private Class<? extends ActionState> next, prev;
+    private Class<? extends ActionState> next, prev;
 
-	public AbstractActionState() {
-		initialize();
-	}
+    public AbstractActionState() {
+        initialize();
+    }
 
-	/**
-	 * Set next state class and previous state class here. If you do nothing,
-	 * {@link #doAction(PaintContext, boolean)} and {@link #undo(PaintContext)}
-	 * will return {@code this} object.
-	 */
-	protected abstract void initialize();
+    /**
+     * Set next state class and previous state class here. If you do nothing,
+     * {@link #doAction(PaintContext, boolean)} and {@link #undo(PaintContext)}
+     * will return {@code this} object.
+     */
+    protected abstract void initialize();
 
-	protected void setNextClass(final Class<? extends ActionState> next) {
-		this.next = next;
-	}
+    protected void setNextClass(final Class<? extends ActionState> next) {
+        this.next = next;
+    }
 
-	protected void setPreviousClass(final Class<? extends ActionState> prev) {
-		this.prev = prev;
-	}
+    protected void setPreviousClass(final Class<? extends ActionState> prev) {
+        this.prev = prev;
+    }
 
-	/**
-	 * first this method calls onAct(), then calls onResult() if onAct() returns
-	 * true.
-	 *
-	 * @return A new instance of next state. if class of next state is not set
-	 *         (or is null), returns {@code this}.
-	 */
-	@Override
-	public final ActionState doAction(final PaintContext context,
-			final boolean doSpecial) {
+    /**
+     * first this method calls onAct(), then calls onResult() if onAct() returns
+     * true.
+     *
+     * @return A new instance of next state. if class of next state is not set
+     *         (or is null), returns {@code this}.
+     */
+    @Override
+    public final ActionState doAction(final PaintContext context,
+            final boolean doSpecial) {
 
-		boolean success = onAct(context, doSpecial);
+        boolean success = onAct(context, doSpecial);
 
-		if (!success) {
-			return this;
-		}
+        if (!success) {
+            return this;
+        }
 
-		onResult(context, doSpecial);
+        onResult(context, doSpecial);
 
-		return getNextState();
-	}
+        return getNextState();
+    }
 
-	/**
-	 * defines what to do after onAct() succeeded.
-	 *
-	 * @param context
-	 *            storage for user interaction
-	 * @param doSpecial
-	 *            true if action should be changed.
-	 */
-	protected abstract void onResult(PaintContext context, final boolean doSpecial);
+    /**
+     * defines what to do after onAct() succeeded.
+     *
+     * @param context
+     *            storage for user interaction
+     * @param doSpecial
+     *            true if action should be changed.
+     */
+    protected abstract void onResult(PaintContext context, final boolean doSpecial);
 
-	/**
-	 * defines the job of this class.
-	 *
-	 * @param context
-	 *            storage for user interaction
-	 * @param doSpecial
-	 *            true if action should be changed.
-	 * @return true if the action succeeded and should return the next state,
-	 *         otherwise false.
-	 */
-	protected abstract boolean onAct(PaintContext context, boolean doSpecial);
+    /**
+     * defines the job of this class.
+     *
+     * @param context
+     *            storage for user interaction
+     * @param doSpecial
+     *            true if action should be changed.
+     * @return true if the action succeeded and should return the next state,
+     *         otherwise false.
+     */
+    protected abstract boolean onAct(PaintContext context, boolean doSpecial);
 
-	/**
-	 * cancel the current actions and returns previous state.
-	 *
-	 * @param context
-	 *            storage for user interaction
-	 * @return Previous state
-	 */
-	@Override
-	public final ActionState undo(final PaintContext context) {
+    /**
+     * cancel the current actions and returns previous state.
+     *
+     * @param context
+     *            storage for user interaction
+     * @return Previous state
+     */
+    @Override
+    public final ActionState undo(final PaintContext context) {
 
-		undoAction(context);
+        undoAction(context);
 
-		return getPreviousState();
-	}
+        return getPreviousState();
+    }
 
-	/**
-	 * implement undo action. clean up the garbages!
-	 *
-	 * @param context
-	 *            storage for user interaction
-	 */
-	protected abstract void undoAction(PaintContext context);
+    /**
+     * implement undo action. clean up the garbages!
+     *
+     * @param context
+     *            storage for user interaction
+     */
+    protected abstract void undoAction(PaintContext context);
 
-	private ActionState getNextState() {
-		return createInstance(next);
-	}
+    private ActionState getNextState() {
+        return createInstance(next);
+    }
 
-	private ActionState getPreviousState() {
-		return createInstance(prev);
-	}
+    private ActionState getPreviousState() {
+        return createInstance(prev);
+    }
 
-	private ActionState createInstance(final Class<? extends ActionState> c) {
-		if (c == null) {
-			return this;
-		}
+    private ActionState createInstance(final Class<? extends ActionState> c) {
+        if (c == null) {
+            return this;
+        }
 
-		try {
-			return c.getConstructor().newInstance();
-		} catch (Exception e) {
-			logger.error("failed to create next/previous state", e);
-			throw new RuntimeException(e);
-		}
-	}
+        try {
+            return c.getConstructor().newInstance();
+        } catch (Exception e) {
+            logger.error("failed to create next/previous state", e);
+            throw new RuntimeException(e);
+        }
+    }
 
 }

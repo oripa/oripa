@@ -31,53 +31,53 @@ import oripa.util.MathUtil;
  */
 public class KawasakiTheoremSuggester {
 
-	/**
-	 *
-	 * @param vertex
-	 * @return angles of suggested lines. empty collection if the vertex is not
-	 *         inside of paper or there is no need to interpolate.
-	 */
-	public Collection<Double> suggest(final OriVertex vertex) {
+    /**
+     *
+     * @param vertex
+     * @return angles of suggested lines. empty collection if the vertex is not
+     *         inside of paper or there is no need to interpolate.
+     */
+    public Collection<Double> suggest(final OriVertex vertex) {
 
-		int angleCount = vertex.edgeCount();
+        int angleCount = vertex.edgeCount();
 
-		if (angleCount % 2 == 0) {
-			return List.of();
-		}
+        if (angleCount % 2 == 0) {
+            return List.of();
+        }
 
-		if (!vertex.isInsideOfPaper()) {
-			return List.of();
-		}
+        if (!vertex.isInsideOfPaper()) {
+            return List.of();
+        }
 
-		var suggestions = new ArrayList<Double>();
+        var suggestions = new ArrayList<Double>();
 
-		double evenSum = 0;
+        double evenSum = 0;
 
-		for (int i = 0; i < angleCount; i += 2) {
-			evenSum += vertex.getAngleDifference(i);
-		}
+        for (int i = 0; i < angleCount; i += 2) {
+            evenSum += vertex.getAngleDifference(i);
+        }
 
-		double oddSum = 2 * Math.PI - evenSum;
+        double oddSum = 2 * Math.PI - evenSum;
 
-		evenSum -= vertex.getAngleDifference(0);
+        evenSum -= vertex.getAngleDifference(0);
 
-		// computes as if indices are re-assigned as current i-th is the new
-		// 0th.
-		for (var i = 0; i < angleCount; i++) {
-			double theta = vertex.getAngleDifference(i);
-			double t = evenSum + theta - Math.PI;
+        // computes as if indices are re-assigned as current i-th is the new
+        // 0th.
+        for (var i = 0; i < angleCount; i++) {
+            double theta = vertex.getAngleDifference(i);
+            double t = evenSum + theta - Math.PI;
 
-			final double EPS = MathUtil.angleRadianEps();
-			if (evenSum < Math.PI - EPS && oddSum < Math.PI - EPS) {
-				var baseAngle = vertex.getEdge(i).getAngle(vertex);
-				suggestions.add((baseAngle + t));
-			}
+            final double EPS = MathUtil.angleRadianEps();
+            if (evenSum < Math.PI - EPS && oddSum < Math.PI - EPS) {
+                var baseAngle = vertex.getEdge(i).getAngle(vertex);
+                suggestions.add((baseAngle + t));
+            }
 
-			var tmpEvenSum = evenSum;
-			evenSum = oddSum + theta - vertex.getAngleDifference(i + 1);
-			oddSum = tmpEvenSum;
-		}
+            var tmpEvenSum = evenSum;
+            evenSum = oddSum + theta - vertex.getAngleDifference(i + 1);
+            oddSum = tmpEvenSum;
+        }
 
-		return suggestions;
-	}
+        return suggestions;
+    }
 }

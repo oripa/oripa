@@ -25,9 +25,9 @@ import oripa.gui.view.FrameView;
  *
  */
 public interface MainFrameDialogFactory {
-	ArrayCopyDialogView createArrayCopyDialog(final FrameView owner);
+    ArrayCopyDialogView createArrayCopyDialog(final FrameView owner);
 
-	CircleCopyDialogView createCircleCopyDialog(final FrameView owner);
+    CircleCopyDialogView createCircleCopyDialog(final FrameView owner);
 
-	PropertyDialogView createPropertyDialog(final FrameView parent);
+    PropertyDialogView createPropertyDialog(final FrameView parent);
 }

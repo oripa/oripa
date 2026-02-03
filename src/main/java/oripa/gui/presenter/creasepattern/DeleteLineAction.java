@@ -11,47 +11,47 @@ import oripa.value.OriLine;
 
 public class DeleteLineAction extends RectangularSelectableAction {
 
-	public DeleteLineAction() {
-		setEditMode(EditMode.OTHER);
+    public DeleteLineAction() {
+        setEditMode(EditMode.OTHER);
 
-		setActionState(new DeletingLine());
+        setActionState(new DeletingLine());
 
-	}
+    }
 
-	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+    @Override
+    public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+            final PaintContext paintContext) {
 
-		super.onDraw(drawer, viewContext, paintContext);
+        super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateLine(drawer, viewContext, paintContext);
+        drawPickCandidateLine(drawer, viewContext, paintContext);
 
-	}
+    }
 
-	/**
-	 * Resets selection marks to avoid undesired deletion.
-	 *
-	 * @see AbstractGraphicMouseAction#recover(PaintContext)
-	 * @param context
-	 */
-	@Override
-	protected void recoverImpl(final PaintContext context) {
-		context.clear(true);
-	}
+    /**
+     * Resets selection marks to avoid undesired deletion.
+     *
+     * @see AbstractGraphicMouseAction#recover(PaintContext)
+     * @param context
+     */
+    @Override
+    protected void recoverImpl(final PaintContext context) {
+        context.clear(true);
+    }
 
-	@Override
-	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
+    @Override
+    protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
+            final CreasePatternViewContext viewContext, final PaintContext paintContext,
+            final boolean differentAction) {
 
-		if (selectedLines.isEmpty()) {
-			return;
-		}
+        if (selectedLines.isEmpty()) {
+            return;
+        }
 
-		selectedLines.forEach(paintContext::pushLine);
+        selectedLines.forEach(paintContext::pushLine);
 
-		Command command = new LineDeleterCommand(paintContext);
-		command.execute();
-	}
+        Command command = new LineDeleterCommand(paintContext);
+        command.execute();
+    }
 
 }

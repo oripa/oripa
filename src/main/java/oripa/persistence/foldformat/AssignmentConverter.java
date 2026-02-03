@@ -29,31 +29,31 @@ import oripa.value.OriLine;
  */
 public class AssignmentConverter {
 
-	private final Map<String, OriLine.Type> typeHash;
+    private final Map<String, OriLine.Type> typeHash;
 
-	public AssignmentConverter() {
-		typeHash = new HashMap<String, OriLine.Type>();
+    public AssignmentConverter() {
+        typeHash = new HashMap<String, OriLine.Type>();
 
-		typeHash.put("B", OriLine.Type.CUT);
-		typeHash.put("F", OriLine.Type.AUX);
-		typeHash.put("M", OriLine.Type.MOUNTAIN);
-		typeHash.put("V", OriLine.Type.VALLEY);
-		typeHash.put("U", OriLine.Type.UNASSIGNED);
-	}
+        typeHash.put("B", OriLine.Type.CUT);
+        typeHash.put("F", OriLine.Type.AUX);
+        typeHash.put("M", OriLine.Type.MOUNTAIN);
+        typeHash.put("V", OriLine.Type.VALLEY);
+        typeHash.put("U", OriLine.Type.UNASSIGNED);
+    }
 
-	public String toFOLD(final OriLine.Type type) {
-		return switch (type) {
-		case AUX -> "F";
-		case CUT -> "B";
-		case MOUNTAIN -> "M";
-		case VALLEY -> "V";
-		case UNASSIGNED -> "U";
-		default -> null;
-		};
-	}
+    public String toFOLD(final OriLine.Type type) {
+        return switch (type) {
+        case AUX -> "F";
+        case CUT -> "B";
+        case MOUNTAIN -> "M";
+        case VALLEY -> "V";
+        case UNASSIGNED -> "U";
+        default -> null;
+        };
+    }
 
-	public OriLine.Type fromFOLD(final String assignment) {
-		return typeHash.get(assignment);
-	}
+    public OriLine.Type fromFOLD(final String assignment) {
+        return typeHash.get(assignment);
+    }
 
 }

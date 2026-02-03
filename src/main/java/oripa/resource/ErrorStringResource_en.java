@@ -26,16 +26,16 @@ import java.util.ListResourceBundle;
  */
 public class ErrorStringResource_en extends ListResourceBundle {
 
-	private static final Object[][] strings = {
-			{ StringID.Error.DEFAULT_TITLE_ID, "Error." },
-			{ StringID.Error.SAVE_FAILED_ID, "Failed to save." },
-			{ StringID.Error.LOAD_FAILED_ID, "Failed to load." },
-			{ StringID.Error.SAVE_INI_FAILED_ID, "Error when saving configurations." },
-			{ StringID.Error.ER_UI_INIT_FAILED_ID, "Initialization error (folded model UI)" },
-	};
+    private static final Object[][] strings = {
+            { StringID.Error.DEFAULT_TITLE_ID, "Error." },
+            { StringID.Error.SAVE_FAILED_ID, "Failed to save." },
+            { StringID.Error.LOAD_FAILED_ID, "Failed to load." },
+            { StringID.Error.SAVE_INI_FAILED_ID, "Error when saving configurations." },
+            { StringID.Error.ER_UI_INIT_FAILED_ID, "Initialization error (folded model UI)" },
+    };
 
-	@Override
-	protected Object[][] getContents() {
-		return strings;
-	}
+    @Override
+    protected Object[][] getContents() {
+        return strings;
+    }
 }

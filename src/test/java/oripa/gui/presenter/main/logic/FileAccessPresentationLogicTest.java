@@ -50,132 +50,132 @@ import oripa.project.Project;
  */
 @ExtendWith(MockitoExtension.class)
 class FileAccessPresentationLogicTest {
-	@InjectMocks
-	FileAccessPresentationLogic presentationLogic;
+    @InjectMocks
+    FileAccessPresentationLogic presentationLogic;
 
-	@Mock
-	MainFrameView view;
+    @Mock
+    MainFrameView view;
 
-	@Mock
-	PainterScreenPresenter screenPresenter;
+    @Mock
+    PainterScreenPresenter screenPresenter;
 
-	@Mock
-	PainterScreenSetting screenSetting;
+    @Mock
+    PainterScreenSetting screenSetting;
 
-	@Mock
-	ChildFrameManager childFrameManager;
+    @Mock
+    ChildFrameManager childFrameManager;
 
-	@Mock
-	PaintContextService paintContextService;
+    @Mock
+    PaintContextService paintContextService;
 
-	@Mock
-	FileAccessService<Doc> dataFileAccess;
+    @Mock
+    FileAccessService<Doc> dataFileAccess;
 
-	@Mock
-	PaintContext paintContext;
-	@Mock
-	CutModelOutlinesHolder cutModelOutlinesHolder;
-	@Mock
-	Project project;
+    @Mock
+    PaintContext paintContext;
+    @Mock
+    CutModelOutlinesHolder cutModelOutlinesHolder;
+    @Mock
+    Project project;
 
-	@Nested
-	class TestSaveFile {
-		@Test
-		void succeeds() {
+    @Nested
+    class TestSaveFile {
+        @Test
+        void succeeds() {
 
-			// execute
-			var selectedPath = presentationLogic.saveFile("path", mock());
+            // execute
+            var selectedPath = presentationLogic.saveFile("path", mock());
 
-			verify(dataFileAccess).saveFile(any(), eq("path"), any());
+            verify(dataFileAccess).saveFile(any(), eq("path"), any());
 
-			assertEquals("path", selectedPath);
-		}
+            assertEquals("path", selectedPath);
+        }
 
-	}
+    }
 
-	@Nested
-	class TestLoadFile {
+    @Nested
+    class TestLoadFile {
 
-		@Test
-		void succeedsWhenFileIsLoaded() {
+        @Test
+        void succeedsWhenFileIsLoaded() {
 
-			String path = "path";
-			Property loadedProperty = mock();
-			Doc loadedDoc = mock();
-			when(loadedDoc.getProperty()).thenReturn(loadedProperty);
-			when(loadedDoc.getCreasePattern()).thenReturn(mock());
-			when(dataFileAccess.loadFile(eq(path))).thenReturn(Optional.of(loadedDoc));
+            String path = "path";
+            Property loadedProperty = mock();
+            Doc loadedDoc = mock();
+            when(loadedDoc.getProperty()).thenReturn(loadedProperty);
+            when(loadedDoc.getCreasePattern()).thenReturn(mock());
+            when(dataFileAccess.loadFile(eq(path))).thenReturn(Optional.of(loadedDoc));
 
-			Property currentProperty = mock();
-			when(project.getProperty()).thenReturn(currentProperty);
+            Property currentProperty = mock();
+            when(project.getProperty()).thenReturn(currentProperty);
 
-			// execute
-			var loadedPath = presentationLogic.loadFile(path);
+            // execute
+            var loadedPath = presentationLogic.loadFile(path);
 
-			assertEquals(path, loadedPath);
+            assertEquals(path, loadedPath);
 
-			verify(childFrameManager).closeAll(view);
+            verify(childFrameManager).closeAll(view);
 
-			verify(dataFileAccess).loadFile(path);
-			verify(project).setProperty(loadedProperty);
-			verify(project).setDataFilePath(anyString());
-			verify(view).setEstimationResultColors(any(), any());
-			verify(screenSetting).setGridVisible(false);
-			verify(paintContextService).setCreasePatternToPaintContext(any());
-			verify(screenPresenter).updateCameraCenter();
-			verify(screenPresenter).clearPaperDomainOfModel();
-		}
+            verify(dataFileAccess).loadFile(path);
+            verify(project).setProperty(loadedProperty);
+            verify(project).setDataFilePath(anyString());
+            verify(view).setEstimationResultColors(any(), any());
+            verify(screenSetting).setGridVisible(false);
+            verify(paintContextService).setCreasePatternToPaintContext(any());
+            verify(screenPresenter).updateCameraCenter();
+            verify(screenPresenter).clearPaperDomainOfModel();
+        }
 
-		@Test
-		void noChangesWhenFileIsNotLoaded() {
+        @Test
+        void noChangesWhenFileIsNotLoaded() {
 
-			String path = "path";
-			// couldn't load
-			when(dataFileAccess.loadFile(eq(path))).thenReturn(Optional.empty());
+            String path = "path";
+            // couldn't load
+            when(dataFileAccess.loadFile(eq(path))).thenReturn(Optional.empty());
 
-			// execute
+            // execute
 
-			var loadedPath = presentationLogic.loadFile(path);
+            var loadedPath = presentationLogic.loadFile(path);
 
-			assertNull(loadedPath);
+            assertNull(loadedPath);
 
-			verify(childFrameManager).closeAll(view);
+            verify(childFrameManager).closeAll(view);
 
-			verify(dataFileAccess).loadFile(path);
+            verify(dataFileAccess).loadFile(path);
 
-			verify(project, never()).setProperty(any());
-			verify(project, never()).setDataFilePath(anyString());
-			verify(view, never()).setEstimationResultColors(any(), any());
-			verify(screenSetting, never()).setGridVisible(anyBoolean());
-			verify(paintContextService, never())
-					.setCreasePatternToPaintContext(any());
+            verify(project, never()).setProperty(any());
+            verify(project, never()).setDataFilePath(anyString());
+            verify(view, never()).setEstimationResultColors(any(), any());
+            verify(screenSetting, never()).setGridVisible(anyBoolean());
+            verify(paintContextService, never())
+                    .setCreasePatternToPaintContext(any());
 
-		}
+        }
 
-		@Test
-		void noChangesWhenDataAccessErrors() {
+        @Test
+        void noChangesWhenDataAccessErrors() {
 
-			doThrow(DataAccessException.class).when(dataFileAccess).loadFile(anyString());
+            doThrow(DataAccessException.class).when(dataFileAccess).loadFile(anyString());
 
-			when(project.getDataFilePath()).thenReturn("project path");
+            when(project.getDataFilePath()).thenReturn("project path");
 
-			// execute
-			var loadedPath = presentationLogic.loadFile("path");
+            // execute
+            var loadedPath = presentationLogic.loadFile("path");
 
-			assertEquals("project path", loadedPath);
+            assertEquals("project path", loadedPath);
 
-			verify(view).showLoadFailureErrorMessage(any());
+            verify(view).showLoadFailureErrorMessage(any());
 
-			verify(childFrameManager).closeAll(view);
-			verify(project, never()).setDataFilePath(anyString());
-			verify(view, never()).setEstimationResultColors(any(), any());
-			verify(screenSetting, never()).setGridVisible(false);
-			verify(paintContextService, never()).setCreasePatternToPaintContext(any());
-			verify(screenPresenter, never()).updateCameraCenter();
-			verify(screenPresenter, never()).clearPaperDomainOfModel();
+            verify(childFrameManager).closeAll(view);
+            verify(project, never()).setDataFilePath(anyString());
+            verify(view, never()).setEstimationResultColors(any(), any());
+            verify(screenSetting, never()).setGridVisible(false);
+            verify(paintContextService, never()).setCreasePatternToPaintContext(any());
+            verify(screenPresenter, never()).updateCameraCenter();
+            verify(screenPresenter, never()).clearPaperDomainOfModel();
 
-		}
+        }
 
-	}
+    }
 
 }

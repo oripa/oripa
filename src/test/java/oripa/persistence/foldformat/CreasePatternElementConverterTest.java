@@ -33,81 +33,81 @@ import oripa.value.OriLine;
  */
 class CreasePatternElementConverterTest {
 
-	private final Collection<OriLine> lines = List.of(
-			new OriLine(0.0, 0.0, 1.0, 0.0, OriLine.Type.CUT),
-			new OriLine(1.0, 0.0, 1.0, 1.0, OriLine.Type.CUT),
-			new OriLine(1.0, 1.0, 0.0, 1.0, OriLine.Type.CUT),
-			new OriLine(0.0, 1.0, 0.0, 0.0, OriLine.Type.CUT),
+    private final Collection<OriLine> lines = List.of(
+            new OriLine(0.0, 0.0, 1.0, 0.0, OriLine.Type.CUT),
+            new OriLine(1.0, 0.0, 1.0, 1.0, OriLine.Type.CUT),
+            new OriLine(1.0, 1.0, 0.0, 1.0, OriLine.Type.CUT),
+            new OriLine(0.0, 1.0, 0.0, 0.0, OriLine.Type.CUT),
 
-			new OriLine(0.0, 0.0, 1.0, 1.0, OriLine.Type.MOUNTAIN)
+            new OriLine(0.0, 0.0, 1.0, 1.0, OriLine.Type.MOUNTAIN)
 
-	);
+    );
 
-	private List<Double> createCoord(final double x, final double y) {
-		return List.of(x, y);
-	}
+    private List<Double> createCoord(final double x, final double y) {
+        return List.of(x, y);
+    }
 
-	private List<Integer> createEdge(final int index1, final int index2) {
-		return List.of(index1, index2);
-	}
+    private List<Integer> createEdge(final int index1, final int index2) {
+        return List.of(index1, index2);
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.persistence.foldformat.CreasePatternElementConverter#toVerticesCoords(java.util.Collection)}.
-	 */
-	@Test
-	void testToVerticesCoords() {
-		var converter = new CreasePatternElementConverter();
+    /**
+     * Test method for
+     * {@link oripa.persistence.foldformat.CreasePatternElementConverter#toVerticesCoords(java.util.Collection)}.
+     */
+    @Test
+    void testToVerticesCoords() {
+        var converter = new CreasePatternElementConverter();
 
-		var coords = converter.toVerticesCoords(lines);
+        var coords = converter.toVerticesCoords(lines);
 
-		assertEquals(4, coords.size());
+        assertEquals(4, coords.size());
 
-		assertTrue(coords.contains(createCoord(0.0, 0.0)));
-		assertTrue(coords.contains(createCoord(1.0, 0.0)));
-		assertTrue(coords.contains(createCoord(1.0, 1.0)));
-		assertTrue(coords.contains(createCoord(0.0, 1.0)));
-	}
+        assertTrue(coords.contains(createCoord(0.0, 0.0)));
+        assertTrue(coords.contains(createCoord(1.0, 0.0)));
+        assertTrue(coords.contains(createCoord(1.0, 1.0)));
+        assertTrue(coords.contains(createCoord(0.0, 1.0)));
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.persistence.foldformat.CreasePatternElementConverter#toEdgesVertices(java.util.Collection)}.
-	 */
-	@Test
-	void testToEdgesVertices() {
-		var converter = new CreasePatternElementConverter();
+    /**
+     * Test method for
+     * {@link oripa.persistence.foldformat.CreasePatternElementConverter#toEdgesVertices(java.util.Collection)}.
+     */
+    @Test
+    void testToEdgesVertices() {
+        var converter = new CreasePatternElementConverter();
 
-		var edges = converter.toEdgesVertices(lines);
+        var edges = converter.toEdgesVertices(lines);
 
-		assertEquals(createEdge(0, 1), edges.get(0));
-		assertEquals(createEdge(0, 2), edges.get(4));
-	}
+        assertEquals(createEdge(0, 1), edges.get(0));
+        assertEquals(createEdge(0, 2), edges.get(4));
+    }
 
-	/**
-	 * Test method for
-	 * {@link oripa.persistence.foldformat.CreasePatternElementConverter#toEdgesAssignment(java.util.Collection)}.
-	 */
-	@Test
-	void testToEdgesAssignment() {
-		var converter = new CreasePatternElementConverter();
+    /**
+     * Test method for
+     * {@link oripa.persistence.foldformat.CreasePatternElementConverter#toEdgesAssignment(java.util.Collection)}.
+     */
+    @Test
+    void testToEdgesAssignment() {
+        var converter = new CreasePatternElementConverter();
 
-		var assignment = converter.toEdgesAssignment(lines);
+        var assignment = converter.toEdgesAssignment(lines);
 
-		assertEquals("B", assignment.get(3));
-		assertEquals("M", assignment.get(4));
-	}
+        assertEquals("B", assignment.get(3));
+        assertEquals("M", assignment.get(4));
+    }
 
-	@Test
-	void testToFacesVertices() {
-		var converter = new CreasePatternElementConverter();
+    @Test
+    void testToFacesVertices() {
+        var converter = new CreasePatternElementConverter();
 
-		var facesVertices = converter.toFacesVertices(lines);
+        var facesVertices = converter.toFacesVertices(lines);
 
-		assertEquals(2, facesVertices.size());
+        assertEquals(2, facesVertices.size());
 
-		assertEquals(3, facesVertices.get(0).size());
-		assertEquals(3, facesVertices.get(1).size());
+        assertEquals(3, facesVertices.get(0).size());
+        assertEquals(3, facesVertices.get(1).size());
 
-	}
+    }
 
 }

@@ -19,10 +19,10 @@
 package oripa.persistence.doc.loader;
 
 class MutablePoint {
-	double x, y;
+    double x, y;
 
-	public MutablePoint(final double x, final double y) {
-		this.x = x;
-		this.y = y;
-	}
+    public MutablePoint(final double x, final double y) {
+        this.x = x;
+        this.y = y;
+    }
 }

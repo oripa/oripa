@@ -23,33 +23,33 @@ package oripa.util;
  *
  */
 public class ClosedRange implements Range {
-	final double min;
-	final double max;
-	final double eps;
+    final double min;
+    final double max;
+    final double eps;
 
-	public ClosedRange(final double min, final double max, final double eps) {
-		if (min > max) {
-			throw new IllegalArgumentException("min should be smaller than max.");
-		}
+    public ClosedRange(final double min, final double max, final double eps) {
+        if (min > max) {
+            throw new IllegalArgumentException("min should be smaller than max.");
+        }
 
-		if (eps < 0) {
-			throw new IllegalArgumentException("eps should be positive");
-		}
+        if (eps < 0) {
+            throw new IllegalArgumentException("eps should be positive");
+        }
 
-		this.min = min;
-		this.max = max;
-		this.eps = eps;
-	}
+        this.min = min;
+        this.max = max;
+        this.eps = eps;
+    }
 
-	public ClosedRange(final double min, final double max) {
-		this(min, max, 0);
-	}
+    public ClosedRange(final double min, final double max) {
+        this(min, max, 0);
+    }
 
-	@Override
-	public boolean includes(final double value) {
-		if (eps == 0) {
-			return value >= min && value <= max;
-		}
-		return value > min - eps && value < max + eps;
-	}
+    @Override
+    public boolean includes(final double value) {
+        if (eps == 0) {
+            return value >= min && value <= max;
+        }
+        return value > min - eps && value < max + eps;
+    }
 }

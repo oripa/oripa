@@ -26,7 +26,7 @@ import oripa.gui.view.FrameView;
  */
 public interface EstimationResultFrameFactory {
 
-	EstimationResultFrameView createFrame(
-			FrameView parent);
+    EstimationResultFrameView createFrame(
+            FrameView parent);
 
 }

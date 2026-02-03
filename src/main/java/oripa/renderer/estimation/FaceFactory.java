@@ -31,51 +31,51 @@ import oripa.util.collection.CollectionUtil;
  */
 class FaceFactory {
 
-	private final CoordinateConverter converter;
-	private final Map<OriVertex, Integer> vertexDepths;
+    private final CoordinateConverter converter;
+    private final Map<OriVertex, Integer> vertexDepths;
 
-	/**
-	 *
-	 * @param converter
-	 * @param vertexDepths
-	 *            can be empty map if converter does not use.
-	 */
-	public FaceFactory(final CoordinateConverter converter, final Map<OriVertex, Integer> vertexDepths,
-			final double eps) {
-		this.converter = converter;
-		this.vertexDepths = vertexDepths;
-	}
+    /**
+     *
+     * @param converter
+     * @param vertexDepths
+     *            can be empty map if converter does not use.
+     */
+    public FaceFactory(final CoordinateConverter converter, final Map<OriVertex, Integer> vertexDepths,
+            final double eps) {
+        this.converter = converter;
+        this.vertexDepths = vertexDepths;
+    }
 
-	public Face create(final OriFace face, final double eps) {
-		return new Face(face, convertCoordinate(face, eps));
-	}
+    public Face create(final OriFace face, final double eps) {
+        return new Face(face, convertCoordinate(face, eps));
+    }
 
-	private OriFace convertCoordinate(final OriFace face, final double eps) {
-		var convertedFace = new OriFace();
-		convertedFace.setFaceID(face.getFaceID());
+    private OriFace convertCoordinate(final OriFace face, final double eps) {
+        var convertedFace = new OriFace();
+        convertedFace.setFaceID(face.getFaceID());
 
-		var convertedHalfedges = face.halfedgeStream()
-				.map(OriHalfedge::getVertex)
-				.map(v -> converter.convert(v.getPosition(), vertexDepths.get(v),
-						v.getPositionBeforeFolding()))
-				.map(p -> new OriHalfedge(new OriVertex(p), convertedFace))
-				.toList();
+        var convertedHalfedges = face.halfedgeStream()
+                .map(OriHalfedge::getVertex)
+                .map(v -> converter.convert(v.getPosition(), vertexDepths.get(v),
+                        v.getPositionBeforeFolding()))
+                .map(p -> new OriHalfedge(new OriVertex(p), convertedFace))
+                .toList();
 
-		for (int i = 0; i < convertedHalfedges.size(); i++) {
-			var he = convertedHalfedges.get(i);
-			he.setNext(CollectionUtil.getCircular(convertedHalfedges, i + 1));
-		}
+        for (int i = 0; i < convertedHalfedges.size(); i++) {
+            var he = convertedHalfedges.get(i);
+            he.setNext(CollectionUtil.getCircular(convertedHalfedges, i + 1));
+        }
 
-		for (var he : convertedHalfedges) {
-			convertedFace.addHalfedge(he);
-		}
+        for (var he : convertedHalfedges) {
+            convertedFace.addHalfedge(he);
+        }
 
-		if (!face.isFaceFront()) {
-			convertedFace.invertFaceFront();
-		}
-		convertedFace.makeHalfedgeLoop(eps);
+        if (!face.isFaceFront()) {
+            convertedFace.invertFaceFront();
+        }
+        convertedFace.makeHalfedgeLoop(eps);
 
-		return convertedFace;
-	}
+        return convertedFace;
+    }
 
 }

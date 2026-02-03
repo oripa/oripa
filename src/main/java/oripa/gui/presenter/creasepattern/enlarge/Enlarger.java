@@ -31,12 +31,12 @@ import oripa.vecmath.Vector2d;
  */
 interface Enlarger {
 
-	Optional<Vector2d> createOriginOfEnlargement(RectangleDomain originalDomain, Vector2d mouseStartPoint);
+    Optional<Vector2d> createOriginOfEnlargement(RectangleDomain originalDomain, Vector2d mouseStartPoint);
 
-	RectangleDomain createEnlargedDomain(Vector2d mousePoint, Vector2d originOfEnlargement,
-			Vector2d mouseStartPoint);
+    RectangleDomain createEnlargedDomain(Vector2d mousePoint, Vector2d originOfEnlargement,
+            Vector2d mouseStartPoint);
 
-	Collection<OriLine> createEnlargedLines(Vector2d mousePoint, Vector2d originOfEnlargement,
-			Vector2d mouseStartPoint, Collection<OriLine> pickedLines);
+    Collection<OriLine> createEnlargedLines(Vector2d mousePoint, Vector2d originOfEnlargement,
+            Vector2d mouseStartPoint, Collection<OriLine> pickedLines);
 
 }

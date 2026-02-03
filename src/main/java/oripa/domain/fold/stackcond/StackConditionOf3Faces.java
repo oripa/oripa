@@ -36,9 +36,9 @@ package oripa.domain.fold.stackcond;
  *            ID of a face covering both upper and lower.
  */
 public record StackConditionOf3Faces(
-		int lower,
-		int upper,
-		int other
+        int lower,
+        int upper,
+        int other
 
 ) {
 }

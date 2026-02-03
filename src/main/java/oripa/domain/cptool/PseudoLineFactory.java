@@ -28,21 +28,21 @@ import oripa.vecmath.Vector2d;
  */
 @Deprecated
 public class PseudoLineFactory {
-	public Segment create(
-			final Vector2d v0, final Vector2d v1, final double paperSize) {
+    public Segment create(
+            final Vector2d v0, final Vector2d v1, final double paperSize) {
 
-		return create(new Segment(v0, v1).getLine(), paperSize);
-	}
+        return create(new Segment(v0, v1).getLine(), paperSize);
+    }
 
-	public Segment create(final Line line, final double paperSize) {
-		var dir = line.getDirection().multiply(paperSize * 8);
+    public Segment create(final Line line, final double paperSize) {
+        var dir = line.getDirection().multiply(paperSize * 8);
 
-		var v0 = line.getPoint();
-		Vector2d sv = v0.subtract(dir);
+        var v0 = line.getPoint();
+        Vector2d sv = v0.subtract(dir);
 
-		Vector2d ev = v0.add(dir);
+        Vector2d ev = v0.add(dir);
 
-		// create new line
-		return new Segment(sv, ev);
-	}
+        // create new line
+        return new Segment(sv, ev);
+    }
 }

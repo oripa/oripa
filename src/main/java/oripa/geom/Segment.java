@@ -25,157 +25,157 @@ import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
 
 public class Segment {
-	private final Vector2d p0;
-	private final Vector2d p1;
+    private final Vector2d p0;
+    private final Vector2d p1;
 
-	public Segment(final Vector2d p0, final Vector2d p1) {
-		this.p0 = p0;
-		this.p1 = p1;
-	}
+    public Segment(final Vector2d p0, final Vector2d p1) {
+        this.p0 = p0;
+        this.p1 = p1;
+    }
 
-	public Segment(final double x0, final double y0, final double x1, final double y1) {
-		this.p0 = new Vector2d(x0, y0);
-		this.p1 = new Vector2d(x1, y1);
-	}
+    public Segment(final double x0, final double y0, final double x1, final double y1) {
+        this.p0 = new Vector2d(x0, y0);
+        this.p1 = new Vector2d(x1, y1);
+    }
 
-	public Vector2d getP0() {
-		return p0;
-	}
+    public Vector2d getP0() {
+        return p0;
+    }
 
-	public Vector2d getP1() {
-		return p1;
-	}
+    public Vector2d getP1() {
+        return p1;
+    }
 
-	public Stream<Vector2d> pointStream() {
-		return Stream.of(getP0(), getP1());
-	}
+    public Stream<Vector2d> pointStream() {
+        return Stream.of(getP0(), getP1());
+    }
 
-	public Line getLine() {
-		var p0 = getP0();
-		var p1 = getP1();
-		return new Line(p0, p1.subtract(p0));
-	}
+    public Line getLine() {
+        var p0 = getP0();
+        var p1 = getP1();
+        return new Line(p0, p1.subtract(p0));
+    }
 
-	public double length() {
-		var p0 = getP0();
-		var p1 = getP1();
+    public double length() {
+        var p0 = getP0();
+        var p1 = getP1();
 
-		var dp = p0.subtract(p1);
+        var dp = p0.subtract(p1);
 
-		return dp.length();
-	}
+        return dp.length();
+    }
 
-	public double getAngle() {
-		var angle = Math.atan2(p1.getY() - p0.getY(), p1.getX() - p0.getX());
-		// limit the angle 0 to PI.
-		if (angle < 0) {
-			angle += Math.PI;
-		}
-		// a line with angle PI is the same as one with angle 0.
-		if (Math.PI - angle < MathUtil.angleRadianEps()) {
-			angle = 0;
-		}
+    public double getAngle() {
+        var angle = Math.atan2(p1.getY() - p0.getY(), p1.getX() - p0.getX());
+        // limit the angle 0 to PI.
+        if (angle < 0) {
+            angle += Math.PI;
+        }
+        // a line with angle PI is the same as one with angle 0.
+        if (Math.PI - angle < MathUtil.angleRadianEps()) {
+            angle = 0;
+        }
 
-		return angle;
-	}
+        return angle;
+    }
 
-	public boolean isVertical() {
-		var angle = getAngle();
-		return MathUtil.areRadianEqual(angle, Math.PI / 2)
-				|| MathUtil.areRadianEqual(angle, 3 * Math.PI / 2);
-	}
+    public boolean isVertical() {
+        var angle = getAngle();
+        return MathUtil.areRadianEqual(angle, Math.PI / 2)
+                || MathUtil.areRadianEqual(angle, 3 * Math.PI / 2);
+    }
 
-	public boolean isStrictlyVertical() {
-		return getP0().getX() == getP1().getX();
-	}
+    public boolean isStrictlyVertical() {
+        return getP0().getX() == getP1().getX();
+    }
 
-	public boolean isHorizontal() {
-		var angle = getAngle();
-		return MathUtil.areRadianEqual(angle, 0)
-				|| MathUtil.areRadianEqual(angle, Math.PI)
-				|| MathUtil.areRadianEqual(angle, 2 * Math.PI);
+    public boolean isHorizontal() {
+        var angle = getAngle();
+        return MathUtil.areRadianEqual(angle, 0)
+                || MathUtil.areRadianEqual(angle, Math.PI)
+                || MathUtil.areRadianEqual(angle, 2 * Math.PI);
 
-	}
+    }
 
-	/**
-	 * Calculates the affine value on the line, at the {@code xTested}
-	 * coordinate using the y = ax + b expression
-	 *
-	 * @param xTested
-	 *            {@linkplain Double#NaN} if this segment is vertical.
-	 */
-	public double getAffineYValueAt(final double xTested) {
-		var p0 = getP0();
-		var p1 = getP1();
+    /**
+     * Calculates the affine value on the line, at the {@code xTested}
+     * coordinate using the y = ax + b expression
+     *
+     * @param xTested
+     *            {@linkplain Double#NaN} if this segment is vertical.
+     */
+    public double getAffineYValueAt(final double xTested) {
+        var p0 = getP0();
+        var p1 = getP1();
 
-		// vertical line does not have y value.
-		if (isVertical()) {
-			return Double.NaN;
-		}
+        // vertical line does not have y value.
+        if (isVertical()) {
+            return Double.NaN;
+        }
 
-		return (p1.getY() - p0.getY()) * (xTested - p0.getX()) / (p1.getX() - p0.getX())
-				+ p0.getY();
-	}
+        return (p1.getY() - p0.getY()) * (xTested - p0.getX()) / (p1.getX() - p0.getX())
+                + p0.getY();
+    }
 
-	/**
-	 * Calculates the affine value on the line, at the {@code yTested}
-	 * coordinate using the x = ay + b expression
-	 *
-	 * @param yTested
-	 *            {@linkplain Double#NaN} if this segment is horizontal.
-	 */
-	public double getAffineXValueAt(final double yTested) {
-		var p0 = getP0();
-		var p1 = getP1();
+    /**
+     * Calculates the affine value on the line, at the {@code yTested}
+     * coordinate using the x = ay + b expression
+     *
+     * @param yTested
+     *            {@linkplain Double#NaN} if this segment is horizontal.
+     */
+    public double getAffineXValueAt(final double yTested) {
+        var p0 = getP0();
+        var p1 = getP1();
 
-		// horizontal line does not have x value.
-		if (isHorizontal()) {
-			return Double.NaN;
-		}
+        // horizontal line does not have x value.
+        if (isHorizontal()) {
+            return Double.NaN;
+        }
 
-		return (p1.getX() - p0.getX()) * (yTested - p0.getY()) / (p1.getY() - p0.getY()) + p0.getX();
-	}
+        return (p1.getX() - p0.getX()) * (yTested - p0.getY()) / (p1.getY() - p0.getY()) + p0.getX();
+    }
 
-	/**
-	 * Both distances between the extremities of the lines should be less than
-	 * the threshold. The lines can be reversed, so the test has to be done both
-	 * ways
-	 *
-	 * @param s
-	 *            segment to compare
-	 * @return true if both segments are (at least almost) equals
-	 */
-	public boolean equals(final Segment s, final double pointEps) {
-		if (getP0().equals(s.getP0(), pointEps) && getP1().equals(s.getP1(), pointEps)) {
-			return true;
-		}
-		if (getP0().equals(s.getP1(), pointEps) && getP1().equals(s.getP0(), pointEps)) {
-			return true;
-		}
+    /**
+     * Both distances between the extremities of the lines should be less than
+     * the threshold. The lines can be reversed, so the test has to be done both
+     * ways
+     *
+     * @param s
+     *            segment to compare
+     * @return true if both segments are (at least almost) equals
+     */
+    public boolean equals(final Segment s, final double pointEps) {
+        if (getP0().equals(s.getP0(), pointEps) && getP1().equals(s.getP1(), pointEps)) {
+            return true;
+        }
+        if (getP0().equals(s.getP1(), pointEps) && getP1().equals(s.getP0(), pointEps)) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Returns {@code true} if an end point of this segment is close enough to
-	 * the given segment's end point.
-	 *
-	 * @param s
-	 * @param pointEps
-	 * @return {@code true} if one of the end point of this segment equals that
-	 *         of the given segment.
-	 */
-	public boolean sharesEndPoint(final Segment s, final double pointEps) {
-		return getSharedEndPoint(s, pointEps).isPresent();
-	}
+    /**
+     * Returns {@code true} if an end point of this segment is close enough to
+     * the given segment's end point.
+     *
+     * @param s
+     * @param pointEps
+     * @return {@code true} if one of the end point of this segment equals that
+     *         of the given segment.
+     */
+    public boolean sharesEndPoint(final Segment s, final double pointEps) {
+        return getSharedEndPoint(s, pointEps).isPresent();
+    }
 
-	public Optional<Vector2d> getSharedEndPoint(final Segment s, final double pointEps) {
-		return pointStream().filter(p -> s.pointStream().anyMatch(q -> p.equals(q, pointEps))).findFirst();
-	}
+    public Optional<Vector2d> getSharedEndPoint(final Segment s, final double pointEps) {
+        return pointStream().filter(p -> s.pointStream().anyMatch(q -> p.equals(q, pointEps))).findFirst();
+    }
 
-	@Override
-	public String toString() {
-		return "(" + p0 + ", " + p1 + ") len:" + length();
-	}
+    @Override
+    public String toString() {
+        return "(" + p0 + ", " + p1 + ") len:" + length();
+    }
 
 }

@@ -31,13 +31,13 @@ import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
  *
  */
 public class FoldedModelSVGConfigWriter {
-	public void write(final FoldedModelSVGConfig config, final String path) throws IOException {
+    public void write(final FoldedModelSVGConfig config, final String path) throws IOException {
 
-		try (var writer = Files.newBufferedWriter(Path.of(path))) {
-			var gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.toJson(config, writer);
-			writer.flush();
-		}
+        try (var writer = Files.newBufferedWriter(Path.of(path))) {
+            var gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(config, writer);
+            writer.flush();
+        }
 
-	}
+    }
 }

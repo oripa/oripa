@@ -25,28 +25,28 @@ import oripa.persistence.dao.FileType;
  *
  */
 public class FoldedModelFileTypes {
-	public static FileType<FoldedModelEntity> svg() {
-		return new FileType<>(FoldedModelFileTypeKey.SVG_FOLDED_MODEL);
-	}
+    public static FileType<FoldedModelEntity> svg() {
+        return new FileType<>(FoldedModelFileTypeKey.SVG_FOLDED_MODEL);
+    }
 
-	public static FileType<FoldedModelEntity> flippedSvg() {
-		return new FileType<>(FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP);
-	}
+    public static FileType<FoldedModelEntity> flippedSvg() {
+        return new FileType<>(FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP);
+    }
 
-	public static FileType<FoldedModelEntity> picture() {
-		return new FileType<>(FoldedModelFileTypeKey.PICTURE);
-	}
+    public static FileType<FoldedModelEntity> picture() {
+        return new FileType<>(FoldedModelFileTypeKey.PICTURE);
+    }
 
-	public static FileType<FoldedModelEntity> ormat() {
-		return new FileType<>(FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL);
-	}
+    public static FileType<FoldedModelEntity> ormat() {
+        return new FileType<>(FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL);
+    }
 
-	public static FileType<FoldedModelEntity> singleFrameFold() {
-		return new FileType<>(FoldedModelFileTypeKey.FOLD_SINGLE_OVERLAPS);
-	}
+    public static FileType<FoldedModelEntity> singleFrameFold() {
+        return new FileType<>(FoldedModelFileTypeKey.FOLD_SINGLE_OVERLAPS);
+    }
 
-	public static FileType<FoldedModelEntity> multiFrameFold() {
-		return new FileType<>(FoldedModelFileTypeKey.FOLD_ALL_OVERLAPS);
-	}
+    public static FileType<FoldedModelEntity> multiFrameFold() {
+        return new FileType<>(FoldedModelFileTypeKey.FOLD_ALL_OVERLAPS);
+    }
 
 }

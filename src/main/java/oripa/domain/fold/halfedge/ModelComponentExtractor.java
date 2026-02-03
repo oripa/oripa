@@ -29,20 +29,20 @@ import oripa.value.OriLine;
  */
 public class ModelComponentExtractor {
 
-	public List<OriVertex> extractByBoundary(final List<OriVertex> wholeVertices,
-			final OriFace boundaryFace, final double eps) {
+    public List<OriVertex> extractByBoundary(final List<OriVertex> wholeVertices,
+            final OriFace boundaryFace, final double eps) {
 
-		return wholeVertices.stream()
-				.filter(vertex -> boundaryFace.includesInclusively(vertex.getPosition(), eps))
-				.toList();
-	}
+        return wholeVertices.stream()
+                .filter(vertex -> boundaryFace.includesInclusively(vertex.getPosition(), eps))
+                .toList();
+    }
 
-	public List<OriLine> extractByBoundary(final Collection<OriLine> wholePrecreases,
-			final OriFace boundaryFace, final double eps) {
+    public List<OriLine> extractByBoundary(final Collection<OriLine> wholePrecreases,
+            final OriFace boundaryFace, final double eps) {
 
-		return wholePrecreases.stream()
-				.filter(p -> boundaryFace.includesInclusively(p, eps))
-				.toList();
-	}
+        return wholePrecreases.stream()
+                .filter(p -> boundaryFace.includesInclusively(p, eps))
+                .toList();
+    }
 
 }

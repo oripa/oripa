@@ -36,94 +36,94 @@ import oripa.vecmath.Vector2d;
  */
 public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.doc.Exporter#export(java.lang.Object,
-	 * java.lang.String)
-	 */
-	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filePath, final Object configObj)
-			throws IOException, IllegalArgumentException {
-		double paperSize = origamiModel.getPaperSize();
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.persistent.doc.Exporter#export(java.lang.Object,
+     * java.lang.String)
+     */
+    @Override
+    public boolean export(final OrigamiModel origamiModel, final String filePath, final Object configObj)
+            throws IOException, IllegalArgumentException {
+        double paperSize = origamiModel.getPaperSize();
 
-		double scale = 6.0 / paperSize; // 6.0 inch width
-		double center = 4.0; // inch
+        double scale = 6.0 / paperSize; // 6.0 inch width
+        double center = 4.0; // inch
 
-		try (var fw = new FileWriter(filePath);
-				var bw = new BufferedWriter(fw);) {
+        try (var fw = new FileWriter(filePath);
+                var bw = new BufferedWriter(fw);) {
 
-			List<OriFace> faces = origamiModel.getFaces();
+            List<OriFace> faces = origamiModel.getFaces();
 
-			var domain = RectangleDomain.createFromPoints(
-					faces.stream()
-							.flatMap(face -> face.halfedgeStream())
-							.map(OriHalfedge::getPosition)
-							.toList());
+            var domain = RectangleDomain.createFromPoints(
+                    faces.stream()
+                            .flatMap(face -> face.halfedgeStream())
+                            .map(OriHalfedge::getPosition)
+                            .toList());
 
-			// Align the center of the model, combine scales
-			Vector2d modelCenter = domain.getCenter();
+            // Align the center of the model, combine scales
+            Vector2d modelCenter = domain.getCenter();
 
-			bw.write("  0\n");
-			bw.write("SECTION\n");
-			bw.write("  2\n");
-			bw.write("HEADER\n");
-			bw.write("  9\n");
-			bw.write("$ACADVER\n");
-			bw.write("  1\n");
-			bw.write("AC1009\n");
-			bw.write("  0\n");
-			bw.write("ENDSEC\n");
-			bw.write("  0\n");
-			bw.write("SECTION\n");
-			bw.write("  2\n");
-			bw.write("ENTITIES\n");
+            bw.write("  0\n");
+            bw.write("SECTION\n");
+            bw.write("  2\n");
+            bw.write("HEADER\n");
+            bw.write("  9\n");
+            bw.write("$ACADVER\n");
+            bw.write("  1\n");
+            bw.write("AC1009\n");
+            bw.write("  0\n");
+            bw.write("ENDSEC\n");
+            bw.write("  0\n");
+            bw.write("SECTION\n");
+            bw.write("  2\n");
+            bw.write("ENTITIES\n");
 
-			for (OriFace face : faces) {
-				for (var he : face.halfedgeIterable()) {
+            for (OriFace face : faces) {
+                for (var he : face.halfedgeIterable()) {
 
-					bw.write("  0\n");
-					bw.write("LINE\n");
-					bw.write("  8\n");
-					bw.write("_0-0_\n"); // Layer name
-					bw.write("  6\n");
-					bw.write("CONTINUOUS\n"); // Line type
-					bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
-										// 6＝magenta 7＝white
-					int colorNumber = 250;
-					var position = he.getPositionForDisplay();
-					var nextPosition = he.getNext().getPositionForDisplay();
+                    bw.write("  0\n");
+                    bw.write("LINE\n");
+                    bw.write("  8\n");
+                    bw.write("_0-0_\n"); // Layer name
+                    bw.write("  6\n");
+                    bw.write("CONTINUOUS\n"); // Line type
+                    bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
+                                       // 6＝magenta 7＝white
+                    int colorNumber = 250;
+                    var position = he.getPositionForDisplay();
+                    var nextPosition = he.getNext().getPositionForDisplay();
 
-					bw.write("" + colorNumber + "\n");
-					bw.write(" 10\n");
-					bw.write(""
-							+ ((position.getX() - modelCenter.getX())
-									* scale + center)
-							+ "\n");
-					bw.write(" 20\n");
-					bw.write(""
-							+ (-(position.getY() - modelCenter.getY())
-									* scale + center)
-							+ "\n");
-					bw.write(" 11\n");
-					bw.write(""
-							+ ((nextPosition.getX() - modelCenter.getX())
-									* scale + center)
-							+ "\n");
-					bw.write(" 21\n");
-					bw.write(""
-							+ (-(nextPosition.getY() - modelCenter.getY())
-									* scale + center)
-							+ "\n");
-				}
-			}
+                    bw.write("" + colorNumber + "\n");
+                    bw.write(" 10\n");
+                    bw.write(""
+                            + ((position.getX() - modelCenter.getX())
+                                    * scale + center)
+                            + "\n");
+                    bw.write(" 20\n");
+                    bw.write(""
+                            + (-(position.getY() - modelCenter.getY())
+                                    * scale + center)
+                            + "\n");
+                    bw.write(" 11\n");
+                    bw.write(""
+                            + ((nextPosition.getX() - modelCenter.getX())
+                                    * scale + center)
+                            + "\n");
+                    bw.write(" 21\n");
+                    bw.write(""
+                            + (-(nextPosition.getY() - modelCenter.getY())
+                                    * scale + center)
+                            + "\n");
+                }
+            }
 
-			bw.write("  0\n");
-			bw.write("ENDSEC\n");
-			bw.write("  0\n");
-			bw.write("EOF\n");
-		}
+            bw.write("  0\n");
+            bw.write("ENDSEC\n");
+            bw.write("  0\n");
+            bw.write("EOF\n");
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

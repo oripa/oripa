@@ -38,85 +38,85 @@ import oripa.value.OriPoint;
  *
  */
 public class LineTypeOverwriter {
-	private final SequentialLineFactory sequentialLineFactory = new SequentialLineFactory();
-	private final OverlappingLineExtractor extractor = new OverlappingLineExtractor();
+    private final SequentialLineFactory sequentialLineFactory = new SequentialLineFactory();
+    private final OverlappingLineExtractor extractor = new OverlappingLineExtractor();
 
-	/**
-	 * Overwrites line types of {@code allLines} with the type of lines in
-	 * {@code addedLines} if they overlap.
-	 *
-	 * @param addedLines
-	 *            each line of {@code addedLines} should be split at cross
-	 *            points.
-	 * @param allLines
-	 *            is the result of adding lines and splitting at cross points.
-	 * @return all lines that each line is from either {@code addedLines} if the
-	 *         line overlaps or {@code allLines} if it has no overlaps.
-	 */
-	public Collection<OriLine> overwriteLineTypes(final Collection<OriLine> addedLines,
-			final Collection<OriLine> allLines,
-			final double pointEps) {
-		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
+    /**
+     * Overwrites line types of {@code allLines} with the type of lines in
+     * {@code addedLines} if they overlap.
+     *
+     * @param addedLines
+     *            each line of {@code addedLines} should be split at cross
+     *            points.
+     * @param allLines
+     *            is the result of adding lines and splitting at cross points.
+     * @return all lines that each line is from either {@code addedLines} if the
+     *         line overlaps or {@code allLines} if it has no overlaps.
+     */
+    public Collection<OriLine> overwriteLineTypes(final Collection<OriLine> addedLines,
+            final Collection<OriLine> allLines,
+            final double pointEps) {
+        var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
-		var addedLineSet = new HashSet<>(addedLines);
-		Set<OriLine> allLineSet = CollectionUtil.newConcurrentHashSet(allLines);
+        var addedLineSet = new HashSet<>(addedLines);
+        Set<OriLine> allLineSet = CollectionUtil.newConcurrentHashSet(allLines);
 
-		overlapGroups.parallelStream().forEach(overlaps -> {
-			determineLineTypes(overlaps, addedLineSet, allLineSet, pointEps);
-		});
+        overlapGroups.parallelStream().forEach(overlaps -> {
+            determineLineTypes(overlaps, addedLineSet, allLineSet, pointEps);
+        });
 
-		return allLineSet;
-	}
+        return allLineSet;
+    }
 
-	private void determineLineTypes(final Collection<OriLine> overlaps, final Set<OriLine> addedLines,
-			final Set<OriLine> allLines, final double pointEps) {
+    private void determineLineTypes(final Collection<OriLine> overlaps, final Set<OriLine> addedLines,
+            final Set<OriLine> allLines, final double pointEps) {
 
-		var addedOverlaps = overlaps.stream()
-				.filter(ov -> addedLines.contains(ov))
-				.collect(Collectors.toSet());
+        var addedOverlaps = overlaps.stream()
+                .filter(ov -> addedLines.contains(ov))
+                .collect(Collectors.toSet());
 
-		var existingOverlaps = overlaps.stream()
-				.filter(ov -> !addedOverlaps.contains(ov))
-				.collect(Collectors.toSet());
+        var existingOverlaps = overlaps.stream()
+                .filter(ov -> !addedOverlaps.contains(ov))
+                .collect(Collectors.toSet());
 
-		allLines.removeAll(addedOverlaps);
-		allLines.removeAll(existingOverlaps);
+        allLines.removeAll(addedOverlaps);
+        allLines.removeAll(existingOverlaps);
 
-		var sortedPoints = sortLineEndPoints(overlaps);
-		List<OriLine> splitLines = sequentialLineFactory.createSequentialLines(sortedPoints, OriLine.Type.AUX,
-				pointEps);
+        var sortedPoints = sortLineEndPoints(overlaps);
+        List<OriLine> splitLines = sequentialLineFactory.createSequentialLines(sortedPoints, OriLine.Type.AUX,
+                pointEps);
 
-		// find lines to be a part of crease pattern
-		var linesToBeUsed = new ArrayList<OriLine>();
-		for (var splitLine : splitLines) {
+        // find lines to be a part of crease pattern
+        var linesToBeUsed = new ArrayList<OriLine>();
+        for (var splitLine : splitLines) {
 
-			Function<Collection<OriLine>, Boolean> find = overlapsForFilter -> {
-				return overlapsForFilter.stream()
-						.filter(line -> GeomUtil.isOverlap(splitLine, line, pointEps))
-						.findFirst()
-						.map(linesToBeUsed::add)
-						.orElse(false);
-			};
+            Function<Collection<OriLine>, Boolean> find = overlapsForFilter -> {
+                return overlapsForFilter.stream()
+                        .filter(line -> GeomUtil.isOverlap(splitLine, line, pointEps))
+                        .findFirst()
+                        .map(linesToBeUsed::add)
+                        .orElse(false);
+            };
 
-			if (find.apply(addedOverlaps)) {
-				continue;
-			}
+            if (find.apply(addedOverlaps)) {
+                continue;
+            }
 
-			find.apply(existingOverlaps);
-		}
+            find.apply(existingOverlaps);
+        }
 
-		allLines.addAll(linesToBeUsed);
-	}
+        allLines.addAll(linesToBeUsed);
+    }
 
-	private List<OriPoint> sortLineEndPoints(final Collection<OriLine> overlaps) {
-		var analyticLine = new AnalyticLine(overlaps.stream().findFirst().get());
+    private List<OriPoint> sortLineEndPoints(final Collection<OriLine> overlaps) {
+        var analyticLine = new AnalyticLine(overlaps.stream().findFirst().get());
 
-		var points = overlaps.stream()
-				.flatMap(line -> line.oriPointStream())
-				.sorted(Comparator.comparing(analyticLine.isVertical() ? OriPoint::getY : OriPoint::getX))
-				.toList();
+        var points = overlaps.stream()
+                .flatMap(line -> line.oriPointStream())
+                .sorted(Comparator.comparing(analyticLine.isVertical() ? OriPoint::getY : OriPoint::getX))
+                .toList();
 
-		return points;
-	}
+        return points;
+    }
 
 }

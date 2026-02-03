@@ -27,16 +27,16 @@ import oripa.appstate.StatePopper;
  */
 public class EditOutlineActionFactory {
 
-	private final StatePopper<EditMode> statePopper;
-	private final MouseActionHolder actionHolder;
+    private final StatePopper<EditMode> statePopper;
+    private final MouseActionHolder actionHolder;
 
-	@Inject
-	public EditOutlineActionFactory(final StatePopper<EditMode> statePopper, final MouseActionHolder actionHolder) {
-		this.statePopper = statePopper;
-		this.actionHolder = actionHolder;
-	}
+    @Inject
+    public EditOutlineActionFactory(final StatePopper<EditMode> statePopper, final MouseActionHolder actionHolder) {
+        this.statePopper = statePopper;
+        this.actionHolder = actionHolder;
+    }
 
-	public GraphicMouseAction create() {
-		return new EditOutlineActionWrapper(statePopper, actionHolder);
-	}
+    public GraphicMouseAction create() {
+        return new EditOutlineActionWrapper(statePopper, actionHolder);
+    }
 }

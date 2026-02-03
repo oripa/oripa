@@ -37,65 +37,65 @@ import oripa.vecmath.Vector2d;
  */
 public interface EstimationResultUIView extends View {
 
-	/**
-	 * Set Model to be displayed and update index label
-	 *
-	 * @param foldedModel
-	 *            {@code FoldedModel} to be displayed
-	 */
-	void setModel(FoldedModel foldedModel);
+    /**
+     * Set Model to be displayed and update index label
+     *
+     * @param foldedModel
+     *            {@code FoldedModel} to be displayed
+     */
+    void setModel(FoldedModel foldedModel);
 
-	FoldedModel getModel();
+    FoldedModel getModel();
 
-	OverlapRelation getOverlapRelation();
+    OverlapRelation getOverlapRelation();
 
-	int getOverlapRelationIndex();
+    int getOverlapRelationIndex();
 
-	boolean isFaceOrderFlipped();
+    boolean isFaceOrderFlipped();
 
-	boolean isFaceShade();
+    boolean isFaceShade();
 
-	boolean isDrawEdges();
+    boolean isDrawEdges();
 
-	boolean isFillFace();
+    boolean isFillFace();
 
-	boolean isUseColor();
+    boolean isUseColor();
 
-	double getRotateAngle();
+    double getRotateAngle();
 
-	double getEps();
+    double getEps();
 
-	DistortionMethod getDistortionMethod();
+    DistortionMethod getDistortionMethod();
 
-	Vector2d getDistortionParameter();
+    Vector2d getDistortionParameter();
 
-	Map<OriVertex, Integer> getVertexDepths();
+    Map<OriVertex, Integer> getVertexDepths();
 
-	double getSVGFaceStrokeWidth();
+    double getSVGFaceStrokeWidth();
 
-	void setSVGFaceStrokeWidth(double strokeWidth);
+    void setSVGFaceStrokeWidth(double strokeWidth);
 
-	double getSVGPrecreaseStrokeWidth();
+    double getSVGPrecreaseStrokeWidth();
 
-	void setSVGPrecreaseStrokeWidth(double strokeWidth);
+    void setSVGPrecreaseStrokeWidth(double strokeWidth);
 
-	Color getFrontColor();
+    Color getFrontColor();
 
-	Color getBackColor();
+    Color getBackColor();
 
-	void addExportButtonListener(Runnable listener);
+    void addExportButtonListener(Runnable listener);
 
-	void addSaveSVGConfigButtonListener(Runnable listener);
+    void addSaveSVGConfigButtonListener(Runnable listener);
 
-	/**
-	 * @param listener
-	 *            Output type: < index of subface, list< overlap relation
-	 *            indices > >
-	 */
-	void setFilterInitializationListener(
-			Function<FoldedModel, Map<Integer, List<BitSet>>> listener);
+    /**
+     * @param listener
+     *            Output type: < index of subface, list< overlap relation
+     *            indices > >
+     */
+    void setFilterInitializationListener(
+            Function<FoldedModel, Map<Integer, List<BitSet>>> listener);
 
-	void showExportErrorMessage(Exception e);
+    void showExportErrorMessage(Exception e);
 
-	void showErrorMessage(Exception e);
+    void showErrorMessage(Exception e);
 }

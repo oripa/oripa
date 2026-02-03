@@ -29,20 +29,20 @@ import oripa.vecmath.Vector2d;
  */
 abstract class AbstractEnlarger implements Enlarger {
 
-	@Override
-	public Collection<OriLine> createEnlargedLines(final Vector2d mousePoint, final Vector2d originOfEnlargement,
-			final Vector2d mouseStartPoint, final Collection<OriLine> pickedLines) {
+    @Override
+    public Collection<OriLine> createEnlargedLines(final Vector2d mousePoint, final Vector2d originOfEnlargement,
+            final Vector2d mouseStartPoint, final Collection<OriLine> pickedLines) {
 
-		return pickedLines.stream()
-				.map(line -> new OriLine(
-						scalePosition(line.getP0(), mousePoint, originOfEnlargement, mouseStartPoint),
-						scalePosition(line.getP1(), mousePoint, originOfEnlargement, mouseStartPoint),
-						line.getType()))
-				.toList();
-	}
+        return pickedLines.stream()
+                .map(line -> new OriLine(
+                        scalePosition(line.getP0(), mousePoint, originOfEnlargement, mouseStartPoint),
+                        scalePosition(line.getP1(), mousePoint, originOfEnlargement, mouseStartPoint),
+                        line.getType()))
+                .toList();
+    }
 
-	protected abstract Vector2d scalePosition(final Vector2d p, final Vector2d mousePoint,
-			final Vector2d originOfEnlargement,
-			final Vector2d mouseStartPoint);
+    protected abstract Vector2d scalePosition(final Vector2d p, final Vector2d mousePoint,
+            final Vector2d originOfEnlargement,
+            final Vector2d mouseStartPoint);
 
 }

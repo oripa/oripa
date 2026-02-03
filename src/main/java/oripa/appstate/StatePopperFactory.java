@@ -23,18 +23,18 @@ package oripa.appstate;
  *
  */
 public class StatePopperFactory<GroupEnum> {
-	private final StateManager<GroupEnum> stateManager;
+    private final StateManager<GroupEnum> stateManager;
 
-	public StatePopperFactory(final StateManager<GroupEnum> stateManager) {
-		this.stateManager = stateManager;
-	}
+    public StatePopperFactory(final StateManager<GroupEnum> stateManager) {
+        this.stateManager = stateManager;
+    }
 
-	public StatePopper<GroupEnum> createForState() {
-		return new StatePopper<>(stateManager);
-	}
+    public StatePopper<GroupEnum> createForState() {
+        return new StatePopper<>(stateManager);
+    }
 
-	public CommandStatePopper<GroupEnum> createForCommand(final GroupEnum mode) {
-		return new CommandStatePopper<>(stateManager, mode);
-	}
+    public CommandStatePopper<GroupEnum> createForCommand(final GroupEnum mode) {
+        return new CommandStatePopper<>(stateManager, mode);
+    }
 
 }

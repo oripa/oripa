@@ -29,36 +29,36 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class SequentialLineFactory {
-	/**
-	 * Returns result of input line divisions by given points.
-	 *
-	 * @param points
-	 *            on input line sequentially.
-	 * @param lineType
-	 *            of new lines.
-	 *
-	 * @return lines created by connecting points in {@code points} one by one.
-	 */
-	public List<OriLine> createSequentialLines(final List<? extends Vector2d> points,
-			final OriLine.Type lineType, final double pointEps) {
-		var newLines = new ArrayList<OriLine>();
+    /**
+     * Returns result of input line divisions by given points.
+     *
+     * @param points
+     *            on input line sequentially.
+     * @param lineType
+     *            of new lines.
+     *
+     * @return lines created by connecting points in {@code points} one by one.
+     */
+    public List<OriLine> createSequentialLines(final List<? extends Vector2d> points,
+            final OriLine.Type lineType, final double pointEps) {
+        var newLines = new ArrayList<OriLine>();
 
-		Vector2d prePoint = points.get(0);
+        Vector2d prePoint = points.get(0);
 
-		// add new lines sequentially
-		for (int i = 1; i < points.size(); i++) {
-			Vector2d p = points.get(i);
-			// remove very short line
-			if (prePoint.equals(p, pointEps)) {
-				continue;
-			}
+        // add new lines sequentially
+        for (int i = 1; i < points.size(); i++) {
+            Vector2d p = points.get(i);
+            // remove very short line
+            if (prePoint.equals(p, pointEps)) {
+                continue;
+            }
 
-			newLines.add(new OriLine(prePoint, p, lineType));
+            newLines.add(new OriLine(prePoint, p, lineType));
 
-			prePoint = p;
-		}
+            prePoint = p;
+        }
 
-		return newLines;
-	}
+        return newLines;
+    }
 
 }

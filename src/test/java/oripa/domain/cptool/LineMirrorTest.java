@@ -33,29 +33,29 @@ import oripa.value.OriLine.Type;
  */
 class LineMirrorTest {
 
-	/**
-	 * Test method for
-	 * {@link oripa.domain.cptool.LineMirror#createMirroredLines(oripa.value.OriLine, java.util.Collection)}.
-	 */
-	@Test
-	void testCreateMirroredLines() {
-		var baseLine = new OriLine(50, -100, 50, 100, OriLine.Type.AUX);
-		var toBeCopied = List.of(
-				new OriLine(0, 0, 10, 0, Type.MOUNTAIN),
-				new OriLine(20, 20, 20, 0, Type.VALLEY),
-				baseLine);
+    /**
+     * Test method for
+     * {@link oripa.domain.cptool.LineMirror#createMirroredLines(oripa.value.OriLine, java.util.Collection)}.
+     */
+    @Test
+    void testCreateMirroredLines() {
+        var baseLine = new OriLine(50, -100, 50, 100, OriLine.Type.AUX);
+        var toBeCopied = List.of(
+                new OriLine(0, 0, 10, 0, Type.MOUNTAIN),
+                new OriLine(20, 20, 20, 0, Type.VALLEY),
+                baseLine);
 
-		var mirror = new LineMirror();
+        var mirror = new LineMirror();
 
-		var mirroredLines = mirror.createMirroredLines(baseLine, toBeCopied);
+        var mirroredLines = mirror.createMirroredLines(baseLine, toBeCopied);
 
-		assertEquals(2, mirroredLines.size());
+        assertEquals(2, mirroredLines.size());
 
-		var mirroredLine1 = new OriLine(100, 0, 90, 0, Type.MOUNTAIN);
-		assertTrue(mirroredLines.stream().anyMatch(l -> l.equals(mirroredLine1, 1e-8)));
+        var mirroredLine1 = new OriLine(100, 0, 90, 0, Type.MOUNTAIN);
+        assertTrue(mirroredLines.stream().anyMatch(l -> l.equals(mirroredLine1, 1e-8)));
 
-		var mirroredLine2 = new OriLine(80, 20, 80, 0, Type.VALLEY);
-		assertTrue(mirroredLines.stream().anyMatch(l -> l.equals(mirroredLine2, 1e-8)));
-	}
+        var mirroredLine2 = new OriLine(80, 20, 80, 0, Type.VALLEY);
+        assertTrue(mirroredLines.stream().anyMatch(l -> l.equals(mirroredLine2, 1e-8)));
+    }
 
 }

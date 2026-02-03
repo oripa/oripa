@@ -34,13 +34,13 @@ import oripa.gui.view.main.UIPanelSetting;
  */
 public class PluginModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-	}
+    @Override
+    protected void configure() {
+    }
 
-	@Provides
-	public List<GraphicMouseActionPlugin> loadPlugin(final MainFrameSetting frameSetting,
-			final UIPanelSetting uiPanelSetting) {
-		return new PluginLoader().loadMouseActionPlugins(frameSetting, uiPanelSetting);
-	}
+    @Provides
+    public List<GraphicMouseActionPlugin> loadPlugin(final MainFrameSetting frameSetting,
+            final UIPanelSetting uiPanelSetting) {
+        return new PluginLoader().loadMouseActionPlugins(frameSetting, uiPanelSetting);
+    }
 }

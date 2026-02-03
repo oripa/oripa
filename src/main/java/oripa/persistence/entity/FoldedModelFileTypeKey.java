@@ -32,76 +32,76 @@ import oripa.persistence.filetool.Loader;
  *
  */
 enum FoldedModelFileTypeKey implements FileTypePropertyWithAccessor<FoldedModelEntity> {
-	SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), "svg"),
-	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), "svg"),
-	PICTURE("picture", 2, null, new FoldedModelPictureExporter(), "png", "jpg"),
-	ORMAT_FOLDED_MODEL("ormat", 3, null, new ExporterORmat(), "ormat"),
-	FOLD_SINGLE_OVERLAPS("fold_single_overlaps", 4, null, new FoldedModelSingleExporterFOLD(), "fold"),
-	FOLD_ALL_OVERLAPS("fold_all_overlaps", 5, null, new FoldedModelAllExporterFOLD(), "fold");
+    SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), "svg"),
+    SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), "svg"),
+    PICTURE("picture", 2, null, new FoldedModelPictureExporter(), "png", "jpg"),
+    ORMAT_FOLDED_MODEL("ormat", 3, null, new ExporterORmat(), "ormat"),
+    FOLD_SINGLE_OVERLAPS("fold_single_overlaps", 4, null, new FoldedModelSingleExporterFOLD(), "fold"),
+    FOLD_ALL_OVERLAPS("fold_all_overlaps", 5, null, new FoldedModelAllExporterFOLD(), "fold");
 
-	private final String keyText;
-	private final Integer order;
-	private final String[] extensions;
+    private final String keyText;
+    private final Integer order;
+    private final String[] extensions;
 
-	private final Loader<FoldedModelEntity> loader;
-	private final Exporter<FoldedModelEntity> exporter;
+    private final Loader<FoldedModelEntity> loader;
+    private final Exporter<FoldedModelEntity> exporter;
 
-	/**
-	 *
-	 * Constructor
-	 *
-	 * @param key
-	 *            key string
-	 * @param order
-	 *            defines the order of members.
-	 * @param extensions
-	 *            which should be managed as that file type.
-	 * @param loadingAction
-	 * @param savingAction
-	 */
-	private FoldedModelFileTypeKey(final String key, final Integer order,
-			final Loader<FoldedModelEntity> loader,
-			final Exporter<FoldedModelEntity> exporter,
-			final String... extensions) {
-		this.keyText = key;
-		this.order = order;
-		this.loader = loader;
-		this.exporter = exporter;
-		this.extensions = extensions;
-	}
+    /**
+     *
+     * Constructor
+     *
+     * @param key
+     *            key string
+     * @param order
+     *            defines the order of members.
+     * @param extensions
+     *            which should be managed as that file type.
+     * @param loadingAction
+     * @param savingAction
+     */
+    private FoldedModelFileTypeKey(final String key, final Integer order,
+            final Loader<FoldedModelEntity> loader,
+            final Exporter<FoldedModelEntity> exporter,
+            final String... extensions) {
+        this.keyText = key;
+        this.order = order;
+        this.loader = loader;
+        this.exporter = exporter;
+        this.extensions = extensions;
+    }
 
-	@Override
-	public String getKeyText() {
-		return keyText;
-	}
+    @Override
+    public String getKeyText() {
+        return keyText;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.doc.FileTypeProperty#getExtensions()
-	 */
-	@Override
-	public String[] getExtensions() {
-		return extensions;
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.persistent.doc.FileTypeProperty#getExtensions()
+     */
+    @Override
+    public String[] getExtensions() {
+        return extensions;
+    }
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
-	 */
-	@Override
-	public Integer getOrder() {
-		return order;
-	}
+    /*
+     * (non Javadoc)
+     *
+     * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
+     */
+    @Override
+    public Integer getOrder() {
+        return order;
+    }
 
-	@Override
-	public Loader<FoldedModelEntity> getLoader() {
-		return loader;
-	}
+    @Override
+    public Loader<FoldedModelEntity> getLoader() {
+        return loader;
+    }
 
-	@Override
-	public Exporter<FoldedModelEntity> getExporter() {
-		return exporter;
-	}
+    @Override
+    public Exporter<FoldedModelEntity> getExporter() {
+        return exporter;
+    }
 }

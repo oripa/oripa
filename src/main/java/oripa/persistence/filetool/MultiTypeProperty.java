@@ -27,36 +27,36 @@ import java.util.Collection;
  */
 public class MultiTypeProperty<Data> implements FileTypePropertyWithAccessor<Data> {
 
-	private final Collection<FileTypeProperty<Data>> properties;
+    private final Collection<FileTypeProperty<Data>> properties;
 
-	public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
-		this.properties = properties;
-	}
+    public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
+        this.properties = properties;
+    }
 
-	@Override
-	public Integer getOrder() {
-		return -1;
-	}
+    @Override
+    public Integer getOrder() {
+        return -1;
+    }
 
-	@Override
-	public String getKeyText() {
-		return String.join("+", getExtensions());
-	}
+    @Override
+    public String getKeyText() {
+        return String.join("+", getExtensions());
+    }
 
-	@Override
-	public String[] getExtensions() {
-		return properties.stream()
-				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
-				.toList().toArray(new String[0]);
-	}
+    @Override
+    public String[] getExtensions() {
+        return properties.stream()
+                .flatMap(p -> Arrays.asList(p.getExtensions()).stream())
+                .toList().toArray(new String[0]);
+    }
 
-	@Override
-	public Loader<Data> getLoader() {
-		return null;
-	}
+    @Override
+    public Loader<Data> getLoader() {
+        return null;
+    }
 
-	@Override
-	public Exporter<Data> getExporter() {
-		return null;
-	}
+    @Override
+    public Exporter<Data> getExporter() {
+        return null;
+    }
 }

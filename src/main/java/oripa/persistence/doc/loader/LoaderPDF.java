@@ -30,73 +30,73 @@ import oripa.value.OriLine;
 
 public class LoaderPDF implements DocLoader {
 
-	@Override
-	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
-		var dtos = new ArrayList<LineDto>();
+    @Override
+    public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
+        var dtos = new ArrayList<LineDto>();
 
-		try (var r = new FileReader(filePath)) {
-			StreamTokenizer st = new StreamTokenizer(r);
-			st.resetSyntax();
-			st.wordChars('0', '9');
-			st.wordChars('.', '.');
-			st.wordChars('0', '\u00FF');
-			st.wordChars('-', '-');
-			st.whitespaceChars(' ', ' ');
-			st.whitespaceChars('\t', '\t');
-			st.whitespaceChars('\n', '\n');
-			st.whitespaceChars('\r', '\r');
+        try (var r = new FileReader(filePath)) {
+            StreamTokenizer st = new StreamTokenizer(r);
+            st.resetSyntax();
+            st.wordChars('0', '9');
+            st.wordChars('.', '.');
+            st.wordChars('0', '\u00FF');
+            st.wordChars('-', '-');
+            st.whitespaceChars(' ', ' ');
+            st.whitespaceChars('\t', '\t');
+            st.whitespaceChars('\n', '\n');
+            st.whitespaceChars('\r', '\r');
 
-			int token;
+            int token;
 
-			LineDto line;
-			int status = 0;
-			while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
-				if (token == StreamTokenizer.TT_WORD && st.sval.equals("stream")) {
-					status = 1;
-					continue;
-				}
-				if (token == StreamTokenizer.TT_WORD && st.sval.equals("endstream")) {
-					status = 0;
-					continue;
-				}
-				if (status == 1) {
-					line = new LineDto();
-					dtos.add(line);
-					System.out.println("new Line " + st.sval);
-					line.type = Integer.parseInt(st.sval) == 1 ? OriLine.Type.MOUNTAIN
-							: OriLine.Type.VALLEY;
+            LineDto line;
+            int status = 0;
+            while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
+                if (token == StreamTokenizer.TT_WORD && st.sval.equals("stream")) {
+                    status = 1;
+                    continue;
+                }
+                if (token == StreamTokenizer.TT_WORD && st.sval.equals("endstream")) {
+                    status = 0;
+                    continue;
+                }
+                if (status == 1) {
+                    line = new LineDto();
+                    dtos.add(line);
+                    System.out.println("new Line " + st.sval);
+                    line.type = Integer.parseInt(st.sval) == 1 ? OriLine.Type.MOUNTAIN
+                            : OriLine.Type.VALLEY;
 
-					System.out.println("line type " + line.type.toInt());
-					token = st.nextToken(); // eat "w"
+                    System.out.println("line type " + line.type.toInt());
+                    token = st.nextToken(); // eat "w"
 
-					token = st.nextToken();
-					line.p0x = Double.parseDouble(st.sval);
+                    token = st.nextToken();
+                    line.p0x = Double.parseDouble(st.sval);
 
-					token = st.nextToken();
-					line.p0y = Double.parseDouble(st.sval);
+                    token = st.nextToken();
+                    line.p0y = Double.parseDouble(st.sval);
 
-					token = st.nextToken(); // eat "m"
+                    token = st.nextToken(); // eat "m"
 
-					token = st.nextToken();
-					line.p1x = Double.parseDouble(st.sval);
+                    token = st.nextToken();
+                    line.p1x = Double.parseDouble(st.sval);
 
-					token = st.nextToken();
-					line.p1y = Double.parseDouble(st.sval);
+                    token = st.nextToken();
+                    line.p1y = Double.parseDouble(st.sval);
 
-					token = st.nextToken(); // eat "l"
-					token = st.nextToken(); // eat "S"
-				}
-			}
+                    token = st.nextToken(); // eat "l"
+                    token = st.nextToken(); // eat "S"
+                }
+            }
 
-			System.out.println("end");
+            System.out.println("end");
 
-		} catch (NumberFormatException e) {
-			throw new WrongDataFormatException("Parse error.", e);
-		}
+        } catch (NumberFormatException e) {
+            throw new WrongDataFormatException("Parse error.", e);
+        }
 
-		var doc = Doc.forLoading(new LineDtoConverter().convert(dtos));
+        var doc = Doc.forLoading(new LineDtoConverter().convert(dtos));
 
-		return Optional.of(doc);
+        return Optional.of(doc);
 
-	}
+    }
 }

@@ -32,39 +32,39 @@ import oripa.persistence.dao.FileType;
  *
  */
 public class ModelViewFilePresentationLogic {
-	private final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
-	private final FileAccessService<OrigamiModel> fileAccessService;
+    private final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory;
+    private final FileAccessService<OrigamiModel> fileAccessService;
 
-	@Inject
-	public ModelViewFilePresentationLogic(
-			final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
-			final FileAccessService<OrigamiModel> fileAccessService
+    @Inject
+    public ModelViewFilePresentationLogic(
+            final OrigamiModelFileSelectionPresenterFactory fileSelectionPresenterFactory,
+            final FileAccessService<OrigamiModel> fileAccessService
 
-	) {
+    ) {
 
-		this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
-		this.fileAccessService = fileAccessService;
-	}
+        this.fileSelectionPresenterFactory = fileSelectionPresenterFactory;
+        this.fileAccessService = fileAccessService;
+    }
 
-	public void exportFile(
-			final ModelViewFrameView view,
-			final OrigamiModel origamiModel,
-			final FileType<OrigamiModel> type) {
+    public void exportFile(
+            final ModelViewFrameView view,
+            final OrigamiModel origamiModel,
+            final FileType<OrigamiModel> type) {
 
-		try {
-			var presenter = fileSelectionPresenterFactory.create(view, fileAccessService.getFileSelectionService());
+        try {
+            var presenter = fileSelectionPresenterFactory.create(view, fileAccessService.getFileSelectionService());
 
-			var selection = presenter.saveUsingGUI(null, List.of(type));
+            var selection = presenter.saveUsingGUI(null, List.of(type));
 
-			if (selection.action() == UserAction.CANCELED) {
-				return;
-			}
+            if (selection.action() == UserAction.CANCELED) {
+                return;
+            }
 
-			fileAccessService.saveFile(origamiModel, selection.path(), type);
+            fileAccessService.saveFile(origamiModel, selection.path(), type);
 
-		} catch (Exception e) {
-			view.showExportErrorMessage(e);
-		}
-	}
+        } catch (Exception e) {
+            view.showExportErrorMessage(e);
+        }
+    }
 
 }

@@ -27,12 +27,12 @@ import oripa.domain.fold.halfedge.OriFace;
  *
  */
 public class ParentFacesCollector {
-	public List<OriFace> collect(final List<OriFace> faces, final SubFace sub,
-			final double eps) {
-		var innerPoints = sub.getInnerPoints(eps);
+    public List<OriFace> collect(final List<OriFace> faces, final SubFace sub,
+            final double eps) {
+        var innerPoints = sub.getInnerPoints(eps);
 
-		return faces.stream()
-				.filter(face -> innerPoints.stream().anyMatch(innerPoint -> face.includesExclusively(innerPoint, eps)))
-				.toList();
-	}
+        return faces.stream()
+                .filter(face -> innerPoints.stream().anyMatch(innerPoint -> face.includesExclusively(innerPoint, eps)))
+                .toList();
+    }
 }

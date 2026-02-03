@@ -30,26 +30,26 @@ import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
  *
  */
 public class SwitcherBetweenPasteAndChangeOrigin implements Consumer<Boolean> {
-	private final MouseActionHolder mouseActionHolder;
+    private final MouseActionHolder mouseActionHolder;
 
-	@Inject
-	public SwitcherBetweenPasteAndChangeOrigin(final MouseActionHolder mouseActionHolder) {
-		this.mouseActionHolder = mouseActionHolder;
-	}
+    @Inject
+    public SwitcherBetweenPasteAndChangeOrigin(final MouseActionHolder mouseActionHolder) {
+        this.mouseActionHolder = mouseActionHolder;
+    }
 
-	/**
-	 * Switches mouse action if it is an instance of {@link CopyAndPasteAction}.
-	 * If {@code changingOrigin} is {@code true}, then this object sets
-	 * change-origin action, otherwise paste action.
-	 *
-	 * @param changingOrigin
-	 *            {@code true} for changing origin, {@code false} for pasting.
-	 */
-	@Override
-	public void accept(final Boolean changingOrigin) {
-		GraphicMouseAction action = mouseActionHolder.getMouseAction().get();
-		if (action instanceof CopyAndPasteAction casted) {
-			casted.changeAction(changingOrigin);
-		}
-	}
+    /**
+     * Switches mouse action if it is an instance of {@link CopyAndPasteAction}.
+     * If {@code changingOrigin} is {@code true}, then this object sets
+     * change-origin action, otherwise paste action.
+     *
+     * @param changingOrigin
+     *            {@code true} for changing origin, {@code false} for pasting.
+     */
+    @Override
+    public void accept(final Boolean changingOrigin) {
+        GraphicMouseAction action = mouseActionHolder.getMouseAction().get();
+        if (action instanceof CopyAndPasteAction casted) {
+            casted.changeAction(changingOrigin);
+        }
+    }
 }

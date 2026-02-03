@@ -31,78 +31,78 @@ import oripa.persistence.filetool.SavingAction;
  *
  */
 public class FileSelectionSupport<Data> implements Comparable<FileSelectionSupport<Data>> {
-	private final FileAccessSupport<Data> fileAccessSupport;
+    private final FileAccessSupport<Data> fileAccessSupport;
 
-	public FileSelectionSupport(final FileAccessSupport<Data> fileAccessSupport) {
-		this.fileAccessSupport = fileAccessSupport;
-	}
+    public FileSelectionSupport(final FileAccessSupport<Data> fileAccessSupport) {
+        this.fileAccessSupport = fileAccessSupport;
+    }
 
-	FileAccessSupport<Data> getFileAccessSupport() {
-		return fileAccessSupport;
-	}
+    FileAccessSupport<Data> getFileAccessSupport() {
+        return fileAccessSupport;
+    }
 
-	/**
-	 *
-	 * @return acceptable extensions
-	 */
-	public String[] getExtensions() {
-		return fileAccessSupport.getExtensions();
-	}
+    /**
+     *
+     * @return acceptable extensions
+     */
+    public String[] getExtensions() {
+        return fileAccessSupport.getExtensions();
+    }
 
-	public boolean extensionsMatch(final String filePath) {
-		return fileAccessSupport.extensionsMatch(filePath);
-	}
+    public boolean extensionsMatch(final String filePath) {
+        return fileAccessSupport.extensionsMatch(filePath);
+    }
 
-	public String getDescription() {
-		return fileAccessSupport.getDescription();
-	}
+    public String getDescription() {
+        return fileAccessSupport.getDescription();
+    }
 
-	public FileType<Data> getTargetType() {
-		return new FileType<Data>(fileAccessSupport.getTargetType());
-	}
+    public FileType<Data> getTargetType() {
+        return new FileType<Data>(fileAccessSupport.getTargetType());
+    }
 
-	/**
-	 * @return loadingAction
-	 */
-	LoadingAction<Data> getLoadingAction() {
-		return fileAccessSupport.getLoadingAction();
-	}
+    /**
+     * @return loadingAction
+     */
+    LoadingAction<Data> getLoadingAction() {
+        return fileAccessSupport.getLoadingAction();
+    }
 
-	/**
-	 * @return savingAction
-	 */
-	SavingAction<Data> getSavingAction() {
-		return fileAccessSupport.getSavingAction();
-	}
+    /**
+     * @return savingAction
+     */
+    SavingAction<Data> getSavingAction() {
+        return fileAccessSupport.getSavingAction();
+    }
 
-	boolean isLoadable() {
-		return fileAccessSupport.getLoadingAction() != null;
-	}
+    boolean isLoadable() {
+        return fileAccessSupport.getLoadingAction() != null;
+    }
 
-	boolean isSavable() {
-		return fileAccessSupport.getSavingAction() != null;
-	}
+    boolean isSavable() {
+        return fileAccessSupport.getSavingAction() != null;
+    }
 
-	void setConfigToSavingAction(final Supplier<Object> configSupplier) {
-		fileAccessSupport.setConfigToSavingAction(configSupplier);
-	}
+    void setConfigToSavingAction(final Supplier<Object> configSupplier) {
+        fileAccessSupport.setConfigToSavingAction(configSupplier);
+    }
 
-	@Override
-	public int compareTo(final FileSelectionSupport<Data> o) {
-		return fileAccessSupport.compareTo(o.fileAccessSupport);
-	}
+    @Override
+    public int compareTo(final FileSelectionSupport<Data> o) {
+        return fileAccessSupport.compareTo(o.fileAccessSupport);
+    }
 
-	@Override
-	public int hashCode() {
-		return fileAccessSupport.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return fileAccessSupport.hashCode();
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof FileSelectionSupport f) {
-			return fileAccessSupport.equals(f.fileAccessSupport);
-		}
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof FileSelectionSupport f) {
+            return fileAccessSupport.equals(f.fileAccessSupport);
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

@@ -23,7 +23,7 @@ package oripa.gui.presenter.creasepattern;
  *
  */
 public class CreasePatternViewContextFactory {
-	public CreasePatternViewContext createContext() {
-		return new CreasePatternViewContextImpl();
-	}
+    public CreasePatternViewContext createContext() {
+        return new CreasePatternViewContextImpl();
+    }
 }

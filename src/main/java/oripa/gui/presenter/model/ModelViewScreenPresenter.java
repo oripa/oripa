@@ -36,85 +36,85 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class ModelViewScreenPresenter {
-	private static final Logger logger = LoggerFactory.getLogger(ModelViewScreenPresenter.class);
+    private static final Logger logger = LoggerFactory.getLogger(ModelViewScreenPresenter.class);
 
-	private final ModelViewScreenView view;
+    private final ModelViewScreenView view;
 
-	private OriLine scissorsLine = null;
+    private OriLine scissorsLine = null;
 
-	private final CutModelOutlinesHolder lineHolder;
-	private final CallbackOnUpdate onUpdateScissorsLine;
+    private final CutModelOutlinesHolder lineHolder;
+    private final CallbackOnUpdate onUpdateScissorsLine;
 
-	private final double pointEps;
+    private final double pointEps;
 
-	public ModelViewScreenPresenter(
-			final ModelViewScreenView view,
-			final CutModelOutlinesHolder lineHolder,
-			final CallbackOnUpdate onUpdateScissorsLine,
-			final double pointEps) {
-		this.view = view;
+    public ModelViewScreenPresenter(
+            final ModelViewScreenView view,
+            final CutModelOutlinesHolder lineHolder,
+            final CallbackOnUpdate onUpdateScissorsLine,
+            final double pointEps) {
+        this.view = view;
 
-		this.lineHolder = lineHolder;
-		this.onUpdateScissorsLine = onUpdateScissorsLine;
+        this.lineHolder = lineHolder;
+        this.onUpdateScissorsLine = onUpdateScissorsLine;
 
-		this.pointEps = pointEps;
+        this.pointEps = pointEps;
 
-		addListeners();
-	}
+        addListeners();
+    }
 
-	private void addListeners() {
-		view.setPaintComponentListener(this::paintComponent);
-		view.setScissorsLineChangeListener(this::recalcScissorsLine);
-		view.setCallbackOnUpdateScissorsLine(onUpdateScissorsLine);
-	}
+    private void addListeners() {
+        view.setPaintComponentListener(this::paintComponent);
+        view.setScissorsLineChangeListener(this::recalcScissorsLine);
+        view.setCallbackOnUpdateScissorsLine(onUpdateScissorsLine);
+    }
 
-	public void paintComponent(final ModelGraphics m) {
+    public void paintComponent(final ModelGraphics m) {
 
-		var origamiModelOpt = view.getModel();
+        var origamiModelOpt = view.getModel();
 
-		origamiModelOpt.ifPresentOrElse(
-				origamiModel -> draw(origamiModel, m),
-				() -> logger.info("null origamiModel."));
-	}
+        origamiModelOpt.ifPresentOrElse(
+                origamiModel -> draw(origamiModel, m),
+                () -> logger.info("null origamiModel."));
+    }
 
-	private void draw(final OrigamiModel origamiModel, final ModelGraphics m) {
-		if (!origamiModel.hasModel()) {
-			logger.info("origamiModel does not have a model data.");
-			return;
-		}
+    private void draw(final OrigamiModel origamiModel, final ModelGraphics m) {
+        if (!origamiModel.hasModel()) {
+            logger.info("origamiModel does not have a model data.");
+            return;
+        }
 
-		var objDrawer = m.getBufferObjectDrawer();
+        var objDrawer = m.getBufferObjectDrawer();
 
-		var drawer = new OrigamiModelGraphicDrawer();
+        var drawer = new OrigamiModelGraphicDrawer();
 
-		drawer.draw(objDrawer, origamiModel, view.isScissorsLineVisible() ? scissorsLine : null,
-				view.getModelDisplayMode(),
-				view.getScale());
+        drawer.draw(objDrawer, origamiModel, view.isScissorsLineVisible() ? scissorsLine : null,
+                view.getModelDisplayMode(),
+                view.getScale());
 
-		m.drawBufferImage();
+        m.drawBufferImage();
 
-	}
+    }
 
-	private void recalcScissorsLine() {
+    private void recalcScissorsLine() {
 
-		var scissorsLineAngleDegree = view.getScissorsLineAngleDegree();
-		var scissorsLinePosition = view.getScissorsLinePosition();
-		var modelCenter = view.getModelCenter();
+        var scissorsLineAngleDegree = view.getScissorsLineAngleDegree();
+        var scissorsLinePosition = view.getScissorsLinePosition();
+        var modelCenter = view.getModelCenter();
 
-		var dir = Vector2d.unitVector(Math.PI * scissorsLineAngleDegree / 180.0);
+        var dir = Vector2d.unitVector(Math.PI * scissorsLineAngleDegree / 180.0);
 
-		var p0 = modelCenter.subtract(dir.multiply(300));
-		var p1 = modelCenter.add(dir.multiply(300));
+        var p0 = modelCenter.subtract(dir.multiply(300));
+        var p1 = modelCenter.add(dir.multiply(300));
 
-		var moveVec = new Vector2d(-dir.getY(), dir.getX()).multiply(scissorsLinePosition);
-		scissorsLine = new OriLine(p0.add(moveVec), p1.add(moveVec), Type.AUX);
+        var moveVec = new Vector2d(-dir.getY(), dir.getX()).multiply(scissorsLinePosition);
+        scissorsLine = new OriLine(p0.add(moveVec), p1.add(moveVec), Type.AUX);
 
-		var factory = new CutModelOutlinesFactory();
-		lineHolder.setOutlines(factory.createOutlines(scissorsLine, view.getModel().orElseThrow(), pointEps));
+        var factory = new CutModelOutlinesFactory();
+        lineHolder.setOutlines(factory.createOutlines(scissorsLine, view.getModel().orElseThrow(), pointEps));
 
-		view.repaint();
+        view.repaint();
 
-		onUpdateScissorsLine.onUpdate();
-	}
+        onUpdateScissorsLine.onUpdate();
+    }
 
 }

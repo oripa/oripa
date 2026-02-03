@@ -19,17 +19,17 @@
 package oripa.domain.fold.origeom;
 
 public enum EstimationResult {
-	NOT_CHANGED(0),
-	CHANGED(1),
-	UNFOLDABLE(2);
+    NOT_CHANGED(0),
+    CHANGED(1),
+    UNFOLDABLE(2);
 
-	private EstimationResult(final int order) {
-		this.order = order;
-	}
+    private EstimationResult(final int order) {
+        this.order = order;
+    }
 
-	private final int order;
+    private final int order;
 
-	public EstimationResult or(final EstimationResult e) {
-		return order > e.order ? this : e;
-	}
+    public EstimationResult or(final EstimationResult e) {
+        return order > e.order ? this : e;
+    }
 }

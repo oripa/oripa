@@ -19,7 +19,7 @@
 package oripa.util;
 
 public record Pair<V1, V2>(
-		V1 v1,
-		V2 v2) {
+        V1 v1,
+        V2 v2) {
 
 }

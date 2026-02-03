@@ -31,150 +31,150 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class FoldedModelPictureConfig {
-	private double eps;
+    private double eps;
 
-	private boolean faceOrderFlipped;
-	private boolean fillFaces;
-	private boolean drawEdges;
-	private boolean ambientOcclusion;
-	private Color frontColor;
-	private Color backColor;
+    private boolean faceOrderFlipped;
+    private boolean fillFaces;
+    private boolean drawEdges;
+    private boolean ambientOcclusion;
+    private Color frontColor;
+    private Color backColor;
 
-	private double rotateAngle;
+    private double rotateAngle;
 
-	private DistortionMethod distortionMethod;
-	private Vector2d distortionParameter;
-	private Map<OriVertex, Integer> vertexDepths;
+    private DistortionMethod distortionMethod;
+    private Vector2d distortionParameter;
+    private Map<OriVertex, Integer> vertexDepths;
 
-	public double getEps() {
-		return eps;
-	}
+    public double getEps() {
+        return eps;
+    }
 
-	public FoldedModelPictureConfig setEps(final double eps) {
-		this.eps = eps;
-		return this;
-	}
+    public FoldedModelPictureConfig setEps(final double eps) {
+        this.eps = eps;
+        return this;
+    }
 
-	public boolean isFaceOrderFlipped() {
-		return faceOrderFlipped;
-	}
+    public boolean isFaceOrderFlipped() {
+        return faceOrderFlipped;
+    }
 
-	public FoldedModelPictureConfig setFaceOrderFlipped(final boolean faceOrderFlipped) {
-		this.faceOrderFlipped = faceOrderFlipped;
-		return this;
-	}
+    public FoldedModelPictureConfig setFaceOrderFlipped(final boolean faceOrderFlipped) {
+        this.faceOrderFlipped = faceOrderFlipped;
+        return this;
+    }
 
-	public boolean isFillFaces() {
-		return fillFaces;
-	}
+    public boolean isFillFaces() {
+        return fillFaces;
+    }
 
-	public FoldedModelPictureConfig setFillFaces(final boolean fillFaces) {
-		this.fillFaces = fillFaces;
-		return this;
-	}
+    public FoldedModelPictureConfig setFillFaces(final boolean fillFaces) {
+        this.fillFaces = fillFaces;
+        return this;
+    }
 
-	public boolean isDrawEdges() {
-		return drawEdges;
-	}
+    public boolean isDrawEdges() {
+        return drawEdges;
+    }
 
-	public FoldedModelPictureConfig setDrawEdges(final boolean drawEdges) {
-		this.drawEdges = drawEdges;
-		return this;
-	}
+    public FoldedModelPictureConfig setDrawEdges(final boolean drawEdges) {
+        this.drawEdges = drawEdges;
+        return this;
+    }
 
-	public boolean isAmbientOcclusion() {
-		return ambientOcclusion;
-	}
+    public boolean isAmbientOcclusion() {
+        return ambientOcclusion;
+    }
 
-	public FoldedModelPictureConfig setAmbientOcclusion(final boolean ambientOcclusion) {
-		this.ambientOcclusion = ambientOcclusion;
-		return this;
-	}
+    public FoldedModelPictureConfig setAmbientOcclusion(final boolean ambientOcclusion) {
+        this.ambientOcclusion = ambientOcclusion;
+        return this;
+    }
 
-	public FoldedModelPictureConfig setColors(final Color front, final Color back) {
-		frontColor = front;
-		backColor = back;
-		return this;
-	}
+    public FoldedModelPictureConfig setColors(final Color front, final Color back) {
+        frontColor = front;
+        backColor = back;
+        return this;
+    }
 
-	public Color getFrontColor() {
-		return frontColor;
-	}
+    public Color getFrontColor() {
+        return frontColor;
+    }
 
-	public FoldedModelPictureConfig setFrontColor(final Color frontColor) {
-		this.frontColor = frontColor;
-		return this;
-	}
+    public FoldedModelPictureConfig setFrontColor(final Color frontColor) {
+        this.frontColor = frontColor;
+        return this;
+    }
 
-	public Color getBackColor() {
-		return backColor;
-	}
+    public Color getBackColor() {
+        return backColor;
+    }
 
-	public FoldedModelPictureConfig setBackColor(final Color backColor) {
-		this.backColor = backColor;
-		return this;
-	}
+    public FoldedModelPictureConfig setBackColor(final Color backColor) {
+        this.backColor = backColor;
+        return this;
+    }
 
-	public double getRotateAngle() {
-		return rotateAngle;
-	}
+    public double getRotateAngle() {
+        return rotateAngle;
+    }
 
-	public FoldedModelPictureConfig setRotateAngle(final double rotateAngle) {
-		this.rotateAngle = rotateAngle;
-		return this;
-	}
+    public FoldedModelPictureConfig setRotateAngle(final double rotateAngle) {
+        this.rotateAngle = rotateAngle;
+        return this;
+    }
 
-	/**
-	 *
-	 * @return given value. NONE if any value is given or null is set.
-	 */
-	public DistortionMethod getDistortionMethod() {
-		return distortionMethod == null ? DistortionMethod.NONE : distortionMethod;
-	}
+    /**
+     *
+     * @return given value. NONE if any value is given or null is set.
+     */
+    public DistortionMethod getDistortionMethod() {
+        return distortionMethod == null ? DistortionMethod.NONE : distortionMethod;
+    }
 
-	public FoldedModelPictureConfig setDistortionMethod(final DistortionMethod distortionMethod) {
-		this.distortionMethod = distortionMethod;
-		return this;
-	}
+    public FoldedModelPictureConfig setDistortionMethod(final DistortionMethod distortionMethod) {
+        this.distortionMethod = distortionMethod;
+        return this;
+    }
 
-	/**
-	 *
-	 * @return given parameter. null if any parameter is given.
-	 */
-	public Vector2d getDistortionParameter() {
-		return distortionParameter;
-	}
+    /**
+     *
+     * @return given parameter. null if any parameter is given.
+     */
+    public Vector2d getDistortionParameter() {
+        return distortionParameter;
+    }
 
-	/**
-	 * This is an optional property. This can be null if distortion method is
-	 * {@link DistortionMethod#NONE}.
-	 *
-	 * @param distortionParameter
-	 * @return
-	 */
-	public FoldedModelPictureConfig setDistortionParameter(final Vector2d distortionParameter) {
-		this.distortionParameter = distortionParameter;
-		return this;
-	}
+    /**
+     * This is an optional property. This can be null if distortion method is
+     * {@link DistortionMethod#NONE}.
+     *
+     * @param distortionParameter
+     * @return
+     */
+    public FoldedModelPictureConfig setDistortionParameter(final Vector2d distortionParameter) {
+        this.distortionParameter = distortionParameter;
+        return this;
+    }
 
-	/**
-	 *
-	 * @return given map. empty map if any map is given or null is set.
-	 */
-	public Map<OriVertex, Integer> getVertexDepths() {
-		return vertexDepths == null ? new HashMap<>() : vertexDepths;
-	}
+    /**
+     *
+     * @return given map. empty map if any map is given or null is set.
+     */
+    public Map<OriVertex, Integer> getVertexDepths() {
+        return vertexDepths == null ? new HashMap<>() : vertexDepths;
+    }
 
-	/**
-	 * This is an optional property. This can be null if distortion method is
-	 * not {@link DistortionMethod#DEPTH}.
-	 *
-	 * @param vertexDepths
-	 * @return
-	 */
-	public FoldedModelPictureConfig setVertexDepths(final Map<OriVertex, Integer> vertexDepths) {
-		this.vertexDepths = vertexDepths;
-		return this;
-	}
+    /**
+     * This is an optional property. This can be null if distortion method is
+     * not {@link DistortionMethod#DEPTH}.
+     *
+     * @param vertexDepths
+     * @return
+     */
+    public FoldedModelPictureConfig setVertexDepths(final Map<OriVertex, Integer> vertexDepths) {
+        this.vertexDepths = vertexDepths;
+        return this;
+    }
 
 }

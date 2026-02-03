@@ -19,7 +19,7 @@
 package oripa.domain.fold.halfedge;
 
 public enum ModelType {
-	ASSIGNED,
-	UNASSIGNED,
-	ERROR_CONTAINING
+    ASSIGNED,
+    UNASSIGNED,
+    ERROR_CONTAINING
 }

@@ -36,33 +36,33 @@ import oripa.persistence.svg.FacesToSvgConverter;
  */
 public class OrigamiModelExporterSVG implements Exporter<OrigamiModel> {
 
-	private final FacesToSvgConverter facesToSvgConverter;
+    private final FacesToSvgConverter facesToSvgConverter;
 
-	/**
-	 * Constructor
-	 */
-	public OrigamiModelExporterSVG() {
-		facesToSvgConverter = new FacesToSvgConverter();
-		facesToSvgConverter.setFaceStyles(PATH_STYLE_TRANSLUCENT);
-		facesToSvgConverter.setPrecreaseLineStyle(THIN_LINE_STYLE);
-	}
+    /**
+     * Constructor
+     */
+    public OrigamiModelExporterSVG() {
+        facesToSvgConverter = new FacesToSvgConverter();
+        facesToSvgConverter.setFaceStyles(PATH_STYLE_TRANSLUCENT);
+        facesToSvgConverter.setPrecreaseLineStyle(THIN_LINE_STYLE);
+    }
 
-	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filepath, final Object configObj)
-			throws IOException {
+    @Override
+    public boolean export(final OrigamiModel origamiModel, final String filepath, final Object configObj)
+            throws IOException {
 
-		List<OriFace> faces = origamiModel.getFaces();
+        List<OriFace> faces = origamiModel.getFaces();
 
-		facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
+        facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
 
-		try (var fw = new FileWriter(filepath);
-				var bw = new BufferedWriter(fw)) {
-			bw.write(SVG_START);
-			bw.write(facesToSvgConverter.getSvgFaces(faces));
-			bw.write(SVG_END_TAG);
-		}
+        try (var fw = new FileWriter(filepath);
+                var bw = new BufferedWriter(fw)) {
+            bw.write(SVG_START);
+            bw.write(facesToSvgConverter.getSvgFaces(faces));
+            bw.write(SVG_END_TAG);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

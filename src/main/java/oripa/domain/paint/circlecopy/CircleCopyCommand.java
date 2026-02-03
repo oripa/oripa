@@ -27,29 +27,29 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class CircleCopyCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+    private final PaintContext context;
 
-	public CircleCopyCommand(final PaintContext context) {
-		this.context = context;
-	}
+    public CircleCopyCommand(final PaintContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+    @Override
+    public void execute() {
+        validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
 
-		context.creasePatternUndo().pushUndoInfo();
+        context.creasePatternUndo().pushUndoInfo();
 
-		var parameter = context.getCircleCopyParameter();
-		var cx = parameter.centerX();
-		var cy = parameter.centerY();
+        var parameter = context.getCircleCopyParameter();
+        var cx = parameter.centerX();
+        var cy = parameter.centerY();
 
-		var angleDeg = parameter.angleDegree();
+        var angleDeg = parameter.angleDegree();
 
-		var count = parameter.copyCount();
+        var count = parameter.copyCount();
 
-		Painter painter = context.getPainter();
-		painter.copyWithRotation(cx, cy, angleDeg, count, context.getPickedLines());
+        Painter painter = context.getPainter();
+        painter.copyWithRotation(cx, cy, angleDeg, count, context.getPickedLines());
 
-	}
+    }
 
 }

@@ -30,36 +30,36 @@ import oripa.persistence.dao.FileType;
  *
  */
 public class FileSelectionService<Data> {
-	private final FileSelectionSupportSelector<Data> selector;
+    private final FileSelectionSupportSelector<Data> selector;
 
-	/**
-	 * The descriptions among the {@link FileSelectionSupport}s in the
-	 * {@code selector} should be unique.
-	 *
-	 * @param selector
-	 */
-	public FileSelectionService(final FileSelectionSupportSelector<Data> selector) {
-		this.selector = selector;
-	}
+    /**
+     * The descriptions among the {@link FileSelectionSupport}s in the
+     * {@code selector} should be unique.
+     *
+     * @param selector
+     */
+    public FileSelectionService(final FileSelectionSupportSelector<Data> selector) {
+        this.selector = selector;
+    }
 
-	public List<FileSelectionSupport<Data>> getSavableSupports() {
-		return selector.getSavables();
-	}
+    public List<FileSelectionSupport<Data>> getSavableSupports() {
+        return selector.getSavables();
+    }
 
-	public List<FileSelectionSupport<Data>> getSavableSupportsOf(final Collection<FileType<Data>> types) {
-		return selector.getSavablesOf(types);
-	}
+    public List<FileSelectionSupport<Data>> getSavableSupportsOf(final Collection<FileType<Data>> types) {
+        return selector.getSavablesOf(types);
+    }
 
-	public List<FileSelectionSupport<Data>> getLoadableSupportsWithMultiType() {
-		return selector.getLoadablesWithMultiType();
-	}
+    public List<FileSelectionSupport<Data>> getLoadableSupportsWithMultiType() {
+        return selector.getLoadablesWithMultiType();
+    }
 
-	public FileType<Data> getSavableTypeByDescription(final String description) {
-		return selector.getSavables().stream()
-				.filter(support -> support.getDescription().equals(description))
-				.findFirst()
-				.get()
-				.getTargetType();
-	}
+    public FileType<Data> getSavableTypeByDescription(final String description) {
+        return selector.getSavables().stream()
+                .filter(support -> support.getDescription().equals(description))
+                .findFirst()
+                .get()
+                .getTargetType();
+    }
 
 }

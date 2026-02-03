@@ -28,17 +28,17 @@ import oripa.value.OriLine;
  */
 public interface CutModelOutlinesHolder {
 
-	/**
-	 * make lines that composes the outline of a shape obtained by cutting the
-	 * folded model.
-	 *
-	 * @param scissorLine
-	 */
-	void setOutlines(Collection<OriLine> outlines);
+    /**
+     * make lines that composes the outline of a shape obtained by cutting the
+     * folded model.
+     *
+     * @param scissorLine
+     */
+    void setOutlines(Collection<OriLine> outlines);
 
-	/**
-	 * @return crossLines
-	 */
-	Collection<OriLine> getOutlines();
+    /**
+     * @return crossLines
+     */
+    Collection<OriLine> getOutlines();
 
 }

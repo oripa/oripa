@@ -28,26 +28,26 @@ import oripa.vecmath.Vector2d;
  */
 public interface NearVerticesGettable {
 
-	/**
-	 * returns vertices in the area which the given vertex belongs to.
-	 *
-	 * @param v
-	 *            vertex
-	 * @return
-	 */
-	Collection<Vector2d> getVerticesAround(Vector2d v);
+    /**
+     * returns vertices in the area which the given vertex belongs to.
+     *
+     * @param v
+     *            vertex
+     * @return
+     */
+    Collection<Vector2d> getVerticesAround(Vector2d v);
 
-	/**
-	 * similar to {@link #getVerticesAround(Vector2d v)}. this method returns
-	 * some areas in a large rectangle (x-distanse, y-distance, x+distance,
-	 * y+distance).
-	 *
-	 * @param x
-	 * @param y
-	 * @param distance
-	 * @return
-	 */
-	Collection<Collection<Vector2d>> getVerticesInArea(double x,
-			double y, double distance);
+    /**
+     * similar to {@link #getVerticesAround(Vector2d v)}. this method returns
+     * some areas in a large rectangle (x-distanse, y-distance, x+distance,
+     * y+distance).
+     *
+     * @param x
+     * @param y
+     * @param distance
+     * @return
+     */
+    Collection<Collection<Vector2d>> getVerticesInArea(double x,
+            double y, double distance);
 
 }

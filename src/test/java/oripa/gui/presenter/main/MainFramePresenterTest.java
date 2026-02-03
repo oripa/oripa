@@ -54,692 +54,692 @@ import oripa.resource.ResourceKey;
 @ExtendWith(MockitoExtension.class)
 class MainFramePresenterTest {
 
-	@Mock
-	MainFrameView view;
+    @Mock
+    MainFrameView view;
 
-	@Mock
-	MainFramePresentationLogic presentationLogic;
+    @Mock
+    MainFramePresentationLogic presentationLogic;
 
-	@Mock
-	MainDialogPresenterFactory dialogPresenterFactory;
+    @Mock
+    MainDialogPresenterFactory dialogPresenterFactory;
 
-	@Mock
-	BindingObjectFactoryFacade bindingFactory;
+    @Mock
+    BindingObjectFactoryFacade bindingFactory;
 
-	@Mock
-	Project project;
+    @Mock
+    Project project;
 
-	@Mock
-	PaintContextService paintContextService;
+    @Mock
+    PaintContextService paintContextService;
 
-	@Mock
-	MainFramePaintMenuListenerFactory paintMenuListenerFactory;
+    @Mock
+    MainFramePaintMenuListenerFactory paintMenuListenerFactory;
 
-	@Mock
-	List<GraphicMouseActionPlugin> plugins;
+    @Mock
+    List<GraphicMouseActionPlugin> plugins;
 
-	@Nested
-	class Constructor {
+    @Nested
+    class Constructor {
 
-		@Nested
-		class TestLoadIniFile {
+        @Nested
+        class TestLoadIniFile {
 
-			@Test
-			void iniFileShouldBeLoaded() {
+            @Test
+            void iniFileShouldBeLoaded() {
 
-				construct();
+                construct();
 
-				verify(presentationLogic).loadIniFile();
+                verify(presentationLogic).loadIniFile();
 
-			}
+            }
 
-		}
+        }
 
-		@Nested
-		class TestAddPlugins {
-			@Test
-			void givenPluginsShouldBeAdded() {
+        @Nested
+        class TestAddPlugins {
+            @Test
+            void givenPluginsShouldBeAdded() {
 
-				construct();
+                construct();
 
-				verify(presentationLogic).addPlugins(plugins);
-			}
-		}
+                verify(presentationLogic).addPlugins(plugins);
+            }
+        }
 
-		@Nested
-		class TestBuildFileMenu {
-			@Test
-			void buildFileMenuShouldBeCalled() {
+        @Nested
+        class TestBuildFileMenu {
+            @Test
+            void buildFileMenuShouldBeCalled() {
 
-				construct();
+                construct();
 
-				verify(view).buildFileMenu();
-			}
-		}
+                verify(view).buildFileMenu();
+            }
+        }
 
-		@Nested
-		class TestUpdateTitleText {
-			@Captor
-			ArgumentCaptor<ResourceKey> resourceKeyCaptor;
+        @Nested
+        class TestUpdateTitleText {
+            @Captor
+            ArgumentCaptor<ResourceKey> resourceKeyCaptor;
 
-			@Captor
-			ArgumentCaptor<String> textIdCaptor;
+            @Captor
+            ArgumentCaptor<String> textIdCaptor;
 
-			@Test
-			void titleTextShouldBeUpdatedWithDefaultText() {
+            @Test
+            void titleTextShouldBeUpdatedWithDefaultText() {
 
-				construct();
+                construct();
 
-				verify(presentationLogic).updateTitleText();
+                verify(presentationLogic).updateTitleText();
 
-			}
-		}
+            }
+        }
 
-		@Nested
-		class TestAddListeners {
+        @Nested
+        class TestAddListeners {
 
-			@Nested
-			class TestAddExit {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestAddExit {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void exitLogicShouldBeCalled() {
+                @Test
+                void exitLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addExitButtonListener(listenerCaptor.capture());
+                    verify(view).addExitButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).exit(any());
-				}
-			}
+                    verify(presentationLogic).exit(any());
+                }
+            }
 
-			@Nested
-			class TestNew {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestNew {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void clearLogicShouldBeCalled() {
+                @Test
+                void clearLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addNewButtonListener(listenerCaptor.capture());
+                    verify(view).addNewButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).clearAll();
+                    verify(presentationLogic).clearAll();
 
-				}
-			}
+                }
+            }
 
-			@Nested
-			class TestClear {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestClear {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void clearLogicShouldBeCalled() {
+                @Test
+                void clearLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addClearButtonListener(listenerCaptor.capture());
+                    verify(view).addClearButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).clearCreasePattern();
+                    verify(presentationLogic).clearCreasePattern();
 
-				}
-			}
+                }
+            }
 
-			@Nested
-			class TestShowPropertyDIalog {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestShowPropertyDIalog {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void propertyDialogShouldBeShown() {
+                @Test
+                void propertyDialogShouldBeShown() {
 
-					PropertyDialogPresenter dialogPresenter = mock();
-					when(dialogPresenterFactory.createPropertyDialogPresenter(view, project))
-							.thenReturn(dialogPresenter);
+                    PropertyDialogPresenter dialogPresenter = mock();
+                    when(dialogPresenterFactory.createPropertyDialogPresenter(view, project))
+                            .thenReturn(dialogPresenter);
 
-					construct();
+                    construct();
 
-					verify(view).addPropertyButtonListener(listenerCaptor.capture());
+                    verify(view).addPropertyButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(dialogPresenter).setViewVisible(true);
-				}
-			}
+                    verify(dialogPresenter).setViewVisible(true);
+                }
+            }
 
-			@Nested
-			class TestShowArrayCopyDialog {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestShowArrayCopyDialog {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void arrayCopyDialogShouldBeShownWhenLinesAreSelected() {
+                @Test
+                void arrayCopyDialogShouldBeShownWhenLinesAreSelected() {
 
-					when(paintContextService.linesSelected()).thenReturn(true);
+                    when(paintContextService.linesSelected()).thenReturn(true);
 
-					ArrayCopyDialogPresenter dialogPresenter = mock();
-					when(dialogPresenterFactory.createArrayCopyDialogPresenter(view))
-							.thenReturn(dialogPresenter);
+                    ArrayCopyDialogPresenter dialogPresenter = mock();
+                    when(dialogPresenterFactory.createArrayCopyDialogPresenter(view))
+                            .thenReturn(dialogPresenter);
 
-					construct();
+                    construct();
 
-					verify(view).addRepeatCopyButtonListener(listenerCaptor.capture());
+                    verify(view).addRepeatCopyButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(dialogPresenter).setViewVisible(true);
-				}
+                    verify(dialogPresenter).setViewVisible(true);
+                }
 
-				@Test
-				void warningShouldBeShownWhenLinesAreNotSelected() {
+                @Test
+                void warningShouldBeShownWhenLinesAreNotSelected() {
 
-					when(paintContextService.linesSelected()).thenReturn(false);
+                    when(paintContextService.linesSelected()).thenReturn(false);
 
-					construct();
+                    construct();
 
-					verify(view).addRepeatCopyButtonListener(listenerCaptor.capture());
+                    verify(view).addRepeatCopyButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(view).showNoSelectionMessageForArrayCopy();
-				}
+                    verify(view).showNoSelectionMessageForArrayCopy();
+                }
 
-			}
+            }
 
-			@Nested
-			class TestShowCircleCopyDialog {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestShowCircleCopyDialog {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void circleCopyDialogShouldBeShownWhenLinesAreSelected() {
+                @Test
+                void circleCopyDialogShouldBeShownWhenLinesAreSelected() {
 
-					when(paintContextService.linesSelected()).thenReturn(true);
+                    when(paintContextService.linesSelected()).thenReturn(true);
 
-					CircleCopyDialogPresenter dialogPresenter = mock();
-					when(dialogPresenterFactory.createCircleCopyDialogPresenter(view))
-							.thenReturn(dialogPresenter);
+                    CircleCopyDialogPresenter dialogPresenter = mock();
+                    when(dialogPresenterFactory.createCircleCopyDialogPresenter(view))
+                            .thenReturn(dialogPresenter);
 
-					construct();
+                    construct();
 
-					verify(view).addCircleCopyButtonListener(listenerCaptor.capture());
+                    verify(view).addCircleCopyButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(dialogPresenter).setViewVisible(true);
-				}
+                    verify(dialogPresenter).setViewVisible(true);
+                }
 
-				@Test
-				void warningShouldBeShownWhenLinesAreNotSelected() {
+                @Test
+                void warningShouldBeShownWhenLinesAreNotSelected() {
 
-					when(paintContextService.linesSelected()).thenReturn(false);
+                    when(paintContextService.linesSelected()).thenReturn(false);
 
-					construct();
+                    construct();
 
-					verify(view).addCircleCopyButtonListener(listenerCaptor.capture());
+                    verify(view).addCircleCopyButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(view).showNoSelectionMessageForCircleCopy();
-				}
+                    verify(view).showNoSelectionMessageForCircleCopy();
+                }
 
-			}
+            }
 
-			@Nested
-			class TestMRUFilesMenuItemUpdate {
-				@Captor
-				ArgumentCaptor<Consumer<Integer>> listenerCaptor;
+            @Nested
+            class TestMRUFilesMenuItemUpdate {
+                @Captor
+                ArgumentCaptor<Consumer<Integer>> listenerCaptor;
 
-				@Test
-				void updateLogicShouldBeCalled() {
+                @Test
+                void updateLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addMRUFilesMenuItemUpdateListener(listenerCaptor.capture());
+                    verify(view).addMRUFilesMenuItemUpdateListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().accept(0);
+                    listenerCaptor.getValue().accept(0);
 
-					verify(presentationLogic).updateMRUFilesMenuItem(0);
-				}
-			}
+                    verify(presentationLogic).updateMRUFilesMenuItem(0);
+                }
+            }
 
-			@Nested
-			class TestSetEstimationResultSaveColors {
-				@Captor
-				ArgumentCaptor<BiConsumer<Color, Color>> listenerCaptor;
+            @Nested
+            class TestSetEstimationResultSaveColors {
+                @Captor
+                ArgumentCaptor<BiConsumer<Color, Color>> listenerCaptor;
 
-				@Test
-				void putColorCodeLogicShouldBeCalled() {
+                @Test
+                void putColorCodeLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).setEstimationResultSaveColorsListener(listenerCaptor.capture());
+                    verify(view).setEstimationResultSaveColorsListener(listenerCaptor.capture());
 
-					Color front = mock();
-					Color back = mock();
-					listenerCaptor.getValue().accept(front, back);
+                    Color front = mock();
+                    Color back = mock();
+                    listenerCaptor.getValue().accept(front, back);
 
-					verify(presentationLogic).setEstimationResultSaveColors(front, back);
-				}
-			}
+                    verify(presentationLogic).setEstimationResultSaveColors(front, back);
+                }
+            }
 
-			@Nested
-			class TestWindowClosing {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestWindowClosing {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void saveIniWhenNoChangeOnCP() {
+                @Test
+                void saveIniWhenNoChangeOnCP() {
 
-					when(paintContextService.creasePatternChangeExists()).thenReturn(false);
+                    when(paintContextService.creasePatternChangeExists()).thenReturn(false);
 
-					construct();
+                    construct();
 
-					verify(view).addWindowClosingListener(listenerCaptor.capture());
+                    verify(view).addWindowClosingListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).saveIniFile();
-				}
+                    verify(presentationLogic).saveIniFile();
+                }
 
-				@Test
-				void saveIniWhenSaveCPIsCanceled() {
+                @Test
+                void saveIniWhenSaveCPIsCanceled() {
 
-					when(paintContextService.creasePatternChangeExists()).thenReturn(true);
+                    when(paintContextService.creasePatternChangeExists()).thenReturn(true);
 
-					when(view.showSaveOnCloseDialog()).thenReturn(false);
+                    when(view.showSaveOnCloseDialog()).thenReturn(false);
 
-					construct();
+                    construct();
 
-					verify(view).addWindowClosingListener(listenerCaptor.capture());
+                    verify(view).addWindowClosingListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).saveIniFile();
-				}
+                    verify(presentationLogic).saveIniFile();
+                }
 
-				@SuppressWarnings("unchecked")
-				@Test
-				void saveCPAndSaveIniWhenCPChangedAndFileIsSelected() {
+                @SuppressWarnings("unchecked")
+                @Test
+                void saveCPAndSaveIniWhenCPChangedAndFileIsSelected() {
 
-					when(paintContextService.creasePatternChangeExists()).thenReturn(true);
+                    when(paintContextService.creasePatternChangeExists()).thenReturn(true);
 
-					when(view.showSaveOnCloseDialog()).thenReturn(true);
+                    when(view.showSaveOnCloseDialog()).thenReturn(true);
 
-					construct();
+                    construct();
 
-					verify(view).addWindowClosingListener(listenerCaptor.capture());
+                    verify(view).addWindowClosingListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).saveFileUsingGUI();
-					verify(presentationLogic).saveIniFile();
+                    verify(presentationLogic).saveFileUsingGUI();
+                    verify(presentationLogic).saveIniFile();
 
-				}
+                }
 
-			}
+            }
 
-			@Nested
-			class TestUndo {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestUndo {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void undoLogicShouldBeCalled() {
+                @Test
+                void undoLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addUndoButtonListener(listenerCaptor.capture());
+                    verify(view).addUndoButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).undo();
-				}
-			}
+                    verify(presentationLogic).undo();
+                }
+            }
 
-			@Nested
-			class TestRedo {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestRedo {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void redoLogicShouldBeCalled() {
+                @Test
+                void redoLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addRedoButtonListener(listenerCaptor.capture());
+                    verify(view).addRedoButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).redo();
-				}
-			}
+                    verify(presentationLogic).redo();
+                }
+            }
 
-			@Nested
-			class TestSave {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestSave {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void saveToCurrentPathLogicShouldBeCalledWhenProjectIsProjectFile() {
+                @Test
+                void saveToCurrentPathLogicShouldBeCalledWhenProjectIsProjectFile() {
 
-					try (var projectStatic = mockStatic(Project.class)) {
+                    try (var projectStatic = mockStatic(Project.class)) {
 
-						String path = "path";
-						FileType<Doc> fileType = mock();
-						when(project.getProjectFileType()).thenReturn(Optional.of(fileType));
-						projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(true);
+                        String path = "path";
+                        FileType<Doc> fileType = mock();
+                        when(project.getProjectFileType()).thenReturn(Optional.of(fileType));
+                        projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(true);
 
-						when(presentationLogic.saveFileToCurrentPath(fileType)).thenReturn(path);
+                        when(presentationLogic.saveFileToCurrentPath(fileType)).thenReturn(path);
 
-						construct();
+                        construct();
 
-						verify(view).addSaveButtonListener(listenerCaptor.capture());
+                        verify(view).addSaveButtonListener(listenerCaptor.capture());
 
-						listenerCaptor.getValue().run();
+                        listenerCaptor.getValue().run();
 
-						// verify before save
-						verifyBeforeSave();
+                        // verify before save
+                        verifyBeforeSave();
 
-						verify(presentationLogic).saveFileToCurrentPath(fileType);
+                        verify(presentationLogic).saveFileToCurrentPath(fileType);
 
-						// verify after save
-						verifyAfterSave(true, path);
-					}
+                        // verify after save
+                        verifyAfterSave(true, path);
+                    }
 
-				}
+                }
 
-				@SuppressWarnings("unchecked")
-				@Test
-				void saveUsingGUILogicShouldBeCalledWhenProjectIsNotProjectFile() {
+                @SuppressWarnings("unchecked")
+                @Test
+                void saveUsingGUILogicShouldBeCalledWhenProjectIsNotProjectFile() {
 
-					try (var projectStatic = mockStatic(Project.class)) {
+                    try (var projectStatic = mockStatic(Project.class)) {
 
-						String path = "path";
+                        String path = "path";
 
-						when(project.getProjectFileType()).thenReturn(Optional.empty());
-						projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(false);
+                        when(project.getProjectFileType()).thenReturn(Optional.empty());
+                        projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(false);
 
-						when(presentationLogic.saveFileUsingGUI()).thenReturn(path);
+                        when(presentationLogic.saveFileUsingGUI()).thenReturn(path);
 
-						construct();
+                        construct();
 
-						verify(view).addSaveButtonListener(listenerCaptor.capture());
+                        verify(view).addSaveButtonListener(listenerCaptor.capture());
 
-						listenerCaptor.getValue().run();
+                        listenerCaptor.getValue().run();
 
-						// verify before save
-						verifyBeforeSave();
+                        // verify before save
+                        verifyBeforeSave();
 
-						verify(presentationLogic).saveFileUsingGUI();
+                        verify(presentationLogic).saveFileUsingGUI();
 
-						// verify after save
-						verifyAfterSave(false, path);
-					}
+                        // verify after save
+                        verifyAfterSave(false, path);
+                    }
 
-				}
+                }
 
-			}
+            }
 
-			@Nested
-			class TestSaveAs {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestSaveAs {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@SuppressWarnings("unchecked")
-				@Test
-				void succeeds() {
+                @SuppressWarnings("unchecked")
+                @Test
+                void succeeds() {
 
-					try (var projectStatic = mockStatic(Project.class)) {
-						String path = "path";
+                    try (var projectStatic = mockStatic(Project.class)) {
+                        String path = "path";
 
-						projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(true);
+                        projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(true);
 
-						when(presentationLogic.saveFileUsingGUI()).thenReturn(path);
+                        when(presentationLogic.saveFileUsingGUI()).thenReturn(path);
 
-						construct();
+                        construct();
 
-						verify(view).addSaveAsButtonListener(listenerCaptor.capture());
+                        verify(view).addSaveAsButtonListener(listenerCaptor.capture());
 
-						listenerCaptor.getValue().run();
+                        listenerCaptor.getValue().run();
 
-						// verify before save
-						verifyBeforeSave();
+                        // verify before save
+                        verifyBeforeSave();
 
-						verify(presentationLogic).saveFileUsingGUI();
+                        verify(presentationLogic).saveFileUsingGUI();
 
-						// verify after save
-						verifyAfterSave(true, path);
-					}
-				}
+                        // verify after save
+                        verifyAfterSave(true, path);
+                    }
+                }
 
-			}
+            }
 
-			void verifyBeforeSave() {
-				verify(presentationLogic).modifySavingActions();
-			}
+            void verifyBeforeSave() {
+                verify(presentationLogic).modifySavingActions();
+            }
 
-			void verifyAfterSave(
-					final boolean projectFileTypeMatch,
-					final String path) {
-				if (projectFileTypeMatch) {
-					verify(paintContextService).clearCreasePatternChanged();
-					verify(project).setDataFilePath(path);
-				}
-				verify(presentationLogic).updateMenu();
-				verify(presentationLogic, atLeastOnce()).updateTitleText();
+            void verifyAfterSave(
+                    final boolean projectFileTypeMatch,
+                    final String path) {
+                if (projectFileTypeMatch) {
+                    verify(paintContextService).clearCreasePatternChanged();
+                    verify(project).setDataFilePath(path);
+                }
+                verify(presentationLogic).updateMenu();
+                verify(presentationLogic, atLeastOnce()).updateTitleText();
 
-			}
+            }
 
-			@Nested
-			class TestExportFOLD {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestExportFOLD {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void succeeds() {
+                @Test
+                void succeeds() {
 
-					construct();
+                    construct();
 
-					verify(view).addExportFOLDButtonListener(listenerCaptor.capture());
+                    verify(view).addExportFOLDButtonListener(listenerCaptor.capture());
 
-					testExportWithTypeTemplate(DocFileTypes.fold(), true, listenerCaptor.getValue());
-				}
-			}
+                    testExportWithTypeTemplate(DocFileTypes.fold(), true, listenerCaptor.getValue());
+                }
+            }
 
-			@Nested
-			class TestExportPicture {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestExportPicture {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void succeeds() {
+                @Test
+                void succeeds() {
 
-					construct();
+                    construct();
 
-					verify(view).addSaveAsImageButtonListener(listenerCaptor.capture());
+                    verify(view).addSaveAsImageButtonListener(listenerCaptor.capture());
 
-					testExportWithTypeTemplate(DocFileTypes.pictutre(), false, listenerCaptor.getValue());
-				}
-			}
+                    testExportWithTypeTemplate(DocFileTypes.pictutre(), false, listenerCaptor.getValue());
+                }
+            }
 
-			@SuppressWarnings("unchecked")
-			void testExportWithTypeTemplate(final FileType<Doc> type, final boolean isProjectFile,
-					final Runnable listener) {
+            @SuppressWarnings("unchecked")
+            void testExportWithTypeTemplate(final FileType<Doc> type, final boolean isProjectFile,
+                    final Runnable listener) {
 
-				try (var projectStatic = mockStatic(Project.class)) {
-					listener.run();
+                try (var projectStatic = mockStatic(Project.class)) {
+                    listener.run();
 
-					String path = "path";
+                    String path = "path";
 
-					projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
+                    projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
 
-					// verify before save
-					verify(presentationLogic).modifySavingActions();
+                    // verify before save
+                    verify(presentationLogic).modifySavingActions();
 
-					verify(presentationLogic).saveFileUsingGUI(eq(type));
-					verifyNoCallsAfterExport(isProjectFile, path);
-				}
+                    verify(presentationLogic).saveFileUsingGUI(eq(type));
+                    verifyNoCallsAfterExport(isProjectFile, path);
+                }
 
-			}
+            }
 
-			@Nested
-			class TestExportDXF {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestExportDXF {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void succeeds() {
+                @Test
+                void succeeds() {
 
-					construct();
+                    construct();
 
-					verify(view).addExportDXFButtonListener(listenerCaptor.capture());
+                    verify(view).addExportDXFButtonListener(listenerCaptor.capture());
 
-					testExportWithModelCheckTemplate(DocFileTypes.dxf(), false, listenerCaptor.getValue());
-				}
-			}
+                    testExportWithModelCheckTemplate(DocFileTypes.dxf(), false, listenerCaptor.getValue());
+                }
+            }
 
-			@Nested
-			class TestExportCP {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestExportCP {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void succeeds() {
+                @Test
+                void succeeds() {
 
-					construct();
+                    construct();
 
-					verify(view).addExportCPButtonListener(listenerCaptor.capture());
+                    verify(view).addExportCPButtonListener(listenerCaptor.capture());
 
-					testExportWithModelCheckTemplate(DocFileTypes.cp(), false, listenerCaptor.getValue());
-				}
-			}
+                    testExportWithModelCheckTemplate(DocFileTypes.cp(), false, listenerCaptor.getValue());
+                }
+            }
 
-			@Nested
-			class TestExportSVG {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestExportSVG {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void succeeds() {
+                @Test
+                void succeeds() {
 
-					construct();
+                    construct();
 
-					verify(view).addExportSVGButtonListener(listenerCaptor.capture());
+                    verify(view).addExportSVGButtonListener(listenerCaptor.capture());
 
-					testExportWithModelCheckTemplate(DocFileTypes.svg(), false, listenerCaptor.getValue());
-				}
-			}
+                    testExportWithModelCheckTemplate(DocFileTypes.svg(), false, listenerCaptor.getValue());
+                }
+            }
 
-			void testExportWithModelCheckTemplate(final FileType<Doc> type, final boolean isProjectFile,
-					final Runnable listener) {
+            void testExportWithModelCheckTemplate(final FileType<Doc> type, final boolean isProjectFile,
+                    final Runnable listener) {
 
-				try (var projectStatic = mockStatic(Project.class)) {
-					listener.run();
+                try (var projectStatic = mockStatic(Project.class)) {
+                    listener.run();
 
-					String path = "path";
+                    String path = "path";
 
-					projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
+                    projectStatic.when(() -> Project.projectFileTypeMatch(path)).thenReturn(isProjectFile);
 
-					verify(presentationLogic).exportFileUsingGUIWithModelCheck(type);
-					verifyNoCallsAfterExport(isProjectFile, path);
-				}
+                    verify(presentationLogic).exportFileUsingGUIWithModelCheck(type);
+                    verifyNoCallsAfterExport(isProjectFile, path);
+                }
 
-			}
+            }
 
-			void verifyNoCallsAfterExport(
-					final boolean projectFileTypeMatch,
-					final String path) {
-				if (projectFileTypeMatch) {
-					verify(paintContextService, never()).clearCreasePatternChanged();
-					verify(project, never()).setDataFilePath(path);
-				}
-				verify(presentationLogic, never()).updateMenu();
-				verify(presentationLogic).updateTitleText();
+            void verifyNoCallsAfterExport(
+                    final boolean projectFileTypeMatch,
+                    final String path) {
+                if (projectFileTypeMatch) {
+                    verify(paintContextService, never()).clearCreasePatternChanged();
+                    verify(project, never()).setDataFilePath(path);
+                }
+                verify(presentationLogic, never()).updateMenu();
+                verify(presentationLogic).updateTitleText();
 
-			}
+            }
 
-			@Nested
-			class TestOpen {
-				@Captor
-				ArgumentCaptor<Runnable> listenerCaptor;
+            @Nested
+            class TestOpen {
+                @Captor
+                ArgumentCaptor<Runnable> listenerCaptor;
 
-				@Test
-				void loadUsingGUILogicShouldBeCalled() {
+                @Test
+                void loadUsingGUILogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addOpenButtonListener(listenerCaptor.capture());
+                    verify(view).addOpenButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().run();
+                    listenerCaptor.getValue().run();
 
-					verify(presentationLogic).loadFileUsingGUI();
+                    verify(presentationLogic).loadFileUsingGUI();
 
-					verifyAfterLoad();
-				}
-			}
+                    verifyAfterLoad();
+                }
+            }
 
-			@Nested
-			class TestMRUFileLoad {
-				@Captor
-				ArgumentCaptor<Consumer<String>> listenerCaptor;
+            @Nested
+            class TestMRUFileLoad {
+                @Captor
+                ArgumentCaptor<Consumer<String>> listenerCaptor;
 
-				@Test
-				void loadLogicShouldBeCalled() {
+                @Test
+                void loadLogicShouldBeCalled() {
 
-					construct();
+                    construct();
 
-					verify(view).addMRUFileButtonListener(listenerCaptor.capture());
+                    verify(view).addMRUFileButtonListener(listenerCaptor.capture());
 
-					listenerCaptor.getValue().accept("path");
+                    listenerCaptor.getValue().accept("path");
 
-					verify(presentationLogic).loadFile("path");
+                    verify(presentationLogic).loadFile("path");
 
-					verifyAfterLoad();
-				}
-			}
+                    verifyAfterLoad();
+                }
+            }
 
-			void verifyAfterLoad() {
-				verify(presentationLogic).updateScreen();
-				verify(presentationLogic).updateMenu();
-				verify(presentationLogic, atLeastOnce()).updateTitleText();
-				verify(presentationLogic).updateValuePanelFractionDigits();
+            void verifyAfterLoad() {
+                verify(presentationLogic).updateScreen();
+                verify(presentationLogic).updateMenu();
+                verify(presentationLogic, atLeastOnce()).updateTitleText();
+                verify(presentationLogic).updateValuePanelFractionDigits();
 
-			}
+            }
 
-			@Nested
-			class TestImport {
+            @Nested
+            class TestImport {
 
-				@Test
-				void listenerShouldBeAdded() {
+                @Test
+                void listenerShouldBeAdded() {
 
-					construct();
+                    construct();
 
-					verify(view).addImportButtonListener(any());
-				}
-			}
-		}
+                    verify(view).addImportButtonListener(any());
+                }
+            }
+        }
 
-	}
+    }
 
-	MainFramePresenter construct() {
-		return new MainFramePresenter(
-				view,
-				presentationLogic,
-				dialogPresenterFactory,
-				paintMenuListenerFactory,
-				project,
-				paintContextService,
-				plugins);
-	}
+    MainFramePresenter construct() {
+        return new MainFramePresenter(
+                view,
+                presentationLogic,
+                dialogPresenterFactory,
+                paintMenuListenerFactory,
+                project,
+                paintContextService,
+                plugins);
+    }
 
 }

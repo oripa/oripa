@@ -29,14 +29,14 @@ import oripa.vecmath.Vector2d;
  *
  */
 class PointSorter {
-	public List<Vector2d> sortPointsOnLine(final List<Vector2d> points, final OriLine line) {
-		var p0 = line.getP0();
-		var p1 = line.getP1();
-		boolean sortByX = Math.abs(p0.getX() - p1.getX()) > Math.abs(p0.getY() - p1.getY());
+    public List<Vector2d> sortPointsOnLine(final List<Vector2d> points, final OriLine line) {
+        var p0 = line.getP0();
+        var p1 = line.getP1();
+        boolean sortByX = Math.abs(p0.getX() - p1.getX()) > Math.abs(p0.getY() - p1.getY());
 
-		return points.stream()
-				.sorted(Comparator.comparing(sortByX ? Vector2d::getX : Vector2d::getY))
-				.toList();
-	}
+        return points.stream()
+                .sorted(Comparator.comparing(sortByX ? Vector2d::getX : Vector2d::getY))
+                .toList();
+    }
 
 }

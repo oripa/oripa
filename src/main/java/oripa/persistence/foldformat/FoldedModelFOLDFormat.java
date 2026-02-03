@@ -28,28 +28,28 @@ import com.google.gson.annotations.SerializedName;
  */
 public class FoldedModelFOLDFormat extends FOLDFormat {
 
-	@SerializedName("faces_oripa:precreases")
-	private List<List<Integer>> facesPrecreases;
+    @SerializedName("faces_oripa:precreases")
+    private List<List<Integer>> facesPrecreases;
 
-	public FoldedModelFOLDFormat() {
-		setFileClasses(List.of(FileClass.SINGLE_MODEL));
+    public FoldedModelFOLDFormat() {
+        setFileClasses(List.of(FileClass.SINGLE_MODEL));
 
-		setFrameClasses(List.of(FrameClass.FOLDED_FORM));
+        setFrameClasses(List.of(FrameClass.FOLDED_FORM));
 
-		setFrameAttributes(List.of(FrameAttribute.TWO_DIMENSION));
-	}
+        setFrameAttributes(List.of(FrameAttribute.TWO_DIMENSION));
+    }
 
-	/**
-	 * Each element of the returned list is a pair of face index and precrease's
-	 * edge index.
-	 *
-	 * @return
-	 */
-	public List<List<Integer>> getFacesPrecreases() {
-		return facesPrecreases;
-	}
+    /**
+     * Each element of the returned list is a pair of face index and precrease's
+     * edge index.
+     *
+     * @return
+     */
+    public List<List<Integer>> getFacesPrecreases() {
+        return facesPrecreases;
+    }
 
-	public void setFacesPrecreases(final List<List<Integer>> facesPrecreases) {
-		this.facesPrecreases = facesPrecreases;
-	}
+    public void setFacesPrecreases(final List<List<Integer>> facesPrecreases) {
+        this.facesPrecreases = facesPrecreases;
+    }
 }

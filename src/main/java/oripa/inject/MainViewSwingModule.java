@@ -41,18 +41,18 @@ import oripa.swing.view.model.ModelViewSwingFrameFactory;
  */
 public class MainViewSwingModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
+    @Override
+    protected void configure() {
 
-		bind(MainFrameView.class).to(MainFrame.class);
-		bind(MainFrameDialogFactory.class).to(MainFrameSwingDialogFactory.class);
+        bind(MainFrameView.class).to(MainFrame.class);
+        bind(MainFrameDialogFactory.class).to(MainFrameSwingDialogFactory.class);
 
-		bind(FoldabilityCheckFrameFactory.class).to(FoldabilityCheckSwingFrameFactory.class);
-		bind(ModelViewFrameFactory.class).to(ModelViewSwingFrameFactory.class);
-		bind(EstimationResultFrameFactory.class).to(EstimationResultSwingFrameFactory.class);
-		bind(SubFrameFactory.class).to(SubSwingFrameFactory.class);
+        bind(FoldabilityCheckFrameFactory.class).to(FoldabilityCheckSwingFrameFactory.class);
+        bind(ModelViewFrameFactory.class).to(ModelViewSwingFrameFactory.class);
+        bind(EstimationResultFrameFactory.class).to(EstimationResultSwingFrameFactory.class);
+        bind(SubFrameFactory.class).to(SubSwingFrameFactory.class);
 
-		bind(FileChooserFactory.class).to(FileChooserSwingFactory.class);
-	}
+        bind(FileChooserFactory.class).to(FileChooserSwingFactory.class);
+    }
 
 }

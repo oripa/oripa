@@ -37,101 +37,101 @@ import oripa.util.rule.AbstractRule;
  */
 public class VertexFoldability extends AbstractRule<OriVertex> {
 
-	private static final Logger logger = LoggerFactory.getLogger(VertexFoldability.class);
+    private static final Logger logger = LoggerFactory.getLogger(VertexFoldability.class);
 
-	private final AngleMinimalityHelper helper = new AngleMinimalityHelper();
-	private final MinimalAngleFolder folder = new MinimalAngleFolder();
+    private final AngleMinimalityHelper helper = new AngleMinimalityHelper();
+    private final MinimalAngleFolder folder = new MinimalAngleFolder();
 
-	public VertexFoldability() {
-		super("foldability");
-	}
+    public VertexFoldability() {
+        super("foldability");
+    }
 
-	@Override
-	public boolean holds(final OriVertex vertex) {
+    @Override
+    public boolean holds(final OriVertex vertex) {
 
-		if (!vertex.isInsideOfPaper()) {
-			return true;
-		}
+        if (!vertex.isInsideOfPaper()) {
+            return true;
+        }
 
-		if (vertex.hasUnassignedEdge()) {
-			return true;
-		}
+        if (vertex.hasUnassignedEdge()) {
+            return true;
+        }
 
-		var ring = createRing(vertex);
-		var minimalIndices = new MinimalAngleIndexManager(ring, helper);
+        var ring = createRing(vertex);
+        var minimalIndices = new MinimalAngleIndexManager(ring, helper);
 
-		int minimalIndex;
+        int minimalIndex;
 
-		logger.trace(ring.toString());
+        logger.trace(ring.toString());
 
-		while (ring.size() > 2) {
+        while (ring.size() > 2) {
 
 //			do {
-			if (minimalIndices.isEmpty()) {
-				return false;
-			}
-			minimalIndex = minimalIndices.pop();
+            if (minimalIndices.isEmpty()) {
+                return false;
+            }
+            minimalIndex = minimalIndices.pop();
 //			} while (!helper.isMinimal(ring, minimalIndex));
 
-			logger.trace("fold {}th gap", minimalIndex);
+            logger.trace("fold {}th gap", minimalIndex);
 
-			// this operation keeps the index manager not having old
-			// information.
-			var mergedRingIndex = folder.foldPartially(ring, minimalIndex, minimalIndices);
+            // this operation keeps the index manager not having old
+            // information.
+            var mergedRingIndex = folder.foldPartially(ring, minimalIndex, minimalIndices);
 
-			var nextRingIndex = ring.getNext(mergedRingIndex).getRingIndex();
-			var previousRingIndex = ring.getPrevious(mergedRingIndex).getRingIndex();
+            var nextRingIndex = ring.getNext(mergedRingIndex).getRingIndex();
+            var previousRingIndex = ring.getPrevious(mergedRingIndex).getRingIndex();
 
-			// update minimality information.
-			addIfMinimal(minimalIndices, ring, mergedRingIndex);
-			addIfMinimal(minimalIndices, ring, nextRingIndex);
-			addIfMinimal(minimalIndices, ring, previousRingIndex);
+            // update minimality information.
+            addIfMinimal(minimalIndices, ring, mergedRingIndex);
+            addIfMinimal(minimalIndices, ring, nextRingIndex);
+            addIfMinimal(minimalIndices, ring, previousRingIndex);
 
-		}
+        }
 
-		logger.trace(ring.toString());
+        logger.trace(ring.toString());
 
-		if (ring.size() == 0) {
-			return true;
-		}
+        if (ring.size() == 0) {
+            return true;
+        }
 
-		if (ring.size() != 2) {
-			return false;
-		}
+        if (ring.size() != 2) {
+            return false;
+        }
 
-		var head = ring.head();
-		var tail = ring.tail();
-		if (!MathUtil.areEqual(head.getAngleGap(), tail.getAngleGap(), AngleMinimalityHelper.EPS)) {
-			return false;
-		}
-		if (head.getLineType() != tail.getLineType()) {
-			return false;
-		}
+        var head = ring.head();
+        var tail = ring.tail();
+        if (!MathUtil.areEqual(head.getAngleGap(), tail.getAngleGap(), AngleMinimalityHelper.EPS)) {
+            return false;
+        }
+        if (head.getLineType() != tail.getLineType()) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private void addIfMinimal(final MinimalAngleIndexManager indices, final RingArrayList<LineGap> ring,
-			final int ringIndex) {
-		if (!helper.isMinimal(ring, ringIndex)) {
-			return;
-		}
-		if (indices.exists(ringIndex)) {
-			return;
-		}
+    private void addIfMinimal(final MinimalAngleIndexManager indices, final RingArrayList<LineGap> ring,
+            final int ringIndex) {
+        if (!helper.isMinimal(ring, ringIndex)) {
+            return;
+        }
+        if (indices.exists(ringIndex)) {
+            return;
+        }
 
-		indices.add(ringIndex);
-	}
+        indices.add(ringIndex);
+    }
 
-	private RingArrayList<LineGap> createRing(final OriVertex vertex) {
-		var gaps = new ArrayList<LineGap>();
+    private RingArrayList<LineGap> createRing(final OriVertex vertex) {
+        var gaps = new ArrayList<LineGap>();
 
-		for (int i = 0; i < vertex.edgeCount(); i++) {
-			gaps.add(new LineGap(vertex.getAngleDifference(i),
-					vertex.getEdge(i).getType()));
-		}
+        for (int i = 0; i < vertex.edgeCount(); i++) {
+            gaps.add(new LineGap(vertex.getAngleDifference(i),
+                    vertex.getEdge(i).getType()));
+        }
 
-		return new RingArrayList<>(gaps);
-	}
+        return new RingArrayList<>(gaps);
+    }
 
 }

@@ -27,44 +27,44 @@ import javax.swing.SwingWorker;
  *
  */
 public class SimpleModalWorker extends SwingWorker<Void, Void> {
-	private final SimpleModalDialog dialog;
-	private final Runnable action;
-	private final Consumer<Exception> errorHandler;
+    private final SimpleModalDialog dialog;
+    private final Runnable action;
+    private final Consumer<Exception> errorHandler;
 
-	public SimpleModalWorker(final SimpleModalDialog dialog, final Runnable action,
-			final Consumer<Exception> errorHandler) {
-		this.dialog = dialog;
-		this.action = action;
-		this.errorHandler = errorHandler;
+    public SimpleModalWorker(final SimpleModalDialog dialog, final Runnable action,
+            final Consumer<Exception> errorHandler) {
+        this.dialog = dialog;
+        this.action = action;
+        this.errorHandler = errorHandler;
 
-		addPropertyChangeListener(e -> {
-			if ("state".equals(e.getPropertyName())
-					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
-				dialog.setVisible(false);
-				dialog.dispose();
-			}
-		});
+        addPropertyChangeListener(e -> {
+            if ("state".equals(e.getPropertyName())
+                    && SwingWorker.StateValue.DONE == e.getNewValue()) {
+                dialog.setVisible(false);
+                dialog.dispose();
+            }
+        });
 
-	}
+    }
 
-	@Override
-	protected Void doInBackground() throws Exception {
-		action.run();
-		return null;
-	}
+    @Override
+    protected Void doInBackground() throws Exception {
+        action.run();
+        return null;
+    }
 
-	@Override
-	protected void done() {
-		try {
-			get();
-		} catch (Exception e) {
-			errorHandler.accept(e);
-			cancel(true);
-		}
-	}
+    @Override
+    protected void done() {
+        try {
+            get();
+        } catch (Exception e) {
+            errorHandler.accept(e);
+            cancel(true);
+        }
+    }
 
-	public void executeModal() {
-		execute();
-		dialog.setVisible(true);
-	}
+    public void executeModal() {
+        execute();
+        dialog.setVisible(true);
+    }
 }

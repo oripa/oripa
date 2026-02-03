@@ -32,50 +32,50 @@ import oripa.value.OriLine;
  *
  */
 class LineDtoConverter {
-	CreasePattern convert(final List<LineDto> dtos) {
+    CreasePattern convert(final List<LineDto> dtos) {
 
-		var domain = RectangleDomain.createFromPoints(
-				dtos.stream()
-						.flatMap(dto -> Stream.of(dto.getP0(), dto.getP1()))
-						.toList());
+        var domain = RectangleDomain.createFromPoints(
+                dtos.stream()
+                        .flatMap(dto -> Stream.of(dto.getP0(), dto.getP1()))
+                        .toList());
 
-		final double size = 400;
-		var center = domain.getCenter();
-		double bboxSize = domain.maxWidthHeight();
-		// size normalization
-		for (LineDto dto : dtos) {
-			dto.p0x = (dto.p0x - center.getX()) / bboxSize * size;
-			dto.p0y = (dto.p0y - center.getY()) / bboxSize * size;
-			dto.p1x = (dto.p1x - center.getX()) / bboxSize * size;
-			dto.p1y = (dto.p1y - center.getY()) / bboxSize * size;
-		}
+        final double size = 400;
+        var center = domain.getCenter();
+        double bboxSize = domain.maxWidthHeight();
+        // size normalization
+        for (LineDto dto : dtos) {
+            dto.p0x = (dto.p0x - center.getX()) / bboxSize * size;
+            dto.p0y = (dto.p0y - center.getY()) / bboxSize * size;
+            dto.p1x = (dto.p1x - center.getX()) / bboxSize * size;
+            dto.p1y = (dto.p1y - center.getY()) / bboxSize * size;
+        }
 
-		var delLines = new ArrayList<LineDto>();
-		int lineNum = dtos.size();
+        var delLines = new ArrayList<LineDto>();
+        int lineNum = dtos.size();
 
-		for (int i = 0; i < lineNum; i++) {
-			for (int j = i + 1; j < lineNum; j++) {
-				var l0 = dtos.get(i);
-				var l1 = dtos.get(j);
+        for (int i = 0; i < lineNum; i++) {
+            for (int j = i + 1; j < lineNum; j++) {
+                var l0 = dtos.get(i);
+                var l1 = dtos.get(j);
 
-				if ((l0.getP0().distance(l1.getP0()) < 0.01 && l0.getP1().distance(l1.getP1()) < 0.01)
-						|| (l0.getP1().distance(l1.getP0()) < 0.01 && l0.getP0().distance(l1.getP1()) < 0.01)) {
+                if ((l0.getP0().distance(l1.getP0()) < 0.01 && l0.getP1().distance(l1.getP1()) < 0.01)
+                        || (l0.getP1().distance(l1.getP0()) < 0.01 && l0.getP0().distance(l1.getP1()) < 0.01)) {
 
-					delLines.add(l0);
-				}
-			}
-		}
+                    delLines.add(l0);
+                }
+            }
+        }
 
-		for (LineDto delLine : delLines) {
-			dtos.remove(delLine);
-		}
+        for (LineDto delLine : delLines) {
+            dtos.remove(delLine);
+        }
 
-		var factory = new CreasePatternFactory();
-		var creasePattern = factory
-				.createCreasePattern(dtos.stream()
-						.map(d -> new OriLine(d.p0x, d.p0y, d.p1x, d.p1y, d.type))
-						.toList());
+        var factory = new CreasePatternFactory();
+        var creasePattern = factory
+                .createCreasePattern(dtos.stream()
+                        .map(d -> new OriLine(d.p0x, d.p0y, d.p1x, d.p1y, d.type))
+                        .toList());
 
-		return creasePattern;
-	}
+        return creasePattern;
+    }
 }

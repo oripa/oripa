@@ -26,26 +26,26 @@ import oripa.gui.view.DialogView;
  */
 public interface PropertyDialogView extends DialogView {
 
-	void setMemo(final String memo);
+    void setMemo(final String memo);
 
-	String getMemo();
+    String getMemo();
 
-	void setReference(final String reference);
+    void setReference(final String reference);
 
-	String getReference();
+    String getReference();
 
-	void setOriginalAutor(final String originalAuthor);
+    void setOriginalAutor(final String originalAuthor);
 
-	String getOriginalAuthor();
+    String getOriginalAuthor();
 
-	void setEditorName(final String editorName);
+    void setEditorName(final String editorName);
 
-	String getEditorName();
+    String getEditorName();
 
-	void setModelTitle(final String title);
+    void setModelTitle(final String title);
 
-	String getModelTitle();
+    String getModelTitle();
 
-	void addOKButtonListener(final Runnable listener);
+    void addOKButtonListener(final Runnable listener);
 
 }

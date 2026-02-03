@@ -19,8 +19,8 @@
 package oripa.domain.cptool;
 
 public class CrossingLineSplitterSweepLineAlgorithmTest implements CrossingLineSplitterTest {
-	@Override
-	public CrossingLineSplitter createTarget() {
-		return new CrossingLineSplitterSweepLineAlgorithm();
-	}
+    @Override
+    public CrossingLineSplitter createTarget() {
+        return new CrossingLineSplitterSweepLineAlgorithm();
+    }
 }

@@ -31,32 +31,32 @@ import oripa.value.OriLine;
  */
 public class CreasePatternToSvgConverter extends SvgConverter {
 
-	public static final String SPACE = " ";
-	CreasePattern creasePatternInterface;
+    public static final String SPACE = " ";
+    CreasePattern creasePatternInterface;
 
-	public CreasePatternToSvgConverter(final CreasePattern creasePatternInterface, final double scaleToFitDomain) {
-		this.creasePatternInterface = creasePatternInterface;
-		this.domain = creasePatternInterface.getPaperDomain();
-		this.scaleToFitDomain = scaleToFitDomain;
-	}
+    public CreasePatternToSvgConverter(final CreasePattern creasePatternInterface, final double scaleToFitDomain) {
+        this.creasePatternInterface = creasePatternInterface;
+        this.domain = creasePatternInterface.getPaperDomain();
+        this.scaleToFitDomain = scaleToFitDomain;
+    }
 
-	public String getSvgCreasePattern() {
-		return creasePatternInterface.stream()
-				.map(oriLine -> getLinePathTag(mapToDomain(oriLine.getOriPoint0()), mapToDomain(oriLine.getOriPoint1()),
-						getLineStyle(oriLine)))
-				.map(stringBuilder -> stringBuilder.insert(0, SPACE))
-				.map(StringBuilder::toString)
-				.collect(Collectors.joining(""));
-	}
+    public String getSvgCreasePattern() {
+        return creasePatternInterface.stream()
+                .map(oriLine -> getLinePathTag(mapToDomain(oriLine.getOriPoint0()), mapToDomain(oriLine.getOriPoint1()),
+                        getLineStyle(oriLine)))
+                .map(stringBuilder -> stringBuilder.insert(0, SPACE))
+                .map(StringBuilder::toString)
+                .collect(Collectors.joining(""));
+    }
 
-	private String getLineStyle(final OriLine line) {
-		return switch (line.getType()) {
-		case CUT -> getLinePathStyle(4, "black").toString();
-		case MOUNTAIN -> getLinePathStyle(2, "red").toString();
-		case VALLEY -> getLinePathStyle(2, "blue").toString();
-		case UNASSIGNED -> getLinePathStyle(2, "orange").toString();
-		default -> getLinePathStyle(1, "gray").toString();
-		};
-	}
+    private String getLineStyle(final OriLine line) {
+        return switch (line.getType()) {
+        case CUT -> getLinePathStyle(4, "black").toString();
+        case MOUNTAIN -> getLinePathStyle(2, "red").toString();
+        case VALLEY -> getLinePathStyle(2, "blue").toString();
+        case UNASSIGNED -> getLinePathStyle(2, "orange").toString();
+        default -> getLinePathStyle(1, "gray").toString();
+        };
+    }
 
 }

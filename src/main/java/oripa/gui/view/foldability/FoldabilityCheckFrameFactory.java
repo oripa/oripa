@@ -26,6 +26,6 @@ import oripa.gui.view.FrameView;
  */
 public interface FoldabilityCheckFrameFactory {
 
-	FoldabilityCheckFrameView createFrame(FrameView parent);
+    FoldabilityCheckFrameView createFrame(FrameView parent);
 
 }

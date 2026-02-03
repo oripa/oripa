@@ -28,18 +28,18 @@ import javax.swing.border.TitledBorder;
  *
  */
 public class TitledBorderFactory {
-	public TitledBorder createTitledBorder(final JComponent parent, final String text) {
-		TitledBorder border = new TitledBorder(text);
-		border.setBorder(new LineBorder(parent.getBackground().darker().darker(), 2));
-		border.setBorder(new MatteBorder(1, 0, 0, 0,
-				parent.getBackground().darker().darker()));
-		return border;
-	}
+    public TitledBorder createTitledBorder(final JComponent parent, final String text) {
+        TitledBorder border = new TitledBorder(text);
+        border.setBorder(new LineBorder(parent.getBackground().darker().darker(), 2));
+        border.setBorder(new MatteBorder(1, 0, 0, 0,
+                parent.getBackground().darker().darker()));
+        return border;
+    }
 
-	public TitledBorder createTitledBorderFrame(final JComponent parent, final String text) {
-		TitledBorder border = new TitledBorder(text);
-		border.setBorder(new LineBorder(parent.getBackground().darker().darker()));
-		return border;
-	}
+    public TitledBorder createTitledBorderFrame(final JComponent parent, final String text) {
+        TitledBorder border = new TitledBorder(text);
+        border.setBorder(new LineBorder(parent.getBackground().darker().darker()));
+        return border;
+    }
 
 }

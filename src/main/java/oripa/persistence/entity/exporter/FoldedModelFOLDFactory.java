@@ -28,31 +28,31 @@ import oripa.persistence.foldformat.FoldedModelFOLDFormat;
  */
 class FoldedModelFOLDFactory {
 
-	private final FoldedModelElementConverter elementConverter;
+    private final FoldedModelElementConverter elementConverter;
 
-	public FoldedModelFOLDFactory(final FoldedModelElementConverter elementConverter) {
-		this.elementConverter = elementConverter;
-	}
+    public FoldedModelFOLDFactory(final FoldedModelElementConverter elementConverter) {
+        this.elementConverter = elementConverter;
+    }
 
-	public FoldedModelFOLDFormat createWithoutFaceOrders(final OrigamiModel origamiModel) {
-		var foldFormat = new FoldedModelFOLDFormat();
+    public FoldedModelFOLDFormat createWithoutFaceOrders(final OrigamiModel origamiModel) {
+        var foldFormat = new FoldedModelFOLDFormat();
 
-		elementConverter.setVertexIDs(origamiModel);
+        elementConverter.setVertexIDs(origamiModel);
 
-		foldFormat.setEdgesAssignment(elementConverter.toEdgesAssignment(origamiModel));
-		foldFormat.setEdgesVertices(elementConverter.toEdgesVertices(origamiModel));
+        foldFormat.setEdgesAssignment(elementConverter.toEdgesAssignment(origamiModel));
+        foldFormat.setEdgesVertices(elementConverter.toEdgesVertices(origamiModel));
 
-		foldFormat.setVerticesCoords(elementConverter.toVerticesCoords(origamiModel));
+        foldFormat.setVerticesCoords(elementConverter.toVerticesCoords(origamiModel));
 
-		foldFormat.setFacesVertices(elementConverter.toFacesVertices(origamiModel));
+        foldFormat.setFacesVertices(elementConverter.toFacesVertices(origamiModel));
 
-		foldFormat.setFacesPrecreases(
-				elementConverter.addPrecreases(
-						foldFormat.getEdgesVertices(),
-						foldFormat.getEdgesAssignment(),
-						foldFormat.getVerticesCoords(),
-						origamiModel));
+        foldFormat.setFacesPrecreases(
+                elementConverter.addPrecreases(
+                        foldFormat.getEdgesVertices(),
+                        foldFormat.getEdgesAssignment(),
+                        foldFormat.getVerticesCoords(),
+                        origamiModel));
 
-		return foldFormat;
-	}
+        return foldFormat;
+    }
 }

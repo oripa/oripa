@@ -9,19 +9,19 @@ import java.util.Optional;
  *
  */
 public class StatePopper<GroupEnum> implements Runnable {
-	private final StateManager<GroupEnum> stateManager;
+    private final StateManager<GroupEnum> stateManager;
 
-	/**
-	 * Constructor
-	 */
-	public StatePopper(final StateManager<GroupEnum> stateManager) {
-		this.stateManager = stateManager;
-	}
+    /**
+     * Constructor
+     */
+    public StatePopper(final StateManager<GroupEnum> stateManager) {
+        this.stateManager = stateManager;
+    }
 
-	@Override
-	public void run() {
-		Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.pop();
+    @Override
+    public void run() {
+        Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.pop();
 
-		currentOpt.ifPresent(current -> current.performActions());
-	}
+        currentOpt.ifPresent(current -> current.performActions());
+    }
 }

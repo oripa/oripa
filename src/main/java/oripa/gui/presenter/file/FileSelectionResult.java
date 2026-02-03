@@ -25,17 +25,17 @@ import oripa.persistence.dao.FileType;
  *
  */
 public record FileSelectionResult<Data>(UserAction action, String path, FileType<Data> type) {
-	public static <Data> FileSelectionResult<Data> createCanceled() {
-		return new FileSelectionResult<>(UserAction.CANCELED, null, null);
-	}
+    public static <Data> FileSelectionResult<Data> createCanceled() {
+        return new FileSelectionResult<>(UserAction.CANCELED, null, null);
+    }
 
-	public static <Data> FileSelectionResult<Data> createSelectedForLoad(final String path) {
-		return new FileSelectionResult<>(UserAction.SELECTED, path, null);
-	}
+    public static <Data> FileSelectionResult<Data> createSelectedForLoad(final String path) {
+        return new FileSelectionResult<>(UserAction.SELECTED, path, null);
+    }
 
-	public static <Data> FileSelectionResult<Data> createSelectedForSave(
-			final String path,
-			final FileType<Data> type) {
-		return new FileSelectionResult<>(UserAction.SELECTED, path, type);
-	}
+    public static <Data> FileSelectionResult<Data> createSelectedForSave(
+            final String path,
+            final FileType<Data> type) {
+        return new FileSelectionResult<>(UserAction.SELECTED, path, type);
+    }
 }

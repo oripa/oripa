@@ -31,10 +31,10 @@ import oripa.swing.view.util.SimpleModalDialog;
  */
 public class DialogWhileFolding extends SimpleModalDialog {
 
-	public DialogWhileFolding(final JFrame parent, final ResourceHolder resources) {
-		super(parent,
-				resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_TITLE_ID),
-				resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_ID));
-	}
+    public DialogWhileFolding(final JFrame parent, final ResourceHolder resources) {
+        super(parent,
+                resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_TITLE_ID),
+                resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_ID));
+    }
 
 }

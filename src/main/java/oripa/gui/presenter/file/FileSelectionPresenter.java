@@ -38,89 +38,89 @@ import oripa.util.file.FileFactory;
  */
 public class FileSelectionPresenter<Data> {
 
-	private static Logger logger = LoggerFactory.getLogger(FileSelectionPresenter.class);
+    private static Logger logger = LoggerFactory.getLogger(FileSelectionPresenter.class);
 
-	private final FrameView parent;
-	private final FileChooserFactory chooserFactory;
-	protected final FileFactory fileFactory;
-	private final FileSelectionService<Data> fileSelectionService;
-	private final ExtensionCorrector extensionCorrector;
+    private final FrameView parent;
+    private final FileChooserFactory chooserFactory;
+    protected final FileFactory fileFactory;
+    private final FileSelectionService<Data> fileSelectionService;
+    private final ExtensionCorrector extensionCorrector;
 
-	public FileSelectionPresenter(
-			final FrameView parent,
-			final FileChooserFactory chooserFactory,
-			final FileFactory fileFactory,
-			final FileSelectionService<Data> fileSelectionService,
-			final ExtensionCorrector extensionCorrector) {
-		this.parent = parent;
-		this.chooserFactory = chooserFactory;
-		this.fileFactory = fileFactory;
-		this.fileSelectionService = fileSelectionService;
-		this.extensionCorrector = extensionCorrector;
-	}
+    public FileSelectionPresenter(
+            final FrameView parent,
+            final FileChooserFactory chooserFactory,
+            final FileFactory fileFactory,
+            final FileSelectionService<Data> fileSelectionService,
+            final ExtensionCorrector extensionCorrector) {
+        this.parent = parent;
+        this.chooserFactory = chooserFactory;
+        this.fileFactory = fileFactory;
+        this.fileSelectionService = fileSelectionService;
+        this.extensionCorrector = extensionCorrector;
+    }
 
-	public FileSelectionResult<Data> saveUsingGUI(final String path) {
+    public FileSelectionResult<Data> saveUsingGUI(final String path) {
 
-		return saveUsingGUIImpl(path, fileSelectionService.getSavableSupports());
-	}
+        return saveUsingGUIImpl(path, fileSelectionService.getSavableSupports());
+    }
 
-	public FileSelectionResult<Data> saveUsingGUI(final String path, final List<FileType<Data>> types) {
+    public FileSelectionResult<Data> saveUsingGUI(final String path, final List<FileType<Data>> types) {
 
-		return saveUsingGUIImpl(path, fileSelectionService.getSavableSupportsOf(types));
-	}
+        return saveUsingGUIImpl(path, fileSelectionService.getSavableSupportsOf(types));
+    }
 
-	private FileSelectionResult<Data> saveUsingGUIImpl(
-			final String path, final List<FileSelectionSupport<Data>> savableSupports) {
+    private FileSelectionResult<Data> saveUsingGUIImpl(
+            final String path, final List<FileSelectionSupport<Data>> savableSupports) {
 
-		var chooser = chooserFactory.createForSaving(
-				path,
-				toFileFilterProperties(savableSupports));
+        var chooser = chooserFactory.createForSaving(
+                path,
+                toFileFilterProperties(savableSupports));
 
-		if (!chooser.showDialog(parent)) {
-			return FileSelectionResult.createCanceled();
-		}
+        if (!chooser.showDialog(parent)) {
+            return FileSelectionResult.createCanceled();
+        }
 
-		var file = chooser.getSelectedFile();
+        var file = chooser.getSelectedFile();
 
-		String filePath = file.getPath();
+        String filePath = file.getPath();
 
-		var correctedPath = extensionCorrector.correct(filePath, chooser.getSelectedFilterExtensions());
-		var correctedFile = fileFactory.create(correctedPath);
+        var correctedPath = extensionCorrector.correct(filePath, chooser.getSelectedFilterExtensions());
+        var correctedFile = fileFactory.create(correctedPath);
 
-		if (correctedFile.exists()) {
-			if (!chooser.showOverwriteConfirmMessage()) {
-				return FileSelectionResult.createCanceled();
-			}
-		}
+        if (correctedFile.exists()) {
+            if (!chooser.showOverwriteConfirmMessage()) {
+                return FileSelectionResult.createCanceled();
+            }
+        }
 
-		logger.debug("saving {}", correctedPath);
+        logger.debug("saving {}", correctedPath);
 
-		return FileSelectionResult.createSelectedForSave(correctedPath,
-				fileSelectionService.getSavableTypeByDescription(chooser.getSelectedFilterDescription()));
-	}
+        return FileSelectionResult.createSelectedForSave(correctedPath,
+                fileSelectionService.getSavableTypeByDescription(chooser.getSelectedFilterDescription()));
+    }
 
-	public FileSelectionResult<Data> loadUsingGUI(final String lastFilePath) {
+    public FileSelectionResult<Data> loadUsingGUI(final String lastFilePath) {
 
-		var chooser = chooserFactory.createForLoading(
-				lastFilePath,
-				toFileFilterProperties(fileSelectionService.getLoadableSupportsWithMultiType()));
+        var chooser = chooserFactory.createForLoading(
+                lastFilePath,
+                toFileFilterProperties(fileSelectionService.getLoadableSupportsWithMultiType()));
 
-		if (!chooser.showDialog(parent)) {
-			return FileSelectionResult.createCanceled();
-		}
+        if (!chooser.showDialog(parent)) {
+            return FileSelectionResult.createCanceled();
+        }
 
-		var file = chooser.getSelectedFile();
+        var file = chooser.getSelectedFile();
 
-		var loadedPath = file.getPath();
+        var loadedPath = file.getPath();
 
-		return FileSelectionResult.createSelectedForLoad(loadedPath);
-	}
+        return FileSelectionResult.createSelectedForLoad(loadedPath);
+    }
 
-	private List<FileFilterProperty> toFileFilterProperties(final List<FileSelectionSupport<Data>> supports) {
-		return supports.stream()
-				.map(support -> new FileFilterProperty(
-						support.getDescription(), support.getExtensions()))
-				.toList();
-	}
+    private List<FileFilterProperty> toFileFilterProperties(final List<FileSelectionSupport<Data>> supports) {
+        return supports.stream()
+                .map(support -> new FileFilterProperty(
+                        support.getDescription(), support.getExtensions()))
+                .toList();
+    }
 
 }
