@@ -2,12 +2,10 @@ package oripa.domain.creasepattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.geom.RectangleDomain;
 import oripa.test.util.AssertionUtil;
 import oripa.value.OriLine;
 

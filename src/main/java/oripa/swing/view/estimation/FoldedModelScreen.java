@@ -68,7 +68,7 @@ public class FoldedModelScreen extends JPanel
     private boolean useColor = true;
     private boolean fillFaces = true;
     private boolean ambientOcclusion = false;
-    private boolean faceOrderFlip = false;
+    private boolean faceFlip = false;
     private final double scaleRate = 0.8;
     private boolean drawEdges = true;
 
@@ -166,7 +166,7 @@ public class FoldedModelScreen extends JPanel
     }
 
     public void flipFaces(final boolean bFlip) {
-        this.faceOrderFlip = bFlip;
+        this.faceFlip = bFlip;
         redrawOrigami();
     }
 
@@ -264,7 +264,8 @@ public class FoldedModelScreen extends JPanel
             return;
         }
 
-        var converter = distortion.createCoordinateConverter(distortionMethod, distortionParameter, getFinalScale());
+        var converter = distortion.createCoordinateConverter(distortionMethod, distortionParameter, getFinalScale(),
+                faceFlip);
 
         var distortionResult = distortion.apply(origamiModel, overlapRelation, converter, vertexDepths, eps);
 
@@ -275,13 +276,14 @@ public class FoldedModelScreen extends JPanel
                 new FoldedModelPixelRenderer.Option()
                         .setAmbientOcclusion(ambientOcclusion)
                         .setDrawEdges(drawEdges)
-                        .setFaceOrderFlipped(faceOrderFlip)
+                        .setFaceOrderFlipped(faceFlip)
                         .setFillFace(fillFaces)
                         .setColors(useColor ? frontColor : singleColor, useColor ? backColor : singleColor));
     }
 
     private void drawSubface(final Graphics2D g2d) {
-        var converter = distortion.createCoordinateConverter(distortionMethod, distortionParameter, getFinalScale());
+        var converter = distortion.createCoordinateConverter(
+                distortionMethod, distortionParameter, getFinalScale(), faceFlip);
         var convertedSubface = selectedSubface.halfedgeStream()
                 .map(v -> converter.convert(v.getPosition(), 0, v.getPositionBeforeFolding()))
                 .toList();

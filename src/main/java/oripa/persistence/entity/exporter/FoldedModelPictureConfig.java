@@ -33,7 +33,7 @@ import oripa.vecmath.Vector2d;
 public class FoldedModelPictureConfig {
     private double eps;
 
-    private boolean faceOrderFlipped;
+    private boolean faceFlipped;
     private boolean fillFaces;
     private boolean drawEdges;
     private boolean ambientOcclusion;
@@ -55,12 +55,12 @@ public class FoldedModelPictureConfig {
         return this;
     }
 
-    public boolean isFaceOrderFlipped() {
-        return faceOrderFlipped;
+    public boolean isFaceFlipped() {
+        return faceFlipped;
     }
 
     public FoldedModelPictureConfig setFaceOrderFlipped(final boolean faceOrderFlipped) {
-        this.faceOrderFlipped = faceOrderFlipped;
+        this.faceFlipped = faceOrderFlipped;
         return this;
     }
 

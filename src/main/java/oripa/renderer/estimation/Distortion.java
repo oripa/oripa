@@ -72,8 +72,8 @@ public class Distortion {
     }
 
     public CoordinateConverter createCoordinateConverter(final DistortionMethod distortionMethod,
-            final Vector2d distortionParameter, final double scale) {
-        var converter = new CoordinateConverter(modelDomain, width, height);
+            final Vector2d distortionParameter, final double scale, final boolean shouldFlipX) {
+        var converter = new CoordinateConverter(modelDomain, width, height, shouldFlipX);
 
         converter.setDistortionMethod(distortionMethod);
         converter.setDistortionParameter(distortionParameter);
@@ -96,7 +96,7 @@ public class Distortion {
             final CoordinateConverter converter,
             final Map<OriVertex, Integer> vertexDepths, final double eps) {
 
-        var factory = new FaceFactory(converter, vertexDepths, eps);
+        var factory = new FaceFactory(converter, vertexDepths);
         var faces = origamiModel.getFaces().stream()
                 .map(face -> factory.create(face, eps))
                 .toList();
