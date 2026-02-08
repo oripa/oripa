@@ -167,6 +167,7 @@ public class FoldedModelScreen extends JPanel
 
     public void flipFaces(final boolean bFlip) {
         this.faceFlip = bFlip;
+        camera.updateRotateAngle(-camera.getRotateAngle());
         redrawOrigami();
     }
 
