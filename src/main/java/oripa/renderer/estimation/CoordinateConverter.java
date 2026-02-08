@@ -31,6 +31,7 @@ public class CoordinateConverter {
     private final double imageWidth;
 
     private final RectangleDomain domain;
+    private final boolean shouldFlipX;
 
     private double scale;
 
@@ -39,16 +40,20 @@ public class CoordinateConverter {
     private final double cameraZ = 20;
     private final double zDiff = 0.5;
 
-    public CoordinateConverter(final RectangleDomain domain, final double imageWidth, final double imageHeight) {
+    public CoordinateConverter(final RectangleDomain domain, final double imageWidth, final double imageHeight,
+            final boolean shouldFlipX) {
         this.domain = domain;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
+        this.shouldFlipX = shouldFlipX;
     }
 
     public Vector2d convert(final Vector2d pos, final Integer depth, final Vector2d cpPos) {
         Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 
-        var p = pos.subtract(center).multiply(scale);
+        var flippedPos = shouldFlipX ? flipX(pos, center.getX()) : pos;
+
+        var p = flippedPos.subtract(center).multiply(scale);
 
         Vector2d distorted = distort(p, depth, cpPos);
 
@@ -59,6 +64,10 @@ public class CoordinateConverter {
         double tY = disY + imageHeight * 0.5;
 
         return new Vector2d(tX, tY);
+    }
+
+    private Vector2d flipX(final Vector2d pos, final double centerX) {
+        return new Vector2d(2 * centerX - pos.getX(), pos.getY());
     }
 
     private Vector2d distort(final Vector2d pos, final Integer depth, final Vector2d cpPos) {

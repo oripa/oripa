@@ -22,6 +22,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.domain.suggestion.MaekawaTheoremSuggester;
+import oripa.domain.suggestion.TargetOriVertexFactory;
 import oripa.util.Command;
 
 /**

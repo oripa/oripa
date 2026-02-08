@@ -40,8 +40,7 @@ class FaceFactory {
      * @param vertexDepths
      *            can be empty map if converter does not use.
      */
-    public FaceFactory(final CoordinateConverter converter, final Map<OriVertex, Integer> vertexDepths,
-            final double eps) {
+    public FaceFactory(final CoordinateConverter converter, final Map<OriVertex, Integer> vertexDepths) {
         this.converter = converter;
         this.vertexDepths = vertexDepths;
     }

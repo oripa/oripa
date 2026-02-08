@@ -21,6 +21,7 @@ package oripa.domain.paint.suggestion;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.domain.suggestion.FoldableLineAngleSuggester;
+import oripa.domain.suggestion.TargetOriVertexFactory;
 
 /**
  * @author OUCHI Koji

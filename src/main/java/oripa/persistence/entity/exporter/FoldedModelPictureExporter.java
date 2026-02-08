@@ -63,7 +63,7 @@ public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
         var rendererOption = new FoldedModelPixelRenderer.Option()
                 .setAmbientOcclusion(config.isAmbientOcclusion())
                 .setDrawEdges(config.isDrawEdges())
-                .setFaceOrderFlipped(config.isFaceOrderFlipped())
+                .setFaceOrderFlipped(config.isFaceFlipped())
                 .setFillFace(config.isFillFaces())
                 .setColors(config.getFrontColor(), config.getBackColor());
 
@@ -72,7 +72,7 @@ public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
         var distortion = new Distortion(modelDomain, WIDTH, HEIGHT);
         var converter = distortion.createCoordinateConverter(config.getDistortionMethod(),
                 config.getDistortionParameter(),
-                computeScale(modelDomain));
+                computeScale(modelDomain), config.isFaceFlipped());
 
         var distortionResult = distortion.apply(origamiModel, overlapRelation,
                 converter, config.getVertexDepths(), config.getEps());
