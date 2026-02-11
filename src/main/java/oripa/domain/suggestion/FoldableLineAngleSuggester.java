@@ -25,7 +25,6 @@ import java.util.List;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -45,11 +44,6 @@ public class FoldableLineAngleSuggester {
 
         if (typeOpt.isEmpty()) {
             return List.of();
-        }
-
-        if (vertex.edgeCount() == 1) {
-            var edge = vertex.getEdge(0);
-            return List.of(MathUtil.normalizeAngle(edge.getAngle(vertex) + Math.PI));
         }
 
         var type = typeOpt.get();
