@@ -49,6 +49,11 @@ public class KawasakiTheoremSuggester {
             return List.of();
         }
 
+        if (vertex.edgeCount() == 1) {
+            var edge = vertex.getEdge(0);
+            return List.of(MathUtil.normalizeAngle(edge.getAngle(vertex) + Math.PI));
+        }
+
         var suggestions = new ArrayList<Double>();
 
         double evenSum = 0;
