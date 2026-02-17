@@ -68,7 +68,7 @@ import oripa.resource.StringID;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ImageResourceLoader;
-import oripa.swing.view.util.KeyStrokes;
+import oripa.swing.view.util.KeyBinding;
 import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
 
@@ -186,15 +186,19 @@ public class UIPanel extends JPanel implements UIPanelView {
     private Runnable modelComputationListener;
     private Runnable showFoldedModelWindowsListener;
 
+    private final KeyBinding keyBinding;
+
     public UIPanel(
             final UIPanelSetting uiPanelSetting,
             final PainterScreenSetting screenSetting,
             final MainDialogService dialogService,
+            final KeyBinding keyBinding,
             final ResourceHolder resources) {
 
         this.resourceHolder = resources;
 
         this.dialogService = dialogService;
+        this.keyBinding = keyBinding;
 
         editModeInputLineButton = new JRadioButton(
                 resourceHolder.getString(ResourceKey.LABEL, StringID.UI.INPUT_LINE_ID));
@@ -659,94 +663,94 @@ public class UIPanel extends JPanel implements UIPanelView {
     }
 
     private void setShortcuts() {
-        setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
+        setShortcut(editModeInputLineButton, keyBinding.use(KeyEvent.VK_I),
                 StringID.UI.INPUT_LINE_ID);
 
-        setShortcut(editModeDeleteLineButton, KeyStrokes.get(KeyEvent.VK_D),
+        setShortcut(editModeDeleteLineButton, keyBinding.use(KeyEvent.VK_D),
                 StringID.DELETE_LINE_ID);
 
-        setShortcut(editModeLineTypeButton, KeyStrokes.get(KeyEvent.VK_T),
+        setShortcut(editModeLineTypeButton, keyBinding.use(KeyEvent.VK_T),
                 StringID.CHANGE_LINE_TYPE_ID);
 
-        setShortcut(editModeAddVertex, KeyStrokes.get(KeyEvent.VK_X),
+        setShortcut(editModeAddVertex, keyBinding.use(KeyEvent.VK_X),
                 StringID.ADD_VERTEX_ID);
 
-        setShortcut(editModeDeleteVertex, KeyStrokes.get(KeyEvent.VK_Y),
+        setShortcut(editModeDeleteVertex, keyBinding.use(KeyEvent.VK_Y),
                 StringID.DELETE_VERTEX_ID);
 
         // ---------------------------------------------------------------------------------------------------------------------------
         // Binding line selection tools
-        setLineSelectionGlobalShortcut(selectionButton, KeyStrokes.get(KeyEvent.VK_S),
+        setLineSelectionGlobalShortcut(selectionButton, keyBinding.use(KeyEvent.VK_S),
                 StringID.SELECT_LINE_ID);
 
-        setLineSelectionGlobalShortcut(enlargementButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_S),
+        setLineSelectionGlobalShortcut(enlargementButton, keyBinding.useWithShiftDown(KeyEvent.VK_S),
                 StringID.ENLARGE_ID);
 
         // ---------------------------------------------------------------------------------------------------------------------------
         // Binding how to enter the line
 
-        setLineInputGlobalShortcut(lineInputDirectVButton, KeyStrokes.get(KeyEvent.VK_E),
+        setLineInputGlobalShortcut(lineInputDirectVButton, keyBinding.use(KeyEvent.VK_E),
                 StringID.DIRECT_V_ID);
 
-        setLineInputGlobalShortcut(lineInputOnVButton, KeyStrokes.get(KeyEvent.VK_O),
+        setLineInputGlobalShortcut(lineInputOnVButton, keyBinding.use(KeyEvent.VK_O),
                 StringID.ON_V_ID);
 
-        setLineInputGlobalShortcut(lineInputVerticalLineButton, KeyStrokes.get(KeyEvent.VK_V),
+        setLineInputGlobalShortcut(lineInputVerticalLineButton, keyBinding.use(KeyEvent.VK_V),
                 StringID.VERTICAL_ID);
 
-        setLineInputGlobalShortcut(lineInputAngleBisectorButton, KeyStrokes.get(KeyEvent.VK_B),
+        setLineInputGlobalShortcut(lineInputAngleBisectorButton, keyBinding.use(KeyEvent.VK_B),
                 StringID.BISECTOR_ID);
 
-        setLineInputGlobalShortcut(lineInputLineToLineButton, KeyStrokes.get(KeyEvent.VK_H),
+        setLineInputGlobalShortcut(lineInputLineToLineButton, keyBinding.use(KeyEvent.VK_H),
                 StringID.LINE_TO_LINE_ID);
 
-        setLineInputGlobalShortcut(lineInputP2LTPButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_5),
+        setLineInputGlobalShortcut(lineInputP2LTPButton, keyBinding.useWithShiftDown(KeyEvent.VK_5),
                 StringID.POINT_TO_LINE_THROUGH_POINT_ID);
 
-        setLineInputGlobalShortcut(lineInputP2LP2LButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_6),
+        setLineInputGlobalShortcut(lineInputP2LP2LButton, keyBinding.useWithShiftDown(KeyEvent.VK_6),
                 StringID.POINT_TO_LINE_POINT_TO_LINE_ID);
 
-        setLineInputGlobalShortcut(lineInputP2LLButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_7),
+        setLineInputGlobalShortcut(lineInputP2LLButton, keyBinding.useWithShiftDown(KeyEvent.VK_7),
                 StringID.POINT_TO_LINE_LINE_PERPENDICULAR_ID);
 
-        setLineInputGlobalShortcut(lineInputTriangleSplitButton, KeyStrokes.get(KeyEvent.VK_R),
+        setLineInputGlobalShortcut(lineInputTriangleSplitButton, keyBinding.use(KeyEvent.VK_R),
                 StringID.TRIANGLE_ID);
 
-        setLineInputGlobalShortcut(lineInputSymmetricButton, KeyStrokes.get(KeyEvent.VK_W),
+        setLineInputGlobalShortcut(lineInputSymmetricButton, keyBinding.use(KeyEvent.VK_W),
                 StringID.SYMMETRIC_ID);
 
-        setLineInputGlobalShortcut(lineInputMirrorButton, KeyStrokes.get(KeyEvent.VK_M),
+        setLineInputGlobalShortcut(lineInputMirrorButton, keyBinding.use(KeyEvent.VK_M),
                 StringID.MIRROR_ID);
 
-        setLineInputGlobalShortcut(lineInputByValueButton, KeyStrokes.get(KeyEvent.VK_L),
+        setLineInputGlobalShortcut(lineInputByValueButton, keyBinding.use(KeyEvent.VK_L),
                 StringID.BY_VALUE_ID);
 
-        setLineInputGlobalShortcut(lineInputPBisectorButton, KeyStrokes.get(KeyEvent.VK_P),
+        setLineInputGlobalShortcut(lineInputPBisectorButton, keyBinding.use(KeyEvent.VK_P),
                 StringID.PERPENDICULAR_BISECTOR_ID);
 
-        setLineInputGlobalShortcut(lineInputAngleSnapButton, KeyStrokes.get(KeyEvent.VK_A),
+        setLineInputGlobalShortcut(lineInputAngleSnapButton, keyBinding.use(KeyEvent.VK_A),
                 StringID.ANGLE_SNAP_ID);
 
-        setLineInputGlobalShortcut(lineInputSuggestionButton, KeyStrokes.get(KeyEvent.VK_F),
+        setLineInputGlobalShortcut(lineInputSuggestionButton, keyBinding.use(KeyEvent.VK_F),
                 StringID.SUGGESTION_ID);
 
-        setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
+        setShortcut(lineTypeMountainButton, keyBinding.useWithShiftDown(KeyEvent.VK_M),
                 StringID.UI.MOUNTAIN_ID);
 
-        setShortcut(lineTypeValleyButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_V),
+        setShortcut(lineTypeValleyButton, keyBinding.useWithShiftDown(KeyEvent.VK_V),
                 StringID.UI.VALLEY_ID);
 
-        setShortcut(lineTypeAuxButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_A),
+        setShortcut(lineTypeAuxButton, keyBinding.useWithShiftDown(KeyEvent.VK_A),
                 StringID.UI.AUX_ID);
 
-        setShortcut(lineTypeUnassignedButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_U),
+        setShortcut(lineTypeUnassignedButton, keyBinding.useWithShiftDown(KeyEvent.VK_U),
                 StringID.UI.UNASSIGNED_ID);
 
         // Check and Fold
-        setShortcut(checkWindowButton, KeyStrokes.get(KeyEvent.VK_C),
+        setShortcut(checkWindowButton, keyBinding.use(KeyEvent.VK_C),
                 StringID.UI.CHECK_WINDOW_ID);
 
-        setShortcut(buildButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_F),
+        setShortcut(buildButton, keyBinding.useWithShiftDown(KeyEvent.VK_F),
                 StringID.UI.FOLD_ID);
 
     }
