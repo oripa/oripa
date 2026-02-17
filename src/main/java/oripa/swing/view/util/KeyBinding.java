@@ -18,7 +18,6 @@
  */
 package oripa.swing.view.util;
 
-import java.awt.event.InputEvent;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,7 +42,7 @@ public class KeyBinding {
      * @return a key stroke.
      */
     public KeyStroke use(final int keyCode) {
-        return use(KeyStroke.getKeyStroke(keyCode, 0));
+        return use(KeyStrokes.get(keyCode));
     }
 
     private KeyStroke use(final KeyStroke stroke) {
@@ -65,7 +64,7 @@ public class KeyBinding {
      * @return a key stroke with shift key down.
      */
     public KeyStroke useWithShiftDown(final int keyCode) {
-        return use(KeyStroke.getKeyStroke(keyCode, InputEvent.SHIFT_DOWN_MASK));
+        return use(KeyStrokes.getWithControlShiftDown(keyCode));
     }
 
     /**
@@ -77,7 +76,7 @@ public class KeyBinding {
      * @return a key stroke with control key down.
      */
     public KeyStroke useWithControlDown(final int keyCode) {
-        return use(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK));
+        return use(KeyStrokes.getWithControlDown(keyCode));
     }
 
     /**
@@ -89,7 +88,7 @@ public class KeyBinding {
      * @return a key stroke with control key and shift key down.
      */
     public KeyStroke useWithControlShiftDown(final int keyCode) {
-        return use(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+        return use(KeyStrokes.getWithControlShiftDown(keyCode));
     }
 
 }
