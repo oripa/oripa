@@ -58,7 +58,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.ImageResourceLoader;
-import oripa.swing.view.util.KeyStrokes;
+import oripa.swing.view.util.KeyBinding;
 
 @Singleton
 public class MainFrame extends JFrame implements MainFrameView, ComponentListener, WindowListener {
@@ -138,6 +138,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
     private UIPanel uiPanel;
     private final PainterScreen mainScreen;
     private final MainDialogService dialogService;
+    private final KeyBinding keyBinding;
 
     private Consumer<Integer> MRUFilesMenuItemUpdateListener;
 
@@ -150,8 +151,11 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
             final UIPanelSetting uiPanelSetting,
             final ViewScreenUpdater viewScreenUpdater,
             final MainDialogService mainDialogService,
+            final KeyBinding keyBinding,
             final ResourceHolder resourceHolder) {
         this.resourceHolder = resourceHolder;
+
+        this.keyBinding = keyBinding;
 
         // setup Menu Bars
         menuFile = new JMenu(
@@ -246,7 +250,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
         logger.info("start constructing UI panel.");
         try {
-            uiPanel = new UIPanel(uiPanelSetting, screenSetting, dialogService, resourceHolder);
+            uiPanel = new UIPanel(uiPanelSetting, screenSetting, dialogService, keyBinding, resourceHolder);
         } catch (RuntimeException ex) {
             logger.error("UI panel construction failed", ex);
             Dialogs.showErrorDialog(
@@ -305,26 +309,26 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
     private void setAccelerators() {
 
-        menuItemOpen.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_O));
+        menuItemOpen.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_O));
 
-        menuItemSave.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_S));
+        menuItemSave.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_S));
 
-        menuItemUndo.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_Z));
+        menuItemUndo.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_Z));
 
-        menuItemRedo.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_Y));
+        menuItemRedo.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_Y));
 
-        menuItemNew.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_N));
+        menuItemNew.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_N));
 
-        menuItemClear.setAccelerator(KeyStrokes.getWithControlShiftDown(KeyEvent.VK_C));
+        menuItemClear.setAccelerator(keyBinding.useWithControlShiftDown(KeyEvent.VK_C));
 
-        menuItemSelectAll.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_A));
+        menuItemSelectAll.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_A));
 
-        menuItemUnSelectAll.setAccelerator(KeyStrokes.get(KeyEvent.VK_ESCAPE));
+        menuItemUnSelectAll.setAccelerator(keyBinding.use(KeyEvent.VK_ESCAPE));
 
-        menuItemDeleteSelectedLines.setAccelerator(KeyStrokes.get(KeyEvent.VK_DELETE));
+        menuItemDeleteSelectedLines.setAccelerator(keyBinding.use(KeyEvent.VK_DELETE));
 
-        menuItemCopyAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_C));
-        menuItemCutAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_X));
+        menuItemCopyAndPaste.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_C));
+        menuItemCutAndPaste.setAccelerator(keyBinding.useWithControlDown(KeyEvent.VK_X));
     }
 
     @Override
