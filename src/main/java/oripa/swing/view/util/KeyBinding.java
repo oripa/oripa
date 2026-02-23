@@ -48,7 +48,7 @@ public class KeyBinding {
     private KeyStroke use(final KeyStroke stroke) {
 
         if (usedStrokes.contains(stroke)) {
-            throw new IllegalArgumentException("the given key is already used.");
+            throw new IllegalArgumentException("the given key " + stroke + " is already used.");
         }
         usedStrokes.add(stroke);
 
@@ -64,7 +64,7 @@ public class KeyBinding {
      * @return a key stroke with shift key down.
      */
     public KeyStroke useWithShiftDown(final int keyCode) {
-        return use(KeyStrokes.getWithControlShiftDown(keyCode));
+        return use(KeyStrokes.getWithShiftDown(keyCode));
     }
 
     /**
