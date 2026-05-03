@@ -201,7 +201,16 @@ public class ModelComputationFacade {
         return new ComputationResult(origamiModels, foldedModels, estimationRules);
     }
 
+    /**
+     *
+     * @param model
+     * @param eps
+     * @return 0 if model does not have edges.
+     */
     private double determineEps(final OrigamiModel model, final double eps) {
+        if (model.getEdges().isEmpty()) {
+            return 0;
+        }
         var minLength = model.getEdges().stream().mapToDouble(e -> e.toSegment().length()).min().getAsDouble();
         var value = minLength / 300;
         // var value = model.getPaperSize() * eps;
