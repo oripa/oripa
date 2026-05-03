@@ -196,6 +196,12 @@ public class OrigamiModelFactory {
 
         List<OriVertex> vertices = origamiModel.getVertices();
 
+        // skip creating faces if the CP has 1-degree vertex in order to prevent
+        // error
+        if (vertices.stream().anyMatch(v -> v.edgeCount() <= 1)) {
+            return origamiModel;
+        }
+
         // Construct the faces
         if (!buildFaces(vertices, faces, pointEps)) {
             return origamiModel;
