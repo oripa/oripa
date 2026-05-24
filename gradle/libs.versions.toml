@@ -1,7 +1,7 @@
 [versions]
 gson = "2.13.2"
 commons-cli = "1.11.0"
-log4j = "2.25.3"
+log4j = "2.25.4"
 junit-jupiter = "6.0.3"
 mockito = "5.22.0"
 slf4j-api = "2.0.17"
