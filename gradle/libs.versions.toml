@@ -9,7 +9,7 @@ guice = "7.0.0"
 
 spotless = "8.4.0"
 shadow = "9.6.1"
-jpackage = "2.0.1"
+jpackage = "2.1.0"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
