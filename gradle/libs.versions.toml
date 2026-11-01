@@ -4,7 +4,7 @@ commons-cli = "1.11.0"
 log4j = "2.26.1"
 junit-jupiter = "6.1.3"
 mockito = "5.23.0"
-slf4j-api = "2.0.17"
+slf4j-api = "2.0.20"
 guice = "7.0.0"
 
 spotless = "8.4.0"
