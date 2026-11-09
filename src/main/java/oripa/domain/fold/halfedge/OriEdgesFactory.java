@@ -73,9 +73,9 @@ public class OriEdgesFactory {
      * creates new OriEdge which consist of given half-edges.
      *
      * @param he0
-     *            .pair and .edge will be affected.
+     *            .pair and .type will be affected.
      * @param he1
-     *            .pair and .edge will be affected.
+     *            .pair and .type will be affected.
      * @return an edge for he0 and he1.
      */
     private OriEdge makePair(final OriHalfedge he0, final OriHalfedge he1) {
@@ -97,8 +97,8 @@ public class OriEdgesFactory {
      * creates new OriEdge which consist of given half-edge.
      *
      * @param he
-     *            .edge will be affected.
-     * @return an edge with CUT type for he0 and he1.
+     *            type will be affected.
+     * @return an edge with left halfedge of CUT type.
      */
     private OriEdge makeBoundary(final OriHalfedge he) {
         OriEdge edge = new OriEdge(he.getVertex(), he.getNext().getVertex(), OriLine.Type.CUT.toInt());
