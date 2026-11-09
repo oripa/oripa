@@ -83,9 +83,8 @@ class OverlapRelationFactory {
                 var pairFaceID = pairFace.getFaceID();
 
                 EstimationResult result = EstimationResult.NOT_CHANGED;
-                var edge = he.getEdge();
-                if ((face.isFaceFront() && edge.isMountain())
-                        || (!face.isFaceFront() && edge.isValley())) {
+                if ((face.isFaceFront() && he.isMountain())
+                        || (!face.isFaceFront() && he.isValley())) {
                     result = overlapRelation.setUpperIfPossible(faceID, pairFaceID);
                 } else {
                     result = overlapRelation.setLowerIfPossible(faceID, pairFaceID);
@@ -95,7 +94,7 @@ class OverlapRelationFactory {
                     ret.addViolation(List.of(face, pairFace));
                     logger.debug("Overlap relation error: face{} is front={}, face{} is front={}, isM={}," +
                             " relation={}",
-                            faceID, face.isFaceFront(), pairFaceID, pairFace.isFaceFront(), edge.isMountain(),
+                            faceID, face.isFaceFront(), pairFaceID, pairFace.isFaceFront(), he.isMountain(),
                             overlapRelation.get(faceID, pairFaceID));
                     return ret;
                 }

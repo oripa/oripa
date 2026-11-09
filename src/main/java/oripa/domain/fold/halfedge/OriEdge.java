@@ -21,7 +21,6 @@ package oripa.domain.fold.halfedge;
 import java.util.Optional;
 
 import oripa.geom.Segment;
-import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -31,7 +30,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-public class OriEdge {
+public class OriEdge implements IntOriLineTypeMixin {
 
     private final OriVertex startVertex;
     private final OriVertex endVertex;
@@ -92,6 +91,7 @@ public class OriEdge {
     /**
      * @return type
      */
+    @Override
     public int getType() {
         return type;
     }
@@ -117,31 +117,6 @@ public class OriEdge {
         Vector2d dir = ev.getPositionBeforeFolding().subtract(sv.getPositionBeforeFolding());
 
         return dir.ownAngle();
-    }
-
-    public boolean isBoundary() {
-        return type == OriLine.Type.CUT.toInt();
-    }
-
-    public boolean isMountain() {
-        return type == OriLine.Type.MOUNTAIN.toInt();
-    }
-
-    public boolean isValley() {
-        return type == OriLine.Type.VALLEY.toInt();
-    }
-
-    public boolean isUnassigned() {
-        return type == OriLine.Type.UNASSIGNED.toInt();
-    }
-
-    public boolean isAssigned() {
-        return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
-    }
-
-    public boolean isFoldLine() {
-        return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt()
-                || type == OriLine.Type.UNASSIGNED.toInt();
     }
 
 //	@Override

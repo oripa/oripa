@@ -33,7 +33,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-public class OriHalfedge {
+public class OriHalfedge implements IntOriLineTypeMixin {
 
     private OriHalfedge next = null;
     private OriHalfedge previous = null;
@@ -108,14 +108,14 @@ public class OriHalfedge {
         this.pair = pair;
     }
 
-    /**
-     * Gets the underlying edge.
-     *
-     * @return edge
-     */
-    public OriEdge getEdge() {
-        return edge;
-    }
+//    /**
+//     * Gets the underlying edge.
+//     *
+//     * @return edge
+//     */
+//    public OriEdge getEdge() {
+//        return edge;
+//    }
 
     /**
      * @param edge
@@ -129,6 +129,7 @@ public class OriHalfedge {
      *
      * @return the line type of the underlying edge.
      */
+    @Override
     public int getType() {
         return edge.getType();
     }
