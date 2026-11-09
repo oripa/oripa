@@ -192,7 +192,7 @@ public class FoldedModelElementConverter {
                 if (edgeIndex == -1) {
                     throw new IllegalArgumentException("no edgeVertices match.");
                 }
-                face.getHalfedge(j).setEdge(edges.get(edgeIndex));
+                face.getHalfedge(j).setType(edges.get(edgeIndex).getType());
             }
 
             if (!GeomUtil.isStrictlyCCW(

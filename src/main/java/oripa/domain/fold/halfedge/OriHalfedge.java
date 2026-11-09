@@ -33,19 +33,14 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-public class OriHalfedge {
+public class OriHalfedge implements IntOriLineTypeMixin {
 
     private OriHalfedge next = null;
     private OriHalfedge previous = null;
     private OriHalfedge pair = null;
-    private OriEdge edge = null;
+    private Integer type = null;
     private final OriVertex vertex;
     private final OriFace face;
-
-    /**
-     * mountain/valley value for constructing edges.
-     */
-    private int temporaryType = 0;
 
     /**
      * temporary position while folding
@@ -108,29 +103,21 @@ public class OriHalfedge {
         this.pair = pair;
     }
 
-    /**
-     * Gets the underlying edge.
-     *
-     * @return edge
-     */
-    public OriEdge getEdge() {
-        return edge;
-    }
-
-    /**
-     * @param edge
-     *            Sets the underlying edge
-     */
-    public void setEdge(final OriEdge edge) {
-        this.edge = edge;
+    public void setType(final Integer type) {
+        this.type = type;
     }
 
     /**
      *
      * @return the line type of the underlying edge.
      */
+    @Override
     public int getType() {
-        return edge.getType();
+        if (type == null) {
+            throw new IllegalStateException("type is not set.");
+        }
+
+        return type;
     }
 
     /**
@@ -149,21 +136,6 @@ public class OriHalfedge {
      */
     public OriFace getFace() {
         return face;
-    }
-
-    /**
-     * @return temporaryType
-     */
-    int getTemporaryType() {
-        return temporaryType;
-    }
-
-    /**
-     * @param temporaryType
-     *            Sets temporaryType
-     */
-    void setTemporaryType(final int temporaryType) {
-        this.temporaryType = temporaryType;
     }
 
     /**

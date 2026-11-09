@@ -18,7 +18,7 @@
  */
 package oripa.renderer.estimation;
 
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -71,22 +71,17 @@ class VertexColorMapFactory {
 
         for (OriHalfedge he : face.halfedgeIterable()) {
             double val = 0;
-            var edge = he.getEdge();
 
-            if (edge == null) {
-                throw new IllegalArgumentException("null edge in a face " + face);
-            }
-
-            if (edge.isMountain()) {
+            if (he.isMountain()) {
                 val += 1;
-            } else if (edge.isValley()) {
+            } else if (he.isValley()) {
                 val -= 1;
             }
 
-            var prevEdge = he.getPrevious().getEdge();
-            if (prevEdge.isMountain()) {
+            var prev = he.getPrevious();
+            if (prev.isMountain()) {
                 val += 1;
-            } else if (prevEdge.isValley()) {
+            } else if (prev.isValley()) {
                 val -= 1;
             }
 

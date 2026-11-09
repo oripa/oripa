@@ -222,7 +222,7 @@ public class OriFacesFactory {
     private void setHalfedgeToFaceAndEdge(final OriVertex walkV, final OriEdge walkE, final OriFace face) {
         OriHalfedge he = new OriHalfedge(walkV, face);
         face.addHalfedge(he);
-        he.setTemporaryType(walkE.getType());
+        he.setType(walkE.getType());
         if (walkE.getStartVertex() == walkV) {
             walkE.setLeft(he);
         } else {
