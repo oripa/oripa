@@ -72,11 +72,6 @@ class VertexColorMapFactory {
         for (OriHalfedge he : face.halfedgeIterable()) {
             double val = 0;
 
-//            var edge = he.getEdge();
-//            if (edge == null) {
-//                throw new IllegalArgumentException("null edge in a face " + face);
-//            }
-
             if (he.isMountain()) {
                 val += 1;
             } else if (he.isValley()) {
