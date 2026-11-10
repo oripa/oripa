@@ -66,7 +66,7 @@ public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
             }
 
             for (OriEdge edge : edges) {
-                bw.write("e " + edge.getStartVertex().getVertexID() + " " + edge.getEndVertex().getVertexID() + " "
+                bw.write("e " + edge.getV0().getVertexID() + " " + edge.getV1().getVertexID() + " "
                         + edge.getType() + " 180\n");
             }
         }

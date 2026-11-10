@@ -76,7 +76,7 @@ public class FoldedModelElementConverter {
         var edges = origamiModel.getEdges();
 
         var vertexIndices = edges.stream()
-                .map(edge -> List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()))
+                .map(edge -> List.of(edge.getV0().getVertexID(), edge.getV1().getVertexID()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         return vertexIndices;
@@ -270,7 +270,7 @@ public class FoldedModelElementConverter {
                 .toList();
 
         var precreaseVertices = precreaseEdges.stream()
-                .flatMap(edge -> Stream.of(edge.getStartVertex(), edge.getEndVertex()))
+                .flatMap(edge -> Stream.of(edge.getV0(), edge.getV1()))
                 .toList();
 
         var vertexCount = verticesCoords.size();
@@ -284,7 +284,7 @@ public class FoldedModelElementConverter {
         }
 
         for (var edge : precreaseEdges) {
-            edgesVertices.add(List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()));
+            edgesVertices.add(List.of(edge.getV0().getVertexID(), edge.getV1().getVertexID()));
             edgesAssignment.add(assignmentConverter.toFOLD(OriLine.Type.AUX));
         }
 

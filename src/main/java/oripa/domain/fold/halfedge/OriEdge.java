@@ -32,60 +32,60 @@ import oripa.vecmath.Vector2d;
  */
 public class OriEdge implements IntOriLineTypeMixin {
 
-    private final OriVertex startVertex;
-    private final OriVertex endVertex;
-    private OriHalfedge left = null;
-    private OriHalfedge right = null;
+    private final OriVertex v0;
+    private final OriVertex v1;
+    private OriHalfedge v0V1 = null;
+    private OriHalfedge v1V0 = null;
     private int type;
 
-    public OriEdge(final OriVertex startVertex, final OriVertex endVertex, final int type) {
+    public OriEdge(final OriVertex v0, final OriVertex v1, final int type) {
         this.type = type;
-        this.startVertex = startVertex;
-        this.endVertex = endVertex;
+        this.v0 = v0;
+        this.v1 = v1;
     }
 
     /**
      * @return sv
      */
-    public OriVertex getStartVertex() {
-        return startVertex;
+    public OriVertex getV0() {
+        return v0;
     }
 
     /**
      * @return ev
      */
-    public OriVertex getEndVertex() {
-        return endVertex;
+    public OriVertex getV1() {
+        return v1;
     }
 
     /**
      * @return left
      */
-    public Optional<OriHalfedge> getLeft() {
-        return Optional.ofNullable(left);
+    public Optional<OriHalfedge> getHalfedgeV0V1() {
+        return Optional.ofNullable(v0V1);
     }
 
     /**
      * @param left
      *            Sets left
      */
-    void setLeft(final OriHalfedge left) {
-        this.left = left;
+    void setHalfedgeV0V1(final OriHalfedge he) {
+        this.v0V1 = he;
     }
 
     /**
      * @return right
      */
-    public Optional<OriHalfedge> getRight() {
-        return Optional.ofNullable(right);
+    public Optional<OriHalfedge> getHalfedgeV1V0() {
+        return Optional.ofNullable(v1V0);
     }
 
     /**
      * @param right
      *            Sets right
      */
-    void setRight(final OriHalfedge right) {
-        this.right = right;
+    void setHalfedgeV1V0(final OriHalfedge he) {
+        this.v1V0 = he;
     }
 
     /**
@@ -101,7 +101,7 @@ public class OriEdge implements IntOriLineTypeMixin {
     }
 
     public OriVertex oppositeVertex(final OriVertex v) {
-        return v == startVertex ? endVertex : startVertex;
+        return v == v0 ? v1 : v0;
     }
 
     /**
@@ -140,7 +140,7 @@ public class OriEdge implements IntOriLineTypeMixin {
 //	}
 
     public Segment toSegment() {
-        return new Segment(getStartVertex().getPosition(), getEndVertex().getPosition());
+        return new Segment(getV0().getPosition(), getV1().getPosition());
     }
 
 }
