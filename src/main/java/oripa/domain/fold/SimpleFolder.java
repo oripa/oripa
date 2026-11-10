@@ -94,14 +94,14 @@ class SimpleFolder {
         }
 
         for (OriEdge e : edges) {
-            var sv = e.getStartVertex();
-            var ev = e.getEndVertex();
+            var v0 = e.getV0();
+            var v1 = e.getV1();
 
-            sv.setPosition(e.getLeft().orElseThrow().getPositionWhileFolding());
+            v0.setPosition(e.getHalfedgeV0V1().orElseThrow().getPositionWhileFolding());
 
-            var rightOpt = e.getRight();
-            rightOpt.map(OriHalfedge::getPositionWhileFolding)
-                    .ifPresent(position -> ev.setPosition(position));
+            var v1V0Opt = e.getHalfedgeV1V0();
+            v1V0Opt.map(OriHalfedge::getPositionWhileFolding)
+                    .ifPresent(position -> v1.setPosition(position));
         }
 
         for (var face : faces) {

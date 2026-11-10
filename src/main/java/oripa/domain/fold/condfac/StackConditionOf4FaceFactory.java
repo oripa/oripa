@@ -67,18 +67,18 @@ public class StackConditionOf4FaceFactory {
 
         IntStream.range(0, edgeNum).parallel().forEach(i -> {
             OriEdge e0 = edges.get(i);
-            var e0LeftOpt = e0.getLeft();
-            var e0RightOpt = e0.getRight();
+            var e0_v0V1Opt = e0.getHalfedgeV0V1();
+            var e0_v1V0Opt = e0.getHalfedgeV1V0();
 
-            if (e0LeftOpt.isEmpty() || e0RightOpt.isEmpty()) {
+            if (e0_v0V1Opt.isEmpty() || e0_v1V0Opt.isEmpty()) {
                 return;
             }
 
             for (int j = i + 1; j < edgeNum; j++) {
                 OriEdge e1 = edges.get(j);
-                var e1LeftOpt = e1.getLeft();
-                var e1RightOpt = e1.getRight();
-                if (e1LeftOpt.isEmpty() || e1RightOpt.isEmpty()) {
+                var e1_v0V1Opt = e1.getHalfedgeV0V1();
+                var e1_v1V0Opt = e1.getHalfedgeV1V0();
+                if (e1_v0V1Opt.isEmpty() || e1_v1V0Opt.isEmpty()) {
                     continue;
                 }
 
@@ -86,41 +86,41 @@ public class StackConditionOf4FaceFactory {
                     continue;
                 }
 
-                var e0LeftFace = e0LeftOpt.get().getFace();
-                var e0RightFace = e0RightOpt.get().getFace();
-                var e1LeftFace = e1LeftOpt.get().getFace();
-                var e1RightFace = e1RightOpt.get().getFace();
+                var e0_v0V1Face = e0_v0V1Opt.get().getFace();
+                var e0_v1V0Face = e0_v1V0Opt.get().getFace();
+                var e1_v0V1Face = e1_v0V1Opt.get().getFace();
+                var e1_v1V0Face = e1_v1V0Opt.get().getFace();
 
-                var intersectionSubfaces = subFacesOfEachFace.get(e0LeftFace).stream()
-                        .filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))
-                        .filter(s -> subFacesOfEachFace.get(e1LeftFace).contains(s))
-                        .filter(s -> subFacesOfEachFace.get(e1RightFace).contains(s))
+                var intersectionSubfaces = subFacesOfEachFace.get(e0_v0V1Face).stream()
+                        .filter(s -> subFacesOfEachFace.get(e0_v1V0Face).contains(s))
+                        .filter(s -> subFacesOfEachFace.get(e1_v0V1Face).contains(s))
+                        .filter(s -> subFacesOfEachFace.get(e1_v1V0Face).contains(s))
                         .toList();
 
                 if (intersectionSubfaces.isEmpty()) {
                     continue;
                 }
 
-                var e0LeftFaceID = e0LeftFace.getFaceID();
-                var e0RightFaceID = e0RightFace.getFaceID();
-                var e1LeftFaceID = e1LeftFace.getFaceID();
-                var e1RightFaceID = e1RightFace.getFaceID();
+                var e0_v0V1FaceID = e0_v0V1Face.getFaceID();
+                var e0_v1V0FaceID = e0_v1V0Face.getFaceID();
+                var e1_v0V1FaceID = e1_v0V1Face.getFaceID();
+                var e1_v1V0FaceID = e1_v1V0Face.getFaceID();
 
                 int upper1, lower1, upper2, lower2;
 
-                if (overlapRelation.isUpper(e0LeftFaceID, e0RightFaceID)) {
-                    upper1 = e0RightFaceID;
-                    lower1 = e0LeftFaceID;
+                if (overlapRelation.isUpper(e0_v0V1FaceID, e0_v1V0FaceID)) {
+                    upper1 = e0_v1V0FaceID;
+                    lower1 = e0_v0V1FaceID;
                 } else {
-                    upper1 = e0LeftFaceID;
-                    lower1 = e0RightFaceID;
+                    upper1 = e0_v0V1FaceID;
+                    lower1 = e0_v1V0FaceID;
                 }
-                if (overlapRelation.isUpper(e1LeftFaceID, e1RightFaceID)) {
-                    upper2 = e1RightFaceID;
-                    lower2 = e1LeftFaceID;
+                if (overlapRelation.isUpper(e1_v0V1FaceID, e1_v1V0FaceID)) {
+                    upper2 = e1_v1V0FaceID;
+                    lower2 = e1_v0V1FaceID;
                 } else {
-                    upper2 = e1LeftFaceID;
-                    lower2 = e1RightFaceID;
+                    upper2 = e1_v0V1FaceID;
+                    lower2 = e1_v1V0FaceID;
                 }
 
                 condition4s.add(new StackConditionOf4Faces(upper1, lower1, upper2, lower2));

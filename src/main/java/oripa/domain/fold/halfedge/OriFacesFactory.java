@@ -94,7 +94,7 @@ public class OriFacesFactory {
         // Construct the faces
         for (OriVertex v : vertices) {
             var createdFaces = v.edgeStream()
-                    .filter(e -> isTarget(v, e))
+                    .filter(e -> isOutgoingHalfedgeEmpty(v, e))
                     .map(e -> makeFace(v, e, eps))
                     .toList();
 
@@ -106,27 +106,19 @@ public class OriFacesFactory {
 
     /**
      *
-     * @param v
+     * @param src
      *            vertex on e
      * @param e
      *            edge
      * @return true if e is an edge to traverse.
      */
-    private boolean isTarget(final OriVertex v, final OriEdge e) {
+    private boolean isOutgoingHalfedgeEmpty(final OriVertex src, final OriEdge e) {
         if (e.isBoundary()) {
             return false;
         }
 
-        if (v == e.getStartVertex()) {
-            if (e.getLeft().isPresent()) {
-                return false;
-            }
-        } else {
-            if (e.getRight().isPresent()) {
-                return false;
-            }
-        }
-        return true;
+        return (src == e.getV0()) ? e.getHalfedgeV0V1().isEmpty() : e.getHalfedgeV1V0().isEmpty();
+
     }
 
     List<OriFace> createBoundaryFaces(final Collection<OriVertex> vertices, final double eps) {
@@ -136,7 +128,7 @@ public class OriFacesFactory {
         for (OriVertex v : vertices) {
 
             var createdFaces = v.edgeStream()
-                    .filter(e -> isTargetBoundary(v, e))
+                    .filter(this::isUnusedBoundary)
                     .map(e -> makeBoundaryFace(v, e, eps))
                     .toList();
 
@@ -150,16 +142,12 @@ public class OriFacesFactory {
         return boundaryFaces;
     }
 
-    private boolean isTargetBoundary(final OriVertex v, final OriEdge e) {
+    private boolean isUnusedBoundary(final OriEdge e) {
         if (!e.isBoundary()) {
             return false;
         }
 
-        if (e.getLeft().isPresent() || e.getRight().isPresent()) {
-            return false;
-        }
-
-        return true;
+        return e.getHalfedgeV0V1().isEmpty() && e.getHalfedgeV1V0().isEmpty();
     }
 
     private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge, final double eps) {
@@ -223,10 +211,10 @@ public class OriFacesFactory {
         OriHalfedge he = new OriHalfedge(walkV, face);
         face.addHalfedge(he);
         he.setType(walkE.getType());
-        if (walkE.getStartVertex() == walkV) {
-            walkE.setLeft(he);
+        if (walkE.getV0() == walkV) {
+            walkE.setHalfedgeV0V1(he);
         } else {
-            walkE.setRight(he);
+            walkE.setHalfedgeV1V0(he);
         }
     }
 

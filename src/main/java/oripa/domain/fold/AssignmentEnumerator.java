@@ -183,7 +183,7 @@ class AssignmentEnumerator {
     }
 
     private List<OriVertex> edgeToKey(final OriEdge edge) {
-        return Stream.of(edge.getStartVertex(), edge.getEndVertex()).sorted().toList();
+        return Stream.of(edge.getV0(), edge.getV1()).sorted().toList();
     }
 
     private void apply(final Map<List<OriVertex>, OriLine.Type> assignment) {

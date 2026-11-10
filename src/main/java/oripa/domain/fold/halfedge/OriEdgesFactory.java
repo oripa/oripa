@@ -70,7 +70,7 @@ public class OriEdgesFactory {
     }
 
     /**
-     * creates new OriEdge which consist of given half-edges.
+     * creates new OriEdge which consists of given half-edges.
      *
      * @param he0
      *            .pair and .type will be affected.
@@ -88,13 +88,13 @@ public class OriEdgesFactory {
 
         var type = he0.getType();
         OriEdge edge = new OriEdge(he0.getVertex(), he1.getVertex(), type);
-        edge.setLeft(he0);
-        edge.setRight(he1);
+        edge.setHalfedgeV0V1(he0);
+        edge.setHalfedgeV1V0(he1);
         return edge;
     }
 
     /**
-     * creates new OriEdge which consist of given half-edge.
+     * creates new OriEdge which consists of given half-edge.
      *
      * @param he
      *            type will be affected.
@@ -103,7 +103,7 @@ public class OriEdgesFactory {
     private OriEdge makeBoundary(final OriHalfedge he) {
         OriEdge edge = new OriEdge(he.getVertex(), he.getNext().getVertex(), OriLine.Type.CUT.toInt());
         he.setType(edge.getType());
-        edge.setLeft(he);
+        edge.setHalfedgeV0V1(he);
 
         return edge;
     }
