@@ -45,44 +45,44 @@ public class OriEdge implements IntOriLineTypeMixin {
     }
 
     /**
-     * @return sv
+     * @return v0
      */
     public OriVertex getV0() {
         return v0;
     }
 
     /**
-     * @return ev
+     * @return v1
      */
     public OriVertex getV1() {
         return v1;
     }
 
     /**
-     * @return left
+     * @return v0V1
      */
     public Optional<OriHalfedge> getHalfedgeV0V1() {
         return Optional.ofNullable(v0V1);
     }
 
     /**
-     * @param left
-     *            Sets left
+     * @param he
+     *            Sets v0V1
      */
     void setHalfedgeV0V1(final OriHalfedge he) {
         this.v0V1 = he;
     }
 
     /**
-     * @return right
+     * @return v1V0
      */
     public Optional<OriHalfedge> getHalfedgeV1V0() {
         return Optional.ofNullable(v1V0);
     }
 
     /**
-     * @param right
-     *            Sets right
+     * @param he
+     *            Sets v1V0
      */
     void setHalfedgeV1V0(final OriHalfedge he) {
         this.v1V0 = he;
