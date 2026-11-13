@@ -50,7 +50,7 @@ class SimpleFolder {
      *            half-edge based data structure. It will be affected by this
      *            method.
      */
-    void simpleFoldWithoutZorder(
+    void simpleFoldWithoutZOrder(
             final OrigamiModel origamiModel, final double eps) {
         foldImpl(origamiModel, eps, false);
     }
@@ -90,7 +90,7 @@ class SimpleFolder {
                     .orElse(faces.get(0)));
             jobs.get(0).setMovedByFold(true);
 
-            transformFaces(jobs, limitUsed ? 1000 : Integer.MAX_VALUE, eps);
+            moveAndFlipFaces(jobs, limitUsed ? 1000 : Integer.MAX_VALUE, eps);
         }
 
         for (OriEdge e : edges) {
@@ -118,7 +118,7 @@ class SimpleFolder {
      * @param faces
      * @param callLimit
      */
-    private void transformFaces(final Queue<OriFace> faces, final int callLimit, final double eps) {
+    private void moveAndFlipFaces(final Queue<OriFace> faces, final int callLimit, final double eps) {
         int callCount = 0;
         while (!faces.isEmpty() && callCount < callLimit) {
             callCount++;
@@ -136,8 +136,8 @@ class SimpleFolder {
                     return;
                 }
 
+                moveAndFlipFace(pairFace, he);
                 pairFace.setMovedByFold(true);
-                flipFace(pairFace, he);
 
                 faces.add(pairFace);
             });
@@ -157,21 +157,21 @@ class SimpleFolder {
      * @param afterDir
      *            clockwise direction vector of the moved crease line.
      */
-    private Vector2d transformVertex(final Vector2d vertex, final Line preLine,
+    private Vector2d moveVertexKeepingFaceConnection(final Vector2d vertex, final Line preLine,
             final Vector2d afterOrigin, final Vector2d afterDir) {
         double param[] = new double[1];
-        double d0 = GeomUtil.distance(vertex, preLine, param);
+        double distanceLineToVertex = GeomUtil.distance(vertex, preLine, param);
         // distance between reference point of preLine and foot cross point from
         // vertex to preLine
-        double d1 = param[0];
+        double distanceOriginToFoot = param[0];
 
-        var originToFootDir = afterDir.multiply(d1);
+        var originToFootDir = afterDir.multiply(distanceOriginToFoot);
 
         // compute a direction vector perpendicular to the crease.
         // the vector directs the right side of the crease halfedge
         // since all vertices of the face are on the right side of the crease
         // halfedge.
-        var afterDirFromFoot = afterDir.getRightSidePerpendicular().multiply(d0);
+        var afterDirFromFoot = afterDir.getRightSidePerpendicular().multiply(distanceLineToVertex);
 
         // compute moved vertex coordinates
         // = afterOrigin + originToFootDir + afterDirFromFoot
@@ -184,21 +184,34 @@ class SimpleFolder {
         return new Vector2d(x, y);
     }
 
-    private void flipFace(final OriFace face, final OriHalfedge baseHe) {
-        var baseHePair = baseHe.getPair().orElseThrow();
-        var baseHePairNext = baseHePair.getNext();
+    /**
+     * Moves the given face and flips it if neccesary. the given halfedge has to
+     * be paired with a halfedge of the face and should have the position after
+     * move.
+     *
+     * @param face
+     *            to be moved
+     * @param movedBaseHe
+     *            a halfedge that is paired with a halfedge of {@code face}.
+     *            {@code movedBaseHe} should has been moved.
+     */
+    private void moveAndFlipFace(final OriFace face, final OriHalfedge movedBaseHe) {
+        // pair of moved base halfedge is not moved yet and is of the given
+        // face.
+        var baseHe = movedBaseHe.getPair().orElseThrow();
+        var baseHeNext = baseHe.getNext();
 
         // baseHe.pair keeps the position before folding.
-        var preOrigin = baseHePairNext.getPositionWhileFolding();
-        var afterOrigin = baseHe.getPositionWhileFolding();
+        var preOrigin = baseHeNext.getPositionWhileFolding();
+        var afterOrigin = movedBaseHe.getPositionWhileFolding();
 
-        // Creates the base unit vector for before the rotation
-        // (reversed direction)
-        var baseDir = baseHePair.getPositionWhileFolding().subtract(baseHePairNext.getPositionWhileFolding());
+        // Creates the base unit vector for the line before move.
+        // note that the direction of baseHe is reverse of movedBaseHe.
+        var baseDir = baseHe.getPositionWhileFolding().subtract(baseHeNext.getPositionWhileFolding());
 
-        // Creates the base unit vector for after the rotation
-        var baseHeNext = baseHe.getNext();
-        var afterDir = baseHeNext.getPositionWhileFolding().subtract(baseHe.getPositionWhileFolding())
+        // Creates the base unit vector for the line after move
+        var movedBaseHeNext = movedBaseHe.getNext();
+        var afterDir = movedBaseHeNext.getPositionWhileFolding().subtract(movedBaseHe.getPositionWhileFolding())
                 .normalize();
 
         Line preLine = new Line(preOrigin, baseDir);
@@ -206,35 +219,35 @@ class SimpleFolder {
         // move the vertices of the face to keep the face connection
         // on baseHe
         face.halfedgeStream().forEach(he -> {
-            he.setPositionWhileFolding(transformVertex(
+            he.setPositionWhileFolding(moveVertexKeepingFaceConnection(
                     he.getPositionWhileFolding(), preLine, afterOrigin, afterDir));
         });
 
         face.setPrecreases(face.precreaseStream().map(precrease -> new OriLine(
-                transformVertex(precrease.getP0(), preLine, afterOrigin, afterDir),
-                transformVertex(precrease.getP1(), preLine, afterOrigin, afterDir),
+                moveVertexKeepingFaceConnection(precrease.getP0(), preLine, afterOrigin, afterDir),
+                moveVertexKeepingFaceConnection(precrease.getP1(), preLine, afterOrigin, afterDir),
                 OriLine.Type.AUX))
                 .toList());
 
         // add mirror effect if necessary
-        if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
-            var ep = baseHeNext.getPositionWhileFolding();
-            var sp = baseHe.getPositionWhileFolding();
+        if (face.isFaceFront() == movedBaseHe.getFace().isFaceFront()) {
+            var v1 = movedBaseHeNext.getPositionWhileFolding();
+            var v0 = movedBaseHe.getPositionWhileFolding();
 
             face.halfedgeStream().forEach(he -> {
-                he.setPositionWhileFolding(flipVertex(he.getPositionWhileFolding(), sp, ep));
+                he.setPositionWhileFolding(flipVertex(he.getPositionWhileFolding(), v0, v1));
             });
             face.setPrecreases(face.precreaseStream().map(precrease -> new OriLine(
-                    flipVertex(precrease.getP0(), sp, ep),
-                    flipVertex(precrease.getP1(), sp, ep),
+                    flipVertex(precrease.getP0(), v0, v1),
+                    flipVertex(precrease.getP1(), v0, v1),
                     OriLine.Type.AUX))
                     .toList());
             face.invertFaceFront();
         }
     }
 
-    private Vector2d flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d ep) {
-        return GeomUtil.getSymmetricPoint(vertex, sp, ep);
+    private Vector2d flipVertex(final Vector2d vertex, final Vector2d v0, final Vector2d v1) {
+        return GeomUtil.getSymmetricPoint(vertex, v0, v1);
     }
 
 }
