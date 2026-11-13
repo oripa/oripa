@@ -543,6 +543,18 @@ public class GeomUtil {
         return getCrossPoint(l0.getP0(), l0.getP1(), l1.getP0(), l1.getP1());
     }
 
+    /**
+     *
+     * @param p
+     * @param line
+     * @param param
+     *            distance between the reference point of the given line and the
+     *            foot from p to line will be set. Precisely, it is not
+     *            "distance" because the value can be negative. The negative
+     *            value means the foot is pointed by the reverse of the line's
+     *            direction vector.
+     * @return distance between the given p and line.
+     */
     public static double distance(final Vector2d p, final Line line, final double[] param) {
 
         var sp = line.getPoint();

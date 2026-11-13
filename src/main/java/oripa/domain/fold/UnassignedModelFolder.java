@@ -40,7 +40,7 @@ class UnassignedModelFolder implements Folder {
 
     @Override
     public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
-        simpleFolder.simpleFoldWithoutZorder(origamiModel, eps);
+        simpleFolder.simpleFoldWithoutZOrder(origamiModel, eps);
         faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
         if (estimationType == EstimationType.X_RAY) {
