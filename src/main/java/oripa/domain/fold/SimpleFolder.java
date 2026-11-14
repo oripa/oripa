@@ -100,7 +100,7 @@ class SimpleFolder {
 
             var v1V0Opt = e.getHalfedgeV1V0();
             v1V0Opt.map(OriHalfedge::getPositionWhileFolding)
-                    .ifPresent(position -> v1.setPosition(position));
+                    .ifPresent(v1::setPosition);
         }
 
         for (var face : faces) {
@@ -122,9 +122,9 @@ class SimpleFolder {
         while (!movedFaces.isEmpty() && callCount < callLimit) {
             callCount++;
 
-            var face = movedFaces.remove();
+            var movedFace = movedFaces.remove();
 
-            for (var movedfoldAxisHe : face.halfedgeIterable()) {
+            for (var movedfoldAxisHe : movedFace.halfedgeIterable()) {
                 var foldAxisHeOpt = movedfoldAxisHe.getPair();
                 if (foldAxisHeOpt.isEmpty()) {
                     continue;
@@ -151,29 +151,29 @@ class SimpleFolder {
      *            vertex to be moved.
      * @param origin
      *            reference point of crease line before folding.
-     * @param dir
+     * @param axisDir
      *            unit direction vector of crease line.
      * @param afterOrigin
      *            a reference point on the moved crease line.
-     * @param afterDir
+     * @param afterAxisDir
      *            unit direction vector of the moved crease line. it should be
-     *            the result of rotation of {@code dir} that describes the
+     *            the result of rotation of {@code axisDir} that describes the
      *            movement of crease line.
      */
     private Vector2d moveVertexKeepingFaceConnection(final Vector2d vertex,
-            final Vector2d origin, final Vector2d dir,
-            final Vector2d afterOrigin, final Vector2d afterDir) {
-        var distanceAndProjection = GeomUtil.distanceToLineAndProjection(vertex, origin, dir);
+            final Vector2d origin, final Vector2d axisDir,
+            final Vector2d afterOrigin, final Vector2d afterAxisDir) {
+        var distanceAndProjection = GeomUtil.distanceToLineAndProjection(vertex, origin, axisDir);
         double distanceLineToVertex = distanceAndProjection.v1();
         // distance between origin and foot cross point from
         // vertex to line
-        var afterOriginToFootDir = afterDir.multiply(distanceAndProjection.v2());
+        var afterOriginToFootDir = afterAxisDir.multiply(distanceAndProjection.v2());
 
         // compute a direction vector perpendicular to the crease.
         // the vector directs the right side of the crease halfedge
         // since all vertices of the face should be on the right side of the
         // crease halfedge after the move.
-        var afterDirFromFoot = afterDir.getRightSidePerpendicular().multiply(distanceLineToVertex);
+        var afterDirFromFoot = afterAxisDir.getRightSidePerpendicular().multiply(distanceLineToVertex);
 
         // compute moved vertex coordinates
         // = afterOrigin + afterOriginToFootDir + afterDirFromFoot
@@ -207,7 +207,7 @@ class SimpleFolder {
         var axisHeNext = axisHe.getNext();
 
         // axisHeNext keeps the position before folding.
-        var preOrigin = axisHeNext.getPositionWhileFolding();
+        var origin = axisHeNext.getPositionWhileFolding();
         var afterOrigin = movedAxisHe.getPositionWhileFolding();
 
         // Creates the axis unit vector for the line before the move.
@@ -216,19 +216,19 @@ class SimpleFolder {
 
         // Creates the axis unit vector for the line after move
         var movedAxisHeNext = movedAxisHe.getNext();
-        var afterDir = movedAxisHeNext.getPositionWhileFolding().subtract(movedAxisHe.getPositionWhileFolding())
+        var afterAxisDir = movedAxisHeNext.getPositionWhileFolding().subtract(movedAxisHe.getPositionWhileFolding())
                 .normalize();
 
         // move the vertices of the face to keep the face connection
         // on axisHe
-        face.halfedgeStream().forEach(he -> {
+        for (var he : face.halfedgeIterable()) {
             he.setPositionWhileFolding(moveVertexKeepingFaceConnection(
-                    he.getPositionWhileFolding(), preOrigin, axisDir, afterOrigin, afterDir));
-        });
+                    he.getPositionWhileFolding(), origin, axisDir, afterOrigin, afterAxisDir));
+        }
 
         face.setPrecreases(face.precreaseStream().map(precrease -> new OriLine(
-                moveVertexKeepingFaceConnection(precrease.getP0(), preOrigin, axisDir, afterOrigin, afterDir),
-                moveVertexKeepingFaceConnection(precrease.getP1(), preOrigin, axisDir, afterOrigin, afterDir),
+                moveVertexKeepingFaceConnection(precrease.getP0(), origin, axisDir, afterOrigin, afterAxisDir),
+                moveVertexKeepingFaceConnection(precrease.getP1(), origin, axisDir, afterOrigin, afterAxisDir),
                 OriLine.Type.AUX))
                 .toList());
 
