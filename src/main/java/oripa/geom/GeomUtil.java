@@ -26,6 +26,7 @@ import java.util.function.BiPredicate;
 
 import oripa.util.ClosedRange;
 import oripa.util.MathUtil;
+import oripa.util.Pair;
 import oripa.value.CalculationResource;
 import oripa.vecmath.Matrix2d;
 import oripa.vecmath.Vector2d;
@@ -343,7 +344,7 @@ public class GeomUtil {
 
         var sub0 = p.subtract(sp);
 
-        // forcing to use normalize() is good becouse it does no arithmetics,
+        // forcing to use normalize() is good because it does no arithmetics,
         // which should be robust.
 
         // direction of the line
@@ -546,21 +547,20 @@ public class GeomUtil {
     /**
      *
      * @param p
-     * @param line
-     * @param param
-     *            distance between the reference point of the given line and the
-     *            foot from p to line will be set. Precisely, it is not
-     *            "distance" because the value can be negative. The negative
-     *            value means the foot is pointed by the reverse of the line's
-     *            direction vector.
-     * @return distance between the given p and line.
+     * @param sp
+     *            reference point of the line
+     * @param dir
+     *            direction unit vector of the line
+     * @return a pair of distance between the given p and line , as v1, and
+     *         distance between the given sp and the foot from p to line, as v2.
+     *         Precisely, the latter is not "distance" because the value can be
+     *         negative. The negative value means the foot is pointed by the
+     *         reverse of the line's direction vector.
+     *
      */
-    public static double distance(final Vector2d p, final Line line, final double[] param) {
-
-        var sp = line.getPoint();
-
-        param[0] = computeParameterForNearestPointToLine(p, sp, line.getDirection());
-        return distancePointToLine(p, line);
+    public static Pair<Double, Double> distanceToLineAndProjection(
+            final Vector2d p, final Vector2d sp, final Vector2d dir) {
+        return new Pair<>(distancePointToLine(p, new Line(sp, dir)), computeParameterForNearestPointToLine(p, sp, dir));
     }
 
     /**
