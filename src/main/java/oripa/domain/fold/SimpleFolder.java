@@ -197,24 +197,24 @@ class SimpleFolder {
      *            to be moved
      * @param movedAxisHe
      *            a halfedge that is the axis of flip(= fold) and is paired with
-     *            a halfedge of {@code face}. {@code movedBaseHe} should have
+     *            a halfedge of {@code face}. {@code movedAxisHe} should have
      *            been moved.
      */
     private void moveAndFlipFace(final OriFace face, final OriHalfedge movedAxisHe) {
-        // pair of moved base halfedge is not moved yet and is of the given
+        // pair of moved axis halfedge is not moved yet and is of the given
         // face.
         var axisHe = movedAxisHe.getPair().orElseThrow();
         var axisHeNext = axisHe.getNext();
 
-        // baseHeNext keeps the position before folding.
+        // axisHeNext keeps the position before folding.
         var preOrigin = axisHeNext.getPositionWhileFolding();
         var afterOrigin = movedAxisHe.getPositionWhileFolding();
 
-        // Creates the base unit vector for the line before the move.
+        // Creates the axis unit vector for the line before the move.
         // note that the direction of axisHe is reverse of movedAxisHe.
         var axisDir = axisHe.getPositionWhileFolding().subtract(axisHeNext.getPositionWhileFolding()).normalize();
 
-        // Creates the base unit vector for the line after move
+        // Creates the axis unit vector for the line after move
         var movedAxisHeNext = movedAxisHe.getNext();
         var afterDir = movedAxisHeNext.getPositionWhileFolding().subtract(movedAxisHe.getPositionWhileFolding())
                 .normalize();
